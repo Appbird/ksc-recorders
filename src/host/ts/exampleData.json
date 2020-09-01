@@ -1,0 +1,15 @@
+{
+    "timeInMilliseconds":0,
+    "regulation":{
+        "gameSystemEnvironment":{
+            "gameDifficultyID":0,
+            "gameModeID":0,
+            "gameSystemID":0
+        },
+        "abilityIDsOfPlayerCharacters":[0,1,1,2],
+        "targetID":0
+    },
+    "runnerID":0,
+    "runnerName":"user00000",
+    "recordID":0
+}

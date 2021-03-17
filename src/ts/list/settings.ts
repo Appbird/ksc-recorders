@@ -1,4 +1,5 @@
-import { LanguageInApplication } from "./IListResolvingId";
+import { LanguageInApplication } from "../server/ControllerOfTableForResolvingID";
+
 
 export const Settings:ISettings = {
     language:"Japanese"

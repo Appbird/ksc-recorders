@@ -1,0 +1,49 @@
+{
+    "recordGroup":{
+        "groupName":"ボス1",
+        "groupSubName":"1戦目",
+        "lastPost":"1992/04/27 06:00",
+        "numberOfRecords":2,
+        "numberOfRunners":1,
+        "records":[{
+            "timeInMillisecond":0,
+            "regulation":{
+                "gameSystemEnvironment":{
+                    "gameDifficultyID":0,
+                    "gameDifficultyName": "難易度名",
+                    "gameModeID":0,
+                    "gameModeName": "モード名",
+                    "gameSystemID":0,
+                    "gameSystemName": "作品名"
+                },
+                "abilityIDsOfPlayerCharacters":[0,1,1,2],
+                "abilityNamesOfPlayerCharacters":["能力0","能力1","能力1","能力2"],
+                "targetID":0,
+                "targetName": "ターゲット名"
+            },
+            "runnerID":0,
+            "runnerName":"user00000",
+            "recordID":0
+        },
+        {
+            "timeInMillisecond":0,
+            "regulation":{
+                "gameSystemEnvironment":{
+                    "gameDifficultyID":0,
+                    "gameDifficultyName": "難易度名",
+                    "gameModeID":0,
+                    "gameModeName": "モード名",
+                    "gameSystemID":0,
+                    "gameSystemName": "作品名"
+                },
+                "abilityIDsOfPlayerCharacters":[0,1,1,2],
+                "abilityNamesOfPlayerCharacters":["能力0","能力1","能力1","能力2"],
+                "targetID":0,
+                "targetName": "ターゲット名"
+            },
+            "runnerID":0,
+            "runnerName":"user00000",
+            "recordID":0
+        }]
+    }
+}

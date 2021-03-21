@@ -1,6 +1,6 @@
 node_modules/
 .vscode/
-.code-workspace
-tsconfig.tsbuildinfo
+*.code-workspace
+*.tsbuildinfo
 build/host/js
 build/server/js

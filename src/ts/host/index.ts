@@ -2,7 +2,7 @@ import { RecordGroupView } from "../view/RecordsCardView";
 import { IRecordGroupWithName } from "../type/record/IRecordGroup";
 import { IReceivedDataFromServer } from "../type/transmission/IReceivedDataFromServer";
 
-const input = `{
+const receivedString = `{
     "isSuccess": true,
     "recordGroups":[{
         "groupName":"ボス1",
@@ -23,7 +23,7 @@ const input = `{
                 },
                 "abilityIDsOfPlayerCharacters":[0,1,1,2],
                 "abilityNamesOfPlayerCharacters":["能力0","能力1","能力1","能力2"],
-                "targetID":0,
+                "targetID":1,
                 "targetName": "ターゲット0"
             },
             "runnerID":0,
@@ -51,10 +51,10 @@ const input = `{
             "recordID":0
         }]
     }]
-}`
+}`;
 
-const inputObject:IReceivedDataFromServer = JSON.parse(input)
-const recordsData:IRecordGroupWithName[] = inputObject.recordGroups;
+let input:IReceivedDataFromServer = JSON.parse(receivedString);
+const recordsData:IRecordGroupWithName[] = input.recordGroups;
 const article = document.getElementById("article");
 
 for (const recordData of recordsData) {

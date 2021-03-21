@@ -2,3 +2,5 @@ node_modules/
 .vscode/
 .code-workspace
 tsconfig.tsbuildinfo
+build/host/js
+build/server/js

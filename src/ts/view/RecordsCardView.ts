@@ -48,12 +48,13 @@ export class RecordGroupView{
 
             <hr noshade class="u-thin">`
 
-        const tagsView = new TagsView();
+        const tagsViews = [new TagsView(),new TagsView()];
         const gameEnv = record.regulation.gameSystemEnvironment;
-        tagsView.generateTag(`${gameEnv.gameSystemName}/${gameEnv.gameModeName}/${gameEnv.gameDifficultyName}`,"gameSystem");
-        tagsView.generateTag(record.regulation.targetName,"target");
-        for (const ability of record.regulation.abilityNamesOfPlayerCharacters) tagsView.generateTag((ability === undefined ? "Not Found" : ability),"ability")
-        ele.appendChild(tagsView.getElement());
+        tagsViews[0].generateTag(`${gameEnv.gameSystemName}/${gameEnv.gameModeName}/${gameEnv.gameDifficultyName}`,"gameSystem");
+        tagsViews[0].generateTag(record.regulation.targetName,"target");
+        for (const ability of record.regulation.abilityNamesOfPlayerCharacters) tagsViews[1].generateTag((ability === undefined ? "Not Found" : ability),"ability")
+        
+        for (const tagsView of tagsViews) ele.appendChild(tagsView.getElement());
         
         this._htmlElement.append(ele);
     }

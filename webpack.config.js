@@ -3,15 +3,14 @@ module.exports = {
   
     entry: './src/ts/host/index.ts',
     output: {
-        path: `${__dirname}/build/js`,
+        path: `${__dirname}/build/host/js`,
         filename: "main.js"
     },
     module: {
       rules: [
         {
-          test: /\.\/src\/ts\/\.ts$/,
-          use: 'ts-loader',
-          exclude: /\.\/src\/ts\/server\/\.ts$/
+          test: /\.ts$/,
+          use: 'ts-loader'
         },
       ],
     },

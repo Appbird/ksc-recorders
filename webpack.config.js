@@ -1,16 +1,17 @@
 module.exports = {
     mode: 'development',
   
-    entry: './src/host/ts/index.ts',
+    entry: './src/ts/host/index.ts',
     output: {
-        path: `${__dirname}/build/host/js`,
+        path: `${__dirname}/build/js`,
         filename: "main.js"
     },
     module: {
       rules: [
         {
-          test: /\.ts$/,
+          test: /\.\/src\/ts\/\.ts$/,
           use: 'ts-loader',
+          exclude: /\.\/src\/ts\/server\/\.ts$/
         },
       ],
     },

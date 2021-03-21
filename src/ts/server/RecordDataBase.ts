@@ -21,7 +21,7 @@ export class RecordDataBase{
         return result;
     }
     getRecord(gameSystemID:number,recordID:number):IRecord{
-    //#CTODO 与えられた条件に適した記録を記録を一つ返す。
+    //[x] 与えられた条件に適した記録を記録を一つ返す。
         const result = this.getGameSystemInfo(gameSystemID).records.find( (item) => item.recordID === recordID);
         if (result === undefined) throw new Error(`ゲームシステムID${gameSystemID}の記録データベースに、指定されたID${recordID}に対する記録が存在しません。`)
         return result;
@@ -35,7 +35,7 @@ export class RecordDataBase{
                             targetIDs?:number[],
                             runnerIDs?:number[]
     ):IRecord[]{
-    //#CTODO undefinedは指定なしとみなし、与えられた条件のうちで「早い順で」start件目からlimit件のデータをグループとして取り出す。(0スタート)
+    //[x] undefinedは指定なしとみなし、与えられた条件のうちで「早い順で」start件目からlimit件のデータをグループとして取り出す。(0スタート)
         if (limit < 0 && start < 0) throw new Error(`検索条件に矛盾があります。(start:${start} end:${limit})`)
         const records = this.getGameSystemInfo(gameSystemID).records;
         return records.filter(

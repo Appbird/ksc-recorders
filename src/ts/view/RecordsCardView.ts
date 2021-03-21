@@ -1,11 +1,12 @@
 import { element } from "../utility/ViewUtility";
-import { RecordInNutShellModel } from "../model/RecordInNutShellModel";
 import { TagsView } from "./TagsView";
-import { IRecordGroup } from "../type/record/IRecordGroup";
+import { IRecordGroupWithName } from "../type/record/IRecordGroup";
+import { IRecordInShortWithName } from "../type/record/IRecord";
+import { converseMiliSecondsIntoTime } from "../utility/timeUtility";
 
-export class RecordCardsView{
+export class RecordGroupView{
     private _htmlElement:Element = document.createElement("div");
-    constructor(recordGroup:IRecordGroup){
+    constructor(recordGroup:IRecordGroupWithName){
         this._htmlElement.classList.add("c-recordCardsGroup");
         this._htmlElement.appendChild(
             element`
@@ -29,42 +30,31 @@ export class RecordCardsView{
         </div>
         `
         )
-        for(const record of recordGroup.records)this.appendRecordCard(new RecordInNutShellModel(record));
+        for(const record of recordGroup.records)this.appendRecordCard(record);
     }
     get htmlElement(){
         return this._htmlElement;
     }
-    appendRecordCard(recordCardModel:RecordInNutShellModel){
-        console.log(recordCardModel.gameSystemEnvironment);
-        const gameEnv = recordCardModel.gameSystemEnvironment;
-        recordCardModel.gameSystemEnv.gameSystemName
-        //TODO:これをElementとして出力して、TagをDOM操作で後付けしたい v
-        const ele = element`<div class = "c-recordCard u-width95per">
-        <div class = "c-title --withUnderline">
-            <div class = "c-title__main">${recordCardModel.time}</div>
-                <div class="c-iconWithDescription">
-                <i class="fas fa-user"></i>${recordCardModel.runner}
+    appendRecordCard(record:IRecordInShortWithName){
+        //[x] これをElementとして出力して、TagをDOM操作で後付けしたい
+        const ele = element`
+            <div class = "c-recordCard u-width95per">
+            <div class = "c-title --withUnderline">
+                <div class = "c-title__main">${converseMiliSecondsIntoTime(record.score)}</div>
+                    <div class="c-iconWithDescription">
+                    <i class="fas fa-user"></i>${record.runnerName}
+                </div>
             </div>
-        </div>
-        
-        <hr noshade class="u-thin">
 
-        <div class = "c-tags">
-            <div class = "c-tag --gameSystem">
-                <div class="c-iconWithDescription">
-                    <i class="fas fa-star"></i>${gameEnv.gameSystemName}/${gameEnv.gameModeName}/${gameEnv.gameDifficultyName}
-                </div>
-            </div>
-            <div class = "c-tag --target">
-                <div class="c-iconWithDescription">
-                    <i class="fas fa-flag"></i>${recordCardModel.target}
-                </div>
-            </div>
-        </div>
-        `;
+            <hr noshade class="u-thin">`
+
         const tagsView = new TagsView();
-        for (const ability of recordCardModel.ability) tagsView.generateTag((ability === undefined ? "Not Found" : ability),"ability")
+        const gameEnv = record.regulation.gameSystemEnvironment;
+        tagsView.generateTag(`${gameEnv.gameSystemName}/${gameEnv.gameModeName}/${gameEnv.gameDifficultyName}`,"gameSystem");
+        tagsView.generateTag(record.regulation.targetName,"target");
+        for (const ability of record.regulation.abilityNamesOfPlayerCharacters) tagsView.generateTag((ability === undefined ? "Not Found" : ability),"ability")
         ele.appendChild(tagsView.getElement());
+        
         this._htmlElement.append(ele);
     }
 }

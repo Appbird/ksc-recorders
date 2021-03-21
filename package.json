@@ -3,12 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "test": "mocha -r ts-node/register 'src/host/ts/test/**/*.ts'",
-    "build-ts": "webpack",
-    "build-css": "node-sass src/host/scss/common.scss -o build/host/css/ --importer node_modules/node-sass-globbing/index.js",
-    "watch-css": "nodemon -e scss -x \"npm run build-css\""
-  },
+  "scripts": {},
   "author": "Appbird",
   "license": "ISC",
   "devDependencies": {

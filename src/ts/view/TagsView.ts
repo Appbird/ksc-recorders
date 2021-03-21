@@ -12,9 +12,9 @@ export class TagsView{
             case "ability"  :
                 icon = `far fa-star`
             case "target"   :
-                icon = `far fa-star`
+                icon = `far fa-flag`
             case "gameSystem":
-                icon = `far fa-star`
+                icon = `fas fa-star`
         }
         this.element.appendChild(
         element`

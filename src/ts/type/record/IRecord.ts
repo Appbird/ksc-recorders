@@ -8,9 +8,9 @@ export interface IRecordInShortWithName {
     recordID: number;
 }
 export interface IRecord{
-    //#CTODO ここの命名をtimeInMiliSecondではなくscoreにしたい…。
+    //[x] ここの命名をtimeInMiliSecondではなくscoreにしたい…。
     score: number;
-    //#CTODO timestampを追加する
+    //[x] timestampを追加する
     timestamp: number;
     regulation: IRegulation;
     runnerID: number;

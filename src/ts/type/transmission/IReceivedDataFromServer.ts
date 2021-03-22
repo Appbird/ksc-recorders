@@ -1,5 +1,6 @@
-import { IRecordGroupWithName } from "../record/IRecordGroup";
+import { IRecordGroup } from "../record/IRecordGroup";
 export interface IReceivedDataFromServer {
     isSuccess: boolean;
-    recordGroups: IRecordGroupWithName[];
+    recordGroups?: IRecordGroup[];
+    message?: string;
 }

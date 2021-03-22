@@ -1,9 +1,9 @@
-import { IRecordInShortWithName } from "./IRecord";
+import { IRecordInShort, IRecordInShortResolved } from "./IRecord";
 
-export interface IRecordGroupWithName {
+export interface IRecordGroup {
     groupName: string;
     groupSubName: string;
-    records: IRecordInShortWithName[];
+    records: {notResolved:IRecordInShort,resolved:IRecordInShortResolved}[];
     lastPost: number;
     numberOfRecords:number;
     numberOfRunners:number;

@@ -8,3 +8,7 @@ export function converseMiliSecondsIntoTime(timeInMiliSeconds:number):string{
 function WriteNumberIn2Digits(num:number):string{
     return (num < 10) ? `0${num}`: String(num);
 }
+export function convertNumberIntoDateString(num:number):string{
+    const date = new Date(num);
+    return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${WriteNumberIn2Digits(date.getHours())}:${WriteNumberIn2Digits(date.getMinutes())}:${WriteNumberIn2Digits(date.getSeconds())}`
+}

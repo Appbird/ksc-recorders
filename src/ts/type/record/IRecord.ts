@@ -1,12 +1,18 @@
-import { IRegulation, IRegulationWithName } from "../foundation/IRegulation";
+import { IRegulation, IRegulationResolved } from "../foundation/IRegulation";
 
-export interface IRecordInShortWithName {
+//#NOTE ここでの"Resolved"は、「IDを対応する文字列に置き換えた(ID解決済)状態である」ことを表す。Resolvedのオブジェクトでは、対応するResolvedでないオブジェクトのうち「Dを表さないパラメタ」を削除している。
+//#NOTE また、"InShort"(日本語訳として「要約すると」)は、本来の記録よりも、「簡単に表示するにあたって必要ないデータを削った状態である」ことを表す。
+export interface IRecordInShort {
     score: number;
-    regulation: IRegulationWithName;
-    runnerID: number;
-    runnerName:string;
-    recordID: number;
+    regulation: IRegulation;
+    runnerID:number;
+    recordID:number;
 }
+export interface IRecordInShortResolved {
+    regulation: IRegulationResolved;
+    runnerName:string;
+}
+
 export interface IRecord{
     //[x] ここの命名をtimeInMiliSecondではなくscoreにしたい…。
     score: number;
@@ -18,4 +24,9 @@ export interface IRecord{
     tag: number[];
     link: string[];
     note: string;
+}
+export interface IRecordResolved{
+    regulation: IRegulationResolved;
+    runnerName: number;
+    tag: string[];
 }

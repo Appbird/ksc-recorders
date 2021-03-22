@@ -1,13 +1,13 @@
-//[-] RecordDataBase,ControllerOfTableForResolvingIDクラスを用いて、必要となる記録データを取り出し、ここでデータの加工を行う。
+//[x] RecordDataBase,ControllerOfTableForResolvingIDクラスを用いて、必要となる記録データを取り出し、ここでデータの加工を行う。
 //[-] クライアントに与えるべきデータをJSONで出力する。
 
 import { exampleData } from "./exampledata";
 import { RecordDataBase } from "../RecordDataBase";
 import { IReceivedDataFromClient_AboutRecordExhibition } from "../../type/transmission/IReceivedDataFromClient";
 import { IReceivedDataFromServer } from "../../type/transmission/IReceivedDataFromServer";
-import { IRecord, IRecordInShortWithName } from "../../type/record/IRecord";
-import { IRecordGroupWithName } from "../../type/record/IRecordGroup";
+import { IRecord, IRecordInShort, IRecordInShortResolved } from "../../type/record/IRecord";
 import { controllerOfTableForResolvingID, LanguageInApplication } from "../ControllerOfTableForResolvingID";
+import { IRecordGroup } from "../../type/record/IRecordGroup";
 
 const requestGroup:IReceivedDataFromClient_AboutRecordExhibition[] = [{
     gameSystemEnv: {
@@ -30,25 +30,43 @@ const requestGroup:IReceivedDataFromClient_AboutRecordExhibition[] = [{
 const database = new RecordDataBase(exampleData);
 let sent:IReceivedDataFromServer;
 try {
-    requestGroup.map( (request) => {
+    const recordGroups = requestGroup.map( (request) => {
             const recordIDs = database.getRecordIDsWithCondition(
                                 request.gameSystemEnv.gameSystemID,
                                 request.orderOfRecordArray,
                                 request.ANDORConditionAboutAbilityIDs,
                                 request.abilityIDs,
                                 request.runnerIDs);
-            
+            const records = database.getRecords(request.gameSystemEnv.gameSystemID,recordIDs.slice(request.startOfRecordArray,request.startOfRecordArray + request.limitOfRecordArray))
+        
+            return convertRecordsIntoRecordGroup(
+            records , { groupName:request.groupName,
+                groupSubName:request.groupSubName,
+                numberOfRecords:recordIDs.length ,
+                numberOfRunners:NaN,
+                lang:request.language
+        }); 
         }
     )
-} catch(e) {
     
+    sent = {
+        isSuccess:true,
+        recordGroups:recordGroups
+    }
+
+} catch(e) {
+    sent = {
+        isSuccess :false,
+        recordGroups:undefined,
+        message: e
+    }
 }
 
 function convertRecordsIntoRecordGroup( records:IRecord[],
-    info:{ groupName: string; groupSubName: string; numberOfRecords:number; numberOfRunners:number; lang:LanguageInApplication;}):IRecordGroupWithName{
+    info:{ groupName: string; groupSubName: string; numberOfRecords:number; numberOfRunners:number; lang:LanguageInApplication;}):IRecordGroup{
 
     return {
-        groupName : info.groupName,
+        groupName: info.groupName,
         groupSubName : info.groupSubName,
         lastPost : records.sort( (a,b) => b.timestamp - a.timestamp )[0].timestamp,
         numberOfRecords : info.numberOfRecords,
@@ -56,26 +74,37 @@ function convertRecordsIntoRecordGroup( records:IRecord[],
         records: records.map( (record) => convertIRecordIntoIRecordInShortWithName(record,record.regulation.gameSystemEnvironment.gameSystemID,info.lang) )
     }
 }
-function convertIRecordIntoIRecordInShortWithName(record:IRecord,gameSystemID:number,lang:LanguageInApplication):IRecordInShortWithName{
+function convertIRecordIntoIRecordInShortWithName(record:IRecord,gameSystemID:number,lang:LanguageInApplication):{resolved:IRecordInShortResolved,notResolved:IRecordInShort}{
+
     const gr = record.regulation; //#README
     const gse = gr.gameSystemEnvironment; //#README
     const cotfr = controllerOfTableForResolvingID; //#README
-    return {
-        score : record.score,
+
+    const a:IRecordInShort = {
+        score:record.score,
+        regulation:record.regulation,
+        runnerID:record.runnerID,
+        recordID:record.recordID
+    }
+    const b:IRecordInShortResolved = {
         regulation : {
             gameSystemEnvironment : {
-                gameSystemID : gse.gameSystemID,
                 gameSystemName : cotfr.resolveGameSystemID(gse.gameSystemID,lang),
-                gameModeID : gse.gameModeID,
                 gameModeName : cotfr.resolveGameModeID(gse.gameSystemID,gse.gameModeID,lang),
-                gameDifficultyID : gse.gameDifficultyID,
                 gameDifficultyName : cotfr.resolveGameDifficultyID(gse.gameSystemID,gse.gameDifficultyID,lang),
             },
-            targetID : 0,
             targetName : cotfr.resolveTargetID(gse.gameSystemID,gr.targetID,lang),
-            abilityIDsOfPlayerCharacters : gse.gameSystemID
-
+            abilityNamesOfPlayerCharacters : gr.abilityIDsOfPlayerCharacters.map( (id) => cotfr.resolveAbilityID(gameSystemID,id,lang)),
+            
+        },
+        runnerName: cotfr.resolveRunnerID(record.runnerID,lang)
         }
-         : record.regulation.abilityIDsOfPlayerCharacters.map( (id) => controllerOfTableForResolvingID.resolveAbilityID(gameSystemID,id,lang))
-    }
+    
+    return {resolved:b,notResolved:a};
 }
+
+describe("正しいオブジェクトが返されるかのテスト",
+    () => {
+        //[-] テストを行う。
+    }
+)

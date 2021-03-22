@@ -4,7 +4,7 @@ import { IGameSystemEnvironment } from "../foundation/IGameSystemEnvironment";
 
 export interface IReceivedDataFromClient_AboutRecordExhibition {
     groupName:string;
-    groupSubName?:string;
+    groupSubName:string;
 
     gameSystemEnv:IGameSystemEnvironment;
     /**  クライアントが受け取る記録データの最大数 */

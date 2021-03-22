@@ -1,14 +1,12 @@
-import { IGameSystemEnvironment, IGameSystemEnvironmentWithName } from "./IGameSystemEnvironment";
+import { IGameSystemEnvironment, IGameSystemEnvironmentResolved } from "./IGameSystemEnvironment";
 
 export interface IRegulation {
     gameSystemEnvironment:IGameSystemEnvironment;
     abilityIDsOfPlayerCharacters: number[];
     targetID:number;
 }
-export interface IRegulationWithName {
-    gameSystemEnvironment:IGameSystemEnvironmentWithName;
-    abilityIDsOfPlayerCharacters: number[];
+export interface IRegulationResolved {
+    gameSystemEnvironment:IGameSystemEnvironmentResolved;
     abilityNamesOfPlayerCharacters: string[];
-    targetID:number;
     targetName:string;
 }

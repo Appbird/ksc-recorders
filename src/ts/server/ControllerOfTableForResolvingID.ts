@@ -11,6 +11,7 @@ class ControllerOfTableForResolvingID{
     constructor(){
         this.dataBase = JSON.parse(fs.readFileSync("exampleData.json",{encoding:"utf8"}));
     }
+
     resolveID(id:number, table: IItemOfResolveTableToName[],lang:LanguageInApplication,descriptionOfPlace:string = ""){
         const item = table.find(
             (element) =>  element.id === id
@@ -21,14 +22,17 @@ class ControllerOfTableForResolvingID{
             case "English": return item.EName;
         }
     }
+
     resolveGameSystemID(id:number,lang:LanguageInApplication){
         return this.resolveID(id,this.dataBase.runnersTable,lang,"GameSystem");
     }
+
     private findProperGameSystemInfo(gameSystemID:number){
         const result = this.dataBase.gameSystemInfo.find( (ele) => ele.id === gameSystemID);
         if (result === undefined) throw new Error(`指定した作品ID${gameSystemID}に該当する作品は存在しません。`)
         return result;
     }
+    
     resolveAbilityID(gameSystemID:number,id:number,lang:LanguageInApplication){
         return this.resolveID(id,this.findProperGameSystemInfo(gameSystemID).list.AbilityList,lang,"Ability");
     }
@@ -40,6 +44,9 @@ class ControllerOfTableForResolvingID{
     }
     resolveGameModeID(gameSystemID:number,id:number,lang:LanguageInApplication){
         return this.resolveID(id,this.findProperGameSystemInfo(gameSystemID).list.GameModeList,lang,"GameMode");
+    }
+    resolveRunnerID(id:number,lang:LanguageInApplication):string{
+        return this.resolveID(id,this.dataBase.runnersTable,lang,"runnersTable");
     }
 }
 

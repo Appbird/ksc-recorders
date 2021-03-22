@@ -1,9 +1,9 @@
 module.exports = {
     mode: 'development',
   
-    entry: './src/ts/host/index.ts',
+    entry: './src/ts/client/index.ts',
     output: {
-        path: `${__dirname}/build/host/js`,
+        path: `${__dirname}/build/client/js`,
         filename: "main.js"
     },
     module: {

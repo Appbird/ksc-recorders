@@ -67,6 +67,6 @@
   },
   
   "exclude":[
-    "src/ts/host/**/*"
+    "src/ts/client/**/*"
   ]
 }

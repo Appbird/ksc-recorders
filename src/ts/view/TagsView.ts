@@ -11,10 +11,13 @@ export class TagsView{
         switch (kind){
             case "ability"  :
                 icon = `far fa-star`
+                break;
             case "target"   :
                 icon = `far fa-flag`
+                break;
             case "gameSystem":
                 icon = `fas fa-star`
+                break;
         }
         this.element.appendChild(
         element`

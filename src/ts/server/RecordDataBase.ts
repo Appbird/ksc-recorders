@@ -1,7 +1,10 @@
 import * as fs from "fs";
 import { IRecord } from "../type/record/IRecord";
-import { IRunner } from "../type/record/IRunner";
-import { IItemOfResolveTableToName } from "./ControllerOfTableForResolvingID";
+import { IGameSystemInfo } from "./IGameSystemInfo";
+import { IRecordDataBase } from "./IRecordDataBase";
+
+export type OrderOfRecordArray = "HigherFirst" | "LowerFirst" | "LaterFirst" | "EarlierFirst"
+
 
 export class RecordDataBase{
     private dataBase:IRecordDataBase;
@@ -26,22 +29,20 @@ export class RecordDataBase{
         return result;
     }
 
-    getRecordsWithCondition(gameSystemID:number, 
-                            order: "HigherFirst" | "LowerFirst" | "LaterFirst" | "EarlierFirst" ,
-                            start:number = 0,limit:number = 10,
+    getRecordIDsWithCondition(gameSystemID:number, 
+                            order:OrderOfRecordArray ,
                             abilityIDsCondition: "AND" | "OR",
-                            abilityIDs?:number[],
-                            targetIDs?:number[],
-                            runnerIDs?:number[]
-    ):IRecord[]{
+                            abilityIDs:number[] = [],
+                            targetIDs:number[] = [],
+                            runnerIDs:number[] = []
+    ):number[]{
     //[x] undefinedは指定なしとみなし、与えられた条件のうちで「早い順で」start件目からlimit件のデータをグループとして取り出す。(0スタート)
-        if (limit < 0 && start < 0) throw new Error(`検索条件に矛盾があります。(start:${start} end:${limit})`)
         const records = this.getGameSystemInfo(gameSystemID).records;
-        return records.filter(
+        const sorted = records.filter(
             (record) => 
-                ((targetIDs === undefined) ? true : targetIDs.some( (id) => id === record.regulation.targetID) ) &&
-                ((abilityIDs === undefined) ? true : this.ifRecordIncludeThatAbilityIDs(record,abilityIDsCondition,abilityIDs) ) &&
-                ((runnerIDs === undefined) ? true : runnerIDs.some( (id) => id === record.runnerID) )
+                ((targetIDs.length === 0) ? true : targetIDs.some( (id) => id === record.regulation.targetID) ) &&
+                ((abilityIDs.length === 0) ? true : this.ifRecordIncludeThatAbilityIDs(record,abilityIDsCondition,abilityIDs) ) &&
+                ((runnerIDs.length === 0) ? true : runnerIDs.some( (id) => id === record.runnerID) )
         ).sort(
             (a,b) => {
                 switch(order){
@@ -51,9 +52,10 @@ export class RecordDataBase{
                     case "EarlierFirst": return 1;
                 }
             }
-        ).filter(
-            (ele,index) => start <= index && index < start + limit 
-        )
+        ).map( (record) => record.recordID);
+        
+        
+        return sorted;
 
     }
     private ifRecordIncludeThatAbilityIDs(record:IRecord,abilityIDsCondition: "AND" | "OR", abilityIDs:number[]):boolean{
@@ -71,38 +73,3 @@ export class RecordDataBase{
 
 }
 
-export interface IRecordDataBase{
-    runnersTable: IRunner[];
-    gameSystemInfo: IGameSystemInfo[];
-}
-export interface IGameSystemInfo extends IItemOfResolveTableToName{
-    id:number;
-    JName:string;
-    EName:string;
-    JDescription?: string;
-    EDescription?: string;
-    list : UniqueResolveTableToGameSystem;
-    records:IRecord[];
-}
-/**
- * カービィの作品にそれぞれひとつずつ対応するID解決テーブル群
- */
-export interface UniqueResolveTableToGameSystem {
-    AbilityList : AbilityList[];
-    
-    TargetList : TargetList[];
-    GameModeList : GameModeList[];
-    //#NOTE ターゲットについてはID解決テーブルという目的以上に難易度に所属するターゲットを示す目的もあることに注意
-    GameDifficultyList : GameDifficultyList[];
-}
-export interface AbilityList extends IItemOfResolveTableToName{
-}
-export interface TargetList extends IItemOfResolveTableToName{
-}
-export interface GameModeList extends IItemOfResolveTableToName{
-    JDescription?: string
-    EDescription?: string
-}
-export interface GameDifficultyList extends IItemOfResolveTableToName{
-    IDsOfTargetIncludedInTheDifficulty?:number[]
-}

@@ -4,7 +4,7 @@ export interface IRecordGroupWithName {
     groupName: string;
     groupSubName: string;
     records: IRecordInShortWithName[];
-    lastPost: string;
+    lastPost: number;
     numberOfRecords:number;
     numberOfRunners:number;
 }

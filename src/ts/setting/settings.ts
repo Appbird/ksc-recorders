@@ -5,5 +5,5 @@ export const Settings:ISettings = {
     language:"Japanese"
 }
 interface ISettings {
-    language:keyof LanguageInApplication,
+    language:LanguageInApplication,
 }

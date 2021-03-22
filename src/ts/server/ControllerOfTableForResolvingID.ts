@@ -1,5 +1,8 @@
 import * as fs from "fs";
-import { IRecordDataBase } from "./RecordDataBase";
+import { IRecordDataBase } from "./IRecordDataBase";
+
+export type LanguageInApplication = "Japanese" | "English";
+
 /**
  * データベースのデータを参照してIDを解決してくれるテーブルマネージャー
  */
@@ -8,7 +11,7 @@ class ControllerOfTableForResolvingID{
     constructor(){
         this.dataBase = JSON.parse(fs.readFileSync("exampleData.json",{encoding:"utf8"}));
     }
-    resolveID(id:number, table: IItemOfResolveTableToName[],lang:keyof LanguageInApplication,descriptionOfPlace:string = ""){
+    resolveID(id:number, table: IItemOfResolveTableToName[],lang:LanguageInApplication,descriptionOfPlace:string = ""){
         const item = table.find(
             (element) =>  element.id === id
         )
@@ -18,7 +21,7 @@ class ControllerOfTableForResolvingID{
             case "English": return item.EName;
         }
     }
-    resolveGameSystemID(id:number,lang:keyof LanguageInApplication){
+    resolveGameSystemID(id:number,lang:LanguageInApplication){
         return this.resolveID(id,this.dataBase.runnersTable,lang,"GameSystem");
     }
     private findProperGameSystemInfo(gameSystemID:number){
@@ -26,16 +29,16 @@ class ControllerOfTableForResolvingID{
         if (result === undefined) throw new Error(`指定した作品ID${gameSystemID}に該当する作品は存在しません。`)
         return result;
     }
-    getAbilityTable(gameSystemID:number,id:number,lang:keyof LanguageInApplication){
+    resolveAbilityID(gameSystemID:number,id:number,lang:LanguageInApplication){
         return this.resolveID(id,this.findProperGameSystemInfo(gameSystemID).list.AbilityList,lang,"Ability");
     }
-    getTargetTable(gameSystemID:number,id:number,lang:keyof LanguageInApplication){
+    resolveTargetID(gameSystemID:number,id:number,lang:LanguageInApplication){
         return this.resolveID(id,this.findProperGameSystemInfo(gameSystemID).list.TargetList,lang,"Target");
     }
-    getGameDifficultyTable(gameSystemID:number,id:number,lang:keyof LanguageInApplication){
+    resolveGameDifficultyID(gameSystemID:number,id:number,lang:LanguageInApplication){
         return this.resolveID(id,this.findProperGameSystemInfo(gameSystemID).list.GameDifficultyList,lang,"GameDifficulty");
     }
-    getGameModeTable(gameSystemID:number,id:number,lang:keyof LanguageInApplication){
+    resolveGameModeID(gameSystemID:number,id:number,lang:LanguageInApplication){
         return this.resolveID(id,this.findProperGameSystemInfo(gameSystemID).list.GameModeList,lang,"GameMode");
     }
 }
@@ -44,10 +47,6 @@ export const controllerOfTableForResolvingID = new ControllerOfTableForResolving
 
 
 
-export interface LanguageInApplication{
-    Japanese:string;
-    English:string
-}
 export interface IItemOfResolveTableToName{
     id:number;
     JName:string;

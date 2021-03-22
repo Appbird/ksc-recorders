@@ -1,6 +1,6 @@
-import { IRecordDataBase } from "./RecordDataBase";
+import { IRecordDataBase } from "../IRecordDataBase";
 
-export const data:IRecordDataBase = {
+export const exampleData:IRecordDataBase = {
 
 
     "runnersTable" : [

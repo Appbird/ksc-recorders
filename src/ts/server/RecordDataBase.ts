@@ -1,5 +1,4 @@
 import * as fs from "fs";
-import { IGameSystemEnvironment } from "../type/foundation/IGameSystemEnvironment";
 import { IRecord } from "../type/record/IRecord";
 import { IRunner } from "../type/record/IRunner";
 import { IItemOfResolveTableToName } from "./ControllerOfTableForResolvingID";
@@ -46,8 +45,8 @@ export class RecordDataBase{
         ).sort(
             (a,b) => {
                 switch(order){
-                    case "HigherFirst": return a.score - b.score;
-                    case "LowerFirst" : return b.score - a.score;
+                    case "HigherFirst": return b.score - a.score;
+                    case "LowerFirst" : return a.score - b.score;
                     case "LaterFirst": return -1;
                     case "EarlierFirst": return 1;
                 }

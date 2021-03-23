@@ -1,4 +1,4 @@
-import { IRecordDataBase } from "../IRecordDataBase";
+import { IRecordDataBase } from "../type/IRecordDataBase";
 
 export const exampleData:IRecordDataBase = {
 

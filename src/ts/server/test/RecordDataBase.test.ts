@@ -1,7 +1,7 @@
 import { IRecord } from "../../type/record/IRecord";
 import { exampleData } from "./exampledata";
 import assert  from "assert";
-import { RecordDataBase } from "../RecordDataBase"
+import { RecordDataBase } from "../DataBase/RecordDataBase"
 import { checkEqualityBetweenArraysWithConsoleMsg } from "../../utility/arrayUtility";
 const database = new RecordDataBase(exampleData);
 describe("正しく記録が選別されるか", () =>{

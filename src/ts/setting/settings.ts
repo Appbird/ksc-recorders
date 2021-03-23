@@ -1,4 +1,4 @@
-import { LanguageInApplication } from "../server/ControllerOfTableForResolvingID";
+import { LanguageInApplication } from "../server/DataBase/ControllerOfTableForResolvingID";
 
 
 export const Settings:ISettings = {

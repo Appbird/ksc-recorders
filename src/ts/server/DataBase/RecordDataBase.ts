@@ -1,8 +1,8 @@
 import * as fs from "fs";
-import { IRecord } from "../type/record/IRecord";
-import { checkEqualityBetweenArrays } from "../utility/arrayUtility";
-import { IGameSystemInfo } from "./IGameSystemInfo";
-import { IRecordDataBase } from "./IRecordDataBase";
+import { IRecord } from "../../type/record/IRecord";
+import { checkEqualityBetweenArrays } from "../../utility/arrayUtility";
+import { IGameSystemInfo } from "../type/IGameSystemInfo";
+import { IRecordDataBase } from "../type/IRecordDataBase";
 
 export type OrderOfRecordArray = "HigherFirst" | "LowerFirst" | "LaterFirst" | "EarlierFirst"
 

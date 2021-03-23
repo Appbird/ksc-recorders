@@ -1,4 +1,4 @@
-import { IRunner } from "../type/record/IRunner";
+import { IRunner } from "../../type/record/IRunner";
 import { IGameSystemInfo } from "./IGameSystemInfo";
 
 

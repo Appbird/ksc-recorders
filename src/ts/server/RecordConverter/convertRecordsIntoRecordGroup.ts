@@ -1,5 +1,5 @@
 import { IRecord, IRecordInShortResolved } from "../../type/record/IRecord";
-import { LanguageInApplication } from "../ControllerOfTableForResolvingID";
+import { LanguageInApplication } from "../DataBase/ControllerOfTableForResolvingID";
 import { IRecordGroup } from "../../type/record/IRecordGroup";
 import { controllerOfTableForResolvingID } from "../test/OutputDataToClient.test";
 

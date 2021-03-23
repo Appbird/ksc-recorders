@@ -1,5 +1,5 @@
-import { LanguageInApplication } from "../../server/ControllerOfTableForResolvingID";
-import { OrderOfRecordArray } from "../../server/RecordDataBase";
+import { LanguageInApplication } from "../../server/DataBase/ControllerOfTableForResolvingID";
+import { OrderOfRecordArray } from "../../server/DataBase/RecordDataBase";
 import { IGameSystemEnvironment } from "../foundation/IGameSystemEnvironment";
 
 export interface IReceivedDataFromClient_AboutRecordExhibition {

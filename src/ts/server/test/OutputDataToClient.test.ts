@@ -2,10 +2,10 @@
 //[-] クライアントに与えるべきデータをJSONで出力する。
 
 import { exampleData } from "./exampledata";
-import { RecordDataBase } from "../RecordDataBase";
+import { RecordDataBase } from "../DataBase/RecordDataBase";
 import { IReceivedDataFromClient_AboutRecordExhibition } from "../../type/transmission/IReceivedDataFromClient";
 import { IReceivedDataFromServer } from "../../type/transmission/IReceivedDataFromServer";
-import { ControllerOfTableForResolvingID } from "../ControllerOfTableForResolvingID";
+import { ControllerOfTableForResolvingID } from "../DataBase/ControllerOfTableForResolvingID";
 import { convertRecordsIntoRecordGroup } from "../RecordConverter/convertRecordsIntoRecordGroup";
 
 const database = new RecordDataBase(exampleData);

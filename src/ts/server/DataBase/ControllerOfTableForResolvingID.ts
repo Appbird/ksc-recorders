@@ -1,5 +1,3 @@
-import * as fs from "fs";
-import { IRecordDataBase } from "./IRecordDataBase";
 import { RecordDataBase } from "./RecordDataBase";
 
 export type LanguageInApplication = "Japanese" | "English";

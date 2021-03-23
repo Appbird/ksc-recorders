@@ -74,33 +74,32 @@ function convertRecordsIntoRecordGroup( records:IRecord[],
         records: records.map( (record) => convertIRecordIntoIRecordInShortWithName(record,record.regulation.gameSystemEnvironment.gameSystemID,info.lang) )
     }
 }
-function convertIRecordIntoIRecordInShortWithName(record:IRecord,gameSystemID:number,lang:LanguageInApplication):{resolved:IRecordInShortResolved,notResolved:IRecordInShort}{
+function convertIRecordIntoIRecordInShortWithName(record:IRecord,gameSystemID:number,lang:LanguageInApplication):IRecordInShortResolved{
 
     const gr = record.regulation; //#README
     const gse = gr.gameSystemEnvironment; //#README
     const cotfr = controllerOfTableForResolvingID; //#README
 
-    const a:IRecordInShort = {
-        score:record.score,
-        regulation:record.regulation,
-        runnerID:record.runnerID,
-        recordID:record.recordID
-    }
-    const b:IRecordInShortResolved = {
-        regulation : {
-            gameSystemEnvironment : {
-                gameSystemName : cotfr.resolveGameSystemID(gse.gameSystemID,lang),
-                gameModeName : cotfr.resolveGameModeID(gse.gameSystemID,gse.gameModeID,lang),
-                gameDifficultyName : cotfr.resolveGameDifficultyID(gse.gameSystemID,gse.gameDifficultyID,lang),
+    return {
+            regulation : {
+                gameSystemEnvironment : {
+                    gameSystemID: gse.gameSystemID,
+                    gameModeID: gse.gameModeID,
+                    gameDifficultyID: gse.gameDifficultyID,
+                    gameSystemName : cotfr.resolveGameSystemID(gse.gameSystemID,lang),
+                    gameModeName : cotfr.resolveGameModeID(gse.gameSystemID,gse.gameModeID,lang),
+                    gameDifficultyName : cotfr.resolveGameDifficultyID(gse.gameSystemID,gse.gameDifficultyID,lang),
+                },
+                targetID: gr.targetID,
+                targetName : cotfr.resolveTargetID(gse.gameSystemID,gr.targetID,lang),
+                abilityIDsOfPlayerCharacters: gr.abilityIDsOfPlayerCharacters,
+                abilityNamesOfPlayerCharacters : gr.abilityIDsOfPlayerCharacters.map( (id) => cotfr.resolveAbilityID(gameSystemID,id,lang)),
             },
-            targetName : cotfr.resolveTargetID(gse.gameSystemID,gr.targetID,lang),
-            abilityNamesOfPlayerCharacters : gr.abilityIDsOfPlayerCharacters.map( (id) => cotfr.resolveAbilityID(gameSystemID,id,lang)),
-            
-        },
-        runnerName: cotfr.resolveRunnerID(record.runnerID,lang)
+            score:record.score,
+            runnerID:record.runnerID,
+            recordID:record.recordID,
+            runnerName: cotfr.resolveRunnerID(record.runnerID,lang)
         }
-    
-    return {resolved:b,notResolved:a};
 }
 
 describe("正しいオブジェクトが返されるかのテスト",

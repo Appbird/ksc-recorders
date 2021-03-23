@@ -18,65 +18,38 @@ let input:IReceivedDataFromServer = {
         "records":[
         //*> 1st Record
         {
-            "resolved":{
-                "regulation":{
-                    "gameSystemEnvironment":{
-                        "gameDifficultyName":"難易度0",
-                        "gameModeName":"モード0",
-                        "gameSystemName":"ゲーム0",
-                    },
-                    "abilityNamesOfPlayerCharacters":["能力0","能力1","能力1","能力2"],
-                    "targetName":"計測対象1",
+            "score":0,
+            "runnerID":0,"runnerName":"@Appbird",
+            "recordID":0,
+            "regulation":{
+                "gameSystemEnvironment":{
+                    "gameDifficultyName":"難易度0", "gameDifficultyID":0,
+                    "gameModeName":"モード0", "gameModeID":0,
+                    "gameSystemName":"ゲーム0", "gameSystemID":0
                 },
-                "runnerName":"@Appbird"
-            },
-            "notResolved":{
-                "score":0,
-                "regulation":{
-                    "gameSystemEnvironment":{
-                        "gameDifficultyID":0,
-                        "gameModeID":0,
-                        "gameSystemID":0,
-                    },
-                    "abilityIDsOfPlayerCharacters":[0,1,1,2],
-                    "targetID":1,
-                },
-                "runnerID":0,
-                "recordID":0
-            }
+                "abilityIDsOfPlayerCharacters":[0,1,1,2], "abilityNamesOfPlayerCharacters":["能力0","能力1","能力1","能力2"], 
+                "targetID":1,"targetName":"計測対象1"
+             },
         },
-        //*> 2nd Record
+    
+        //*> 1st Record
         {
-            "resolved": {
-                "regulation":{
-                    "gameSystemEnvironment":{
-                        "gameDifficultyName":"難易度0",
-                        "gameModeName":"モード0",
-                        "gameSystemName":"ゲーム0",
-                    },
-                    "abilityNamesOfPlayerCharacters":["能力0","能力1","能力1","能力2"],
-                    "targetName":"計測対象1",
+            "score":0,
+            "runnerID":0,"runnerName":"@Appbird",
+            "recordID":0,
+            "regulation":{
+                "gameSystemEnvironment":{
+                    "gameDifficultyName":"難易度0", "gameDifficultyID":0,
+                    "gameModeName":"モード0", "gameModeID":0,
+                    "gameSystemName":"ゲーム0", "gameSystemID":0
                 },
-                "runnerName":"@Appbird"
-            },
-            "notResolved":{
-                "score":0,
-                "regulation":{
-                    "gameSystemEnvironment":{
-                        "gameDifficultyID":0,
-                        "gameModeID":0,
-                        "gameSystemID":0,
-                    },
-                    "abilityIDsOfPlayerCharacters":[0,1,1,2],
-                    "targetID":0,
-                },
-                "runnerID":0,
-                "recordID":0
-            }
+                "abilityIDsOfPlayerCharacters":[0,1,1,2], "abilityNamesOfPlayerCharacters":["能力0","能力1","能力1","能力2"], 
+                "targetID":1,"targetName":"計測対象1"
+             },
         }],
+        
     }]
-    /* */
-};
+}
 generateView(input);
 
 function generateView(input:IReceivedDataFromServer){

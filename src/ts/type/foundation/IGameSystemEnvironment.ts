@@ -6,6 +6,9 @@ export interface IGameSystemEnvironment {
 }
 
 export interface IGameSystemEnvironmentResolved {
+    gameSystemID: number;
+    gameModeID: number;
+    gameDifficultyID: number;
     gameSystemName: string;
     gameModeName: string;
     gameDifficultyName: string;

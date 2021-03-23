@@ -3,7 +3,7 @@ import { IRecordInShort, IRecordInShortResolved } from "./IRecord";
 export interface IRecordGroup {
     groupName: string;
     groupSubName: string;
-    records: {notResolved:IRecordInShort,resolved:IRecordInShortResolved}[];
+    records:IRecordInShortResolved[];
     lastPost: number;
     numberOfRecords:number;
     numberOfRunners:number;

@@ -35,26 +35,25 @@ export class RecordGroupView{
     get htmlElement(){
         return this._htmlElement;
     }
-    appendRecordCard(record:{resolved:IRecordInShortResolved;notResolved:IRecordInShort;}){
+    appendRecordCard(record:IRecordInShortResolved){
         //[x] これをElementとして出力して、TagをDOM操作で後付けしたい
         const ele = element`
             <div class = "c-recordCard u-width95per">
             <div class = "c-title --withUnderline">
-                <div class = "c-title__main">${converseMiliSecondsIntoTime(record.notResolved.score)}</div>
+                <div class = "c-title__main">${converseMiliSecondsIntoTime(record.score)}</div>
                     <div class="c-iconWithDescription">
-                    <i class="fas fa-user"></i>${record.resolved.runnerName}
+                    <i class="fas fa-user"></i>${record.runnerName}
                 </div>
             </div>
 
             <hr noshade class="u-thin">`
 
         const tagsViews = [new TagsView(),new TagsView()];
-        const rrr = record.resolved.regulation;
-        const gameEnv = record.resolved.regulation.gameSystemEnvironment;
+        const gameEnv = record.regulation.gameSystemEnvironment;
 
         tagsViews[0].generateTag(`${gameEnv.gameSystemName}/${gameEnv.gameModeName}/${gameEnv.gameDifficultyName}`,"gameSystem");
-        tagsViews[0].generateTag(rrr.targetName,"target");
-        for (const ability of rrr.abilityNamesOfPlayerCharacters) tagsViews[1].generateTag((ability === undefined ? "Not Found" : ability),"ability")
+        tagsViews[0].generateTag(record.regulation.targetName,"target");
+        for (const ability of record.regulation.abilityNamesOfPlayerCharacters) tagsViews[1].generateTag((ability === undefined ? "Not Found" : ability),"ability")
         
         for (const tagsView of tagsViews) ele.appendChild(tagsView.getElement());
         

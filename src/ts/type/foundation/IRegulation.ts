@@ -7,6 +7,8 @@ export interface IRegulation {
 }
 export interface IRegulationResolved {
     gameSystemEnvironment:IGameSystemEnvironmentResolved;
+    abilityIDsOfPlayerCharacters: number[];
+    targetID:number;
     abilityNamesOfPlayerCharacters: string[];
     targetName:string;
 }

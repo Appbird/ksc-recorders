@@ -9,6 +9,9 @@ export interface IRecordInShort {
     recordID:number;
 }
 export interface IRecordInShortResolved {
+    score: number;
+    runnerID:number;
+    recordID:number;
     regulation: IRegulationResolved;
     runnerName:string;
 }
@@ -26,7 +29,14 @@ export interface IRecord{
     note: string;
 }
 export interface IRecordResolved{
+    score: number;
+    timestamp: number;
+    runnerID: number;
+    recordID: number;
+    tag: number[];
+    link: string[];
+    note: string;
     regulation: IRegulationResolved;
     runnerName: number;
-    tag: string[];
+    tagName: string[];
 }

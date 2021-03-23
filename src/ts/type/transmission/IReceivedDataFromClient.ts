@@ -15,7 +15,7 @@ export interface IReceivedDataFromClient_AboutRecordExhibition {
     targetIDs:number[];
     abilityIDs:number[];
     /** 能力カテゴリを用いた記録検索において、And検索を行うかOr検索を行うか */
-    ANDORConditionAboutAbilityIDs:"AND" | "OR";
+    abilityIDsCondition: "AND" | "OR" | "AllowForOrder";
     runnerIDs:number[];
     language:LanguageInApplication
     

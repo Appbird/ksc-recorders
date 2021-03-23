@@ -43,7 +43,7 @@ export class RecordDataBase{
         
         return records.filter(
             (record) => 
-                ((targetIDs.length === 0) ? true : targetIDs.some( (id) => id === record.regulation.targetID) ) &&
+                ((targetIDs.length === 0) ? true : targetIDs.some( (id) => id === record.regulation.targetID ) ) &&
                 ((abilityIDs.length === 0) ? true : this.ifRecordIncludeThatAbilityIDs(record,abilityIDsCondition,abilityIDs) ) &&
                 ((runnerIDs.length === 0) ? true : runnerIDs.some( (id) => id === record.runnerID) )
         ).sort(
@@ -74,7 +74,6 @@ export class RecordDataBase{
             (record) => recordIDs.includes(record.recordID)
         )
     }
-
 
 }
 

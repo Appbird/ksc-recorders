@@ -1,18 +1,19 @@
 import * as fs from "fs";
 import { IRecordDataBase } from "./IRecordDataBase";
+import { RecordDataBase } from "./RecordDataBase";
 
 export type LanguageInApplication = "Japanese" | "English";
 
 /**
  * データベースのデータを参照してIDを解決してくれるテーブルマネージャー
  */
-class ControllerOfTableForResolvingID{
-    private dataBase: IRecordDataBase;
-    constructor(){
-        this.dataBase = JSON.parse(fs.readFileSync("exampleData.json",{encoding:"utf8"}));
+export class ControllerOfTableForResolvingID{
+    private dataBase: RecordDataBase;
+    constructor(database:RecordDataBase){
+        this.dataBase = database;
     }
 
-    resolveID(id:number, table: IItemOfResolveTableToName[],lang:LanguageInApplication,descriptionOfPlace:string = ""){
+    private resolveID(id:number, table: IItemOfResolveTableToName[],lang:LanguageInApplication,descriptionOfPlace:string = ""){
         const item = table.find(
             (element) =>  element.id === id
         )
@@ -24,12 +25,11 @@ class ControllerOfTableForResolvingID{
     }
 
     resolveGameSystemID(id:number,lang:LanguageInApplication){
-        return this.resolveID(id,this.dataBase.runnersTable,lang,"GameSystem");
+        return this.resolveID(id,this.dataBase.runnersList,lang,"GameSystem");
     }
 
     private findProperGameSystemInfo(gameSystemID:number){
-        const result = this.dataBase.gameSystemInfo.find( (ele) => ele.id === gameSystemID);
-        if (result === undefined) throw new Error(`指定した作品ID${gameSystemID}に該当する作品は存在しません。`)
+        const result = this.dataBase.getGameSystemInfo(gameSystemID);
         return result;
     }
     
@@ -46,14 +46,9 @@ class ControllerOfTableForResolvingID{
         return this.resolveID(id,this.findProperGameSystemInfo(gameSystemID).list.GameModeList,lang,"GameMode");
     }
     resolveRunnerID(id:number,lang:LanguageInApplication):string{
-        return this.resolveID(id,this.dataBase.runnersTable,lang,"runnersTable");
+        return this.resolveID(id,this.dataBase.runnersList,lang,"runnersTable");
     }
 }
-
-export const controllerOfTableForResolvingID = new ControllerOfTableForResolvingID();
-
-
-
 export interface IItemOfResolveTableToName{
     id:number;
     JName:string;

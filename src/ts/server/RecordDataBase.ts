@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import { IRecord } from "../type/record/IRecord";
+import { checkEqualityBetweenArrays } from "../utility/arrayUtility";
 import { IGameSystemInfo } from "./IGameSystemInfo";
 import { IRecordDataBase } from "./IRecordDataBase";
 
@@ -22,6 +23,7 @@ export class RecordDataBase{
         if (result === undefined) throw new Error(`指定されたID${gameSystemID}に対応するゲームが存在しません。`);
         return result;
     }
+    
     getRecord(gameSystemID:number,recordID:number):IRecord{
     //[x] 与えられた条件に適した記録を記録を一つ返す。
         const result = this.getGameSystemInfo(gameSystemID).records.find( (item) => item.recordID === recordID);
@@ -31,14 +33,15 @@ export class RecordDataBase{
 
     getRecordIDsWithCondition(gameSystemID:number, 
                             order:OrderOfRecordArray ,
-                            abilityIDsCondition: "AND" | "OR",
+                            abilityIDsCondition: "AND" | "OR" | "AllowForOrder",
                             abilityIDs:number[] = [],
                             targetIDs:number[] = [],
                             runnerIDs:number[] = []
     ):number[]{
     //[x] undefinedは指定なしとみなし、与えられた条件のうちで「早い順で」start件目からlimit件のデータをグループとして取り出す。(0スタート)
         const records = this.getGameSystemInfo(gameSystemID).records;
-        const sorted = records.filter(
+        
+        return records.filter(
             (record) => 
                 ((targetIDs.length === 0) ? true : targetIDs.some( (id) => id === record.regulation.targetID) ) &&
                 ((abilityIDs.length === 0) ? true : this.ifRecordIncludeThatAbilityIDs(record,abilityIDsCondition,abilityIDs) ) &&
@@ -53,15 +56,17 @@ export class RecordDataBase{
                 }
             }
         ).map( (record) => record.recordID);
-        
-        
-        return sorted;
 
     }
-    private ifRecordIncludeThatAbilityIDs(record:IRecord,abilityIDsCondition: "AND" | "OR", abilityIDs:number[]):boolean{
-        if (abilityIDsCondition === "AND"){
-            return abilityIDs.every( id => record.regulation.abilityIDsOfPlayerCharacters.includes(id));
-        }else { return abilityIDs.some( id => record.regulation.abilityIDsOfPlayerCharacters.includes(id));}
+    private ifRecordIncludeThatAbilityIDs(record:IRecord,abilityIDsCondition: "AND" | "OR" | "AllowForOrder", abilityIDs:number[]):boolean{
+        switch(abilityIDsCondition){
+            case "AND":
+                return abilityIDs.every( id => record.regulation.abilityIDsOfPlayerCharacters.includes(id));
+            case "OR":
+                return abilityIDs.some( id => record.regulation.abilityIDsOfPlayerCharacters.includes(id));
+            case "AllowForOrder":
+                return checkEqualityBetweenArrays(record.regulation.abilityIDsOfPlayerCharacters,abilityIDs);
+        }
     }
 
     getRecords(gameSystemID:number,recordIDs:number[]):IRecord[]{

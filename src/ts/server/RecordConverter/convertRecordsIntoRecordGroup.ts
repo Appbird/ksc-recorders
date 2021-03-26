@@ -1,7 +1,7 @@
 import { IRecord, IRecordInShortResolved } from "../../type/record/IRecord";
 import { LanguageInApplication } from "../DataBase/ControllerOfTableForResolvingID";
 import { IRecordGroup } from "../../type/record/IRecordGroup";
-import { controllerOfTableForResolvingID } from "../test/OutputDataToClient.test";
+import { controllerOfTableForResolvingID } from "../ServerFunctions/search";
 
 export function convertRecordsIntoRecordGroup(records: IRecord[],
     info: { groupName: string; numberOfRecords: number; numberOfRunners: number; lang: LanguageInApplication; }): IRecordGroup {

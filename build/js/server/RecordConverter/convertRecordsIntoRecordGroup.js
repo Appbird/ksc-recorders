@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.convertRecordsIntoRecordGroup = void 0;
-var OutputDataToClient_test_1 = require("../test/OutputDataToClient.test");
+var search_1 = require("../ServerFunctions/search");
 function convertRecordsIntoRecordGroup(records, info) {
     return {
         groupName: info.groupName,
@@ -15,7 +15,7 @@ exports.convertRecordsIntoRecordGroup = convertRecordsIntoRecordGroup;
 function convertIRecordIntoIRecordInShortWithName(record, gameSystemID, lang) {
     var gr = record.regulation; //#README
     var gse = gr.gameSystemEnvironment; //#README
-    var cotfr = OutputDataToClient_test_1.controllerOfTableForResolvingID; //#README
+    var cotfr = search_1.controllerOfTableForResolvingID; //#README
     return {
         regulation: {
             gameSystemEnvironment: {

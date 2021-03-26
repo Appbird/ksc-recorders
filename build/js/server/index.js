@@ -42,40 +42,72 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var http_1 = __importDefault(require("http"));
 var promises_1 = __importDefault(require("fs/promises"));
 var url_1 = require("url");
+var search_1 = require("./ServerFunctions/search");
 var hostname = '127.0.0.1';
 var port = 3000;
 var server = http_1.default.createServer(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, e_1;
+    var body_1;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 3, , 4]);
-                if (req.url === undefined) {
-                    throw new Error("URLが指定されていません。");
+        try {
+            req.on("data", function (chunk) {
+                if (chunk === undefined)
+                    return;
+                if (typeof chunk === "string")
+                    chunk = Buffer.from(chunk);
+                if (chunk.length >= 1000000)
+                    throw new Error("データ容量が1MBを超えています。");
+                console.info("received Data : " + body_1.join().length + " byte");
+                body_1.push(Buffer.from(chunk));
+            });
+            req.on("end", function () {
+                console.info("[" + new Date().toISOString() + "]: All transferred Body-Data has been completely received.");
+                for (var _i = 0, body_2 = body_1; _i < body_2.length; _i++) {
+                    var aBody = body_2[_i];
+                    process(req, res, aBody.toString());
                 }
-                url = new url_1.URL(req.url, "http://" + req.headers.host);
-                if (req.method === "POST" && url.pathname === "/recordDatabase/give") {
-                }
-                if (!(req.method === "GET")) return [3 /*break*/, 2];
-                return [4 /*yield*/, sendDocument(req.url, res)];
-            case 1:
-                _a.sent();
-                _a.label = 2;
-            case 2: return [3 /*break*/, 4];
-            case 3:
-                e_1 = _a.sent();
-                console.error(e_1);
-                endWith500Error(res, e_1);
-                return [3 /*break*/, 4];
-            case 4:
-                res.end();
-                return [2 /*return*/];
+            });
         }
+        catch (e) {
+            console.error(e);
+            endWith500Error(res, e);
+        }
+        res.end();
+        return [2 /*return*/];
     });
 }); });
 server.listen(port, hostname, function () {
     console.info("Server running at http://" + hostname + ":" + port + "/");
 });
+function process(req, res, body) {
+    return __awaiter(this, void 0, void 0, function () {
+        var url, _a;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    if (req.url === undefined) {
+                        throw new Error("URLが指定されていません。");
+                    }
+                    url = new url_1.URL(req.url, "http://" + req.headers.host);
+                    _a = req.method;
+                    switch (_a) {
+                        case "GET": return [3 /*break*/, 1];
+                        case "POST": return [3 /*break*/, 3];
+                    }
+                    return [3 /*break*/, 4];
+                case 1: return [4 /*yield*/, sendDocument(req.url, res)];
+                case 2:
+                    _b.sent();
+                    return [3 /*break*/, 5];
+                case 3:
+                    if (url.pathname === "/recordDatabase/give")
+                        res.write(search_1.search(body));
+                    return [3 /*break*/, 5];
+                case 4: return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
+            }
+        });
+    });
+}
 function sendDocument(url, res) {
     return __awaiter(this, void 0, void 0, function () {
         var contents, ary;

@@ -45,36 +45,31 @@ var url_1 = require("url");
 var hostname = '127.0.0.1';
 var port = 3000;
 var server = http_1.default.createServer(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, input, e_1;
+    var url, e_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 6, , 7]);
-                if (!(req.url === undefined)) return [3 /*break*/, 2];
-                return [4 /*yield*/, sendDocument("main.html", res)];
+                _a.trys.push([0, 3, , 4]);
+                if (req.url === undefined) {
+                    throw new Error("URLが指定されていません。");
+                }
+                url = new url_1.URL(req.url, "http://" + req.headers.host);
+                if (req.method === "POST" && url.pathname === "/recordDatabase/give") {
+                }
+                if (!(req.method === "GET")) return [3 /*break*/, 2];
+                return [4 /*yield*/, sendDocument(req.url, res)];
             case 1:
                 _a.sent();
-                return [2 /*return*/];
-            case 2:
-                url = new url_1.URL(req.url, "http://" + req.headers.host);
-                if (!(req.method === "GET" && url.pathname === "/recordDatabase/give")) return [3 /*break*/, 3];
-                input = url.searchParams.get("request");
-                if (input === null) {
-                    throw new Error("can't find \"str\" searchParam.");
-                }
-                res.writeHead(200, { 'Content-Type': "text/plain" });
-                res.end();
-                return [3 /*break*/, 5];
-            case 3: return [4 /*yield*/, sendDocument(req.url, res)];
-            case 4:
-                _a.sent();
-                _a.label = 5;
-            case 5: return [3 /*break*/, 7];
-            case 6:
+                _a.label = 2;
+            case 2: return [3 /*break*/, 4];
+            case 3:
                 e_1 = _a.sent();
+                console.error(e_1);
                 endWith500Error(res, e_1);
-                return [3 /*break*/, 7];
-            case 7: return [2 /*return*/];
+                return [3 /*break*/, 4];
+            case 4:
+                res.end();
+                return [2 /*return*/];
         }
     });
 }); });
@@ -94,7 +89,6 @@ function sendDocument(url, res) {
                         throw new Error("拡張子が指定されていません。");
                     res.writeHead(200, { 'Content-Type': "text/" + ary[ary.length - 1] });
                     res.write(contents);
-                    res.end();
                     return [2 /*return*/];
             }
         });
@@ -102,5 +96,5 @@ function sendDocument(url, res) {
 }
 function endWith500Error(res, reason) {
     res.writeHead(500, { 'Content-Type': "text/plain" });
-    res.end("internal error : " + reason);
+    res.write("internal error : " + reason);
 }

@@ -13,7 +13,7 @@ export class RecordGroupView{
         <div class = "c-recordGroupHeader">
             <div class="c-title">
             <div class="c-title__main">${recordGroup.groupName}</div>
-            <div class="c-title__sub">${recordGroup.groupSubName}</div>
+            <div class="c-title__sub">${"サブタイトル"}</div>
             </div>
         <div class="c-stateInfo">
             <div class = "c-stateInfo__unit">

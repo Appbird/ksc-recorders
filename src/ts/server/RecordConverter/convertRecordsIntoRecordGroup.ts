@@ -4,11 +4,10 @@ import { IRecordGroup } from "../../type/record/IRecordGroup";
 import { controllerOfTableForResolvingID } from "../test/OutputDataToClient.test";
 
 export function convertRecordsIntoRecordGroup(records: IRecord[],
-    info: { groupName: string; groupSubName: string; numberOfRecords: number; numberOfRunners: number; lang: LanguageInApplication; }): IRecordGroup {
+    info: { groupName: string; numberOfRecords: number; numberOfRunners: number; lang: LanguageInApplication; }): IRecordGroup {
 
     return {
         groupName: info.groupName,
-        groupSubName: info.groupSubName,
         lastPost: records.sort((a, b) => b.timestamp - a.timestamp)[0].timestamp,
         numberOfRecords: info.numberOfRecords,
         numberOfRunners: info.numberOfRecords,

@@ -5,7 +5,6 @@ var OutputDataToClient_test_1 = require("../test/OutputDataToClient.test");
 function convertRecordsIntoRecordGroup(records, info) {
     return {
         groupName: info.groupName,
-        groupSubName: info.groupSubName,
         lastPost: records.sort(function (a, b) { return b.timestamp - a.timestamp; })[0].timestamp,
         numberOfRecords: info.numberOfRecords,
         numberOfRunners: info.numberOfRecords,

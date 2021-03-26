@@ -9,31 +9,14 @@ var ControllerOfTableForResolvingID_1 = require("../DataBase/ControllerOfTableFo
 var convertRecordsIntoRecordGroup_1 = require("../RecordConverter/convertRecordsIntoRecordGroup");
 var database = new RecordDataBase_1.RecordDataBase(exampledata_1.exampleData);
 exports.controllerOfTableForResolvingID = new ControllerOfTableForResolvingID_1.ControllerOfTableForResolvingID(database);
-function main() {
-    var requestGroup = [{
-            gameSystemEnv: {
-                gameSystemID: 0,
-                gameModeID: 0,
-                gameDifficultyID: 0
-            },
-            groupName: "Name",
-            groupSubName: "一戦目",
-            orderOfRecordArray: "LowerFirst",
-            startOfRecordArray: 0,
-            limitOfRecordArray: 10,
-            targetIDs: [],
-            abilityIDs: [1, 2],
-            abilityIDsCondition: "AND",
-            runnerIDs: [],
-            language: "Japanese"
-        }];
+function process(dataInJSON) {
+    var requestGroup = JSON.parse(dataInJSON);
     var sent;
     try {
         var recordGroups = requestGroup.map(function (request) {
             var recordIDs = database.getRecordIDsWithCondition(request.gameSystemEnv.gameSystemID, request.orderOfRecordArray, request.abilityIDsCondition, request.abilityIDs, request.targetIDs, request.runnerIDs);
             var records = database.getRecords(request.gameSystemEnv.gameSystemID, recordIDs.slice(request.startOfRecordArray, request.startOfRecordArray + request.limitOfRecordArray));
             return convertRecordsIntoRecordGroup_1.convertRecordsIntoRecordGroup(records, { groupName: request.groupName,
-                groupSubName: request.groupSubName,
                 numberOfRecords: recordIDs.length,
                 numberOfRunners: NaN,
                 lang: request.language

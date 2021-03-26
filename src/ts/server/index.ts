@@ -6,20 +6,17 @@ const hostname = '127.0.0.1';
 const port = 3000;
 const server = http.createServer(async (req, res) => {
     try {
-        if (req.url === undefined){ await sendDocument("main.html",res); return; }
+        if (req.url === undefined){ throw new Error("URLが指定されていません。"); }
         const url = new URL(req.url, `http://${req.headers.host}`);
-        if (req.method === "GET" && url.pathname === "/recordDatabase/give"){
-          //#TODO 
-            const input = url.searchParams.get("request")
-            if (input === null) { throw new Error(`can't find "str" searchParam.`)}
-            res.writeHead(200, {'Content-Type': `text/plain`});
-            res.end();
-        }else {
-            await sendDocument(req.url,res);
-        }  
+        if (req.method === "POST" && url.pathname === "/recordDatabase/give"){
+            
+        }
+        if (req.method === "GET") await sendDocument(req.url,res);
     } catch(e) {
+        console.error(e);
         endWith500Error(res,e);
     }
+    res.end();
     
 });
 
@@ -33,9 +30,8 @@ async function sendDocument(url:string,res:http.ServerResponse){
     if (ary === undefined) throw new Error("拡張子が指定されていません。");
     res.writeHead(200, {'Content-Type': `text/${ary[ary.length - 1]}`});
     res.write(contents);
-    res.end();
 }
 function endWith500Error(res:http.ServerResponse, reason:any){
     res.writeHead(500, {'Content-Type': `text/plain`});
-    res.end(`internal error : ${reason}`);
+    res.write(`internal error : ${reason}`);
 }

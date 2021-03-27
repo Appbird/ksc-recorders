@@ -6,7 +6,10 @@ import { IRecordInShort, IRecordInShortResolved } from "../type/record/IRecord";
 
 export class RecordGroupView{
     private _htmlElement:Element = document.createElement("div");
-    constructor(recordGroup:IRecordGroup){
+    
+    constructor(recordGroup:IRecordGroup,options:OptionObject = {
+        displayTags:{gameSystemTags:false,targetTags:false,abilityTags:true}
+    }){
         this._htmlElement.classList.add("c-recordCardsGroup");
         this._htmlElement.appendChild(
             element`
@@ -30,12 +33,12 @@ export class RecordGroupView{
         </div>
         `
         )
-        for(const record of recordGroup.records)this.appendRecordCard(record);
+        for(const record of recordGroup.records)this.appendRecordCard(record,options);
     }
     get htmlElement(){
         return this._htmlElement;
     }
-    appendRecordCard(record:IRecordInShortResolved){
+    appendRecordCard(record:IRecordInShortResolved,options:OptionObject){
         //[x] これをElementとして出力して、TagをDOM操作で後付けしたい
         const ele = element`
             <div class = "c-recordCard u-width95per">
@@ -46,17 +49,22 @@ export class RecordGroupView{
                 </div>
             </div>
 
-            <hr noshade class="u-thin">`
+            ${(!options.displayTags.gameSystemTags && !options.displayTags.targetTags && options.displayTags.abilityTags) ? ``: `<hr noshade class="u-thin">`}`
 
         const tagsViews = [new TagsView(),new TagsView()];
         const gameEnv = record.regulation.gameSystemEnvironment;
 
-        tagsViews[0].generateTag(`${gameEnv.gameSystemName}/${gameEnv.gameModeName}/${gameEnv.gameDifficultyName}`,"gameSystem");
-        tagsViews[0].generateTag(record.regulation.targetName,"target");
-        for (const ability of record.regulation.abilityNamesOfPlayerCharacters) tagsViews[1].generateTag((ability === undefined ? "Not Found" : ability),"ability")
+        if (options.displayTags.gameSystemTags)tagsViews[0].generateTag(`${gameEnv.gameSystemName}/${gameEnv.gameModeName}/${gameEnv.gameDifficultyName}`,"gameSystem");
+        if (options.displayTags.targetTags)tagsViews[0].generateTag(record.regulation.targetName,"target");
+        if (options.displayTags.abilityTags)for (const ability of record.regulation.abilityNamesOfPlayerCharacters) tagsViews[1].generateTag((ability === undefined ? "Not Found" : ability),"ability")
         
-        for (const tagsView of tagsViews) ele.appendChild(tagsView.getElement());
+        if (options.displayTags.gameSystemTags || options.displayTags.targetTags)ele.appendChild(tagsViews[0].getElement());
+        if (options.displayTags.abilityTags)ele.appendChild(tagsViews[1].getElement());
         
         this._htmlElement.append(ele);
     }
+}
+
+interface OptionObject{
+    displayTags:{gameSystemTags:boolean,targetTags:boolean,abilityTags:boolean}
 }

@@ -1,0 +1,43 @@
+{
+    "isSuccess": true,
+    "message":"メッセージは　でないはずだよ　でたら　おしえてね",
+    "recordGroups": [{
+        "groupName":"ボス1",
+        "groupSubName":"1戦目",
+        "lastPost":704300400000,
+        "numberOfRecords":2,
+        "numberOfRunners":1,
+
+        "records":[
+        {
+            "score":0,
+            "runnerID":0,"runnerName":"@Appbird",
+            "recordID":0,
+            "regulation":{
+                "gameSystemEnvironment":{
+                    "gameDifficultyName":"難易度0", "gameDifficultyID":0,
+                    "gameModeName":"モード0", "gameModeID":0,
+                    "gameSystemName":"ゲーム0", "gameSystemID":0
+                },
+                "abilityIDsOfPlayerCharacters":[0,1,1,2], "abilityNamesOfPlayerCharacters":["能力0","能力1","能力1","能力2"], 
+                "targetID":1,"targetName":"計測対象1"
+             }
+        },
+    
+        {
+            "score":0,
+            "runnerID":0,"runnerName":"@Appbird",
+            "recordID":0,
+            "regulation":{
+                "gameSystemEnvironment":{
+                    "gameDifficultyName":"難易度0", "gameDifficultyID":0,
+                    "gameModeName":"モード0", "gameModeID":0,
+                    "gameSystemName":"ゲーム0", "gameSystemID":0
+                },
+                "abilityIDsOfPlayerCharacters":[0,1,1,2], "abilityNamesOfPlayerCharacters":["能力0","能力1","能力1","能力2"], 
+                "targetID":1,"targetName":"計測対象1"
+             }
+        }]
+        
+    }]
+}

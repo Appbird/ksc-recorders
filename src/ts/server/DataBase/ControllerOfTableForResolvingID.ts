@@ -23,7 +23,7 @@ export class ControllerOfTableForResolvingID{
     }
 
     resolveGameSystemID(id:number,lang:LanguageInApplication){
-        return this.resolveID(id,this.dataBase.runnersList,lang,"GameSystem");
+        return this.resolveID(id,this.dataBase.gameSystemList,lang,"GameSystem");
     }
 
     private findProperGameSystemInfo(gameSystemID:number){

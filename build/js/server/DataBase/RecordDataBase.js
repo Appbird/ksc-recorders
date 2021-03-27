@@ -35,7 +35,7 @@ var RecordDataBase = /** @class */ (function () {
     });
     Object.defineProperty(RecordDataBase.prototype, "gameSystemList", {
         get: function () {
-            return this.dataBase.runnersTable;
+            return this.dataBase.gameSystemInfo;
         },
         enumerable: false,
         configurable: true
@@ -84,7 +84,8 @@ var RecordDataBase = /** @class */ (function () {
         }
     };
     RecordDataBase.prototype.getRecords = function (gameSystemID, recordIDs) {
-        return this.getGameSystemInfo(gameSystemID).records.filter(function (record) { return recordIDs.includes(record.recordID); });
+        var _this = this;
+        return recordIDs.map(function (recordID) { return _this.getRecord(gameSystemID, recordID); });
     };
     return RecordDataBase;
 }());

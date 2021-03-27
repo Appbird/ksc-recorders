@@ -1,6 +1,6 @@
 export function converseMiliSecondsIntoTime(timeInMiliSeconds:number):string{
     const miliSeconds = timeInMiliSeconds % 100;
-    const timeInSecond = timeInMiliSeconds - miliSeconds;
+    const timeInSecond = Math.floor(timeInMiliSeconds/100);
     const minutes = Math.floor(timeInMiliSeconds / 3600)
     const seconds = timeInSecond % 3600;
     return `${WriteNumberIn2Digits(minutes)}:${WriteNumberIn2Digits(seconds)}.${WriteNumberIn2Digits(miliSeconds)}`

@@ -5,12 +5,12 @@ import { controllerOfTableForResolvingID } from "../ServerFunctions/search";
 
 export function convertRecordsIntoRecordGroup(records: IRecord[],
     info: { groupName: string; numberOfRecords: number; numberOfRunners: number; lang: LanguageInApplication; }): IRecordGroup {
-
+    const copy = records.concat();
     return {
         groupName: info.groupName,
-        lastPost: records.sort((a, b) => b.timestamp - a.timestamp)[0].timestamp,
+        lastPost: copy.sort((a, b) => b.timestamp - a.timestamp)[0].timestamp,
         numberOfRecords: info.numberOfRecords,
-        numberOfRunners: info.numberOfRecords,
+        numberOfRunners: info.numberOfRunners,
         records: records.map((record) => convertIRecordIntoIRecordInShortWithName(record, record.regulation.gameSystemEnvironment.gameSystemID, info.lang))
     };
 }

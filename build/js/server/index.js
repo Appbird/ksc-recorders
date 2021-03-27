@@ -43,12 +43,13 @@ var http_1 = __importDefault(require("http"));
 var promises_1 = __importDefault(require("fs/promises"));
 var url_1 = require("url");
 var search_1 = require("./ServerFunctions/search");
-var hostname = '127.0.0.1';
+var hostname = 'localhost';
 var port = 3000;
 var server = http_1.default.createServer(function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var body_1;
     return __generator(this, function (_a) {
         try {
+            body_1 = [];
             req.on("data", function (chunk) {
                 if (chunk === undefined)
                     return;
@@ -56,11 +57,15 @@ var server = http_1.default.createServer(function (req, res) { return __awaiter(
                     chunk = Buffer.from(chunk);
                 if (chunk.length >= 1000000)
                     throw new Error("データ容量が1MBを超えています。");
-                console.info("received Data : " + body_1.join().length + " byte");
+                console.info("received Data : " + chunk.length + " byte");
                 body_1.push(Buffer.from(chunk));
             });
             req.on("end", function () {
-                console.info("[" + new Date().toISOString() + "]: All transferred Body-Data has been completely received.");
+                if (body_1.length === 0) {
+                    process(req, res);
+                    return;
+                }
+                console.info("[" + new Date().toUTCString() + "]: All transferred Body-Data has been completely received.");
                 for (var _i = 0, body_2 = body_1; _i < body_2.length; _i++) {
                     var aBody = body_2[_i];
                     process(req, res, aBody.toString());
@@ -68,10 +73,8 @@ var server = http_1.default.createServer(function (req, res) { return __awaiter(
             });
         }
         catch (e) {
-            console.error(e);
-            endWith500Error(res, e);
+            endWithError(res, e);
         }
-        res.end();
         return [2 /*return*/];
     });
 }); });
@@ -80,30 +83,46 @@ server.listen(port, hostname, function () {
 });
 function process(req, res, body) {
     return __awaiter(this, void 0, void 0, function () {
-        var url, _a;
+        var url, _a, dateStartProcess, result;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
-                    if (req.url === undefined) {
-                        throw new Error("URLが指定されていません。");
-                    }
+                    if (!(req.url === undefined || req.url.endsWith("/"))) return [3 /*break*/, 2];
+                    return [4 /*yield*/, sendDocument("/html/main.html", res)];
+                case 1:
+                    _b.sent();
+                    res.end();
+                    return [2 /*return*/];
+                case 2:
                     url = new url_1.URL(req.url, "http://" + req.headers.host);
                     _a = req.method;
                     switch (_a) {
-                        case "GET": return [3 /*break*/, 1];
-                        case "POST": return [3 /*break*/, 3];
+                        case "GET": return [3 /*break*/, 3];
+                        case "POST": return [3 /*break*/, 5];
                     }
-                    return [3 /*break*/, 4];
-                case 1: return [4 /*yield*/, sendDocument(req.url, res)];
-                case 2:
+                    return [3 /*break*/, 6];
+                case 3: return [4 /*yield*/, sendDocument(req.url, res)];
+                case 4:
                     _b.sent();
-                    return [3 /*break*/, 5];
-                case 3:
-                    if (url.pathname === "/recordDatabase/give")
-                        res.write(search_1.search(body));
-                    return [3 /*break*/, 5];
-                case 4: return [3 /*break*/, 5];
-                case 5: return [2 /*return*/];
+                    return [3 /*break*/, 7];
+                case 5:
+                    if (url.pathname === "/recordDatabase/search/record") {
+                        if (body === undefined)
+                            return [3 /*break*/, 7];
+                        dateStartProcess = new Date().getTime();
+                        result = search_1.search(body);
+                        if (result.isSuccess)
+                            res.writeHead(200, { 'Content-Type': "text/json}" });
+                        else
+                            res.writeHead(400, { 'Content-Type': "text/json}" });
+                        res.write(JSON.stringify(result));
+                        console.info("[" + new Date().toUTCString() + "] process /recordDatabase/search takes " + (new Date().getTime() - dateStartProcess) + " miliseconds.");
+                    }
+                    return [3 /*break*/, 7];
+                case 6: return [3 /*break*/, 7];
+                case 7:
+                    res.end();
+                    return [2 /*return*/];
             }
         });
     });
@@ -113,10 +132,12 @@ function sendDocument(url, res) {
         var contents, ary;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, promises_1.default.readFile(__dirname + "/../../" + url, 'utf-8')];
+                case 0: return [4 /*yield*/, promises_1.default.readFile(__dirname + "/../../" + url, 'utf-8').catch(function (reason) { endWithError(res, reason, 404); })];
                 case 1:
                     contents = _a.sent();
-                    ary = url === null || url === void 0 ? void 0 : url.split(".");
+                    if (contents === undefined)
+                        return [2 /*return*/];
+                    ary = url.split(".");
                     if (ary === undefined)
                         throw new Error("拡張子が指定されていません。");
                     res.writeHead(200, { 'Content-Type': "text/" + ary[ary.length - 1] });
@@ -126,7 +147,10 @@ function sendDocument(url, res) {
         });
     });
 }
-function endWith500Error(res, reason) {
-    res.writeHead(500, { 'Content-Type': "text/plain" });
-    res.write("internal error : " + reason);
+function endWithError(res, reason, statusCode) {
+    if (statusCode === void 0) { statusCode = 503; }
+    console.error("\u001B[31m" + reason + "\u001B[0m");
+    res.writeHead(statusCode, { 'Content-Type': "application/json" });
+    res.write("{\n        \"isSuccess\": false,\n        \"message\": \"" + reason + "\",\n    }");
+    res.end();
 }

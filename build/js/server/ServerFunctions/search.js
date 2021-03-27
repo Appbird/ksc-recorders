@@ -21,25 +21,25 @@ var checkerObj = {
     limitOfRecordArray: "number",
     targetIDs: "number[]",
     abilityIDs: "number[]",
-    abilityIDsCondition: "string[]",
+    abilityIDsCondition: "\"AND\" | \"OR\" | \"AllowForOrder\"",
     runnerIDs: "number[]",
-    language: "Ja | En"
+    language: "\"Japanese\" | \"English\""
 };
 exports.controllerOfTableForResolvingID = new ControllerOfTableForResolvingID_1.ControllerOfTableForResolvingID(database);
 function search(dataInJSON) {
-    var inputData = JSON.parse(dataInJSON);
-    var requestGroup = JSON.parse(dataInJSON);
-    if (Array.isArray(requestGroup))
-        throw new Error("与データが配列ではありません。");
-    InputCheckerUtility_1.checkInputObjectWithErrorPossibility(requestGroup, checkerObj);
     var sent;
     try {
+        var requestGroup = JSON.parse(dataInJSON);
+        if (!Array.isArray(requestGroup))
+            throw new Error("与データが配列ではありません。");
+        if (!assureInputDataBelongToProperType(requestGroup))
+            throw new Error("入力されたデータが正しくありません");
         var recordGroups = requestGroup.map(function (request) {
             var recordIDs = database.getRecordIDsWithCondition(request.gameSystemEnv.gameSystemID, request.orderOfRecordArray, request.abilityIDsCondition, request.abilityIDs, request.targetIDs, request.runnerIDs);
             var records = database.getRecords(request.gameSystemEnv.gameSystemID, recordIDs.slice(request.startOfRecordArray, request.startOfRecordArray + request.limitOfRecordArray));
             return convertRecordsIntoRecordGroup_1.convertRecordsIntoRecordGroup(records, { groupName: request.groupName,
                 numberOfRecords: recordIDs.length,
-                numberOfRunners: 3,
+                numberOfRunners: countRunner(database.getRecords(request.gameSystemEnv.gameSystemID, recordIDs)),
                 lang: request.language
             });
         });
@@ -48,13 +48,34 @@ function search(dataInJSON) {
             recordGroups: recordGroups
         };
     }
-    catch (e) {
+    catch (reason) {
+        console.error("\u001B[31m" + reason + "\u001B[0m");
         sent = {
             isSuccess: false,
-            recordGroups: undefined,
-            message: e
+            message: String(reason)
         };
     }
-    return JSON.stringify(sent);
+    return sent;
 }
 exports.search = search;
+function countRunner(record) {
+    var copy = record.concat();
+    copy.sort(function (a, b) { return a.runnerID - b.runnerID; });
+    var note = -1;
+    var result = 0;
+    for (var _i = 0, copy_1 = copy; _i < copy_1.length; _i++) {
+        var element = copy_1[_i];
+        if (note === element.runnerID)
+            continue;
+        result++;
+        note = element.runnerID;
+    }
+    return result;
+}
+function assureInputDataBelongToProperType(data) {
+    for (var _i = 0, data_1 = data; _i < data_1.length; _i++) {
+        var unit = data_1[_i];
+        InputCheckerUtility_1.checkInputObjectWithErrorPossibility(unit, checkerObj, "data");
+    }
+    return true;
+}

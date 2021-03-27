@@ -3,11 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.convertRecordsIntoRecordGroup = void 0;
 var search_1 = require("../ServerFunctions/search");
 function convertRecordsIntoRecordGroup(records, info) {
+    var copy = records.concat();
     return {
         groupName: info.groupName,
-        lastPost: records.sort(function (a, b) { return b.timestamp - a.timestamp; })[0].timestamp,
+        lastPost: copy.sort(function (a, b) { return b.timestamp - a.timestamp; })[0].timestamp,
         numberOfRecords: info.numberOfRecords,
-        numberOfRunners: info.numberOfRecords,
+        numberOfRunners: info.numberOfRunners,
         records: records.map(function (record) { return convertIRecordIntoIRecordInShortWithName(record, record.regulation.gameSystemEnvironment.gameSystemID, info.lang); })
     };
 }

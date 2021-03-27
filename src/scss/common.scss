@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
-@import "foundation/*.scss";
-@import "layout/*.scss";
-@import "object/component/*.scss";
-@import "object/project/*.scss";
-@import "object/utility/*.scss";
+@use "foundation/*.scss";
+@use "layout/*.scss";
+@use "object/component/*.scss";
+@use "object/project/*.scss";
+@use "object/utility/*.scss";

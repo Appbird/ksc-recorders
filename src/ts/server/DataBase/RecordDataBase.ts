@@ -16,7 +16,7 @@ export class RecordDataBase{
         return this.dataBase.runnersTable;
     }
     get gameSystemList(){
-        return this.dataBase.runnersTable;
+        return this.dataBase.gameSystemInfo;
     }
     getGameSystemInfo(gameSystemID:number):IGameSystemInfo{
         const result = this.dataBase.gameSystemInfo.find(item => item.id === gameSystemID);
@@ -70,9 +70,7 @@ export class RecordDataBase{
     }
 
     getRecords(gameSystemID:number,recordIDs:number[]):IRecord[]{
-        return this.getGameSystemInfo(gameSystemID).records.filter(
-            (record) => recordIDs.includes(record.recordID)
-        )
+        return recordIDs.map( (recordID) => this.getRecord(gameSystemID,recordID) )
     }
 
 }

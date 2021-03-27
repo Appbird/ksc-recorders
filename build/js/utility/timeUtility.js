@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.convertNumberIntoDateString = exports.converseMiliSecondsIntoTime = void 0;
 function converseMiliSecondsIntoTime(timeInMiliSeconds) {
     var miliSeconds = timeInMiliSeconds % 100;
-    var timeInSecond = timeInMiliSeconds - miliSeconds;
+    var timeInSecond = Math.floor(timeInMiliSeconds / 100);
     var minutes = Math.floor(timeInMiliSeconds / 3600);
     var seconds = timeInSecond % 3600;
     return WriteNumberIn2Digits(minutes) + ":" + WriteNumberIn2Digits(seconds) + "." + WriteNumberIn2Digits(miliSeconds);

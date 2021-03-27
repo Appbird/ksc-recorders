@@ -1,4 +1,5 @@
 import { IRecordDataBase } from "../type/IRecordDataBase";
+import { recordsData } from "./exampleRecords";
 
 export const exampleData:IRecordDataBase = {
 
@@ -34,46 +35,6 @@ export const exampleData:IRecordDataBase = {
       },
 
 
-        "records"	: [
-        {
-                "recordID" :0, "score" :128,
-                "timestamp": 0,
-                "regulation" :{
-                  "gameSystemEnvironment"	:{ "gameDifficultyID" :0, "gameModeID" :0, "gameSystemID" :0},
-                  "abilityIDsOfPlayerCharacters" :[0], "targetID" :0
-              },
-              "runnerID":0, "tag": [0,2], "link" : ["---","---"], "note" : "---"
-        },
-
-        {
-            "recordID" :1, "score" :129,
-            "timestamp": 1,
-            "regulation" :{
-              "gameSystemEnvironment"	:{ "gameDifficultyID" :0, "gameModeID" :0, "gameSystemID" :0},
-              "abilityIDsOfPlayerCharacters" :[2], "targetID" :1
-          },
-          "runnerID":0, "tag": [0,2], "link" : ["---","---"], "note" : "---"
-        },
-        
-        {
-            "recordID" :2, "score" :133,
-            "timestamp": 3,
-            "regulation" :{
-              "gameSystemEnvironment"	:{ "gameDifficultyID" :0, "gameModeID" :0, "gameSystemID" :0},
-              "abilityIDsOfPlayerCharacters" :[1,2], "targetID" :1
-          },
-          "runnerID":1, "tag": [0,2], "link" : ["---","---"], "note" : "---"
-        },
-        
-        {
-            "recordID" :3, "score" :131,
-            "timestamp": 4,
-            "regulation" :{
-              "gameSystemEnvironment"	:{ "gameDifficultyID" :0, "gameModeID" :0, "gameSystemID" :0},
-              "abilityIDsOfPlayerCharacters" :[0,1,1,2], "targetID" :0
-          },
-          "runnerID":0, "tag": [0,2], "link" : ["---","---"], "note" : "---"
-        }
-    ]
+        "records"	: recordsData
   }]
 }

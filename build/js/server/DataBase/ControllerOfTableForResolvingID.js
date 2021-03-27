@@ -19,7 +19,7 @@ var ControllerOfTableForResolvingID = /** @class */ (function () {
         }
     };
     ControllerOfTableForResolvingID.prototype.resolveGameSystemID = function (id, lang) {
-        return this.resolveID(id, this.dataBase.runnersList, lang, "GameSystem");
+        return this.resolveID(id, this.dataBase.gameSystemList, lang, "GameSystem");
     };
     ControllerOfTableForResolvingID.prototype.findProperGameSystemInfo = function (gameSystemID) {
         var result = this.dataBase.getGameSystemInfo(gameSystemID);

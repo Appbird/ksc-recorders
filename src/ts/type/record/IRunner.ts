@@ -1,13 +1,15 @@
-import { IItemOfResolveTableToName } from "../../server/DataBase/ControllerOfTableForResolvingID";
+import { IItemOfResolveTableToName } from "../../server/type/IItemOfResolveTableToName";
 
 export interface IRunner extends IItemOfResolveTableToName{
     JName : string;
     EName : string;
-    id : number;
+    id : string;
     theDateOfRegistered: number;
     theNumberOfPost :number;
     twitterID : string;
     youtubeID : string;
-    idOfGameSystemRunnerHavePlayed: number[];
+    idOfGameSystemRunnerHavePlayed: string[];
     theDateOfLastPost :number; 
+    isCommitteeMember:boolean;
+    isMuted:boolean;
 }

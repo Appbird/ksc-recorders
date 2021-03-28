@@ -1,8 +1,8 @@
-import { element } from "../utility/ViewUtility";
+import { element } from "../../utility/ViewUtility";
 import { TagsView } from "./TagsView";
-import { converseMiliSecondsIntoTime, convertNumberIntoDateString } from "../utility/timeUtility";
-import { IRecordGroup } from "../type/record/IRecordGroup";
-import { IRecordInShort, IRecordInShortResolved } from "../type/record/IRecord";
+import { converseMiliSecondsIntoTime, convertNumberIntoDateString } from "../../utility/timeUtility";
+import { IRecordGroup } from "../../type/record/IRecordGroup";
+import { IRecordInShortResolved } from "../../type/record/IRecord";
 
 export class RecordGroupView{
     private _htmlElement:Element = document.createElement("div");

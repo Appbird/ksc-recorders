@@ -48,7 +48,7 @@ async function process(req:http.IncomingMessage,res:ServerResponse,body?:string)
                 if ( url.pathname === "/recordDatabase/search/record"){
                     if (body === undefined) break;
                     const dateStartProcess = new Date().getTime();
-                    const result = search(body);
+                    const result = await search(body);
                     if (result.isSuccess) res.writeHead(200, {'Content-Type': `text/json}`});
                     else res.writeHead(400, {'Content-Type': `text/json}`})
                     res.write(JSON.stringify(result));

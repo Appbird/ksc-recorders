@@ -2,13 +2,11 @@ import { IGameSystemEnvironment, IGameSystemEnvironmentResolved } from "./IGameS
 
 export interface IRegulation {
     gameSystemEnvironment:IGameSystemEnvironment;
-    abilityIDsOfPlayerCharacters: number[];
-    targetID:number;
+    abilityIDsOfPlayerCharacters: string[];
+    targetID:string;
 }
-export interface IRegulationResolved {
+export interface IRegulationResolved extends IRegulation {
     gameSystemEnvironment:IGameSystemEnvironmentResolved;
-    abilityIDsOfPlayerCharacters: number[];
-    targetID:number;
     abilityNamesOfPlayerCharacters: string[];
     targetName:string;
 }

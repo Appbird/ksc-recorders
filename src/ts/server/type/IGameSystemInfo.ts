@@ -1,9 +1,9 @@
 import { IRecord } from "../../type/record/IRecord";
-import { IItemOfResolveTableToName } from "../DataBase/ControllerOfTableForResolvingID";
+import { IItemOfResolveTableToName } from "./IItemOfResolveTableToName";
 import { UniqueResolveTableToGameSystem } from "./UniqueResolveTableToGameSystem";
 
 export interface IGameSystemInfo extends IItemOfResolveTableToName {
-    id: number;
+    id: string;
     JName: string;
     EName: string;
     JDescription?: string;

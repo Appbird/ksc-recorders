@@ -1,4 +1,4 @@
-import { IItemOfResolveTableToName } from "../DataBase/ControllerOfTableForResolvingID";
+import { IItemOfResolveTableToName } from "./IItemOfResolveTableToName";
 
 /**
  * カービィの作品にそれぞれひとつずつ対応するID解決テーブル群

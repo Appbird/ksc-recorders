@@ -1,4 +1,4 @@
-import { element } from "../utility/ViewUtility";
+import { element } from "../../utility/ViewUtility";
 
 export class TagsView{
     private element:HTMLElement;

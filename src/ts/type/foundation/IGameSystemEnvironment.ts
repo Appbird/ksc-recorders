@@ -1,14 +1,11 @@
 export interface IGameSystemEnvironment {
-    gameSystemID: number;
-    gameModeID: number;
+    gameSystemID: string;
+    gameModeID: string;
     //#NOTE このDifficultyIDについては特に記録指定の時には関わってこないとする。
-    gameDifficultyID: number;
+    gameDifficultyID: string;
 }
 
-export interface IGameSystemEnvironmentResolved {
-    gameSystemID: number;
-    gameModeID: number;
-    gameDifficultyID: number;
+export interface IGameSystemEnvironmentResolved extends IGameSystemEnvironment {
     gameSystemName: string;
     gameModeName: string;
     gameDifficultyName: string;

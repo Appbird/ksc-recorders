@@ -1,16 +1,20 @@
 import * as fs from "fs";
 import { IRecord } from "../../type/record/IRecord";
 import { checkEqualityBetweenArrays } from "../../utility/arrayUtility";
-import { IGameSystemInfo } from "../type/IGameSystemInfo";
+import { exampleData } from "../test/exampledata";
 import { IRecordDataBase } from "../type/IRecordDataBase";
 
 export type OrderOfRecordArray = "HigherFirst" | "LowerFirst" | "LaterFirst" | "EarlierFirst"
-
-
+interface IRecordsArrayWithInfo{
+    records: IRecord[],
+    numberOfRecords: number,
+    numberOfRunners: number
+}
+//[-] getRecordsWithConditionメソッドの実装
 export class RecordDataBase{
     private dataBase:IRecordDataBase;
-    constructor(data?:IRecordDataBase){
-        this.dataBase = (data === undefined) ? JSON.parse(fs.readFileSync("exampleData.json",{encoding:"utf8"})): data;
+    constructor(){
+        this.dataBase = exampleData;
     }
     get runnersList(){
         return this.dataBase.runnersTable;
@@ -18,30 +22,33 @@ export class RecordDataBase{
     get gameSystemList(){
         return this.dataBase.gameSystemInfo;
     }
-    getGameSystemInfo(gameSystemID:number):IGameSystemInfo{
+    async getGameSystemInfo(gameSystemID:string){
         const result = this.dataBase.gameSystemInfo.find(item => item.id === gameSystemID);
         if (result === undefined) throw new Error(`指定されたID${gameSystemID}に対応するゲームが存在しません。`);
         return result;
     }
     
-    getRecord(gameSystemID:number,recordID:number):IRecord{
+    async getRecord(gameSystemID:string,recordID:string){
     //[x] 与えられた条件に適した記録を記録を一つ返す。
-        const result = this.getGameSystemInfo(gameSystemID).records.find( (item) => item.recordID === recordID);
+        const result = (await this.getGameSystemInfo(gameSystemID)).records.find( (item) => item.id === recordID);
         if (result === undefined) throw new Error(`ゲームシステムID${gameSystemID}の記録データベースに、指定されたID${recordID}に対する記録が存在しません。`)
         return result;
     }
 
-    getRecordIDsWithCondition(gameSystemID:number, 
+    //#[-] この関数を、一つのオブジェクトだけを引数に取りたい。直接サーバーへのリクエストを引数にとったほうが良いかも。
+    async getRecordsAndInfoWithCondition(gameSystemID:string, 
                             order:OrderOfRecordArray ,
                             abilityIDsCondition: "AND" | "OR" | "AllowForOrder",
-                            abilityIDs:number[] = [],
-                            targetIDs:number[] = [],
-                            runnerIDs:number[] = []
-    ):number[]{
+                            abilityIDs:string[] = [],
+                            targetIDs:string[] = [],
+                            runnerIDs:string[] = [],
+                            limits:number = 10 //#README
+    ):Promise<IRecordsArrayWithInfo>{
     //[x] undefinedは指定なしとみなし、与えられた条件のうちで「早い順で」start件目からlimit件のデータをグループとして取り出す。(0スタート)
-        const records = this.getGameSystemInfo(gameSystemID).records;
+    
+    const records = (await this.getGameSystemInfo(gameSystemID)).records;
         
-        return records.filter(
+        records.filter(
             (record) => 
                 ((targetIDs.length === 0) ? true : targetIDs.some( (id) => id === record.regulation.targetID ) ) &&
                 ((abilityIDs.length === 0) ? true : this.ifRecordIncludeThatAbilityIDs(record,abilityIDsCondition,abilityIDs) ) &&
@@ -51,14 +58,18 @@ export class RecordDataBase{
                 switch(order){
                     case "HigherFirst": return b.score - a.score;
                     case "LowerFirst" : return a.score - b.score;
-                    case "LaterFirst": return -1;
+                    case "LaterFirst": return -1; //[-] ここの実装を、timestampをもとにしたものにする。
                     case "EarlierFirst": return 1;
                 }
             }
-        ).map( (record) => record.recordID);
+        )
+        return {
+            //[-] ここのエラーを修正する。
+        }
+        
 
     }
-    private ifRecordIncludeThatAbilityIDs(record:IRecord,abilityIDsCondition: "AND" | "OR" | "AllowForOrder", abilityIDs:number[]):boolean{
+    private ifRecordIncludeThatAbilityIDs(record:IRecord,abilityIDsCondition: "AND" | "OR" | "AllowForOrder", abilityIDs:string[]):boolean{
         switch(abilityIDsCondition){
             case "AND":
                 return abilityIDs.every( id => record.regulation.abilityIDsOfPlayerCharacters.includes(id));
@@ -68,10 +79,16 @@ export class RecordDataBase{
                 return checkEqualityBetweenArrays(record.regulation.abilityIDsOfPlayerCharacters,abilityIDs);
         }
     }
-
-    getRecords(gameSystemID:number,recordIDs:number[]):IRecord[]{
-        return recordIDs.map( (recordID) => this.getRecord(gameSystemID,recordID) )
+    private countRunner(record:IRecord[]):number{
+        const runnerIDs:string[] = record.map((element) => element.runnerID);
+        runnerIDs.sort()
+        let note:string = "";
+        let result = 0;
+        for (const element of runnerIDs){
+            if (note === element) continue;
+            result++; note = element;
+        }
+        return result;
     }
 
 }
-

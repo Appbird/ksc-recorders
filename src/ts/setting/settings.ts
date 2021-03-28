@@ -1,4 +1,4 @@
-import { LanguageInApplication } from "../server/DataBase/ControllerOfTableForResolvingID";
+import { LanguageInApplication } from "../server/firestore/ControllerOfTableForResolvingID";
 
 
 export const Settings:ISettings = {

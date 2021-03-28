@@ -5,38 +5,29 @@ import { IRegulation, IRegulationResolved } from "../foundation/IRegulation";
 export interface IRecordInShort {
     score: number;
     regulation: IRegulation;
-    runnerID:number;
-    recordID:number;
+    runnerID:string;
+    recordID:string;
 }
-export interface IRecordInShortResolved {
-    score: number;
-    runnerID:number;
-    recordID:number;
+export interface IRecordInShortResolved extends IRecordInShort {
     regulation: IRegulationResolved;
     runnerName:string;
 }
 
 export interface IRecord{
+    id: string;
+
     //[x] ここの命名をtimeInMiliSecondではなくscoreにしたい…。
     score: number;
     //[x] timestampを追加する
     timestamp: number;
     regulation: IRegulation;
-    runnerID: number;
-    recordID: number;
-    tag: number[];
+    runnerID: string;
+    tagID: string[];
     link: string[];
     note: string;
 }
-export interface IRecordResolved{
-    score: number;
-    timestamp: number;
-    runnerID: number;
-    recordID: number;
-    tag: number[];
-    link: string[];
-    note: string;
-    regulation: IRegulationResolved;
+export interface IRecordResolved extends IRecord{
     runnerName: number;
     tagName: string[];
+    regulation: IRegulationResolved;
 }

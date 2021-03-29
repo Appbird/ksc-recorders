@@ -1,11 +1,14 @@
+import { checkInputObjectWithErrorPossibility } from "../../utility/InputCheckerUtility";
 import { firebase } from "../firebaseAdmin";
+import { expectedObj_IItemOfResolveTableToName, IItemOfResolveTableToName } from "../type/IItemOfResolveTableToName";
+import { LanguageInApplication } from "../type/LanguageInApplication";
 import { RecordDataBase } from "./RecordDataBase";
-//[-] ここの定義を別の場所に移したい
-export type LanguageInApplication = "Japanese" | "English";
+
 
 /**
  * データベースのデータを参照してIDを解決してくれるテーブルマネージャー
  */
+
 export class ControllerOfTableForResolvingID{
     private dataBase: RecordDataBase;
     constructor(database:RecordDataBase){
@@ -15,13 +18,16 @@ export class ControllerOfTableForResolvingID{
         const result = await collection.doc(id).get();
         
         if (!result.exists) throw new Error(`${descriptionOfPlace}テーブルにおいて、id${id}に対応するデータが存在しません。`);
-        //#TODO ここの型定義を保証する
-        const item = result.data() as FirebaseFirestore.DocumentData;
+        //#CTODO ここの型定義を保証する
+        const item:unknown = result.data()
+        if (!checkInputObjectWithErrorPossibility<IItemOfResolveTableToName>(item,expectedObj_IItemOfResolveTableToName,
+            "In ControllerOfTableForResolvingID#resolveID, data")) throw new Error();
         switch(lang){
             case "Japanese": return item.JName;
             case "English": return item.EName;
         }
     }
+
 
     resolveGameSystemID(id:string,lang:LanguageInApplication){
         return this.resolveID(id,this.dataBase.gameSystemList,lang,"GameSystem");

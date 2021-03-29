@@ -8,8 +8,7 @@ import { IReceivedDataFromClient_AboutRecordExhibition } from "../../type/transm
 import { IReceivedDataFromServer } from "../../type/transmission/IReceivedDataFromServer";
 import { convertRecordsIntoRecordGroup } from "../recordConverter/convertRecordsIntoRecordGroup";
 import { checkInputObjectWithErrorPossibility } from "../../utility/InputCheckerUtility";
-
-//
+import { IRecord } from "../../type/record/IRecord";
 
 const database = new RecordDataBase();
 const checkerObj = {
@@ -38,16 +37,16 @@ export async function search(dataInJSON:string):Promise<IReceivedDataFromServer>
         if (!assureInputDataBelongToProperType(requestGroup)) throw new Error("入力されたデータが正しくありません");
         
             const recordGroups = await Promise.all(requestGroup.map( async (request) => {
-                    const records = await database.getRecordsAndInfoWithCondition(
+                    const records = await database.getRecordsWithCondition(
                                         request.gameSystemEnv.gameSystemID,request.orderOfRecordArray,
                                         request.abilityIDsCondition,request.abilityIDs,
                                         request.targetIDs,request.runnerIDs);
                     
                     return convertRecordsIntoRecordGroup(
-                    records.records , { 
+                    records.slice(request.startOfRecordArray,request.limitOfRecordArray) , { 
                         groupName: request.groupName,
-                        numberOfRecords: records.numberOfRecords ,
-                        numberOfRunners: records.numberOfRunners,
+                        numberOfRecords: records.length ,
+                        numberOfRunners: countRunners(records),
                         lang:request.language
                     }); 
                 }
@@ -72,4 +71,15 @@ export async function search(dataInJSON:string):Promise<IReceivedDataFromServer>
 function assureInputDataBelongToProperType(data:unknown[]):data is IReceivedDataFromClient_AboutRecordExhibition[]{
     for (const unit of data)checkInputObjectWithErrorPossibility(unit,checkerObj,`data`)
     return true;
+}
+function countRunners(record:IRecord[]):number{
+    const runnerIDs:string[] = record.map((element) => element.runnerID);
+    runnerIDs.sort()
+    let note:string = "";
+    let result = 0;
+    for (const element of runnerIDs){
+        if (note === element) continue;
+        result++; note = element;
+    }
+    return result;
 }

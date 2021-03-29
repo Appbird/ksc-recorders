@@ -1,7 +1,6 @@
 import { IItemOfResolveTableToName } from "../type/IItemOfResolveTableToName";
+import { LanguageInApplication } from "../type/LanguageInApplication";
 import { RecordDataBase } from "./RecordDataBase";
-
-export type LanguageInApplication = "Japanese" | "English";
 
 /**
  * データベースのデータを参照してIDを解決してくれるテーブルマネージャー

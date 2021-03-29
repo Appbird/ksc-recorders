@@ -1,5 +1,5 @@
 import { IRecord, IRecordInShortResolved } from "../../type/record/IRecord";
-import { LanguageInApplication } from "../firestore/ControllerOfTableForResolvingID";
+import { LanguageInApplication } from "../type/LanguageInApplication";
 import { IRecordGroup } from "../../type/record/IRecordGroup";
 import { controllerOfTableForResolvingID } from "../ServerFunctions/search";
 

@@ -1,14 +1,21 @@
-export function checkInputObjectWithErrorPossibility(actual:any,expectedStructure:TypeValue,checkedPlace?:string):boolean{
-    for (const [propertyName,expectedTypeName] of Object.entries(expectedStructure)){
+export function checkInputObjectWithErrorPossibility<CheckType>(actual:any,expectedStructure:TypeValue | TypeValue[],checkedPlace?:string):actual is CheckType{
+    if (actual === undefined) throw new Error(`与えられたオブジェクト${checkedPlace}はundefinedでした。`)
+    if (Array.isArray(expectedStructure)){
+        if (!Array.isArray(actual)) throw Error(`与えられたオブジェクト${checkedPlace}は配列であるとされていますが、配列ではありませんでした。`)
+        for (const element of actual){
+            checkInputObjectWithErrorPossibility(element, expectedStructure[0], `${checkedPlace}`)
+        }
+    }
+    for (const [propertyName,expectedSubStructure] of Object.entries(expectedStructure)){
 
         if (!actual.hasOwnProperty(propertyName)) throw new Error(`キー${propertyName}が存在しません。場所 : ${checkedPlace}`)
 
-        if (typeof actual[propertyName] === "object" && typeof expectedTypeName !== "string"){
-             checkInputObjectWithErrorPossibility(actual[propertyName],expectedTypeName,`${checkedPlace} / ${propertyName}`)
+        if (typeof actual[propertyName] === "object" && typeof expectedSubStructure !== "string"){
+             checkInputObjectWithErrorPossibility(actual[propertyName],expectedSubStructure,`${checkedPlace} / ${propertyName}`)
              continue;
         }
-        if (typeof expectedTypeName === "string" && !checkType(actual[propertyName],expectedTypeName)){
-            throw new Error(`キー${propertyName}に対応する値の型は${expectedTypeName}であるとされていますが、実際には${actual[propertyName]}(${
+        if (typeof expectedSubStructure === "string" && !checkType(actual[propertyName],expectedSubStructure)){
+            throw new Error(`キー${propertyName}に対応する値の型は${expectedSubStructure}であるとされていますが、実際には${actual[propertyName]}(${
                 Array.isArray(actual[propertyName])?"Array":(actual[propertyName])}型)でした。場所 : ${checkedPlace}`)
         }
     }
@@ -34,6 +41,6 @@ function checkType(actualValue:any,expectedTypeName:string):boolean{
 function checkString(actual:string,expectedStrings:string[]){
     return expectedStrings.some( (expectedString) => expectedString === actual)
 }
-type TypeValue = {
-    [key: string]: string | TypeValue;
+export interface TypeValue {
+    [key: string]: string | TypeValue | TypeValue[];
 }

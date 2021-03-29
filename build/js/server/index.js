@@ -100,27 +100,29 @@ function process(req, res, body) {
                         case "GET": return [3 /*break*/, 3];
                         case "POST": return [3 /*break*/, 5];
                     }
-                    return [3 /*break*/, 6];
+                    return [3 /*break*/, 8];
                 case 3: return [4 /*yield*/, sendDocument(req.url, res)];
                 case 4:
                     _b.sent();
-                    return [3 /*break*/, 7];
+                    return [3 /*break*/, 9];
                 case 5:
-                    if (url.pathname === "/recordDatabase/search/record") {
-                        if (body === undefined)
-                            return [3 /*break*/, 7];
-                        dateStartProcess = new Date().getTime();
-                        result = search_1.search(body);
-                        if (result.isSuccess)
-                            res.writeHead(200, { 'Content-Type': "text/json}" });
-                        else
-                            res.writeHead(400, { 'Content-Type': "text/json}" });
-                        res.write(JSON.stringify(result));
-                        console.info("[" + new Date().toUTCString() + "] process /recordDatabase/search takes " + (new Date().getTime() - dateStartProcess) + " miliseconds.");
-                    }
-                    return [3 /*break*/, 7];
-                case 6: return [3 /*break*/, 7];
-                case 7:
+                    if (!(url.pathname === "/recordDatabase/search/record")) return [3 /*break*/, 7];
+                    if (body === undefined)
+                        return [3 /*break*/, 9];
+                    dateStartProcess = new Date().getTime();
+                    return [4 /*yield*/, search_1.search(body)];
+                case 6:
+                    result = _b.sent();
+                    if (result.isSuccess)
+                        res.writeHead(200, { 'Content-Type': "text/json}" });
+                    else
+                        res.writeHead(400, { 'Content-Type': "text/json}" });
+                    res.write(JSON.stringify(result));
+                    console.info("[" + new Date().toUTCString() + "] process /recordDatabase/search takes " + (new Date().getTime() - dateStartProcess) + " miliseconds.");
+                    _b.label = 7;
+                case 7: return [3 /*break*/, 9];
+                case 8: return [3 /*break*/, 9];
+                case 9:
                     res.end();
                     return [2 /*return*/];
             }

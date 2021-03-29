@@ -1,16 +1,10 @@
-import * as fs from "fs";
 import { IRecord } from "../../type/record/IRecord";
 import { checkEqualityBetweenArrays } from "../../utility/arrayUtility";
+import { OrderOfRecordArray } from "../type/OrderOfRecordArray";
 import { exampleData } from "../test/exampledata";
 import { IRecordDataBase } from "../type/IRecordDataBase";
 
-export type OrderOfRecordArray = "HigherFirst" | "LowerFirst" | "LaterFirst" | "EarlierFirst"
-interface IRecordsArrayWithInfo{
-    records: IRecord[],
-    numberOfRecords: number,
-    numberOfRunners: number
-}
-//[-] getRecordsWithConditionメソッドの実装
+//[x] getRecordsWithConditionメソッドの実装
 export class RecordDataBase{
     private dataBase:IRecordDataBase;
     constructor(){
@@ -35,20 +29,18 @@ export class RecordDataBase{
         return result;
     }
 
-    //#[-] この関数を、一つのオブジェクトだけを引数に取りたい。直接サーバーへのリクエストを引数にとったほうが良いかも。
-    async getRecordsAndInfoWithCondition(gameSystemID:string, 
+    async getRecordsWithCondition(gameSystemID:string, 
                             order:OrderOfRecordArray ,
                             abilityIDsCondition: "AND" | "OR" | "AllowForOrder",
                             abilityIDs:string[] = [],
                             targetIDs:string[] = [],
                             runnerIDs:string[] = [],
-                            limits:number = 10 //#README
-    ):Promise<IRecordsArrayWithInfo>{
+    ):Promise<IRecord[]>{
     //[x] undefinedは指定なしとみなし、与えられた条件のうちで「早い順で」start件目からlimit件のデータをグループとして取り出す。(0スタート)
     
-    const records = (await this.getGameSystemInfo(gameSystemID)).records;
+    let records = (await this.getGameSystemInfo(gameSystemID)).records;
         
-        records.filter(
+        records = records.filter(
             (record) => 
                 ((targetIDs.length === 0) ? true : targetIDs.some( (id) => id === record.regulation.targetID ) ) &&
                 ((abilityIDs.length === 0) ? true : this.ifRecordIncludeThatAbilityIDs(record,abilityIDsCondition,abilityIDs) ) &&
@@ -58,16 +50,14 @@ export class RecordDataBase{
                 switch(order){
                     case "HigherFirst": return b.score - a.score;
                     case "LowerFirst" : return a.score - b.score;
-                    case "LaterFirst": return -1; //[-] ここの実装を、timestampをもとにしたものにする。
-                    case "EarlierFirst": return 1;
+                    //[x] ここの実装を、timestampをもとにしたものにする。
+                    case "LaterFirst": return b.timestamp - a.timestamp;
+                    case "EarlierFirst": return a.timestamp - b.timestamp;
+                    default : return 0;
                 }
             }
         )
-        return {
-            //[-] ここのエラーを修正する。
-        }
-        
-
+        return records;
     }
     private ifRecordIncludeThatAbilityIDs(record:IRecord,abilityIDsCondition: "AND" | "OR" | "AllowForOrder", abilityIDs:string[]):boolean{
         switch(abilityIDsCondition){
@@ -79,16 +69,6 @@ export class RecordDataBase{
                 return checkEqualityBetweenArrays(record.regulation.abilityIDsOfPlayerCharacters,abilityIDs);
         }
     }
-    private countRunner(record:IRecord[]):number{
-        const runnerIDs:string[] = record.map((element) => element.runnerID);
-        runnerIDs.sort()
-        let note:string = "";
-        let result = 0;
-        for (const element of runnerIDs){
-            if (note === element) continue;
-            result++; note = element;
-        }
-        return result;
-    }
+    
 
 }

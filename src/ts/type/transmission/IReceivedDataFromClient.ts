@@ -1,5 +1,5 @@
-import { LanguageInApplication } from "../../server/firestore/ControllerOfTableForResolvingID";
-import { OrderOfRecordArray } from "../../server/firestore/RecordDataBase";
+import { LanguageInApplication } from "../../server/type/LanguageInApplication";
+import { OrderOfRecordArray } from "../../server/type/OrderOfRecordArray";
 import { IGameSystemEnvironment } from "../foundation/IGameSystemEnvironment";
 
 export interface IReceivedDataFromClient_AboutRecordExhibition {

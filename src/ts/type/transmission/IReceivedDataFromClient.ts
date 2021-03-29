@@ -5,7 +5,10 @@ import { IGameSystemEnvironment } from "../foundation/IGameSystemEnvironment";
 export interface IReceivedDataFromClient_AboutRecordExhibition {
     groupName:string;
 
-    gameSystemEnv:IGameSystemEnvironment;
+    gameSystemEnv:{
+        gameSystemID: string;
+        gameModeID: string;
+    };
     orderOfRecordArray:OrderOfRecordArray;
     startOfRecordArray:number;
     limitOfRecordArray:number;

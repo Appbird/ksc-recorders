@@ -61,11 +61,7 @@ var ControllerOfTableForResolvingID = /** @class */ (function () {
             });
         });
     };
-    ControllerOfTableForResolvingID.prototype.findProperGameSystemInfo = function (gameSystemID) {
-        var result = this.dataBase.getGameSystemInfo(gameSystemID);
-        return result;
-    };
-    ControllerOfTableForResolvingID.prototype.resolveAbilityID = function (gameSystemID, id, lang) {
+    ControllerOfTableForResolvingID.prototype.resolveAbilityID = function (gameSystemID, gameModeID, id, lang) {
         return __awaiter(this, void 0, void 0, function () {
             var _a, _b;
             return __generator(this, function (_c) {
@@ -73,13 +69,13 @@ var ControllerOfTableForResolvingID = /** @class */ (function () {
                     case 0:
                         _a = this.resolveID;
                         _b = [id];
-                        return [4 /*yield*/, this.findProperGameSystemInfo(gameSystemID)];
-                    case 1: return [2 /*return*/, _a.apply(this, _b.concat([(_c.sent()).list.AbilityList, lang, "Ability"]))];
+                        return [4 /*yield*/, this.dataBase.getGameModeInfo(gameSystemID, gameModeID)];
+                    case 1: return [2 /*return*/, _a.apply(this, _b.concat([(_c.sent()).abilities, lang, "Ability"]))];
                 }
             });
         });
     };
-    ControllerOfTableForResolvingID.prototype.resolveTargetID = function (gameSystemID, id, lang) {
+    ControllerOfTableForResolvingID.prototype.resolveTargetID = function (gameSystemID, gameModeID, id, lang) {
         return __awaiter(this, void 0, void 0, function () {
             var _a, _b;
             return __generator(this, function (_c) {
@@ -87,13 +83,13 @@ var ControllerOfTableForResolvingID = /** @class */ (function () {
                     case 0:
                         _a = this.resolveID;
                         _b = [id];
-                        return [4 /*yield*/, this.findProperGameSystemInfo(gameSystemID)];
-                    case 1: return [2 /*return*/, _a.apply(this, _b.concat([(_c.sent()).list.TargetList, lang, "Target"]))];
+                        return [4 /*yield*/, this.dataBase.getGameModeInfo(gameSystemID, gameModeID)];
+                    case 1: return [2 /*return*/, _a.apply(this, _b.concat([(_c.sent()).targets, lang, "Target"]))];
                 }
             });
         });
     };
-    ControllerOfTableForResolvingID.prototype.resolveGameDifficultyID = function (gameSystemID, id, lang) {
+    ControllerOfTableForResolvingID.prototype.resolveGameDifficultyID = function (gameSystemID, gameModeID, id, lang) {
         return __awaiter(this, void 0, void 0, function () {
             var _a, _b;
             return __generator(this, function (_c) {
@@ -101,8 +97,8 @@ var ControllerOfTableForResolvingID = /** @class */ (function () {
                     case 0:
                         _a = this.resolveID;
                         _b = [id];
-                        return [4 /*yield*/, this.findProperGameSystemInfo(gameSystemID)];
-                    case 1: return [2 /*return*/, _a.apply(this, _b.concat([(_c.sent()).list.GameDifficultyList, lang, "GameDifficulty"]))];
+                        return [4 /*yield*/, this.dataBase.getGameModeInfo(gameSystemID, gameModeID)];
+                    case 1: return [2 /*return*/, _a.apply(this, _b.concat([(_c.sent()).difficulties, lang, "GameDifficulty"]))];
                 }
             });
         });
@@ -115,8 +111,8 @@ var ControllerOfTableForResolvingID = /** @class */ (function () {
                     case 0:
                         _a = this.resolveID;
                         _b = [id];
-                        return [4 /*yield*/, this.findProperGameSystemInfo(gameSystemID)];
-                    case 1: return [2 /*return*/, _a.apply(this, _b.concat([(_c.sent()).list.GameModeList, lang, "GameMode"]))];
+                        return [4 /*yield*/, this.dataBase.getGameSystemInfo(gameSystemID)];
+                    case 1: return [2 /*return*/, _a.apply(this, _b.concat([(_c.sent()).modes, lang, "GameMode"]))];
                 }
             });
         });

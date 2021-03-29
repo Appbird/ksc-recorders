@@ -1,25 +1,25 @@
+import { IRecord } from "../../type/record/IRecord";
 import { IItemOfResolveTableToName } from "./IItemOfResolveTableToName";
 
 /**
  * カービィの作品にそれぞれひとつずつ対応するID解決テーブル群
  */
 export interface UniqueResolveTableToGameSystem {
-    AbilityList: AbilityList[];
-
-    TargetList: TargetList[];
-    GameModeList: GameModeList[];
-    //#NOTE ターゲットについてはID解決テーブルという目的以上に難易度に所属するターゲットを示す目的もあることに注意
-    GameDifficultyList: GameDifficultyList[];
+    GameModeList: GameModeItem[];
 }
-
-export interface AbilityList extends IItemOfResolveTableToName {
+export interface AbilityItem extends IItemOfResolveTableToName{
 }
-export interface TargetList extends IItemOfResolveTableToName{
+export interface TargetItem extends IItemOfResolveTableToName{
 }
-export interface GameModeList extends IItemOfResolveTableToName{
+export interface GameModeItem extends IItemOfResolveTableToName{
+    abilities: AbilityItem[];
+    records:IRecord[];
+    targets: TargetItem[];
+    difficulties: GameDifficultyItem[];
     JDescription?: string
     EDescription?: string
+    
 }
-export interface GameDifficultyList extends IItemOfResolveTableToName{
-    IDsOfTargetIncludedInTheDifficulty?:number[]
+export interface GameDifficultyItem extends IItemOfResolveTableToName{
+    TargetIDsIncludedInTheDifficulty?:number[]
 }

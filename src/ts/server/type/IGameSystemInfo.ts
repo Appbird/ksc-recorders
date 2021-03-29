@@ -1,6 +1,6 @@
 import { IRecord } from "../../type/record/IRecord";
 import { IItemOfResolveTableToName } from "./IItemOfResolveTableToName";
-import { UniqueResolveTableToGameSystem } from "./UniqueResolveTableToGameSystem";
+import { GameModeItem } from "./UniqueResolveTableToGameSystem";
 
 export interface IGameSystemInfo extends IItemOfResolveTableToName {
     id: string;
@@ -8,6 +8,5 @@ export interface IGameSystemInfo extends IItemOfResolveTableToName {
     EName: string;
     JDescription?: string;
     EDescription?: string;
-    list: UniqueResolveTableToGameSystem;
-    records: IRecord[];
+    modes : GameModeItem[];
 }

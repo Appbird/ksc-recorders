@@ -13,10 +13,10 @@ export async function convertRecordsIntoRecordGroup(records: IRecord[],
         lastPost: copy.sort((a, b) => b.timestamp - a.timestamp)[0].timestamp,
         numberOfRecords: info.numberOfRecords,
         numberOfRunners: info.numberOfRunners,
-        records: await Promise.all(records.map((record) => convertIRecordIntoIRecordInShortWithName(record, record.regulation.gameSystemEnvironment.gameSystemID, info.lang)))
+        records: await Promise.all(records.map((record) => convertIRecordIntoIRecordInShortWithName(record,  info.lang)))
     };
 }
-async function convertIRecordIntoIRecordInShortWithName(record: IRecord, gameSystemID: string, lang: LanguageInApplication): Promise<IRecordInShortResolved> {
+async function convertIRecordIntoIRecordInShortWithName(record: IRecord, lang: LanguageInApplication): Promise<IRecordInShortResolved> {
 
     const gr = record.regulation; //#README
     const gse = gr.gameSystemEnvironment; //#README
@@ -30,12 +30,12 @@ async function convertIRecordIntoIRecordInShortWithName(record: IRecord, gameSys
                 gameDifficultyID: gse.gameDifficultyID,
                 gameSystemName: await cotfr.resolveGameSystemID(gse.gameSystemID, lang),
                 gameModeName: await cotfr.resolveGameModeID(gse.gameSystemID, gse.gameModeID, lang),
-                gameDifficultyName: await cotfr.resolveGameDifficultyID(gse.gameSystemID, gse.gameDifficultyID, lang),
+                gameDifficultyName: await cotfr.resolveGameDifficultyID(gse.gameSystemID,gse.gameModeID, gse.gameDifficultyID, lang),
             },
             targetID: gr.targetID,
-            targetName: await cotfr.resolveTargetID(gse.gameSystemID, gr.targetID, lang),
+            targetName: await cotfr.resolveTargetID(gse.gameSystemID, gse.gameModeID, gr.targetID, lang),
             abilityIDsOfPlayerCharacters: gr.abilityIDsOfPlayerCharacters,
-            abilityNamesOfPlayerCharacters: await Promise.all(gr.abilityIDsOfPlayerCharacters.map((id) => cotfr.resolveAbilityID(gameSystemID, id, lang))),
+            abilityNamesOfPlayerCharacters: await Promise.all(gr.abilityIDsOfPlayerCharacters.map((id) => cotfr.resolveAbilityID(gse.gameSystemID,gse.gameModeID, id, lang))),
         },
         score: record.score,
         runnerID: record.runnerID,

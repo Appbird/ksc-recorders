@@ -39,12 +39,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RecordDataBase = void 0;
 var arrayUtility_1 = require("../../utility/arrayUtility");
 var exampledata_1 = require("../test/exampledata");
+var undefinedChecker_1 = require("../../utility/undefinedChecker");
 //[x] getRecordsWithConditionメソッドの実装
 var RecordDataBase = /** @class */ (function () {
     function RecordDataBase() {
         this.dataBase = exampledata_1.exampleData;
     }
     Object.defineProperty(RecordDataBase.prototype, "runnersList", {
+        /** @deprecated これをDataBaseを利用する側で使うと仮データベースと実データベースとの整合が取れなくなるので注意 */
         get: function () {
             return this.dataBase.runnersTable;
         },
@@ -52,29 +54,39 @@ var RecordDataBase = /** @class */ (function () {
         configurable: true
     });
     Object.defineProperty(RecordDataBase.prototype, "gameSystemList", {
+        /** @deprecated これをDataBaseを利用する側で使うと仮データベースと実データベースとの整合が取れなくなるので注意 */
         get: function () {
             return this.dataBase.gameSystemInfo;
         },
         enumerable: false,
         configurable: true
     });
-    RecordDataBase.prototype.getGameSystemInfo = function (gameSystemID) {
+    RecordDataBase.prototype.getGameModeInfo = function (gameSystemID, gameModeID) {
         return __awaiter(this, void 0, void 0, function () {
-            var result;
+            var gameMode;
             return __generator(this, function (_a) {
-                result = this.dataBase.gameSystemInfo.find(function (item) { return item.id === gameSystemID; });
-                if (result === undefined)
-                    throw new Error("\u6307\u5B9A\u3055\u308C\u305FID" + gameSystemID + "\u306B\u5BFE\u5FDC\u3059\u308B\u30B2\u30FC\u30E0\u304C\u5B58\u5728\u3057\u307E\u305B\u3093\u3002");
-                return [2 /*return*/, result];
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.getGameSystemInfo(gameSystemID)];
+                    case 1:
+                        gameMode = (_a.sent()).modes.find(function (item) { return item.id === gameModeID; });
+                        return [2 /*return*/, undefinedChecker_1.checkIsUndefined(gameMode, "\u6307\u5B9A\u3055\u308C\u305FID" + gameSystemID + "\u306B\u5BFE\u5FDC\u3059\u308B\u30E2\u30FC\u30C9\u304C\u3001\u30B7\u30EA\u30FC\u30BA\u306E\u30B2\u30FC\u30E0(ID:" + gameSystemID + ")\u306B\u5B58\u5728\u3057\u307E\u305B\u3093\u3002")];
+                }
             });
         });
     };
-    RecordDataBase.prototype.getRecord = function (gameSystemID, recordID) {
+    RecordDataBase.prototype.getGameSystemInfo = function (gameSystemID) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, undefinedChecker_1.checkIsUndefined(this.dataBase.gameSystemInfo.find(function (item) { return item.id === gameSystemID; }), "\u6307\u5B9A\u3055\u308C\u305FID" + gameSystemID + "\u306B\u5BFE\u5FDC\u3059\u308B\u30B7\u30EA\u30FC\u30BA\u306E\u30B2\u30FC\u30E0\u304C\u5B58\u5728\u3057\u307E\u305B\u3093\u3002")];
+            });
+        });
+    };
+    RecordDataBase.prototype.getRecord = function (gameSystemID, gameModeID, recordID) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.getGameSystemInfo(gameSystemID)];
+                    case 0: return [4 /*yield*/, this.getGameModeInfo(gameSystemID, gameModeID)];
                     case 1:
                         result = (_a.sent()).records.find(function (item) { return item.id === recordID; });
                         if (result === undefined)
@@ -84,7 +96,7 @@ var RecordDataBase = /** @class */ (function () {
             });
         });
     };
-    RecordDataBase.prototype.getRecordsWithCondition = function (gameSystemID, order, abilityIDsCondition, abilityIDs, targetIDs, runnerIDs) {
+    RecordDataBase.prototype.getRecordsWithCondition = function (gameSystemID, gameModeID, order, abilityIDsCondition, abilityIDs, targetIDs, runnerIDs) {
         if (abilityIDs === void 0) { abilityIDs = []; }
         if (targetIDs === void 0) { targetIDs = []; }
         if (runnerIDs === void 0) { runnerIDs = []; }
@@ -93,7 +105,7 @@ var RecordDataBase = /** @class */ (function () {
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.getGameSystemInfo(gameSystemID)];
+                    case 0: return [4 /*yield*/, this.getGameModeInfo(gameSystemID, gameModeID)];
                     case 1:
                         records = (_a.sent()).records;
                         records = records.filter(function (record) {

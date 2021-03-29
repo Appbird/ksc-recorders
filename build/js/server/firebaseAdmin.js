@@ -18,11 +18,17 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.firebase = void 0;
 var fbAdmin = __importStar(require("firebase-admin"));
-var data = require("../../../../secret/surviceKey.json");
-fbAdmin.initializeApp();
+var fs_1 = __importDefault(require("fs"));
+var data = JSON.parse(fs_1.default.readFileSync("./secret/serviceAccountKey.json", "utf-8"));
+fbAdmin.initializeApp({
+    credential: fbAdmin.credential.cert(data)
+});
 exports.firebase = {
     firestore: fbAdmin.firestore()
 };

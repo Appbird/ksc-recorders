@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var assert_1 = __importDefault(require("assert"));
-var RecordDataBase_1 = require("../tmpDataBase/RecordDataBase");
+var RecordDataBase_1 = require("../firestore/RecordDataBase");
 var arrayUtility_1 = require("../../utility/arrayUtility");
 var database = new RecordDataBase_1.RecordDataBase();
 describe("正しく記録が選別されるか", function () {
@@ -48,52 +48,55 @@ describe("正しく記録が選別されるか", function () {
     //[x] こいつらをどういう配置にしてコンパイルするか…を考えたい！
     //[x] 挙動の確認
     //[x] Firestoreの物に切り替えてもしっかりとチェックが通るかを確認
+    //[-]ここのエラーの修正
+    var workID = "fpNF4dAftZV2ffQJLvv6";
+    var modeID = "OkXl20WqP6KKVnHeM31O";
     it("能力IDに2を含む記録を早い順で2件取り出す", function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             //*> [1,3]
-            assert_1.default.ok(checkF(["1", "3"], "0", "0", "LowerFirst", "AND", ["2"]));
+            assert_1.default.ok(checkF(["1", "3"], workID, modeID, "LowerFirst", "AND", ["2"], [], [], 2));
             return [2 /*return*/];
         });
     }); });
     it("能力IDに2を含む記録を遅い順で2件取り出す", function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             //*> [2,3]
-            assert_1.default.ok(checkF(["2", "3"], "0", "0", "HigherFirst", "AND", ["2"]));
+            assert_1.default.ok(checkF(["2", "3"], workID, modeID, "HigherFirst", "AND", ["2"], [], [], 2));
             return [2 /*return*/];
         });
     }); });
     it("能力IDに2を含む記録を新しい投稿順で2件取り出す", function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             //*> [2,3]
-            assert_1.default.ok(checkF(["2", "3"], "0", "0", "LaterFirst", "AND", ["2"]));
+            assert_1.default.ok(checkF(["2", "3"], workID, modeID, "LaterFirst", "AND", ["2"], [], [], 2));
             return [2 /*return*/];
         });
     }); });
     it("能力IDに1,2をどちらも含む記録を取り出す", function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             //*> [3,2]
-            assert_1.default.ok(checkF(["3", "2"], "0", "0", "LowerFirst", "AND", ["1", "2"]));
+            assert_1.default.ok(checkF(["3", "2"], workID, modeID, "LowerFirst", "AND", ["1", "2"]));
             return [2 /*return*/];
         });
     }); });
     it("能力IDに1,2をいずれか含む記録を取り出す", function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             //*> [1,3,2]
-            assert_1.default.ok(checkF(["1", "3", "2"], "0", "0", "LowerFirst", "OR", ["1", "2"]));
+            assert_1.default.ok(checkF(["1", "3", "2"], workID, modeID, "LowerFirst", "OR", ["1", "2"]));
             return [2 /*return*/];
         });
     }); });
     it("対象IDが1である記録を取り出す", function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             //*> [1,2]
-            assert_1.default.ok(checkF(["1", "2"], "0", "0", "LowerFirst", "AND", undefined, ["1"], undefined));
+            assert_1.default.ok(checkF(["1", "2"], workID, modeID, "LowerFirst", "AND", undefined, ["1"], undefined));
             return [2 /*return*/];
         });
     }); });
     it("走者IDが1である記録を取り出す", function () { return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
             //*> [2]
-            assert_1.default.ok(checkF(["2"], "0", "0", "LowerFirst", "AND", undefined, undefined, ["1"]));
+            assert_1.default.ok(checkF(["2"], workID, modeID, "LowerFirst", "AND", undefined, undefined, ["1"]));
             return [2 /*return*/];
         });
     }); });
@@ -104,7 +107,7 @@ describe("正しく記録が選別されるか", function () {
                 case 0:
                     //*> idが2の記録
                     _b = (_a = assert_1.default).ok;
-                    return [4 /*yield*/, database.getRecord("0", "0", "2")];
+                    return [4 /*yield*/, database.getRecord(workID, modeID, "2")];
                 case 1:
                     //*> idが2の記録
                     _b.apply(_a, [(_c.sent()).id === "2"]);
@@ -116,7 +119,8 @@ describe("正しく記録が選別されるか", function () {
 function converseIntoIDs(records) {
     return records.map(function (record) { return record.id; });
 }
-function checkF(expectedRecordIDs, gameSystemID, gameModeID, order, abilityIDsCondition, abilityIDs, targetIDs, runnerIDs) {
+function checkF(expectedRecordIDs, gameSystemID, gameModeID, order, abilityIDsCondition, abilityIDs, targetIDs, runnerIDs, limits) {
+    if (limits === void 0) { limits = 10; }
     return __awaiter(this, void 0, void 0, function () {
         var _a, _b;
         return __generator(this, function (_c) {
@@ -124,9 +128,9 @@ function checkF(expectedRecordIDs, gameSystemID, gameModeID, order, abilityIDsCo
                 case 0:
                     _a = arrayUtility_1.checkEqualityBetweenArraysWithConsoleMsg;
                     _b = converseIntoIDs;
-                    return [4 /*yield*/, database.getRecordsWithCondition(gameSystemID, gameModeID, order, abilityIDsCondition, abilityIDs, targetIDs, runnerIDs)];
+                    return [4 /*yield*/, database.getRecordsWithCondition(gameSystemID, gameModeID, order, abilityIDsCondition, abilityIDs, targetIDs, runnerIDs).catch(function (e) { console.error(e); return []; })];
                 case 1:
-                    _a.apply(void 0, [_b.apply(void 0, [_c.sent()]), expectedRecordIDs]);
+                    _a.apply(void 0, [_b.apply(void 0, [_c.sent()]).slice(0, limits), expectedRecordIDs]);
                     return [2 /*return*/];
             }
         });

@@ -37,9 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ControllerOfTableForResolvingID = void 0;
-var InputCheckerUtility_1 = require("../../utility/InputCheckerUtility");
 var firebaseAdmin_1 = require("../firebaseAdmin");
-var IItemOfResolveTableToName_1 = require("../type/IItemOfResolveTableToName");
 /**
  * データベースのデータを参照してIDを解決してくれるテーブルマネージャー
  */
@@ -59,8 +57,12 @@ var ControllerOfTableForResolvingID = /** @class */ (function () {
                         if (!result.exists)
                             throw new Error(descriptionOfPlace + "\u30C6\u30FC\u30D6\u30EB\u306B\u304A\u3044\u3066\u3001id" + id + "\u306B\u5BFE\u5FDC\u3059\u308B\u30C7\u30FC\u30BF\u304C\u5B58\u5728\u3057\u307E\u305B\u3093\u3002");
                         item = result.data();
-                        if (!InputCheckerUtility_1.checkInputObjectWithErrorPossibility(item, IItemOfResolveTableToName_1.expectedObj_IItemOfResolveTableToName, "In ControllerOfTableForResolvingID#resolveID, data"))
-                            throw new Error();
+                        /*
+                         //#CTODO ここの型定義を保証する
+                        const item:unknown = result.data()
+                        if (!checkInputObjectWithErrorPossibility<IItemOfResolveTableToName>(item,expectedObj_IItemOfResolveTableToName,
+                            "In ControllerOfTableForResolvingID#resolveID, data")) throw new Error();
+                        */
                         switch (lang) {
                             case "Japanese": return [2 /*return*/, item.JName];
                             case "English": return [2 /*return*/, item.EName];
@@ -71,36 +73,39 @@ var ControllerOfTableForResolvingID = /** @class */ (function () {
         });
     };
     ControllerOfTableForResolvingID.prototype.resolveGameSystemID = function (id, lang) {
-        return this.resolveID(id, this.dataBase.gameSystemList, lang, "GameSystem");
+        return this.resolveID(id, this.dataBase.gameSystemRef, lang, "GameSystem");
     };
     ControllerOfTableForResolvingID.prototype.getGameSystemRef = function (gameSystemID) {
         return firebaseAdmin_1.firebase.firestore.collection("works").doc(gameSystemID);
     };
-    ControllerOfTableForResolvingID.prototype.resolveAbilityID = function (gameSystemID, id, lang) {
+    ControllerOfTableForResolvingID.prototype.getGameModeRef = function (gameSystemID, gameModeID) {
+        return firebaseAdmin_1.firebase.firestore.collection("works").doc(gameSystemID).collection("modes").doc(gameModeID);
+    };
+    ControllerOfTableForResolvingID.prototype.resolveAbilityID = function (gameSystemID, gameModeID, id, lang) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.resolveID(id, this.getGameSystemRef(gameSystemID).collection("ability"), lang, "Ability")];
+                return [2 /*return*/, this.resolveID(id, this.getGameModeRef(gameSystemID, gameModeID).collection("abilities"), lang, "Ability")];
             });
         });
     };
-    ControllerOfTableForResolvingID.prototype.resolveTargetID = function (gameSystemID, id, lang) {
+    ControllerOfTableForResolvingID.prototype.resolveTargetID = function (gameSystemID, gameModeID, id, lang) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.resolveID(id, this.getGameSystemRef(gameSystemID).collection("target"), lang, "Target")];
+                return [2 /*return*/, this.resolveID(id, this.getGameModeRef(gameSystemID, gameModeID).collection("targets"), lang, "Target")];
             });
         });
     };
-    ControllerOfTableForResolvingID.prototype.resolveGameDifficultyID = function (gameSystemID, id, lang) {
+    ControllerOfTableForResolvingID.prototype.resolveGameDifficultyID = function (gameSystemID, gameModeID, id, lang) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.resolveID(id, this.getGameSystemRef(gameSystemID).collection("difficulty"), lang, "GameDifficulty")];
+                return [2 /*return*/, this.resolveID(id, this.getGameModeRef(gameSystemID, gameModeID).collection("difficulties"), lang, "GameDifficulty")];
             });
         });
     };
     ControllerOfTableForResolvingID.prototype.resolveGameModeID = function (gameSystemID, id, lang) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.resolveID(id, this.getGameSystemRef(gameSystemID).collection("gameMode"), lang, "GameMode")];
+                return [2 /*return*/, this.resolveID(id, this.getGameSystemRef(gameSystemID).collection("modes"), lang, "GameMode")];
             });
         });
     };

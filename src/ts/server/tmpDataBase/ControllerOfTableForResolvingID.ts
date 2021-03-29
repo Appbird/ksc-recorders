@@ -25,23 +25,18 @@ export class ControllerOfTableForResolvingID{
     async resolveGameSystemID(id:string,lang:LanguageInApplication){
         return this.resolveID(id,this.dataBase.gameSystemList,lang,"GameSystem");
     }
-
-    private findProperGameSystemInfo(gameSystemID:string){
-        const result = this.dataBase.getGameSystemInfo(gameSystemID);
-        return result;
-    }
     
-    async resolveAbilityID(gameSystemID:string,id:string,lang:LanguageInApplication){
-        return this.resolveID(id,(await this.findProperGameSystemInfo(gameSystemID)).list.AbilityList,lang,"Ability");
+    async resolveAbilityID(gameSystemID:string,gameModeID:string,id:string,lang:LanguageInApplication){
+        return this.resolveID(id,(await this.dataBase.getGameModeInfo(gameSystemID,gameModeID)).abilities,lang,"Ability");
     }
-    async resolveTargetID(gameSystemID:string,id:string,lang:LanguageInApplication){
-        return this.resolveID(id,(await this.findProperGameSystemInfo(gameSystemID)).list.TargetList,lang,"Target");
+    async resolveTargetID(gameSystemID:string,gameModeID:string,id:string,lang:LanguageInApplication){
+        return this.resolveID(id,(await this.dataBase.getGameModeInfo(gameSystemID,gameModeID)).targets,lang,"Target");
     }
-    async resolveGameDifficultyID(gameSystemID:string,id:string,lang:LanguageInApplication){
-        return this.resolveID(id,(await this.findProperGameSystemInfo(gameSystemID)).list.GameDifficultyList,lang,"GameDifficulty");
+    async resolveGameDifficultyID(gameSystemID:string,gameModeID:string,id:string,lang:LanguageInApplication){
+        return this.resolveID(id,(await this.dataBase.getGameModeInfo(gameSystemID,gameModeID)).difficulties,lang,"GameDifficulty");
     }
     async resolveGameModeID(gameSystemID:string,id:string,lang:LanguageInApplication){
-        return this.resolveID(id,(await this.findProperGameSystemInfo(gameSystemID)).list.GameModeList,lang,"GameMode");
+        return this.resolveID(id,(await this.dataBase.getGameSystemInfo(gameSystemID)).modes,lang,"GameMode");
     }
     async resolveRunnerID(id:string,lang:LanguageInApplication){
         return this.resolveID(id,this.dataBase.runnersList,lang,"runnersTable");

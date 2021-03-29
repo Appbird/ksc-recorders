@@ -43,26 +43,29 @@ var RecordDataBase = /** @class */ (function () {
     function RecordDataBase() {
         this.dataBase = firebaseAdmin_1.firebase.firestore;
     }
-    Object.defineProperty(RecordDataBase.prototype, "runnersList", {
+    Object.defineProperty(RecordDataBase.prototype, "runnersRef", {
         get: function () {
             return this.dataBase.collection("runners");
         },
         enumerable: false,
         configurable: true
     });
-    Object.defineProperty(RecordDataBase.prototype, "gameSystemList", {
+    Object.defineProperty(RecordDataBase.prototype, "gameSystemRef", {
         get: function () {
             return this.dataBase.collection("gameSystem");
         },
         enumerable: false,
         configurable: true
     });
+    RecordDataBase.prototype.getGameModeRef = function (gameSystemID, gameModeID) {
+        return this.gameSystemRef.doc(gameSystemID).collection("modes").doc(gameModeID);
+    };
     RecordDataBase.prototype.getGameSystemInfo = function (gameSystemID) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.gameSystemList.doc(gameSystemID).get()];
+                    case 0: return [4 /*yield*/, this.gameSystemRef.doc(gameSystemID).get()];
                     case 1:
                         result = _a.sent();
                         if (!result.exists)
@@ -72,12 +75,12 @@ var RecordDataBase = /** @class */ (function () {
             });
         });
     };
-    RecordDataBase.prototype.getRecord = function (gameSystemID, recordID) {
+    RecordDataBase.prototype.getGameModeInfo = function (gameSystemID, gameModeID) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.gameSystemList.doc(gameSystemID).collection("records").doc(recordID).get()];
+                    case 0: return [4 /*yield*/, this.gameSystemRef.doc(gameSystemID).collection("modes").doc(gameModeID).get()];
                     case 1:
                         result = _a.sent();
                         if (!result.exists)
@@ -87,7 +90,22 @@ var RecordDataBase = /** @class */ (function () {
             });
         });
     };
-    RecordDataBase.prototype.getRecordsWithCondition = function (gameSystemID, order, abilityIDsCondition, abilityIDs, targetIDs, runnerIDs) {
+    RecordDataBase.prototype.getRecord = function (gameSystemID, gameModeID, recordID) {
+        return __awaiter(this, void 0, void 0, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.getGameModeRef(gameSystemID, gameModeID).collection("records").doc(recordID).get()];
+                    case 1:
+                        result = _a.sent();
+                        if (!result.exists)
+                            throw new Error("\u6307\u5B9A\u3055\u308C\u305FID" + gameSystemID + "\u306B\u5BFE\u5FDC\u3059\u308B\u30B2\u30FC\u30E0\u304C\u5B58\u5728\u3057\u307E\u305B\u3093\u3002");
+                        return [2 /*return*/, result.data()];
+                }
+            });
+        });
+    };
+    RecordDataBase.prototype.getRecordsWithCondition = function (gameSystemID, gameModeID, order, abilityIDsCondition, abilityIDs, targetIDs, runnerIDs) {
         if (abilityIDs === void 0) { abilityIDs = []; }
         if (targetIDs === void 0) { targetIDs = []; }
         if (runnerIDs === void 0) { runnerIDs = []; }
@@ -98,7 +116,7 @@ var RecordDataBase = /** @class */ (function () {
                     case 0:
                         if (abilityIDs.length > 10 || targetIDs.length > 10 || runnerIDs.length > 10)
                             throw Error("\u80FD\u529B(" + abilityIDs.length + "\u3064),\u8A08\u6E2C\u5BFE\u8C61(" + targetIDs.length + "\u3064),\u8D70\u8005(" + runnerIDs.length + "\u3064)\u306E\u3046\u3061\u3044\u305A\u308C\u304B\u306E\u6761\u4EF6\u6307\u5B9A\u304C\u591A\u3059\u304E\u307E\u3059\u3002");
-                        recordsQuery = this.gameSystemList.doc(gameSystemID).collection("records");
+                        recordsQuery = this.getGameModeRef(gameSystemID, gameModeID).collection("records");
                         if (abilityIDs.length !== 0)
                             recordsQuery = this.addQueryAboutAbilityIDs(recordsQuery, abilityIDsCondition, abilityIDs);
                         if (targetIDs.length !== 0)

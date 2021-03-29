@@ -52,7 +52,7 @@ function convertRecordsIntoRecordGroup(records, info) {
                         numberOfRecords: info.numberOfRecords,
                         numberOfRunners: info.numberOfRunners
                     };
-                    return [4 /*yield*/, Promise.all(records.map(function (record) { return convertIRecordIntoIRecordInShortWithName(record, record.regulation.gameSystemEnvironment.gameSystemID, info.lang); }))];
+                    return [4 /*yield*/, Promise.all(records.map(function (record) { return convertIRecordIntoIRecordInShortWithName(record, info.lang); }))];
                 case 1: return [2 /*return*/, (_a.records = _b.sent(),
                         _a)];
             }
@@ -60,7 +60,7 @@ function convertRecordsIntoRecordGroup(records, info) {
     });
 }
 exports.convertRecordsIntoRecordGroup = convertRecordsIntoRecordGroup;
-function convertIRecordIntoIRecordInShortWithName(record, gameSystemID, lang) {
+function convertIRecordIntoIRecordInShortWithName(record, lang) {
     return __awaiter(this, void 0, void 0, function () {
         var gr, gse, cotfr, _a, _b, _c;
         return __generator(this, function (_d) {
@@ -82,16 +82,16 @@ function convertIRecordIntoIRecordInShortWithName(record, gameSystemID, lang) {
                     return [4 /*yield*/, cotfr.resolveGameModeID(gse.gameSystemID, gse.gameModeID, lang)];
                 case 2:
                     _c.gameModeName = _d.sent();
-                    return [4 /*yield*/, cotfr.resolveGameDifficultyID(gse.gameSystemID, gse.gameDifficultyID, lang)];
+                    return [4 /*yield*/, cotfr.resolveGameDifficultyID(gse.gameSystemID, gse.gameModeID, gse.gameDifficultyID, lang)];
                 case 3:
                     _b.gameSystemEnvironment = (_c.gameDifficultyName = _d.sent(),
                         _c),
                         _b.targetID = gr.targetID;
-                    return [4 /*yield*/, cotfr.resolveTargetID(gse.gameSystemID, gr.targetID, lang)];
+                    return [4 /*yield*/, cotfr.resolveTargetID(gse.gameSystemID, gse.gameModeID, gr.targetID, lang)];
                 case 4:
                     _b.targetName = _d.sent(),
                         _b.abilityIDsOfPlayerCharacters = gr.abilityIDsOfPlayerCharacters;
-                    return [4 /*yield*/, Promise.all(gr.abilityIDsOfPlayerCharacters.map(function (id) { return cotfr.resolveAbilityID(gameSystemID, id, lang); }))];
+                    return [4 /*yield*/, Promise.all(gr.abilityIDsOfPlayerCharacters.map(function (id) { return cotfr.resolveAbilityID(gse.gameSystemID, gse.gameModeID, id, lang); }))];
                 case 5:
                     _a.regulation = (_b.abilityNamesOfPlayerCharacters = _d.sent(),
                         _b),

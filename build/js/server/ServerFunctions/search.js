@@ -49,8 +49,7 @@ var checkerObj = {
     groupName: "string",
     gameSystemEnv: {
         gameSystemID: "string",
-        gameModeID: "string",
-        gameDifficultyID: "string",
+        gameModeID: "string"
     },
     orderOfRecordArray: "\"HigherFirst\" | \"LowerFirst\" | \"LaterFirst\" | \"EarlierFirst\"",
     startOfRecordArray: "string",
@@ -73,13 +72,13 @@ function search(dataInJSON) {
                     requestGroup = JSON.parse(dataInJSON);
                     if (!Array.isArray(requestGroup))
                         throw new Error("与データが配列ではありません。");
-                    if (!assureInputDataBelongToProperType(requestGroup))
+                    if (!InputCheckerUtility_1.checkInputObjectWithErrorPossibility(requestGroup, [checkerObj], "data"))
                         throw new Error("入力されたデータが正しくありません");
                     return [4 /*yield*/, Promise.all(requestGroup.map(function (request) { return __awaiter(_this, void 0, void 0, function () {
                             var records;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
-                                    case 0: return [4 /*yield*/, database.getRecordsWithCondition(request.gameSystemEnv.gameSystemID, request.orderOfRecordArray, request.abilityIDsCondition, request.abilityIDs, request.targetIDs, request.runnerIDs)];
+                                    case 0: return [4 /*yield*/, database.getRecordsWithCondition(request.gameSystemEnv.gameSystemID, request.gameSystemEnv.gameModeID, request.orderOfRecordArray, request.abilityIDsCondition, request.abilityIDs, request.targetIDs, request.runnerIDs)];
                                     case 1:
                                         records = _a.sent();
                                         return [2 /*return*/, convertRecordsIntoRecordGroup_1.convertRecordsIntoRecordGroup(records.slice(request.startOfRecordArray, request.limitOfRecordArray), {
@@ -112,13 +111,6 @@ function search(dataInJSON) {
     });
 }
 exports.search = search;
-function assureInputDataBelongToProperType(data) {
-    for (var _i = 0, data_1 = data; _i < data_1.length; _i++) {
-        var unit = data_1[_i];
-        InputCheckerUtility_1.checkInputObjectWithErrorPossibility(unit, checkerObj, "data");
-    }
-    return true;
-}
 function countRunners(record) {
     var runnerIDs = record.map(function (element) { return element.runnerID; });
     runnerIDs.sort();

@@ -9,24 +9,34 @@ export class RecordDataBase{
     constructor(){
         this.dataBase = firebase.firestore;
     }
-    get runnersList(){
+    get runnersRef(){
         return this.dataBase.collection("runners");
     }
-    get gameSystemList(){
+    get gameSystemRef(){
         return this.dataBase.collection("gameSystem");
     }
+    getGameModeRef(gameSystemID:string,gameModeID:string){
+        return this.gameSystemRef.doc(gameSystemID).collection("modes").doc(gameModeID);
+    }
+
     async getGameSystemInfo(gameSystemID:string){
-        const result = await this.gameSystemList.doc(gameSystemID).get();
+        const result = await this.gameSystemRef.doc(gameSystemID).get();
+        if (!result.exists) throw new Error(`指定されたID${gameSystemID}に対応するゲームが存在しません。`);
+        return result.data() as IGameSystemInfo;
+    }
+    async getGameModeInfo(gameSystemID:string,gameModeID:string){
+        const result = await this.gameSystemRef.doc(gameSystemID).collection("modes").doc(gameModeID).get();
         if (!result.exists) throw new Error(`指定されたID${gameSystemID}に対応するゲームが存在しません。`);
         return result.data() as IGameSystemInfo;
     }
     
-    async getRecord(gameSystemID:string,recordID:string){
-        const result = await this.gameSystemList.doc(gameSystemID).collection("records").doc(recordID).get();
+    async getRecord(gameSystemID:string,gameModeID:string,recordID:string){
+        const result = await this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(recordID).get();
         if (!result.exists) throw new Error(`指定されたID${gameSystemID}に対応するゲームが存在しません。`);
         return result.data() as IRecord;
     }
-    async getRecordsWithCondition(gameSystemID:string, 
+
+    async getRecordsWithCondition(gameSystemID:string, gameModeID:string,
         order:OrderOfRecordArray ,
         abilityIDsCondition: "AND" | "OR" | "AllowForOrder",
         abilityIDs:string[] = [],
@@ -35,7 +45,7 @@ export class RecordDataBase{
     ):Promise<IRecord[]>{
         if (abilityIDs.length > 10 || targetIDs.length > 10 || runnerIDs.length > 10) throw Error(`能力(${abilityIDs.length}つ),計測対象(${targetIDs.length}つ),走者(${runnerIDs.length}つ)のうちいずれかの条件指定が多すぎます。`)
         //[x] undefinedは指定なしとみなし、与えられた条件のうちで「早い順で」start件目からlimit件のデータをグループとして取り出す。(0スタート)
-        let recordsQuery:FirebaseFirestore.Query = this.gameSystemList.doc(gameSystemID).collection("records");
+        let recordsQuery:FirebaseFirestore.Query = this.getGameModeRef(gameSystemID,gameModeID).collection("records");
 
         if (abilityIDs.length !== 0) recordsQuery = this.addQueryAboutAbilityIDs(recordsQuery,abilityIDsCondition,abilityIDs)
         if (targetIDs.length !== 0) recordsQuery = recordsQuery.where("targetIDs","array-contains-any",targetIDs)

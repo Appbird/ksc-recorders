@@ -2,16 +2,16 @@ import { expected_IGameSystemEnvironment, IGameSystemEnvironment, IGameSystemEnv
 
 export interface IRegulation {
     gameSystemEnvironment:IGameSystemEnvironment;
-    abilityIDsOfPlayerCharacters: string[];
+    abilityIDs: string[];
     targetID:string;
 }
 export const expected_IRegulation = {
     gameSystemEnvironment:expected_IGameSystemEnvironment,
-    abilityIDsOfPlayerCharacters: "string[]",
+    abilityIDs: "string[]",
     targetID:"string",
 }
 export interface IRegulationResolved extends IRegulation {
     gameSystemEnvironment:IGameSystemEnvironmentResolved;
-    abilityNamesOfPlayerCharacters: string[];
+    abilityNames: string[];
     targetName:string;
 }

@@ -52,13 +52,23 @@ var RecordDataBase = /** @class */ (function () {
     });
     Object.defineProperty(RecordDataBase.prototype, "gameSystemRef", {
         get: function () {
-            return this.dataBase.collection("gameSystem");
+            return this.dataBase.collection("works");
         },
         enumerable: false,
         configurable: true
     });
     RecordDataBase.prototype.getGameModeRef = function (gameSystemID, gameModeID) {
         return this.gameSystemRef.doc(gameSystemID).collection("modes").doc(gameModeID);
+    };
+    RecordDataBase.prototype.checkExistanceOfGameMode = function (gameSystemID, gameModeID) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.getGameModeRef(gameSystemID, gameModeID).get()];
+                    case 1: return [2 /*return*/, (_a.sent()).exists];
+                }
+            });
+        });
     };
     RecordDataBase.prototype.getGameSystemInfo = function (gameSystemID) {
         return __awaiter(this, void 0, void 0, function () {
@@ -99,7 +109,7 @@ var RecordDataBase = /** @class */ (function () {
                     case 1:
                         result = _a.sent();
                         if (!result.exists)
-                            throw new Error("\u6307\u5B9A\u3055\u308C\u305FID" + gameSystemID + "\u306B\u5BFE\u5FDC\u3059\u308B\u30B2\u30FC\u30E0\u304C\u5B58\u5728\u3057\u307E\u305B\u3093\u3002");
+                            throw new Error("\u6307\u5B9A\u3055\u308C\u305F\u30B2\u30FC\u30E0ID" + gameSystemID + ",\u30E2\u30FC\u30C9ID" + gameModeID + "\u5185\u306E\u8A18\u9332ID" + recordID + "\u306B\u5BFE\u5FDC\u3059\u308B\u30E2\u30FC\u30C9\u304C\u5B58\u5728\u3057\u307E\u305B\u3093\u3002");
                         return [2 /*return*/, result.data()];
                 }
             });
@@ -111,19 +121,21 @@ var RecordDataBase = /** @class */ (function () {
         if (runnerIDs === void 0) { runnerIDs = []; }
         return __awaiter(this, void 0, void 0, function () {
             var recordsQuery, recordsQuerySnapshot, records;
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         if (abilityIDs.length > 10 || targetIDs.length > 10 || runnerIDs.length > 10)
-                            throw Error("\u80FD\u529B(" + abilityIDs.length + "\u3064),\u8A08\u6E2C\u5BFE\u8C61(" + targetIDs.length + "\u3064),\u8D70\u8005(" + runnerIDs.length + "\u3064)\u306E\u3046\u3061\u3044\u305A\u308C\u304B\u306E\u6761\u4EF6\u6307\u5B9A\u304C\u591A\u3059\u304E\u307E\u3059\u3002");
+                            throw Error("\u80FD\u529B(" + abilityIDs.length + "\u3064),\u8A08\u6E2C\u5BFE\u8C61(" + targetIDs.length + "\u3064),\u8D70\u8005(" + runnerIDs.length + "\u3064)\u306E\u3046\u3061\u3044\u305A\u308C\u304B\u306E\u6761\u4EF6\u6307\u5B9A\u304C10\u500B\u3088\u308A\u3082\u591A\u3044\u3067\u3059\u3002");
+                        console.log("[" + new Date().toUTCString() + "]\u4EE5\u4E0B\u306E\u6761\u4EF6\u3067\u691C\u7D22\u3092\u958B\u59CB\u3057\u307E\u3059\u3002\n\u001B[33m gameSystemID:" + gameSystemID + ", gameModeID:" + gameModeID + ", order:" + order + ", abilityIDsCondition:" + abilityIDsCondition + ", abilityIDs:[" + abilityIDs + "] (" + abilityIDs.length + "), targetIDs:[" + targetIDs + "] (" + targetIDs.length + "), runnerIDs:[" + runnerIDs + "] (" + runnerIDs.length + ") \u001B[0m");
                         recordsQuery = this.getGameModeRef(gameSystemID, gameModeID).collection("records");
                         if (abilityIDs.length !== 0)
                             recordsQuery = this.addQueryAboutAbilityIDs(recordsQuery, abilityIDsCondition, abilityIDs);
                         if (targetIDs.length !== 0)
-                            recordsQuery = recordsQuery.where("targetIDs", "array-contains-any", targetIDs);
+                            recordsQuery = recordsQuery.where("regulation.targetID", "in", targetIDs);
                         if (runnerIDs.length !== 0)
-                            recordsQuery = recordsQuery.where("runnerIDs", "array-contains-any", targetIDs);
-                        return [4 /*yield*/, this.addQueryAboutOrderBy(recordsQuery, order).get()];
+                            recordsQuery = recordsQuery.where("runnerID", "in", runnerIDs);
+                        return [4 /*yield*/, recordsQuery.get()];
                     case 1:
                         recordsQuerySnapshot = _a.sent();
                         records = recordsQuerySnapshot.docs.map(function (doc) {
@@ -131,7 +143,14 @@ var RecordDataBase = /** @class */ (function () {
                             data.id = doc.id;
                             return data;
                         });
-                        return [2 /*return*/, records];
+                        if (recordsQuerySnapshot.empty)
+                            console.info("条件に該当する記録が存在しませんでした。");
+                        //#NOTE abilityIDsでAND検索を行った場合の補填をここでする。
+                        if (abilityIDsCondition === "AND")
+                            records = records.filter(function (record) {
+                                return abilityIDs.every(function (abilityID) { return record.regulation.abilityIDs.includes(abilityID); });
+                            });
+                        return [2 /*return*/, records.sort(function (a, b) { return _this.sortFunction(a, b, order); })];
                 }
             });
         });
@@ -139,23 +158,21 @@ var RecordDataBase = /** @class */ (function () {
     RecordDataBase.prototype.addQueryAboutAbilityIDs = function (recordQuery, abilityIDsCondition, abilityIDs) {
         switch (abilityIDsCondition) {
             case "AND":
-                for (var _i = 0, abilityIDs_1 = abilityIDs; _i < abilityIDs_1.length; _i++) {
-                    var abilityID = abilityIDs_1[_i];
-                    recordQuery = recordQuery.where("abilityIDs", "array-contains", abilityID);
-                }
-                return recordQuery;
+                //#NOTE array-contains句は一つしか設定できずクエリでのAND検索が実装不可能であるため、必要条件のクエリとしてabilityIDs array-contains abilityIDs[0]をFirebase側に送り、のちに十分性をFunctionsサイドで補填する。
+                return recordQuery.where("regulation.abilityIDs", "array-contains", abilityIDs[0]);
             case "OR":
-                return recordQuery.where("abilityIDs", "array-contains-any", abilityIDs);
+                return recordQuery.where("regulation.abilityIDs", "array-contains-any", abilityIDs);
             case "AllowForOrder":
-                return recordQuery.where("abilityIDs", "==", abilityIDs);
+                return recordQuery.where("regulation.abilityIDs", "==", abilityIDs);
         }
     };
-    RecordDataBase.prototype.addQueryAboutOrderBy = function (recordQuery, order) {
+    RecordDataBase.prototype.sortFunction = function (a, b, order) {
         switch (order) {
-            case "EarlierFirst": return recordQuery.orderBy("timestamp", "asc");
-            case "LaterFirst": return recordQuery.orderBy("timestamp", "desc");
-            case "LowerFirst": return recordQuery.orderBy("stamp", "asc");
-            case "HigherFirst": return recordQuery.orderBy("stamp", "desc");
+            case "HigherFirst": return b.score - a.score;
+            case "LowerFirst": return a.score - b.score;
+            case "LaterFirst": return b.timestamp - a.timestamp;
+            case "EarlierFirst": return a.timestamp - b.timestamp;
+            default: return 0;
         }
     };
     return RecordDataBase;

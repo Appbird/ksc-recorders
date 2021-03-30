@@ -7,7 +7,7 @@ export const recordsData:IRecord[] = [
             "timestamp": 724300400000,
             "regulation" :{
               "gameSystemEnvironment"	:{ "gameDifficultyID" :"0", "gameModeID" :"0", "gameSystemID" :"0"},
-              "abilityIDsOfPlayerCharacters" :["0"], "targetID" :"0"
+              "abilityIDs" :["0"], "targetID" :"0"
           },
           "runnerID":"0", "tagID": [], "link" : ["---","---"], "note" : "---"
     },
@@ -17,7 +17,7 @@ export const recordsData:IRecord[] = [
         "timestamp": 734300400000,
         "regulation" :{
           "gameSystemEnvironment"	:{ "gameDifficultyID" :"0", "gameModeID" :"0", "gameSystemID" :"0"},
-          "abilityIDsOfPlayerCharacters" :["2"], "targetID" :"1"
+          "abilityIDs" :["2"], "targetID" :"1"
       },
       "runnerID":"0", "tagID": [], "link" : ["---","---"], "note" : "---"
     },
@@ -27,7 +27,7 @@ export const recordsData:IRecord[] = [
         "timestamp": 744300400000,
         "regulation" :{
           "gameSystemEnvironment"	:{ "gameDifficultyID" :"0", "gameModeID" :"0", "gameSystemID" :"0"},
-          "abilityIDsOfPlayerCharacters" :["1","2"], "targetID" :"1"
+          "abilityIDs" :["1","2"], "targetID" :"1"
       },
       "runnerID":"1", "tagID": [], "link" : ["---","---"], "note" : "---"
     },
@@ -37,7 +37,7 @@ export const recordsData:IRecord[] = [
         "timestamp": 704300400000,
         "regulation" :{
           "gameSystemEnvironment"	:{ "gameDifficultyID" :"0", "gameModeID" :"0", "gameSystemID" :"0"},
-          "abilityIDsOfPlayerCharacters" :["0","1","1","2"], "targetID" :"0"
+          "abilityIDs" :["0","1","1","2"], "targetID" :"0"
       },
       "runnerID":"0", "tagID": [], "link" : ["---","---"], "note" : "---"
     }

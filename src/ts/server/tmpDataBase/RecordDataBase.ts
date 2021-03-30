@@ -66,11 +66,11 @@ export class RecordDataBase{
     private ifRecordIncludeThatAbilityIDs(record:IRecord,abilityIDsCondition: "AND" | "OR" | "AllowForOrder", abilityIDs:string[]):boolean{
         switch(abilityIDsCondition){
             case "AND":
-                return abilityIDs.every( id => record.regulation.abilityIDsOfPlayerCharacters.includes(id));
+                return abilityIDs.every( id => record.regulation.abilityIDs.includes(id));
             case "OR":
-                return abilityIDs.some( id => record.regulation.abilityIDsOfPlayerCharacters.includes(id));
+                return abilityIDs.some( id => record.regulation.abilityIDs.includes(id));
             case "AllowForOrder":
-                return checkEqualityBetweenArrays(record.regulation.abilityIDsOfPlayerCharacters,abilityIDs);
+                return checkEqualityBetweenArrays(record.regulation.abilityIDs,abilityIDs);
         }
     }
     

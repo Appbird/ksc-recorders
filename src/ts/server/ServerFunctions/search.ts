@@ -68,13 +68,5 @@ export async function search(dataInJSON:string):Promise<IReceivedDataFromServer>
 }
 
 function countRunners(record:IRecord[]):number{
-    const runnerIDs:string[] = record.map((element) => element.runnerID);
-    runnerIDs.sort()
-    let note:string = "";
-    let result = 0;
-    for (const element of runnerIDs){
-        if (note === element) continue;
-        result++; note = element;
-    }
-    return result;
+    return new Set(record.map((element) => element.runnerID)).size
 }

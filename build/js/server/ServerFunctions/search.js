@@ -112,16 +112,5 @@ function search(dataInJSON) {
 }
 exports.search = search;
 function countRunners(record) {
-    var runnerIDs = record.map(function (element) { return element.runnerID; });
-    runnerIDs.sort();
-    var note = "";
-    var result = 0;
-    for (var _i = 0, runnerIDs_1 = runnerIDs; _i < runnerIDs_1.length; _i++) {
-        var element = runnerIDs_1[_i];
-        if (note === element)
-            continue;
-        result++;
-        note = element;
-    }
-    return result;
+    return new Set(record.map(function (element) { return element.runnerID; })).size;
 }

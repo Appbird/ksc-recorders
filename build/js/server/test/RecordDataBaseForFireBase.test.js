@@ -43,61 +43,134 @@ var assert_1 = __importDefault(require("assert"));
 var RecordDataBase_1 = require("../firestore/RecordDataBase");
 var arrayUtility_1 = require("../../utility/arrayUtility");
 var database = new RecordDataBase_1.RecordDataBase();
+var workID = "fpNF4dAftZV2ffQJLvv6";
+var modeID = "OkXl20WqP6KKVnHeM31O";
+var _recordIDs = ["dEM2ZqreBJWFlPBi1DKP", "OSisCLCeVulU1YvCjbkN", "x9uswxT60LwBj3mANb79", "a63aPqWLoxPLAYLAdsIa"];
+var _abilityIDs = ["fFP6AoTUpj0g2XuRaED1", "wSRE6MPhAxotO4lvQP6V", "qjHvv97ajO0B4c3FgpUF"];
+var _targetIDs = ["uqfq8ggNMxmQOk6OPQfs", "a0OVgCEoigK3zgG25J1V", "wH2m8P6Nnm1TuouFIFyj"];
+var _runnerIDs = ["6RVv7FuJmFTeV6yUlmSu", "NdAjJP82wpsoZeQiMWQx", "O0mzND0yxOuTko7zWPga"];
 describe("正しく記録が選別されるか", function () {
     //[x] これらのテストコードの実装
     //[x] こいつらをどういう配置にしてコンパイルするか…を考えたい！
     //[x] 挙動の確認
     //[x] Firestoreの物に切り替えてもしっかりとチェックが通るかを確認
+    it("そもそもデータベースは存在するか", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var _a, _b;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    _b = (_a = assert_1.default).ok;
+                    return [4 /*yield*/, database.checkExistanceOfGameMode(workID, modeID)];
+                case 1:
+                    _b.apply(_a, [_c.sent()]);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it("無条件でデータを取り出す。", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var _a, _b;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    //*> [0,1,3,2]
+                    _b = (_a = assert_1.default).ok;
+                    return [4 /*yield*/, checkF([0, 1, 3, 2], workID, modeID, "LowerFirst", "OR", [], [], [])];
+                case 1:
+                    //*> [0,1,3,2]
+                    _b.apply(_a, [_c.sent()]);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
     //[-]ここのエラーの修正
-    var workID = "fpNF4dAftZV2ffQJLvv6";
-    var modeID = "OkXl20WqP6KKVnHeM31O";
-    it("能力IDに2を含む記録を早い順で2件取り出す", function () { return __awaiter(void 0, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            //*> [1,3]
-            assert_1.default.ok(checkF(["1", "3"], workID, modeID, "LowerFirst", "AND", ["2"], [], [], 2));
-            return [2 /*return*/];
+    it("能力IDに2を含む記録を早い順で取り出す", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var _a, _b;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    //*> [1,3,2]
+                    _b = (_a = assert_1.default).ok;
+                    return [4 /*yield*/, checkF([1, 3, 2], workID, modeID, "LowerFirst", "OR", [2], [], [])];
+                case 1:
+                    //*> [1,3,2]
+                    _b.apply(_a, [_c.sent()]);
+                    return [2 /*return*/];
+            }
         });
     }); });
-    it("能力IDに2を含む記録を遅い順で2件取り出す", function () { return __awaiter(void 0, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            //*> [2,3]
-            assert_1.default.ok(checkF(["2", "3"], workID, modeID, "HigherFirst", "AND", ["2"], [], [], 2));
-            return [2 /*return*/];
-        });
-    }); });
-    it("能力IDに2を含む記録を新しい投稿順で2件取り出す", function () { return __awaiter(void 0, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            //*> [2,3]
-            assert_1.default.ok(checkF(["2", "3"], workID, modeID, "LaterFirst", "AND", ["2"], [], [], 2));
-            return [2 /*return*/];
+    it("能力IDに2を含む記録を新しい投稿順で取り出す", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var _a, _b;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    //*> [2,3]
+                    _b = (_a = assert_1.default).ok;
+                    return [4 /*yield*/, checkF([2, 1, 3], workID, modeID, "LaterFirst", "OR", [2], [], [])];
+                case 1:
+                    //*> [2,3]
+                    _b.apply(_a, [_c.sent()]);
+                    return [2 /*return*/];
+            }
         });
     }); });
     it("能力IDに1,2をどちらも含む記録を取り出す", function () { return __awaiter(void 0, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            //*> [3,2]
-            assert_1.default.ok(checkF(["3", "2"], workID, modeID, "LowerFirst", "AND", ["1", "2"]));
-            return [2 /*return*/];
+        var _a, _b;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    //*> [3,2]
+                    _b = (_a = assert_1.default).ok;
+                    return [4 /*yield*/, checkF([3, 2], workID, modeID, "LowerFirst", "AND", [1, 2])];
+                case 1:
+                    //*> [3,2]
+                    _b.apply(_a, [_c.sent()]);
+                    return [2 /*return*/];
+            }
         });
     }); });
     it("能力IDに1,2をいずれか含む記録を取り出す", function () { return __awaiter(void 0, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            //*> [1,3,2]
-            assert_1.default.ok(checkF(["1", "3", "2"], workID, modeID, "LowerFirst", "OR", ["1", "2"]));
-            return [2 /*return*/];
+        var _a, _b;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    //*> [1,3,2]
+                    _b = (_a = assert_1.default).ok;
+                    return [4 /*yield*/, checkF([1, 3, 2], workID, modeID, "LowerFirst", "OR", [1, 2])];
+                case 1:
+                    //*> [1,3,2]
+                    _b.apply(_a, [_c.sent()]);
+                    return [2 /*return*/];
+            }
         });
     }); });
     it("対象IDが1である記録を取り出す", function () { return __awaiter(void 0, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            //*> [1,2]
-            assert_1.default.ok(checkF(["1", "2"], workID, modeID, "LowerFirst", "AND", undefined, ["1"], undefined));
-            return [2 /*return*/];
+        var _a, _b;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    //*> [1,2]
+                    _b = (_a = assert_1.default).ok;
+                    return [4 /*yield*/, checkF([1, 2], workID, modeID, "LowerFirst", "OR", undefined, [1], undefined)];
+                case 1:
+                    //*> [1,2]
+                    _b.apply(_a, [_c.sent()]);
+                    return [2 /*return*/];
+            }
         });
     }); });
     it("走者IDが1である記録を取り出す", function () { return __awaiter(void 0, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            //*> [2]
-            assert_1.default.ok(checkF(["2"], workID, modeID, "LowerFirst", "AND", undefined, undefined, ["1"]));
-            return [2 /*return*/];
+        var _a, _b;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    //*> [2]
+                    _b = (_a = assert_1.default).ok;
+                    return [4 /*yield*/, checkF([2], workID, modeID, "LowerFirst", "OR", undefined, undefined, [1])];
+                case 1:
+                    //*> [2]
+                    _b.apply(_a, [_c.sent()]);
+                    return [2 /*return*/];
+            }
         });
     }); });
     it("記録IDが2である記録を取り出す", function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -107,7 +180,7 @@ describe("正しく記録が選別されるか", function () {
                 case 0:
                     //*> idが2の記録
                     _b = (_a = assert_1.default).ok;
-                    return [4 /*yield*/, database.getRecord(workID, modeID, "2")];
+                    return [4 /*yield*/, database.getRecord(workID, modeID, _recordIDs[2])];
                 case 1:
                     //*> idが2の記録
                     _b.apply(_a, [(_c.sent()).id === "2"]);
@@ -120,18 +193,25 @@ function converseIntoIDs(records) {
     return records.map(function (record) { return record.id; });
 }
 function checkF(expectedRecordIDs, gameSystemID, gameModeID, order, abilityIDsCondition, abilityIDs, targetIDs, runnerIDs, limits) {
+    if (abilityIDs === void 0) { abilityIDs = []; }
+    if (targetIDs === void 0) { targetIDs = []; }
+    if (runnerIDs === void 0) { runnerIDs = []; }
     if (limits === void 0) { limits = 10; }
     return __awaiter(this, void 0, void 0, function () {
-        var _a, _b;
+        var _a, _b, error_1;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
+                    _c.trys.push([0, 2, , 3]);
                     _a = arrayUtility_1.checkEqualityBetweenArraysWithConsoleMsg;
                     _b = converseIntoIDs;
-                    return [4 /*yield*/, database.getRecordsWithCondition(gameSystemID, gameModeID, order, abilityIDsCondition, abilityIDs, targetIDs, runnerIDs).catch(function (e) { console.error(e); return []; })];
-                case 1:
-                    _a.apply(void 0, [_b.apply(void 0, [_c.sent()]).slice(0, limits), expectedRecordIDs]);
-                    return [2 /*return*/];
+                    return [4 /*yield*/, database.getRecordsWithCondition(gameSystemID, gameModeID, order, abilityIDsCondition, abilityIDs.map(function (ele) { return _abilityIDs[ele]; }), targetIDs.map(function (ele) { return _targetIDs[ele]; }), runnerIDs.map(function (ele) { return _runnerIDs[ele]; }))];
+                case 1: return [2 /*return*/, _a.apply(void 0, [_b.apply(void 0, [(_c.sent()).slice(0, limits)]), expectedRecordIDs.map(function (expectedRecordID) { return _recordIDs[expectedRecordID]; })])];
+                case 2:
+                    error_1 = _c.sent();
+                    console.log(error_1);
+                    return [2 /*return*/, false];
+                case 3: return [2 /*return*/];
             }
         });
     });

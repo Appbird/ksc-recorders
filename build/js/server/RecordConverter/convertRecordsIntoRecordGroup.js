@@ -90,10 +90,10 @@ function convertIRecordIntoIRecordInShortWithName(record, lang) {
                     return [4 /*yield*/, cotfr.resolveTargetID(gse.gameSystemID, gse.gameModeID, gr.targetID, lang)];
                 case 4:
                     _b.targetName = _d.sent(),
-                        _b.abilityIDsOfPlayerCharacters = gr.abilityIDsOfPlayerCharacters;
-                    return [4 /*yield*/, Promise.all(gr.abilityIDsOfPlayerCharacters.map(function (id) { return cotfr.resolveAbilityID(gse.gameSystemID, gse.gameModeID, id, lang); }))];
+                        _b.abilityIDs = gr.abilityIDs;
+                    return [4 /*yield*/, Promise.all(gr.abilityIDs.map(function (id) { return cotfr.resolveAbilityID(gse.gameSystemID, gse.gameModeID, id, lang); }))];
                 case 5:
-                    _a.regulation = (_b.abilityNamesOfPlayerCharacters = _d.sent(),
+                    _a.regulation = (_b.abilityNames = _d.sent(),
                         _b),
                         _a.score = record.score,
                         _a.runnerID = record.runnerID,

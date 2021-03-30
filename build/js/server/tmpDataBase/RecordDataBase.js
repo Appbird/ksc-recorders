@@ -130,11 +130,11 @@ var RecordDataBase = /** @class */ (function () {
     RecordDataBase.prototype.ifRecordIncludeThatAbilityIDs = function (record, abilityIDsCondition, abilityIDs) {
         switch (abilityIDsCondition) {
             case "AND":
-                return abilityIDs.every(function (id) { return record.regulation.abilityIDsOfPlayerCharacters.includes(id); });
+                return abilityIDs.every(function (id) { return record.regulation.abilityIDs.includes(id); });
             case "OR":
-                return abilityIDs.some(function (id) { return record.regulation.abilityIDsOfPlayerCharacters.includes(id); });
+                return abilityIDs.some(function (id) { return record.regulation.abilityIDs.includes(id); });
             case "AllowForOrder":
-                return arrayUtility_1.checkEqualityBetweenArrays(record.regulation.abilityIDsOfPlayerCharacters, abilityIDs);
+                return arrayUtility_1.checkEqualityBetweenArrays(record.regulation.abilityIDs, abilityIDs);
         }
     };
     return RecordDataBase;

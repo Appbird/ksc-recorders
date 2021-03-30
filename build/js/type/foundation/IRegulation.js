@@ -4,6 +4,6 @@ exports.expected_IRegulation = void 0;
 var IGameSystemEnvironment_1 = require("./IGameSystemEnvironment");
 exports.expected_IRegulation = {
     gameSystemEnvironment: IGameSystemEnvironment_1.expected_IGameSystemEnvironment,
-    abilityIDsOfPlayerCharacters: "string[]",
+    abilityIDs: "string[]",
     targetID: "string",
 };

@@ -1,15 +1,14 @@
 //[x] RecordDataBase,ControllerOfTableForResolvingIDクラスを用いて、必要となる記録データを取り出し、ここでデータの加工を行う。
 //[x] クライアントに与えるべきデータをJSONで出力する。
 //#NOTE ここの実装はRecordDataBaseの実装に依存しない。
-import { RecordDataBase } from "../tmpDataBase/RecordDataBase";
+import { recordDataBase } from "../tmpDataBase/RecordDataBase";
 
-import { IReceivedDataAtServer_recordSearch,checker } from "../../type/transmission/IReceivedDataAtServer_recordSearch";
-import { IReceivedDataAtClient_recordSearch } from "../../type/transmission/IReceivedDataAtClient_recordSearch";
+import { IReceivedDataAtServer_recordSearch,checker } from "../../type/transmission/recordSearch/IReceivedDataAtServer_recordSearch";
+import { IReceivedDataAtClient_recordSearch } from "../../type/transmission/recordSearch/IReceivedDataAtClient_recordSearch";
 import { convertRecordsIntoRecordGroup } from "../recordConverter/convertRecordsIntoRecordGroup";
 import { checkInputObjectWithErrorPossibility } from "../../utility/InputCheckerUtility";
 import { IRecord } from "../../type/record/IRecord";
 
-const database = new RecordDataBase();
 export async function search(dataInJSON:string):Promise<IReceivedDataAtClient_recordSearch>{
     let sent:IReceivedDataAtClient_recordSearch;
     try {
@@ -18,7 +17,7 @@ export async function search(dataInJSON:string):Promise<IReceivedDataAtClient_re
         if (!checkInputObjectWithErrorPossibility<IReceivedDataAtServer_recordSearch[]>(requestGroup,[checker],`data`)) throw new Error("入力されたデータが正しくありません");
         
             const recordGroups = await Promise.all(requestGroup.map( async (request) => {
-                    const records = await database.getRecordsWithCondition(
+                    const records = await recordDataBase.getRecordsWithCondition(
                                         request.gameSystemEnv.gameSystemID,request.gameSystemEnv.gameModeID,request.orderOfRecordArray,
                                         request.abilityIDsCondition,request.abilityIDs,
                                         request.targetIDs,request.runnerIDs);

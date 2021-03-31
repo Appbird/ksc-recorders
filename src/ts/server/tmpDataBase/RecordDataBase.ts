@@ -6,7 +6,7 @@ import { IRecordDataBase } from "../type/IRecordDataBase";
 import { checkIsUndefined } from "../../utility/undefinedChecker";
 
 //[x] getRecordsWithConditionメソッドの実装
-export class RecordDataBase{
+class RecordDataBase{
     private dataBase:IRecordDataBase;
     constructor(){
         this.dataBase = exampleData;
@@ -76,3 +76,6 @@ export class RecordDataBase{
     
 
 }
+
+//#NOTE シングルトン
+export const recordDataBase = new RecordDataBase();

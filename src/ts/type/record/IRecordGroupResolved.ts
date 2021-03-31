@@ -1,6 +1,6 @@
-import { IRecordInShort, IRecordInShortResolved } from "./IRecord";
+import { IRecordInShortResolved } from "./IRecord";
 
-export interface IRecordGroup {
+export interface IRecordGroupResolved {
     groupName: string;
     records:IRecordInShortResolved[];
     lastPost: number;

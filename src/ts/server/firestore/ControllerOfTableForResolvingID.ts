@@ -1,18 +1,13 @@
 import { firebase } from "../firebaseAdmin";
 import { IItemOfResolveTableToName } from "../type/IItemOfResolveTableToName";
 import { LanguageInApplication } from "../type/LanguageInApplication";
-import { RecordDataBase } from "./RecordDataBase";
-
+import { recordDataBase } from "./RecordDataBase";
 
 /**
  * データベースのデータを参照してIDを解決してくれるテーブルマネージャー
  */
-
-export class ControllerOfTableForResolvingID{
-    private dataBase: RecordDataBase;
-    constructor(database:RecordDataBase){
-        this.dataBase = database;
-    }
+class ControllerOfTableForResolvingID{
+    constructor(){}
     private async resolveID(id:string, collection:FirebaseFirestore.CollectionReference, lang:LanguageInApplication, descriptionOfPlace:string = ""):Promise<string>{
         const result = await collection.doc(id).get();
         
@@ -34,7 +29,7 @@ export class ControllerOfTableForResolvingID{
 
 
     resolveGameSystemID(id:string,lang:LanguageInApplication){
-        return this.resolveID(id,this.dataBase.gameSystemRef,lang,"GameSystem");
+        return this.resolveID(id,firebase.firestore.collection("works"),lang,"GameSystem");
     }
 
     private getGameSystemRef(gameSystemID:string){
@@ -61,3 +56,5 @@ export class ControllerOfTableForResolvingID{
         return this.resolveID(id,firebase.firestore.collection("runners"),lang,"runnersTable");
     }
 }
+
+export const controllerOfTableForResolvingID = new ControllerOfTableForResolvingID()

@@ -1,5 +1,5 @@
-import { LanguageInApplication } from "../../server/type/LanguageInApplication";
-import { OrderOfRecordArray } from "../../server/type/OrderOfRecordArray";
+import { LanguageInApplication } from "../../../server/type/LanguageInApplication";
+import { OrderOfRecordArray } from "../../../server/type/OrderOfRecordArray";
 
 export interface IReceivedDataAtServer_recordSearch {
     groupName:string;

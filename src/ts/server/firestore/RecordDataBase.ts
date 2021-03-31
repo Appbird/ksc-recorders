@@ -4,7 +4,7 @@ import { IGameSystemInfo } from "../type/IGameSystemInfo";
 import { OrderOfRecordArray } from "../type/OrderOfRecordArray";
 
 //[x] getRecordsWithConditionメソッドの実装
-export class RecordDataBase{
+class RecordDataBase{
     private dataBase:FirebaseFirestore.Firestore;
     constructor(){
         this.dataBase = firebase.firestore;
@@ -92,3 +92,5 @@ export class RecordDataBase{
     }
 }
 
+
+export const recordDataBase = new RecordDataBase();

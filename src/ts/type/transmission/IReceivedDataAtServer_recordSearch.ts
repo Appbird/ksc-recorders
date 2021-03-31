@@ -1,8 +1,7 @@
 import { LanguageInApplication } from "../../server/type/LanguageInApplication";
 import { OrderOfRecordArray } from "../../server/type/OrderOfRecordArray";
-import { IGameSystemEnvironment } from "../foundation/IGameSystemEnvironment";
 
-export interface IReceivedDataFromClient_AboutRecordExhibition {
+export interface IReceivedDataAtServer_recordSearch {
     groupName:string;
 
     gameSystemEnv:{
@@ -20,4 +19,20 @@ export interface IReceivedDataFromClient_AboutRecordExhibition {
     runnerIDs:string[];
     language:LanguageInApplication
     
+}
+
+export const checker = {
+    groupName:"string",
+    gameSystemEnv:{
+        gameSystemID: "string",
+        gameModeID: "string"
+    },
+    orderOfRecordArray:`"HigherFirst" | "LowerFirst" | "LaterFirst" | "EarlierFirst"`,
+    startOfRecordArray:"string",
+    limitOfRecordArray:"string",
+    targetIDs:"string[]",
+    abilityIDs:"string[]",
+    abilityIDsCondition: `"AND" | "OR" | "AllowForOrder"`,
+    runnerIDs:"string[]",
+    language:`"Japanese" | "English"`
 }

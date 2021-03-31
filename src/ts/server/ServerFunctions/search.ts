@@ -2,38 +2,20 @@
 //[x] クライアントに与えるべきデータをJSONで出力する。
 //#NOTE ここの実装はRecordDataBaseの実装に依存しない。
 import { RecordDataBase } from "../tmpDataBase/RecordDataBase";
-import { ControllerOfTableForResolvingID } from "../tmpDataBase/ControllerOfTableForResolvingID";
 
-import { IReceivedDataFromClient_AboutRecordExhibition } from "../../type/transmission/IReceivedDataFromClient";
-import { IReceivedDataFromServer } from "../../type/transmission/IReceivedDataFromServer";
+import { IReceivedDataAtServer_recordSearch,checker } from "../../type/transmission/IReceivedDataAtServer_recordSearch";
+import { IReceivedDataAtClient_recordSearch } from "../../type/transmission/IReceivedDataAtClient_recordSearch";
 import { convertRecordsIntoRecordGroup } from "../recordConverter/convertRecordsIntoRecordGroup";
 import { checkInputObjectWithErrorPossibility } from "../../utility/InputCheckerUtility";
 import { IRecord } from "../../type/record/IRecord";
 
 const database = new RecordDataBase();
-const checkerObj = {
-    groupName:"string",
-    gameSystemEnv:{
-        gameSystemID: "string",
-        gameModeID: "string"
-    },
-    orderOfRecordArray:`"HigherFirst" | "LowerFirst" | "LaterFirst" | "EarlierFirst"`,
-    startOfRecordArray:"string",
-    limitOfRecordArray:"string",
-    targetIDs:"string[]",
-    abilityIDs:"string[]",
-    abilityIDsCondition: `"AND" | "OR" | "AllowForOrder"`,
-    runnerIDs:"string[]",
-    language:`"Japanese" | "English"`
-}
-export const controllerOfTableForResolvingID = new ControllerOfTableForResolvingID(database);
-
-export async function search(dataInJSON:string):Promise<IReceivedDataFromServer>{
-    let sent:IReceivedDataFromServer;
+export async function search(dataInJSON:string):Promise<IReceivedDataAtClient_recordSearch>{
+    let sent:IReceivedDataAtClient_recordSearch;
     try {
         const requestGroup:unknown = JSON.parse(dataInJSON);
         if (!Array.isArray(requestGroup)) throw new Error("与データが配列ではありません。")
-        if (!checkInputObjectWithErrorPossibility<IReceivedDataFromClient_AboutRecordExhibition[]>(requestGroup,[checkerObj],`data`)) throw new Error("入力されたデータが正しくありません");
+        if (!checkInputObjectWithErrorPossibility<IReceivedDataAtServer_recordSearch[]>(requestGroup,[checker],`data`)) throw new Error("入力されたデータが正しくありません");
         
             const recordGroups = await Promise.all(requestGroup.map( async (request) => {
                     const records = await database.getRecordsWithCondition(

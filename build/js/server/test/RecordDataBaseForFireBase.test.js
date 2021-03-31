@@ -82,7 +82,7 @@ describe("正しく記録が選別されるか", function () {
             }
         });
     }); });
-    //[-]ここのエラーの修正
+    //[x]ここのエラーの修正
     it("能力IDに2を含む記録を早い順で取り出す", function () { return __awaiter(void 0, void 0, void 0, function () {
         var _a, _b;
         return __generator(this, function (_c) {

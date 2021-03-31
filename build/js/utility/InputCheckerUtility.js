@@ -21,7 +21,7 @@ function checkInputObjectWithErrorPossibility(actual, expectedStructure, checked
             continue;
         }
         if (typeof expectedSubStructure === "string" && !checkType(actual[propertyName], expectedSubStructure)) {
-            throw new Error("\u30AD\u30FC" + propertyName + "\u306B\u5BFE\u5FDC\u3059\u308B\u5024\u306E\u578B\u306F" + expectedSubStructure + "\u3067\u3042\u308B\u3068\u3055\u308C\u3066\u3044\u307E\u3059\u304C\u3001\u5B9F\u969B\u306B\u306F" + actual[propertyName] + "(" + (Array.isArray(actual[propertyName]) ? "Array" : (actual[propertyName])) + "\u578B)\u3067\u3057\u305F\u3002\u5834\u6240 : " + checkedPlace);
+            throw new Error("\u30AD\u30FC" + propertyName + "\u306B\u5BFE\u5FDC\u3059\u308B\u5024\u306E\u578B\u306F" + expectedSubStructure + "\u3067\u3042\u308B\u3068\u3055\u308C\u3066\u3044\u307E\u3059\u304C\u3001\u5B9F\u969B\u306B\u306F" + actual[propertyName] + "(" + (Array.isArray(actual[propertyName]) ? "Array" : (typeof actual[propertyName])) + "\u578B)\u3067\u3057\u305F\u3002\u5834\u6240 : " + checkedPlace);
         }
     }
     return true;

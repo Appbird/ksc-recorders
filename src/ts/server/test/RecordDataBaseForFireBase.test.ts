@@ -27,7 +27,7 @@ describe("正しく記録が選別されるか", () =>{
             await checkF([0,1,3,2],workID,modeID,"LowerFirst","OR",[],[],[])
         );
     })
-    //[-]ここのエラーの修正
+    //[x]ここのエラーの修正
     it("能力IDに2を含む記録を早い順で取り出す", async () =>{
         //*> [1,3,2]
         assert.ok(

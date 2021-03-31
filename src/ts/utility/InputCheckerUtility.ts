@@ -16,7 +16,7 @@ export function checkInputObjectWithErrorPossibility<CheckType>(actual:any,expec
         }
         if (typeof expectedSubStructure === "string" && !checkType(actual[propertyName],expectedSubStructure)){
             throw new Error(`キー${propertyName}に対応する値の型は${expectedSubStructure}であるとされていますが、実際には${actual[propertyName]}(${
-                Array.isArray(actual[propertyName])?"Array":(actual[propertyName])}型)でした。場所 : ${checkedPlace}`)
+                Array.isArray(actual[propertyName])?"Array":(typeof actual[propertyName])}型)でした。場所 : ${checkedPlace}`)
         }
     }
     return true;

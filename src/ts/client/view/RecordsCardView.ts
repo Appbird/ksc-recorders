@@ -56,7 +56,7 @@ export class RecordGroupView{
 
         if (options.displayTags.gameSystemTags)tagsViews[0].generateTag(`${gameEnv.gameSystemName}/${gameEnv.gameModeName}/${gameEnv.gameDifficultyName}`,"gameSystem");
         if (options.displayTags.targetTags)tagsViews[0].generateTag(record.regulation.targetName,"target");
-        if (options.displayTags.abilityTags)for (const ability of record.regulation.abilityNamesOfPlayerCharacters) tagsViews[1].generateTag((ability === undefined ? "Not Found" : ability),"ability")
+        if (options.displayTags.abilityTags)for (const ability of record.regulation.abilityNames) tagsViews[1].generateTag((ability === undefined ? "Not Found" : ability),"ability")
         
         if (options.displayTags.gameSystemTags || options.displayTags.targetTags)ele.appendChild(tagsViews[0].getElement());
         if (options.displayTags.abilityTags)ele.appendChild(tagsViews[1].getElement());

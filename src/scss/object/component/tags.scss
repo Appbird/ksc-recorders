@@ -9,6 +9,18 @@
     padding: 0.3em;
     border-radius : 0.5em;
 }
+
+.c-tag.--etc{
+    background-color: rgb(70, 68, 68);
+    color: rgb(255, 255, 255);
+}
+
+.c-tag.--runner{
+    background-color: rgb(185, 185, 185);
+    font-size: 1.5em;
+    font-weight: bolder;
+}
+
 .c-tag.--ability{
     background-color: rgb(255, 194, 237);
 }

@@ -71,6 +71,19 @@ nav {
   box-shadow: inset 0 0 2px #777;
 }
 
+.c-evidenceMovie {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.c-evidenceMovie__placeholder {
+  margin: 1em;
+  width: 80%;
+  height: 45ex;
+  background-color: black;
+}
+
 .c-iconWithDescription {
   margin: 0 0.5em 0 0.5em;
 }
@@ -121,6 +134,17 @@ nav {
   border-radius: 0.5em;
 }
 
+.c-tag.--etc {
+  background-color: #464444;
+  color: white;
+}
+
+.c-tag.--runner {
+  background-color: #b9b9b9;
+  font-size: 1.5em;
+  font-weight: bolder;
+}
+
 .c-tag.--ability {
   background-color: #ffc2ed;
 }
@@ -147,6 +171,28 @@ nav {
 
 u-unused {
   display: none;
+}
+
+.u-biggerChara.c-title__main {
+  font-size: 3.5em;
+}
+
+.u-x-biggerChara.c-title__main {
+  font-size: 3.5em;
+}
+
+.u-x-biggerChara.c-title__sub {
+  font-size: xx-large;
+  font-weight: bolder;
+}
+
+.u-biggerChara.c-title__sub {
+  font-size: x-large;
+  font-weight: bolder;
+}
+
+.u-underline {
+  border-bottom: thin solid #131313;
 }
 
 /*# sourceMappingURL=common.css.map */

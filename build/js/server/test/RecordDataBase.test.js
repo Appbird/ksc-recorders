@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var assert_1 = __importDefault(require("assert"));
 var RecordDataBase_1 = require("../tmpDataBase/RecordDataBase");
 var arrayUtility_1 = require("../../utility/arrayUtility");
-var database = new RecordDataBase_1.RecordDataBase();
+var database = RecordDataBase_1.recordDataBase;
 describe("正しく記録が選別されるか", function () {
     //[x] これらのテストコードの実装
     //[x] こいつらをどういう配置にしてコンパイルするか…を考えたい！

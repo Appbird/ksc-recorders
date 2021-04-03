@@ -1,13 +1,13 @@
 import { element } from "../../utility/ViewUtility";
 import { TagsView } from "./TagsView";
 import { converseMiliSecondsIntoTime, convertNumberIntoDateString } from "../../utility/timeUtility";
-import { IRecordGroup } from "../../type/record/IRecordGroup";
+import { IRecordGroupResolved } from "../../type/record/IRecordGroupResolved";
 import { IRecordInShortResolved } from "../../type/record/IRecord";
 
 export class RecordGroupView{
     private _htmlElement:Element = document.createElement("div");
     
-    constructor(recordGroup:IRecordGroup,options:OptionObject = {
+    constructor(recordGroup:IRecordGroupResolved,options:OptionObject = {
         displayTags:{gameSystemTags:false,targetTags:false,abilityTags:true}
     }){
         this._htmlElement.classList.add("c-recordCardsGroup");

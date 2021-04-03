@@ -1,6 +1,6 @@
 import { RecordGroupView } from "../view/RecordsCardView";
-import { IRecordGroup } from "../../type/record/IRecordGroup";
-import { IReceivedDataAtClient_recordSearch } from "../../type/transmission/IReceivedDataAtClient_recordSearch";
+import { IRecordGroupResolved } from "../../type/record/IRecordGroupResolved";
+import { IReceivedDataAtClient_recordSearch } from "../../type/transmission/recordSearch/IReceivedDataAtClient_recordSearch";
 import { element } from "../../utility/ViewUtility";
 
 
@@ -9,7 +9,7 @@ export function generateSearchView(input:IReceivedDataAtClient_recordSearch, art
         displayError(input)
         return;
     }
-    const recordsData:IRecordGroup[] = input.recordGroups;
+    const recordsData:IRecordGroupResolved[] = input.recordGroups;
 
     for (const recordData of recordsData) {
         const element = new RecordGroupView(recordData);
@@ -32,7 +32,7 @@ function displayError(input:IReceivedDataAtClient_recordSearch){
 }
 function assureInputHasRecords(data:IReceivedDataAtClient_recordSearch):data is {
     isSuccess: boolean;
-    recordGroups: IRecordGroup[];
+    recordGroups: IRecordGroupResolved[];
 }{
     return data.isSuccess;
 }

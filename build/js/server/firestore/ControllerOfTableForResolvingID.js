@@ -36,14 +36,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ControllerOfTableForResolvingID = void 0;
+exports.controllerOfTableForResolvingID = void 0;
 var firebaseAdmin_1 = require("../firebaseAdmin");
 /**
  * データベースのデータを参照してIDを解決してくれるテーブルマネージャー
  */
 var ControllerOfTableForResolvingID = /** @class */ (function () {
-    function ControllerOfTableForResolvingID(database) {
-        this.dataBase = database;
+    function ControllerOfTableForResolvingID() {
     }
     ControllerOfTableForResolvingID.prototype.resolveID = function (id, collection, lang, descriptionOfPlace) {
         if (descriptionOfPlace === void 0) { descriptionOfPlace = ""; }
@@ -73,7 +72,7 @@ var ControllerOfTableForResolvingID = /** @class */ (function () {
         });
     };
     ControllerOfTableForResolvingID.prototype.resolveGameSystemID = function (id, lang) {
-        return this.resolveID(id, this.dataBase.gameSystemRef, lang, "GameSystem");
+        return this.resolveID(id, firebaseAdmin_1.firebase.firestore.collection("works"), lang, "GameSystem");
     };
     ControllerOfTableForResolvingID.prototype.getGameSystemRef = function (gameSystemID) {
         return firebaseAdmin_1.firebase.firestore.collection("works").doc(gameSystemID);
@@ -118,4 +117,4 @@ var ControllerOfTableForResolvingID = /** @class */ (function () {
     };
     return ControllerOfTableForResolvingID;
 }());
-exports.ControllerOfTableForResolvingID = ControllerOfTableForResolvingID;
+exports.controllerOfTableForResolvingID = new ControllerOfTableForResolvingID();

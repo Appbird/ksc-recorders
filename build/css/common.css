@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300&family=Montserrat:wght@100&family=Quicksand:wght@300&display=swap");
 body {
   font-family: "Quicksand", "M PLUS Rounded 1c", sans-serif;
   color: #0c1d46;
@@ -13,7 +14,7 @@ hr {
 }
 
 hr.u-bold {
-  height: 3px;
+  height: 5px;
 }
 
 hr.u-thin {
@@ -35,7 +36,6 @@ main {
   flex-wrap: nowrap;
   justify-content: center;
   min-height: 100%;
-  height: 100%;
 }
 
 article {
@@ -45,7 +45,6 @@ article {
   border-right: 10px solid #e9e9e9;
   border-left: 10px solid #e9e9e9;
   overflow-x: hidden;
-  overflow-y: scroll;
 }
 
 nav {
@@ -80,7 +79,7 @@ nav {
 .c-evidenceMovie__placeholder {
   margin: 1em;
   width: 80%;
-  height: 45ex;
+  height: 20em;
   background-color: black;
 }
 
@@ -101,10 +100,6 @@ nav {
 
 .c-recordCard:hover {
   transform: scale(1.005);
-}
-
-.u-width95per {
-  width: 95%;
 }
 
 .c-recordCardsGroup > * {
@@ -169,6 +164,25 @@ nav {
   font-size: xx-large;
 }
 
+.c-runnerNote > h1 {
+  padding: 0;
+}
+
+.c-runnerNote > h1::after {
+  content: "";
+  display: inline-block;
+  width: 100%;
+  height: 1px;
+  border: 0;
+  margin: 0;
+  padding: 0;
+  background-color: #bbb;
+}
+
+.u-font--ForNumber {
+  font-family: "Montserrat", sans-serif;
+}
+
 u-unused {
   display: none;
 }
@@ -191,8 +205,38 @@ u-unused {
   font-weight: bolder;
 }
 
+.u-bolderChara.c-title__sub {
+  font-weight: 900;
+}
+
 .u-underline {
-  border-bottom: thin solid #131313;
+  border-bottom: 2px solid #131313;
+}
+
+.u-space50vh {
+  width: 100%;
+  height: 50vh;
+}
+
+.u-space20vh {
+  width: 100%;
+  height: 20vh;
+}
+
+.u-space3em {
+  width: 100%;
+  height: 3em;
+}
+
+.u-space6em {
+  width: 100%;
+  height: 6em;
+}
+
+.u-width95per {
+  width: 95%;
+  margin-left: 2.5%;
+  margin-right: 2.5%;
 }
 
 /*# sourceMappingURL=common.css.map */

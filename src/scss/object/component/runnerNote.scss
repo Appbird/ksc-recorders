@@ -1,0 +1,16 @@
+
+
+.c-runnerNote>h1{
+    padding:0;
+}
+
+.c-runnerNote>h1::after{
+    content:"";
+    display: inline-block;
+    width: 100%;
+    height: 1px;
+    border: 0;
+    margin: 0;
+    padding: 0;
+    background-color: #bbb;
+}

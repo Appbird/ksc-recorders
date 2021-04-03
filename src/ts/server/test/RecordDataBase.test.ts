@@ -1,10 +1,10 @@
 
 import { IRecord } from "../../type/record/IRecord";
 import assert  from "assert";
-import { RecordDataBase } from "../tmpDataBase/RecordDataBase"
+import { recordDataBase } from "../tmpDataBase/RecordDataBase"
 import { checkEqualityBetweenArraysWithConsoleMsg } from "../../utility/arrayUtility";
 import { OrderOfRecordArray } from "../type/OrderOfRecordArray";
-const database = new RecordDataBase();
+const database = recordDataBase;
 describe("正しく記録が選別されるか", () =>{
     //[x] これらのテストコードの実装
     //[x] こいつらをどういう配置にしてコンパイルするか…を考えたい！

@@ -36,31 +36,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.search = exports.controllerOfTableForResolvingID = void 0;
+exports.search = void 0;
 //[x] RecordDataBase,ControllerOfTableForResolvingIDクラスを用いて、必要となる記録データを取り出し、ここでデータの加工を行う。
 //[x] クライアントに与えるべきデータをJSONで出力する。
 //#NOTE ここの実装はRecordDataBaseの実装に依存しない。
 var RecordDataBase_1 = require("../tmpDataBase/RecordDataBase");
-var ControllerOfTableForResolvingID_1 = require("../tmpDataBase/ControllerOfTableForResolvingID");
+var IReceivedDataAtServer_recordSearch_1 = require("../../type/transmission/recordSearch/IReceivedDataAtServer_recordSearch");
 var convertRecordsIntoRecordGroup_1 = require("../recordConverter/convertRecordsIntoRecordGroup");
 var InputCheckerUtility_1 = require("../../utility/InputCheckerUtility");
-var database = new RecordDataBase_1.RecordDataBase();
-var checkerObj = {
-    groupName: "string",
-    gameSystemEnv: {
-        gameSystemID: "string",
-        gameModeID: "string"
-    },
-    orderOfRecordArray: "\"HigherFirst\" | \"LowerFirst\" | \"LaterFirst\" | \"EarlierFirst\"",
-    startOfRecordArray: "string",
-    limitOfRecordArray: "string",
-    targetIDs: "string[]",
-    abilityIDs: "string[]",
-    abilityIDsCondition: "\"AND\" | \"OR\" | \"AllowForOrder\"",
-    runnerIDs: "string[]",
-    language: "\"Japanese\" | \"English\""
-};
-exports.controllerOfTableForResolvingID = new ControllerOfTableForResolvingID_1.ControllerOfTableForResolvingID(database);
 function search(dataInJSON) {
     return __awaiter(this, void 0, void 0, function () {
         var sent, requestGroup, recordGroups, reason_1;
@@ -72,13 +55,13 @@ function search(dataInJSON) {
                     requestGroup = JSON.parse(dataInJSON);
                     if (!Array.isArray(requestGroup))
                         throw new Error("与データが配列ではありません。");
-                    if (!InputCheckerUtility_1.checkInputObjectWithErrorPossibility(requestGroup, [checkerObj], "data"))
+                    if (!InputCheckerUtility_1.checkInputObjectWithErrorPossibility(requestGroup, [IReceivedDataAtServer_recordSearch_1.checker], "data"))
                         throw new Error("入力されたデータが正しくありません");
                     return [4 /*yield*/, Promise.all(requestGroup.map(function (request) { return __awaiter(_this, void 0, void 0, function () {
                             var records;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
-                                    case 0: return [4 /*yield*/, database.getRecordsWithCondition(request.gameSystemEnv.gameSystemID, request.gameSystemEnv.gameModeID, request.orderOfRecordArray, request.abilityIDsCondition, request.abilityIDs, request.targetIDs, request.runnerIDs)];
+                                    case 0: return [4 /*yield*/, RecordDataBase_1.recordDataBase.getRecordsWithCondition(request.gameSystemEnv.gameSystemID, request.gameSystemEnv.gameModeID, request.orderOfRecordArray, request.abilityIDsCondition, request.abilityIDs, request.targetIDs, request.runnerIDs)];
                                     case 1:
                                         records = _a.sent();
                                         return [2 /*return*/, convertRecordsIntoRecordGroup_1.convertRecordsIntoRecordGroup(records.slice(request.startOfRecordArray, request.limitOfRecordArray), {

@@ -42,7 +42,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var assert_1 = __importDefault(require("assert"));
 var RecordDataBase_1 = require("../firestore/RecordDataBase");
 var arrayUtility_1 = require("../../utility/arrayUtility");
-var database = new RecordDataBase_1.RecordDataBase();
+var database = RecordDataBase_1.recordDataBase;
 var workID = "fpNF4dAftZV2ffQJLvv6";
 var modeID = "OkXl20WqP6KKVnHeM31O";
 var _recordIDs = ["dEM2ZqreBJWFlPBi1DKP", "OSisCLCeVulU1YvCjbkN", "x9uswxT60LwBj3mANb79", "a63aPqWLoxPLAYLAdsIa"];

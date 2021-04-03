@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RecordDataBase = void 0;
+exports.recordDataBase = void 0;
 var firebaseAdmin_1 = require("../firebaseAdmin");
 //[x] getRecordsWithConditionメソッドの実装
 var RecordDataBase = /** @class */ (function () {
@@ -177,4 +177,4 @@ var RecordDataBase = /** @class */ (function () {
     };
     return RecordDataBase;
 }());
-exports.RecordDataBase = RecordDataBase;
+exports.recordDataBase = new RecordDataBase();

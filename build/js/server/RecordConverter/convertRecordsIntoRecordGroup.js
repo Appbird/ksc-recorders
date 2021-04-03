@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.convertRecordsIntoRecordGroup = void 0;
-var search_1 = require("../ServerFunctions/search");
+var ControllerOfTableForResolvingID_1 = require("../tmpDataBase/ControllerOfTableForResolvingID");
 //#NOTE このモジュールはRecordsDataBaseの実装に依存しない。
 function convertRecordsIntoRecordGroup(records, info) {
     return __awaiter(this, void 0, void 0, function () {
@@ -68,7 +68,7 @@ function convertIRecordIntoIRecordInShortWithName(record, lang) {
                 case 0:
                     gr = record.regulation;
                     gse = gr.gameSystemEnvironment;
-                    cotfr = search_1.controllerOfTableForResolvingID;
+                    cotfr = ControllerOfTableForResolvingID_1.controllerOfTableForResolvingID;
                     _a = {};
                     _b = {};
                     _c = {

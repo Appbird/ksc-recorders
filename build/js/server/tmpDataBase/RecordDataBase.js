@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.RecordDataBase = void 0;
+exports.recordDataBase = void 0;
 var arrayUtility_1 = require("../../utility/arrayUtility");
 var exampledata_1 = require("../test/exampledata");
 var undefinedChecker_1 = require("../../utility/undefinedChecker");
@@ -139,4 +139,5 @@ var RecordDataBase = /** @class */ (function () {
     };
     return RecordDataBase;
 }());
-exports.RecordDataBase = RecordDataBase;
+//#NOTE シングルトン
+exports.recordDataBase = new RecordDataBase();

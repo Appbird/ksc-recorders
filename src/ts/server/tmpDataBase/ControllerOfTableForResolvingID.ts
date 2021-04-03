@@ -1,14 +1,12 @@
 import { IItemOfResolveTableToName } from "../type/IItemOfResolveTableToName";
 import { LanguageInApplication } from "../type/LanguageInApplication";
-import { RecordDataBase } from "./RecordDataBase";
+import { recordDataBase } from "./RecordDataBase";
 
 /**
  * データベースのデータを参照してIDを解決してくれるテーブルマネージャー
  */
 export class ControllerOfTableForResolvingID{
-    private dataBase: RecordDataBase;
-    constructor(database:RecordDataBase){
-        this.dataBase = database;
+    constructor(){
     }
 
     private resolveID(id:string, table: IItemOfResolveTableToName[],lang:LanguageInApplication,descriptionOfPlace:string = ""){
@@ -23,22 +21,23 @@ export class ControllerOfTableForResolvingID{
     }
 
     async resolveGameSystemID(id:string,lang:LanguageInApplication){
-        return this.resolveID(id,this.dataBase.gameSystemList,lang,"GameSystem");
+        return this.resolveID(id,recordDataBase.gameSystemList,lang,"GameSystem");
     }
     
     async resolveAbilityID(gameSystemID:string,gameModeID:string,id:string,lang:LanguageInApplication){
-        return this.resolveID(id,(await this.dataBase.getGameModeInfo(gameSystemID,gameModeID)).abilities,lang,"Ability");
+        return this.resolveID(id,(await recordDataBase.getGameModeInfo(gameSystemID,gameModeID)).abilities,lang,"Ability");
     }
     async resolveTargetID(gameSystemID:string,gameModeID:string,id:string,lang:LanguageInApplication){
-        return this.resolveID(id,(await this.dataBase.getGameModeInfo(gameSystemID,gameModeID)).targets,lang,"Target");
+        return this.resolveID(id,(await recordDataBase.getGameModeInfo(gameSystemID,gameModeID)).targets,lang,"Target");
     }
     async resolveGameDifficultyID(gameSystemID:string,gameModeID:string,id:string,lang:LanguageInApplication){
-        return this.resolveID(id,(await this.dataBase.getGameModeInfo(gameSystemID,gameModeID)).difficulties,lang,"GameDifficulty");
+        return this.resolveID(id,(await recordDataBase.getGameModeInfo(gameSystemID,gameModeID)).difficulties,lang,"GameDifficulty");
     }
     async resolveGameModeID(gameSystemID:string,id:string,lang:LanguageInApplication){
-        return this.resolveID(id,(await this.dataBase.getGameSystemInfo(gameSystemID)).modes,lang,"GameMode");
+        return this.resolveID(id,(await recordDataBase.getGameSystemInfo(gameSystemID)).modes,lang,"GameMode");
     }
     async resolveRunnerID(id:string,lang:LanguageInApplication){
-        return this.resolveID(id,this.dataBase.runnersList,lang,"runnersTable");
+        return this.resolveID(id,recordDataBase.runnersList,lang,"runnersTable");
     }
 }
+export const controllerOfTableForResolvingID = new ControllerOfTableForResolvingID();

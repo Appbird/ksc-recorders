@@ -28,8 +28,8 @@ export const checker = {
         gameModeID: "string"
     },
     orderOfRecordArray:`"HigherFirst" | "LowerFirst" | "LaterFirst" | "EarlierFirst"`,
-    startOfRecordArray:"string",
-    limitOfRecordArray:"string",
+    startOfRecordArray:"number",
+    limitOfRecordArray:"number",
     targetIDs:"string[]",
     abilityIDs:"string[]",
     abilityIDsCondition: `"AND" | "OR" | "AllowForOrder"`,

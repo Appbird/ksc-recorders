@@ -36,13 +36,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ControllerOfTableForResolvingID = void 0;
+exports.controllerOfTableForResolvingID = exports.ControllerOfTableForResolvingID = void 0;
+var RecordDataBase_1 = require("./RecordDataBase");
 /**
  * データベースのデータを参照してIDを解決してくれるテーブルマネージャー
  */
 var ControllerOfTableForResolvingID = /** @class */ (function () {
-    function ControllerOfTableForResolvingID(database) {
-        this.dataBase = database;
+    function ControllerOfTableForResolvingID() {
     }
     ControllerOfTableForResolvingID.prototype.resolveID = function (id, table, lang, descriptionOfPlace) {
         if (descriptionOfPlace === void 0) { descriptionOfPlace = ""; }
@@ -57,7 +57,7 @@ var ControllerOfTableForResolvingID = /** @class */ (function () {
     ControllerOfTableForResolvingID.prototype.resolveGameSystemID = function (id, lang) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.resolveID(id, this.dataBase.gameSystemList, lang, "GameSystem")];
+                return [2 /*return*/, this.resolveID(id, RecordDataBase_1.recordDataBase.gameSystemList, lang, "GameSystem")];
             });
         });
     };
@@ -69,7 +69,7 @@ var ControllerOfTableForResolvingID = /** @class */ (function () {
                     case 0:
                         _a = this.resolveID;
                         _b = [id];
-                        return [4 /*yield*/, this.dataBase.getGameModeInfo(gameSystemID, gameModeID)];
+                        return [4 /*yield*/, RecordDataBase_1.recordDataBase.getGameModeInfo(gameSystemID, gameModeID)];
                     case 1: return [2 /*return*/, _a.apply(this, _b.concat([(_c.sent()).abilities, lang, "Ability"]))];
                 }
             });
@@ -83,7 +83,7 @@ var ControllerOfTableForResolvingID = /** @class */ (function () {
                     case 0:
                         _a = this.resolveID;
                         _b = [id];
-                        return [4 /*yield*/, this.dataBase.getGameModeInfo(gameSystemID, gameModeID)];
+                        return [4 /*yield*/, RecordDataBase_1.recordDataBase.getGameModeInfo(gameSystemID, gameModeID)];
                     case 1: return [2 /*return*/, _a.apply(this, _b.concat([(_c.sent()).targets, lang, "Target"]))];
                 }
             });
@@ -97,7 +97,7 @@ var ControllerOfTableForResolvingID = /** @class */ (function () {
                     case 0:
                         _a = this.resolveID;
                         _b = [id];
-                        return [4 /*yield*/, this.dataBase.getGameModeInfo(gameSystemID, gameModeID)];
+                        return [4 /*yield*/, RecordDataBase_1.recordDataBase.getGameModeInfo(gameSystemID, gameModeID)];
                     case 1: return [2 /*return*/, _a.apply(this, _b.concat([(_c.sent()).difficulties, lang, "GameDifficulty"]))];
                 }
             });
@@ -111,7 +111,7 @@ var ControllerOfTableForResolvingID = /** @class */ (function () {
                     case 0:
                         _a = this.resolveID;
                         _b = [id];
-                        return [4 /*yield*/, this.dataBase.getGameSystemInfo(gameSystemID)];
+                        return [4 /*yield*/, RecordDataBase_1.recordDataBase.getGameSystemInfo(gameSystemID)];
                     case 1: return [2 /*return*/, _a.apply(this, _b.concat([(_c.sent()).modes, lang, "GameMode"]))];
                 }
             });
@@ -120,10 +120,11 @@ var ControllerOfTableForResolvingID = /** @class */ (function () {
     ControllerOfTableForResolvingID.prototype.resolveRunnerID = function (id, lang) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                return [2 /*return*/, this.resolveID(id, this.dataBase.runnersList, lang, "runnersTable")];
+                return [2 /*return*/, this.resolveID(id, RecordDataBase_1.recordDataBase.runnersList, lang, "runnersTable")];
             });
         });
     };
     return ControllerOfTableForResolvingID;
 }());
 exports.ControllerOfTableForResolvingID = ControllerOfTableForResolvingID;
+exports.controllerOfTableForResolvingID = new ControllerOfTableForResolvingID();

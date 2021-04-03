@@ -14,8 +14,13 @@
 @use "object/component/stateInfo.scss";
 @use "object/component/tags.scss";
 @use "object/component/title.scss";
-// @use "object/project/*.scss";
-// @use "object/utility/*.scss";
+@use "object/component/runnerNote.scss";
+
+@use "object/utility/fontChanger.scss";
 @use "object/utility/unused.scss";
 @use "object/utility/biggerChara.scss";
 @use "object/utility/underline.scss";
+@use "object/utility/space.scss";
+@use "object/utility/width.scss";
+
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300&family=Montserrat:wght@100&family=Quicksand:wght@300&display=swap');

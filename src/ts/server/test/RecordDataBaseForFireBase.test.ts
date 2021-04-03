@@ -1,9 +1,9 @@
 import { IRecord } from "../../type/record/IRecord";
 import assert  from "assert";
-import { RecordDataBase } from "../firestore/RecordDataBase"
+import { recordDataBase } from "../firestore/RecordDataBase"
 import { checkEqualityBetweenArraysWithConsoleMsg } from "../../utility/arrayUtility";
 import { OrderOfRecordArray } from "../type/OrderOfRecordArray";
-const database = new RecordDataBase();
+const database = recordDataBase;
 
 const workID = "fpNF4dAftZV2ffQJLvv6"
 const modeID = "OkXl20WqP6KKVnHeM31O"

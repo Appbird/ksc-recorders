@@ -1,7 +1,7 @@
 import { IRecord, IRecordInShortResolved } from "../../type/record/IRecord";
 import { LanguageInApplication } from "../type/LanguageInApplication";
 import { IRecordGroupResolved } from "../../type/record/IRecordGroupResolved";
-import { controllerOfTableForResolvingID } from "../firestore/ControllerOfTableForResolvingID";
+import { controllerOfTableForResolvingID } from "../tmpDataBase/ControllerOfTableForResolvingID";
 
 //#NOTE このモジュールはRecordsDataBaseの実装に依存しない。
 export async function convertRecordsIntoRecordGroup(records: IRecord[],

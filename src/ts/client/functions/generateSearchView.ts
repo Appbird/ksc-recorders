@@ -1,6 +1,6 @@
 import { RecordGroupView } from "../view/RecordsCardView";
 import { IRecordGroupResolved } from "../../type/record/IRecordGroupResolved";
-import { IReceivedDataAtClient_recordSearch } from "../../type/transmission/recordSearch/IReceivedDataAtClient_recordSearch";
+import { IReceivedDataAtClient_recordSearch } from "../../type/transmission/record/IReceivedData_recordSearch";
 import { element } from "../../utility/ViewUtility";
 
 
@@ -9,12 +9,10 @@ export function generateSearchView(input:IReceivedDataAtClient_recordSearch, art
         displayError(input)
         return;
     }
-    const recordsData:IRecordGroupResolved[] = input.recordGroups;
+    const recordData:IRecordGroupResolved = input.result;
 
-    for (const recordData of recordsData) {
         const element = new RecordGroupView(recordData);
         articleDOM?.appendChild(element.htmlElement)
-    }
     return;
 }
 function displayError(input:IReceivedDataAtClient_recordSearch){
@@ -32,7 +30,7 @@ function displayError(input:IReceivedDataAtClient_recordSearch){
 }
 function assureInputHasRecords(data:IReceivedDataAtClient_recordSearch):data is {
     isSuccess: boolean;
-    recordGroups: IRecordGroupResolved[];
+    result: IRecordGroupResolved;
 }{
     return data.isSuccess;
 }

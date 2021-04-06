@@ -1,7 +1,6 @@
 import { firebase } from "../firebaseAdmin";
 import { IItemOfResolveTableToName } from "../type/IItemOfResolveTableToName";
 import { LanguageInApplication } from "../type/LanguageInApplication";
-import { recordDataBase } from "./RecordDataBase";
 
 /**
  * データベースのデータを参照してIDを解決してくれるテーブルマネージャー
@@ -38,7 +37,9 @@ class ControllerOfTableForResolvingID{
     private getGameModeRef(gameSystemID:string,gameModeID:string){
         return firebase.firestore.collection("works").doc(gameSystemID).collection("modes").doc(gameModeID)
     }
-    
+    async resolveTagID(gameSystemID:string,gameModeID:string,id:string,lang:LanguageInApplication){
+        return this.resolveID(id,this.getGameModeRef(gameSystemID,gameModeID).collection("tags"),lang,"Tag");
+    }
     
     async resolveAbilityID(gameSystemID:string,gameModeID:string,id:string,lang:LanguageInApplication){
         return this.resolveID(id,this.getGameModeRef(gameSystemID,gameModeID).collection("abilities"),lang,"Ability");

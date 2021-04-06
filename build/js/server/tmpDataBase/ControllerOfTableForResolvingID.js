@@ -124,6 +124,20 @@ var ControllerOfTableForResolvingID = /** @class */ (function () {
             });
         });
     };
+    ControllerOfTableForResolvingID.prototype.resolveTagID = function (gameSystemID, gameModeID, id, lang) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        _a = this.resolveID;
+                        _b = [id];
+                        return [4 /*yield*/, RecordDataBase_1.recordDataBase.getGameModeInfo(gameSystemID, gameModeID)];
+                    case 1: return [2 /*return*/, _a.apply(this, _b.concat([(_c.sent()).tags, lang, "runnersTable"]))];
+                }
+            });
+        });
+    };
     return ControllerOfTableForResolvingID;
 }());
 exports.ControllerOfTableForResolvingID = ControllerOfTableForResolvingID;

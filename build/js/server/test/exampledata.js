@@ -31,6 +31,7 @@ exports.exampleData = {
                     "id": "0",
                     "JName": "モード0",
                     "EName": "Mode0",
+                    "tags": [{ "id": "0", "JName": "だいしゃりん", "EName": "tag0" }],
                     "targets": [{ "id": "0", "JName": "対象0", "EName": "Target0" }, { "id": "1", "JName": "対象1", "EName": "Target1" }, { "id": "2", "JName": "対象2", "EName": "Target2" }],
                     "abilities": [{ "id": "0", "JName": "能力0", "EName": "Ability0" }, { "id": "1", "JName": "能力1", "EName": "Ability1" }, { "id": "2", "JName": "能力2", "EName": "Ability2" }],
                     "difficulties": [{ "id": "0", "JName": "難易度0", "EName": "Difficulty0", }, { "id": "1", "JName": "難易度1", "EName": "Difficulty1" }, { "id": "2", "JName": "難易度2", "EName": "Difficulty2" }],

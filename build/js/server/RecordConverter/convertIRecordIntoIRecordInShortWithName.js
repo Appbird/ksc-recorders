@@ -35,47 +35,53 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = __importDefault(require("express"));
-var apiDefinition_1 = require("./function/apiDefinition");
-var app = express_1.default();
-app.use("/page", express_1.default.static('public'));
-app.use(express_1.default.json());
-apiDefinition_1.apiDefinition.forEach(function (value, key) {
-    app.post("/api" + key, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var errorInString, _a, _b, error_1, errorInString;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
+exports.convertIRecordIntoIRecordInShortWithName = void 0;
+var ControllerOfTableForResolvingID_1 = require("../tmpDataBase/ControllerOfTableForResolvingID");
+function convertIRecordIntoIRecordInShortWithName(record, lang) {
+    return __awaiter(this, void 0, void 0, function () {
+        var gr, gse, cotfr, _a, _b, _c;
+        return __generator(this, function (_d) {
+            switch (_d.label) {
                 case 0:
-                    try {
-                        value.structureCheckerFunction(req.body);
-                    }
-                    catch (error) {
-                        errorInString = String(error);
-                        console.error(errorInString);
-                        res.status(400).json({ isSuccess: false, message: errorInString });
-                        return [2 /*return*/];
-                    }
-                    _c.label = 1;
+                    gr = record.regulation;
+                    gse = gr.gameSystemEnvironment;
+                    cotfr = ControllerOfTableForResolvingID_1.controllerOfTableForResolvingID;
+                    _a = {};
+                    _b = {};
+                    _c = {
+                        gameSystemID: gse.gameSystemID,
+                        gameModeID: gse.gameModeID,
+                        gameDifficultyID: gse.gameDifficultyID
+                    };
+                    return [4 /*yield*/, cotfr.resolveGameSystemID(gse.gameSystemID, lang)];
                 case 1:
-                    _c.trys.push([1, 3, , 4]);
-                    _b = (_a = res.status(200)).json;
-                    return [4 /*yield*/, value.process(req.body)];
+                    _c.gameSystemName = _d.sent();
+                    return [4 /*yield*/, cotfr.resolveGameModeID(gse.gameSystemID, gse.gameModeID, lang)];
                 case 2:
-                    _b.apply(_a, [_c.sent()]);
-                    return [3 /*break*/, 4];
+                    _c.gameModeName = _d.sent();
+                    return [4 /*yield*/, cotfr.resolveGameDifficultyID(gse.gameSystemID, gse.gameModeID, gse.gameDifficultyID, lang)];
                 case 3:
-                    error_1 = _c.sent();
-                    errorInString = String(error_1);
-                    console.error(errorInString);
-                    res.status(500).json({ isSuccess: false, message: errorInString });
-                    return [2 /*return*/];
-                case 4: return [2 /*return*/];
+                    _b.gameSystemEnvironment = (_c.gameDifficultyName = _d.sent(),
+                        _c),
+                        _b.targetID = gr.targetID;
+                    return [4 /*yield*/, cotfr.resolveTargetID(gse.gameSystemID, gse.gameModeID, gr.targetID, lang)];
+                case 4:
+                    _b.targetName = _d.sent(),
+                        _b.abilityIDs = gr.abilityIDs;
+                    return [4 /*yield*/, Promise.all(gr.abilityIDs.map(function (id) { return cotfr.resolveAbilityID(gse.gameSystemID, gse.gameModeID, id, lang); }))];
+                case 5:
+                    _a.regulation = (_b.abilityNames = _d.sent(),
+                        _b),
+                        _a.score = record.score,
+                        _a.runnerID = record.runnerID,
+                        _a.recordID = record.id;
+                    return [4 /*yield*/, cotfr.resolveRunnerID(record.runnerID, lang)];
+                case 6: //#README
+                return [2 /*return*/, (_a.runnerName = _d.sent(),
+                        _a)];
             }
         });
-    }); });
-});
-app.listen(3000, function () { return console.info("start on http://localhost:3000/page/html/main.html"); });
+    });
+}
+exports.convertIRecordIntoIRecordInShortWithName = convertIRecordIntoIRecordInShortWithName;

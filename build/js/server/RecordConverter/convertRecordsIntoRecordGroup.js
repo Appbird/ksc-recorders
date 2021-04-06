@@ -37,8 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.convertRecordsIntoRecordGroup = void 0;
-var ControllerOfTableForResolvingID_1 = require("../tmpDataBase/ControllerOfTableForResolvingID");
-//#NOTE このモジュールはRecordsDataBaseの実装に依存しない。
+var convertIRecordIntoIRecordInShortWithName_1 = require("./convertIRecordIntoIRecordInShortWithName");
 function convertRecordsIntoRecordGroup(records, info) {
     return __awaiter(this, void 0, void 0, function () {
         var copy, _a;
@@ -52,7 +51,7 @@ function convertRecordsIntoRecordGroup(records, info) {
                         numberOfRecords: info.numberOfRecords,
                         numberOfRunners: info.numberOfRunners
                     };
-                    return [4 /*yield*/, Promise.all(records.map(function (record) { return convertIRecordIntoIRecordInShortWithName(record, info.lang); }))];
+                    return [4 /*yield*/, Promise.all(records.map(function (record) { return convertIRecordIntoIRecordInShortWithName_1.convertIRecordIntoIRecordInShortWithName(record, info.lang); }))];
                 case 1: return [2 /*return*/, (_a.records = _b.sent(),
                         _a)];
             }
@@ -60,49 +59,3 @@ function convertRecordsIntoRecordGroup(records, info) {
     });
 }
 exports.convertRecordsIntoRecordGroup = convertRecordsIntoRecordGroup;
-function convertIRecordIntoIRecordInShortWithName(record, lang) {
-    return __awaiter(this, void 0, void 0, function () {
-        var gr, gse, cotfr, _a, _b, _c;
-        return __generator(this, function (_d) {
-            switch (_d.label) {
-                case 0:
-                    gr = record.regulation;
-                    gse = gr.gameSystemEnvironment;
-                    cotfr = ControllerOfTableForResolvingID_1.controllerOfTableForResolvingID;
-                    _a = {};
-                    _b = {};
-                    _c = {
-                        gameSystemID: gse.gameSystemID,
-                        gameModeID: gse.gameModeID,
-                        gameDifficultyID: gse.gameDifficultyID
-                    };
-                    return [4 /*yield*/, cotfr.resolveGameSystemID(gse.gameSystemID, lang)];
-                case 1:
-                    _c.gameSystemName = _d.sent();
-                    return [4 /*yield*/, cotfr.resolveGameModeID(gse.gameSystemID, gse.gameModeID, lang)];
-                case 2:
-                    _c.gameModeName = _d.sent();
-                    return [4 /*yield*/, cotfr.resolveGameDifficultyID(gse.gameSystemID, gse.gameModeID, gse.gameDifficultyID, lang)];
-                case 3:
-                    _b.gameSystemEnvironment = (_c.gameDifficultyName = _d.sent(),
-                        _c),
-                        _b.targetID = gr.targetID;
-                    return [4 /*yield*/, cotfr.resolveTargetID(gse.gameSystemID, gse.gameModeID, gr.targetID, lang)];
-                case 4:
-                    _b.targetName = _d.sent(),
-                        _b.abilityIDs = gr.abilityIDs;
-                    return [4 /*yield*/, Promise.all(gr.abilityIDs.map(function (id) { return cotfr.resolveAbilityID(gse.gameSystemID, gse.gameModeID, id, lang); }))];
-                case 5:
-                    _a.regulation = (_b.abilityNames = _d.sent(),
-                        _b),
-                        _a.score = record.score,
-                        _a.runnerID = record.runnerID,
-                        _a.recordID = record.id;
-                    return [4 /*yield*/, cotfr.resolveRunnerID(record.runnerID, lang)];
-                case 6: //#README
-                return [2 /*return*/, (_a.runnerName = _d.sent(),
-                        _a)];
-            }
-        });
-    });
-}

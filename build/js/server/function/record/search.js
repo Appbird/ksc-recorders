@@ -35,47 +35,38 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = __importDefault(require("express"));
-var apiDefinition_1 = require("./function/apiDefinition");
-var app = express_1.default();
-app.use("/page", express_1.default.static('public'));
-app.use(express_1.default.json());
-apiDefinition_1.apiDefinition.forEach(function (value, key) {
-    app.post("/api" + key, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var errorInString, _a, _b, error_1, errorInString;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
-                case 0:
-                    try {
-                        value.structureCheckerFunction(req.body);
-                    }
-                    catch (error) {
-                        errorInString = String(error);
-                        console.error(errorInString);
-                        res.status(400).json({ isSuccess: false, message: errorInString });
-                        return [2 /*return*/];
-                    }
-                    _c.label = 1;
+exports.search = void 0;
+//[x] RecordDataBase,ControllerOfTableForResolvingIDクラスを用いて、必要となる記録データを取り出し、ここでデータの加工を行う。
+//[x] クライアントに与えるべきデータをJSONで出力する。
+//#NOTE ここの実装はRecordDataBaseの実装に依存しない。
+var RecordDataBase_1 = require("../../tmpDataBase/RecordDataBase");
+var convertRecordsIntoRecordGroup_1 = require("../../recordConverter/convertRecordsIntoRecordGroup");
+function search(input) {
+    return __awaiter(this, void 0, void 0, function () {
+        var records, record;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, RecordDataBase_1.recordDataBase.getRecordsWithCondition(input.gameSystemEnv.gameSystemID, input.gameSystemEnv.gameModeID, input.orderOfRecordArray, input.abilityIDsCondition, input.abilityIDs, input.targetIDs, input.runnerIDs)];
                 case 1:
-                    _c.trys.push([1, 3, , 4]);
-                    _b = (_a = res.status(200)).json;
-                    return [4 /*yield*/, value.process(req.body)];
+                    records = _a.sent();
+                    return [4 /*yield*/, convertRecordsIntoRecordGroup_1.convertRecordsIntoRecordGroup(records.slice(input.startOfRecordArray, input.limitOfRecordArray), {
+                            groupName: input.groupName,
+                            numberOfRecords: records.length,
+                            numberOfRunners: countRunners(records),
+                            lang: input.language
+                        })];
                 case 2:
-                    _b.apply(_a, [_c.sent()]);
-                    return [3 /*break*/, 4];
-                case 3:
-                    error_1 = _c.sent();
-                    errorInString = String(error_1);
-                    console.error(errorInString);
-                    res.status(500).json({ isSuccess: false, message: errorInString });
-                    return [2 /*return*/];
-                case 4: return [2 /*return*/];
+                    record = _a.sent();
+                    return [2 /*return*/, {
+                            isSuccess: true,
+                            result: record
+                        }];
             }
         });
-    }); });
-});
-app.listen(3000, function () { return console.info("start on http://localhost:3000/page/html/main.html"); });
+    });
+}
+exports.search = search;
+function countRunners(record) {
+    return new Set(record.map(function (element) { return element.runnerID; })).size;
+}

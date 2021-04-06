@@ -9,7 +9,7 @@ export const recordsData:IRecord[] = [
               "gameSystemEnvironment"	:{ "gameDifficultyID" :"0", "gameModeID" :"0", "gameSystemID" :"0"},
               "abilityIDs" :["0"], "targetID" :"0"
           },
-          "runnerID":"0", "tagID": [], "link" : ["---","---"], "note" : "---"
+          "runnerID":"0", "tagID": ["0","0"], "link" : ["---","---"], "note" : "---"
     },
 
     {

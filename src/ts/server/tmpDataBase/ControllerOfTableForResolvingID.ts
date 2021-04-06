@@ -6,6 +6,7 @@ import { recordDataBase } from "./RecordDataBase";
  * データベースのデータを参照してIDを解決してくれるテーブルマネージャー
  */
 export class ControllerOfTableForResolvingID{
+    
     constructor(){
     }
 
@@ -38,6 +39,9 @@ export class ControllerOfTableForResolvingID{
     }
     async resolveRunnerID(id:string,lang:LanguageInApplication){
         return this.resolveID(id,recordDataBase.runnersList,lang,"runnersTable");
+    }
+    async resolveTagID(gameSystemID: string, gameModeID: string, id: string, lang: LanguageInApplication) {
+        return this.resolveID(id,(await recordDataBase.getGameModeInfo(gameSystemID,gameModeID)).tags,lang,"runnersTable");
     }
 }
 export const controllerOfTableForResolvingID = new ControllerOfTableForResolvingID();

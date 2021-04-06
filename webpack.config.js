@@ -3,7 +3,7 @@ module.exports = {
   
     entry: './src/ts/client/index.ts',
     output: {
-        path: `${__dirname}/build/js`,
+        path: `${__dirname}/public/js`,
         filename: "main.js"
     },
     module: {

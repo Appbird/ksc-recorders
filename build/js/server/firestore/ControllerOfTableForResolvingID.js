@@ -80,6 +80,13 @@ var ControllerOfTableForResolvingID = /** @class */ (function () {
     ControllerOfTableForResolvingID.prototype.getGameModeRef = function (gameSystemID, gameModeID) {
         return firebaseAdmin_1.firebase.firestore.collection("works").doc(gameSystemID).collection("modes").doc(gameModeID);
     };
+    ControllerOfTableForResolvingID.prototype.resolveTagID = function (gameSystemID, gameModeID, id, lang) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2 /*return*/, this.resolveID(id, this.getGameModeRef(gameSystemID, gameModeID).collection("tags"), lang, "Tag")];
+            });
+        });
+    };
     ControllerOfTableForResolvingID.prototype.resolveAbilityID = function (gameSystemID, gameModeID, id, lang) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {

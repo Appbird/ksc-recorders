@@ -37,7 +37,7 @@ export const expected_IRecord = {
     note: "string"
 }
 export interface IRecordResolved extends IRecord{
-    runnerName: number;
+    runnerName: string;
     tagName: string[];
     regulation: IRegulationResolved;
 }

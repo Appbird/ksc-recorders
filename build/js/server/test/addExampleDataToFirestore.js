@@ -35,20 +35,32 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __values = (this && this.__values) || function(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var firebaseAdmin_1 = require("../firebaseAdmin");
 var exampleRecords_1 = require("./exampleRecords");
 //#TODO 想定する通りにコードを作る。
 (function () { return __awaiter(void 0, void 0, void 0, function () {
-    var ref, data, mode, _i, _a, ele, _b, _c, ele, _d, _e, ele, _f, recordsData_1, record;
-    return __generator(this, function (_g) {
-        switch (_g.label) {
+    var ref, data, mode, _a, _b, ele, _c, _d, ele, _e, _f, ele, recordsData_1, recordsData_1_1, record;
+    var e_1, _g, e_2, _h, e_3, _j, e_4, _k;
+    return __generator(this, function (_l) {
+        switch (_l.label) {
             case 0: return [4 /*yield*/, firebaseAdmin_1.firebase.firestore.collection("works").add({
                     "id": 0, "JName": "日本語作品名", "EName": "Title Of a kirby's game",
                     "JDescription": "ゲームに関する説明を短く記述", "EDescription": "Description about the game",
                 })];
             case 1:
-                ref = _g.sent();
+                ref = _l.sent();
                 data = {
                     "ability": [{ "id": "0", "JName": "能力0", "EName": "Ability0" }, { "id": "1", "JName": "能力1", "EName": "Ability1" }, { "id": "2", "JName": "能力2", "EName": "Ability2" }],
                     "target": [{ "id": "0", "JName": "対象0", "EName": "Target0" }, { "id": "1", "JName": "対象1", "EName": "Target1" }, { "id": "2", "JName": "対象2", "EName": "Target2" }],
@@ -57,22 +69,58 @@ var exampleRecords_1 = require("./exampleRecords");
                 };
                 return [4 /*yield*/, ref.collection("modes").add(data.modes[0])];
             case 2:
-                mode = _g.sent();
-                for (_i = 0, _a = data.ability; _i < _a.length; _i++) {
-                    ele = _a[_i];
-                    mode.collection("abilities").add(ele);
+                mode = _l.sent();
+                try {
+                    for (_a = __values(data.ability), _b = _a.next(); !_b.done; _b = _a.next()) {
+                        ele = _b.value;
+                        mode.collection("abilities").add(ele);
+                    }
                 }
-                for (_b = 0, _c = data.difficulty; _b < _c.length; _b++) {
-                    ele = _c[_b];
-                    mode.collection("difficulties").add(ele);
+                catch (e_1_1) { e_1 = { error: e_1_1 }; }
+                finally {
+                    try {
+                        if (_b && !_b.done && (_g = _a.return)) _g.call(_a);
+                    }
+                    finally { if (e_1) throw e_1.error; }
                 }
-                for (_d = 0, _e = data.target; _d < _e.length; _d++) {
-                    ele = _e[_d];
-                    mode.collection("targets").add(ele);
+                try {
+                    for (_c = __values(data.difficulty), _d = _c.next(); !_d.done; _d = _c.next()) {
+                        ele = _d.value;
+                        mode.collection("difficulties").add(ele);
+                    }
                 }
-                for (_f = 0, recordsData_1 = exampleRecords_1.recordsData; _f < recordsData_1.length; _f++) {
-                    record = recordsData_1[_f];
-                    mode.collection("records").add(record);
+                catch (e_2_1) { e_2 = { error: e_2_1 }; }
+                finally {
+                    try {
+                        if (_d && !_d.done && (_h = _c.return)) _h.call(_c);
+                    }
+                    finally { if (e_2) throw e_2.error; }
+                }
+                try {
+                    for (_e = __values(data.target), _f = _e.next(); !_f.done; _f = _e.next()) {
+                        ele = _f.value;
+                        mode.collection("targets").add(ele);
+                    }
+                }
+                catch (e_3_1) { e_3 = { error: e_3_1 }; }
+                finally {
+                    try {
+                        if (_f && !_f.done && (_j = _e.return)) _j.call(_e);
+                    }
+                    finally { if (e_3) throw e_3.error; }
+                }
+                try {
+                    for (recordsData_1 = __values(exampleRecords_1.recordsData), recordsData_1_1 = recordsData_1.next(); !recordsData_1_1.done; recordsData_1_1 = recordsData_1.next()) {
+                        record = recordsData_1_1.value;
+                        mode.collection("records").add(record);
+                    }
+                }
+                catch (e_4_1) { e_4 = { error: e_4_1 }; }
+                finally {
+                    try {
+                        if (recordsData_1_1 && !recordsData_1_1.done && (_k = recordsData_1.return)) _k.call(recordsData_1);
+                    }
+                    finally { if (e_4) throw e_4.error; }
                 }
                 return [2 /*return*/];
         }

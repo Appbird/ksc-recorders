@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.apiDefinition = void 0;
+var IReceivedData_recordDetail_1 = require("../../type/transmission/record/IReceivedData_recordDetail");
+var IReceivedData_recordSearch_1 = require("../../type/transmission/record/IReceivedData_recordSearch");
+var detail_1 = require("./record/detail");
+var search_1 = require("./record/search");
+exports.apiDefinition = new Map();
+exports.apiDefinition.set("/record/search", { structureCheckerFunction: IReceivedData_recordSearch_1.isIReceivedDataAtServer_recordSearch, process: search_1.search });
+exports.apiDefinition.set("/record/detail", { structureCheckerFunction: IReceivedData_recordDetail_1.isIReceivedDataAtServer_recordDetail, process: detail_1.detail });

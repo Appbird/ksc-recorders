@@ -1,6 +1,5 @@
 "use strict";
 //[x] RecordDataBase,ControllerOfTableForResolvingIDクラスを用いて、必要となる記録データを取り出し、ここでデータの加工を行う。
-//[-] クライアントに与えるべきデータをJSONで出力する。
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.controllerOfTableForResolvingID = void 0;
 var exampledata_1 = require("./exampledata");

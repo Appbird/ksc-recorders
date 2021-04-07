@@ -1,7 +1,7 @@
 export interface IReceivedDataAtServer{}
 
 export interface IReceivedDataAtClient{
-    isSuccess:boolean;
+    isSucceeded:boolean;
     result?:any;
     message?:string;
 }

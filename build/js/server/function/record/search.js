@@ -59,7 +59,7 @@ function search(input) {
                 case 2:
                     record = _a.sent();
                     return [2 /*return*/, {
-                            isSuccess: true,
+                            isSucceeded: true,
                             result: record
                         }];
             }

@@ -49,7 +49,6 @@ var __values = (this && this.__values) || function(o) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var firebaseAdmin_1 = require("../firebaseAdmin");
 var exampleRecords_1 = require("./exampleRecords");
-//#TODO 想定する通りにコードを作る。
 (function () { return __awaiter(void 0, void 0, void 0, function () {
     var ref, data, mode, _a, _b, ele, _c, _d, ele, _e, _f, ele, recordsData_1, recordsData_1_1, record;
     var e_1, _g, e_2, _h, e_3, _j, e_4, _k;

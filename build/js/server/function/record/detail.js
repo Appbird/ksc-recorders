@@ -48,7 +48,7 @@ function detail(input) {
                 case 1:
                     result = _b.sent();
                     _a = {
-                        isSuccess: true
+                        isSucceeded: true
                     };
                     return [4 /*yield*/, convertRecordIntoIRecordResolved_1.convertRecordIntoRecordResolved(result, input.lang)];
                 case 2: return [2 /*return*/, (_a.result = _b.sent(),

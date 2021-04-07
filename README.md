@@ -4,10 +4,14 @@
 
 # 利用したもの
 
+- marked.js
+https://marked.js.org/
 - SimpleMDE - Markdown Editor by Sparksuite
 https://simplemde.com/
 
 ## フォント
+- Font Awesome 5
+https://fontawesome.com/
 - Montserrat
 https://fonts.google.com/specimen/Montserrat
 - Quicksand

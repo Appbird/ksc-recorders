@@ -6,7 +6,7 @@ export class TagsView{
         this.element = document.createElement("div");
         this.element.classList.add("c-tags");
     }
-    generateTag(tagName:string,kind:"ability"|"target"|"gameSystem"){
+    generateTag(tagName:string,kind:"ability"|"target"|"gameSystem"|"hashTag"){
         let icon = "";
         switch (kind){
             case "ability"  :
@@ -17,6 +17,9 @@ export class TagsView{
                 break;
             case "gameSystem":
                 icon = `fas fa-star`
+                break;
+            case "hashTag":
+                icon = `fas fa-hashtag`
                 break;
         }
         this.element.appendChild(

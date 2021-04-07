@@ -5,13 +5,13 @@ import { IRecordGroupResolved } from "../../type/record/IRecordGroupResolved";
 import { IRecordInShortResolved } from "../../type/record/IRecord";
 
 export class RecordGroupView{
-    private _htmlElement:Element = document.createElement("div");
+    readonly htmlElement = document.createElement("div");
     
     constructor(recordGroup:IRecordGroupResolved,options:OptionObject = {
         displayTags:{gameSystemTags:false,targetTags:false,abilityTags:true}
     }){
-        this._htmlElement.classList.add("c-recordCardsGroup");
-        this._htmlElement.appendChild(
+        this.htmlElement.classList.add("c-recordCardsGroup");
+        this.htmlElement.appendChild(
             element`
         <div class = "c-recordGroupHeader">
             <div class="c-title">
@@ -34,9 +34,6 @@ export class RecordGroupView{
         `
         )
         for(const record of recordGroup.records)this.appendRecordCard(record,options);
-    }
-    get htmlElement(){
-        return this._htmlElement;
     }
     appendRecordCard(record:IRecordInShortResolved,options:OptionObject){
         //[x] これをElementとして出力して、TagをDOM操作で後付けしたい
@@ -61,7 +58,7 @@ export class RecordGroupView{
         if (options.displayTags.gameSystemTags || options.displayTags.targetTags)ele.appendChild(tagsViews[0].getElement());
         if (options.displayTags.abilityTags)ele.appendChild(tagsViews[1].getElement());
         
-        this._htmlElement.append(ele);
+        this.htmlElement.append(ele);
     }
 }
 

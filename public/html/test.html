@@ -1,0 +1,34 @@
+<div class="c-title">
+  <div class="c-title__main">記録の基本情報</div>
+</div>
+<hr noshade class="u-bold" />
+<div class="u-width95per">
+  <div class="c-evidenceMovie">
+    <div class="c-evidenceMovie__placeholder"></div>
+  </div>
+  <div class="c-title">
+    <div class="c-title__sub u-underline">
+      <i class="fas fa-link"></i> <a>${recordDetail.link[0]}</a>
+    </div>
+  </div>
+
+  <div class="c-title">
+    <div class="c-title__main u-biggerChara">
+      ${converseMiliSecondsIntoTime(recordDetail.score)}
+    </div>
+    <div class="c-title__sub u-biggerChara onClickFirer_RunnerName">
+      <i class="fas fa-user"></i>${recordDetail.runnerName}
+    </div>
+  </div>
+  <hr noshade class="u-thin" />
+  <div class="tagsDetail"></div>
+</div>
+<div class="u-space3em"></div>
+<div class="c-title">
+  <div class="c-title__main">走者ノート</div>
+</div>
+<hr noshade class="u-bold" />
+<div class="u-width95per">
+  <div class="c-runnerNote">${marked(recordDetail.note)}</div>
+  <div class="u-space3em"></div>
+</div>

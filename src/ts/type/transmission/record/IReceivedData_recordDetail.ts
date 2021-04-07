@@ -23,5 +23,5 @@ const checker = {
         gameSystemID: "string",
         gameModeID: "string"
     },
-    id: "number"
+    id: "string"
 }

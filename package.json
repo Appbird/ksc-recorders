@@ -21,9 +21,11 @@
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
+    "@types/marked": "^2.0.1",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "firebase-admin": "^9.5.0",
+    "marked": "^2.0.1",
     "simplemde": "^1.11.2"
   }
 }

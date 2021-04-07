@@ -2,7 +2,15 @@ import App from "./App";
 
 const app = new App();
 
-app.search([{
+app.detail({
+    gameSystemEnv:{
+        gameSystemID:"0",
+        gameModeID:"0"
+    },
+    id:"0",
+    lang:"Japanese"
+})
+/* app.search([{
     groupName: "ボス1",
     gameSystemEnv: {
         gameSystemID: "0",
@@ -31,3 +39,4 @@ app.search([{
     runnerIDs: [],
     language: "Japanese"
 }])
+*/

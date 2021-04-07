@@ -23,7 +23,7 @@ export async function search(input:IReceivedDataAtServer_recordSearch):Promise<I
             
                 
     return {
-        isSuccess:true,
+        isSucceeded:true,
         result:record
     }
 }

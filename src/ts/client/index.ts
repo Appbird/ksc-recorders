@@ -1,8 +1,10 @@
 import App from "./App";
+const articleDOM =  document.getElementById("article")
+if (articleDOM === null) throw new Error("idがarticleである要素を見つけられませんでした。")
+const app = new App("none",articleDOM);
 
-const app = new App();
 
-app.detail({
+/* app.detail({
     gameSystemEnv:{
         gameSystemID:"0",
         gameModeID:"0"
@@ -10,6 +12,7 @@ app.detail({
     id:"0",
     lang:"Japanese"
 })
+*/
 /* app.search([{
     groupName: "ボス1",
     gameSystemEnv: {

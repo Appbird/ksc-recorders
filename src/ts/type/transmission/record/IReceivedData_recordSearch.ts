@@ -7,6 +7,9 @@ import { IReceivedDataAtClient, IReceivedDataAtServer } from "../transmissionBas
 export interface IReceivedDataAtClient_recordSearch extends IReceivedDataAtClient {
     result?: IRecordGroupResolved;
 }
+export interface IReceivedDataAtClient_recordSearchSuccessfully extends IReceivedDataAtClient {
+    result: IRecordGroupResolved;
+}
 
 
 export interface IReceivedDataAtServer_recordSearch extends IReceivedDataAtServer {

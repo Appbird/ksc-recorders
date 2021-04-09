@@ -5,6 +5,9 @@ import { IReceivedDataAtClient, IReceivedDataAtServer } from "../transmissionBas
 export interface IReceivedDataAtClient_recordDetail extends IReceivedDataAtClient{
     result?:IRecordResolved
 }
+export interface IReceivedDataAtClient_recordDetailSuccessfully extends IReceivedDataAtClient{
+    result:IRecordResolved
+}
 export interface IReceivedDataAtServer_recordDetail extends IReceivedDataAtServer{
     gameSystemEnv:{
         gameSystemID: string;

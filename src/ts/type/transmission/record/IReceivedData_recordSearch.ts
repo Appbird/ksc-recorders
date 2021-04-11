@@ -5,7 +5,7 @@ import { IRecordGroupResolved } from "../../record/IRecordGroupResolved";
 import { IReceivedDataAtClient, IReceivedDataAtServer } from "../transmissionBase";
 
 export interface IReceivedDataAtClient_recordSearch extends IReceivedDataAtClient {
-    result?: IRecordGroupResolved;
+    result?: IRecordGroupResolved[];
 }
 export interface IReceivedDataAtClient_recordSearchSuccessfully extends IReceivedDataAtClient {
     result: IRecordGroupResolved;

@@ -4,28 +4,70 @@ import { OrderOfRecordArray } from "../type/OrderOfRecordArray";
 import { exampleData } from "../test/exampledata";
 import { IRecordDataBase } from "../type/IRecordDataBase";
 import { checkIsUndefined } from "../../utility/undefinedChecker";
+import { InterfaceOfRecordDatabase } from "../type/InterfaceOfRecordDatabase";
 
-//[x] getRecordsWithConditionメソッドの実装
-class RecordDataBase{
+export class RecordDataBase implements InterfaceOfRecordDatabase{
     private dataBase:IRecordDataBase;
     constructor(){
         this.dataBase = exampleData;
     }
-    /** @deprecated これをDataBaseを利用する側で使うと仮データベースと実データベースとの整合が取れなくなるので注意 */
-    get runnersList(){
-        return this.dataBase.runnersTable;
-    }
-    /** @deprecated これをDataBaseを利用する側で使うと仮データベースと実データベースとの整合が取れなくなるので注意 */
-    get gameSystemList(){
-        return this.dataBase.gameSystemInfo;
-    }
-    async getGameModeInfo(gameSystemID:string,gameModeID:string){
-        const gameMode = (await this.getGameSystemInfo(gameSystemID)).modes.find(item => item.id === gameModeID);
-        return checkIsUndefined(gameMode,`指定されたID${gameSystemID}に対応するモードが、シリーズのゲーム(ID:${gameSystemID})に存在しません。`)
+    
+
+    async getGameSystemCollection(){
+        return this.dataBase.gameSystemInfo
     }
     async getGameSystemInfo(gameSystemID:string){
         return checkIsUndefined(this.dataBase.gameSystemInfo.find(item => item.id === gameSystemID),`指定されたID${gameSystemID}に対応するシリーズのゲームが存在しません。`)
     }
+
+
+    async getGameModeCollection(gameSystemID:string){
+        return (await this.getGameSystemInfo(gameSystemID)).modes
+    }
+    async getGameModeInfo(gameSystemID:string,gameModeID:string){
+        return checkIsUndefined((await this.getGameSystemInfo(gameSystemID)).modes.find(item => item.id === gameModeID),`指定されたID${gameSystemID}に対応するモードが、シリーズのゲーム(ID:${gameSystemID})に存在しません。`)
+    }
+
+
+    async getRunnerCollection(){
+        return this.dataBase.runnersTable
+    }
+    async getRunnerInfo(id:string){
+        return checkIsUndefined(this.dataBase.runnersTable.find(item => item.id === id),`指定されたID${id}に対応する走者は存在しません。`)
+    }
+
+
+    async getTargetCollection(gameSystemID:string,gameModeID:string){
+        return (await this.getGameModeInfo(gameSystemID,gameModeID)).targets
+    }
+    async getTargetInfo(gameSystemID:string,gameModeID:string,id:string){
+        return checkIsUndefined((await this.getGameModeInfo(gameSystemID,gameModeID)).targets.find(item => item.id === id),`ゲームモード${gameSystemID}/${gameModeID}における指定されたID${id}に対応する計測対象は存在しません。`)
+    }
+
+
+    async getAbilityCollection(gameSystemID:string,gameModeID:string){
+        return (await this.getGameModeInfo(gameSystemID,gameModeID)).abilities
+    }
+    async getAbilityInfo(gameSystemID:string,gameModeID:string,id:string){
+        return checkIsUndefined((await this.getGameModeInfo(gameSystemID,gameModeID)).abilities.find(item => item.id === id),`ゲームモード${gameSystemID}/${gameModeID}における指定されたID${id}に対応する能力は存在しません。`)
+    }
+
+
+    async getGameDifficultyCollection(gameSystemID:string,gameModeID:string){
+        return (await this.getGameModeInfo(gameSystemID,gameModeID)).difficulties
+    }
+    async getGameDifficultyInfo(gameSystemID:string,gameModeID:string,id:string){
+        return checkIsUndefined((await this.getGameModeInfo(gameSystemID,gameModeID)).difficulties.find(item => item.id === id),`ゲームモード${gameSystemID}/${gameModeID}における指定されたID${id}に対応する難易度は存在しません。`)
+    }
+
+
+    async getHashTagCollection(gameSystemID:string){
+        return (await this.getGameSystemInfo(gameSystemID)).tags
+    }
+    async getHashTagInfo(gameSystemID:string,id:string){
+        return checkIsUndefined((await this.getGameSystemInfo(gameSystemID)).tags.find(item => item.id === id),`ゲーム${gameSystemID}における指定されたID${id}に対応するハッシュタグは存在しません。`)
+    }
+
     async getRecord(gameSystemID:string,gameModeID:string,recordID:string){
     //[x] 与えられた条件に適した記録を記録を一つ返す。
         const result = (await this.getGameModeInfo(gameSystemID,gameModeID)).records.find( (item) => item.id === recordID);

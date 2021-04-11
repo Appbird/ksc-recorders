@@ -10,7 +10,7 @@ import { LanguageInApplication } from "../server/type/LanguageInApplication";
 const marked = require("marked");
 
 interface APIFunctions {
-    record_search:{required:IReceivedDataAtServer_recordSearch, returned:IReceivedDataAtClient_recordSearchSuccessfully},
+    record_search:{required:IReceivedDataAtServer_recordSearch[], returned:IReceivedDataAtClient_recordSearchSuccessfully[]},
     record_detail:{required:IReceivedDataAtServer_recordDetail, returned:IReceivedDataAtClient_recordDetailSuccessfully}
 }
 
@@ -106,9 +106,7 @@ export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptio
 
     //#CTODO ここの型を埋める。
     private async search(requestConditions:PageStates["searchResultView"]){
-        const result = await Promise.all(
-            requestConditions.required.map( (requestCondition) => this.accessToAPI("record_search",requestCondition))
-        )
+        const result = await this.accessToAPI("record_search",requestConditions.required)
         result.map(receivedData => this.articleDOM.appendChild(new RecordGroupView(receivedData.result,this).htmlElement))
         this.option.gameSystemEnvDisplayed = requestConditions[0].gameSystemEnv;
         this.state = "searchResultView"
@@ -122,10 +120,11 @@ export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptio
         
         const record = (await this.accessToAPI("record_detail",request)).result;
 
-        const relatedRecord = (await this.accessToAPI("record_search",{
+        const relatedRecord = (await this.accessToAPI("record_search",[{
             groupName:"同レギュレーションの記録", gameSystemEnv: record.regulation.gameSystemEnvironment, orderOfRecordArray: "LowerFirst", startOfRecordArray:0, limitOfRecordArray:100,
             targetIDs:[record.regulation.targetID], abilityIDs: record.regulation.abilityIDs, abilityIDsCondition: "AllowForOrder", runnerIDs: [], language: request.lang
-        }) ).result
+        }]) )[0].result
+        
         let rank:number|undefined = relatedRecord.records.findIndex(element => element.id === record.id)
         if (rank === -1) rank = undefined;
         detailDiv.appendChild(new RecordDetailView(record,this,rank).htmlElement) 

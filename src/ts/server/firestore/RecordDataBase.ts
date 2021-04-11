@@ -1,38 +1,85 @@
 import { IRecord } from "../../type/record/IRecord";
+import { IRunner } from "../../type/record/IRunner";
 import { firebase } from "../firebaseAdmin";
-import { IGameSystemInfo } from "../type/IGameSystemInfo";
+import { HashTagItem, IGameSystemInfo } from "../type/IGameSystemInfo";
+import { InterfaceOfRecordDatabase } from "../type/InterfaceOfRecordDatabase";
 import { OrderOfRecordArray } from "../type/OrderOfRecordArray";
+import { AbilityItem, GameDifficultyItem, GameModeItem, TargetItem } from "../type/UniqueResolveTableToGameSystem";
 
 //[x] getRecordsWithConditionメソッドの実装
-class RecordDataBase{
+class RecordDataBase implements InterfaceOfRecordDatabase{
     private dataBase:FirebaseFirestore.Firestore;
     constructor(){
         this.dataBase = firebase.firestore;
     }
-    get runnersRef(){
+    
+    private getRunnersRef(){
         return this.dataBase.collection("runners");
     }
-    get gameSystemRef(){
+    private getGameSystemCollectionRef(){
         return this.dataBase.collection("works");
     }
-    getGameModeRef(gameSystemID:string,gameModeID:string){
-        return this.gameSystemRef.doc(gameSystemID).collection("modes").doc(gameModeID);
+    private getGameSystemRef(gameSystemID:string){
+        return this.dataBase.collection("works").doc(gameSystemID);
     }
-    async checkExistanceOfGameMode(gameSystemID:string,gameModeID:string){
+    private getGameModeRef(gameSystemID:string,gameModeID:string){
+        return this.getGameSystemCollectionRef().doc(gameSystemID).collection("modes").doc(gameModeID);
+    }
+    private async checkExistanceOfGameMode(gameSystemID:string,gameModeID:string){
         return (await this.getGameModeRef(gameSystemID,gameModeID).get()).exists
     }
 
+
+
+    async getGameSystemCollection(){
+        const result = await this.getGameSystemCollectionRef().get();
+        if (result.empty) throw new Error(`登録されているゲームが存在しません。`);
+        //#NOTE ここ無理矢理で不安になる…
+        return result.docs as unknown as IGameSystemInfo[];
+    }
     async getGameSystemInfo(gameSystemID:string){
-        const result = await this.gameSystemRef.doc(gameSystemID).get();
+        const result = await this.getGameSystemCollectionRef().doc(gameSystemID).get();
         if (!result.exists) throw new Error(`指定されたID${gameSystemID}に対応するゲームが存在しません。`);
         return result.data() as IGameSystemInfo;
+    }
+
+    async getGameModeCollection(gameSystemID:string){
+        const result = await this.getGameSystemRef(gameSystemID).collection("modes").get()
+        if (result.empty) throw new Error(`ゲーム${gameSystemID}に登録されているゲームモードがありません`);
+        return result.docs as unknown as GameModeItem[];
     }
     async getGameModeInfo(gameSystemID:string,gameModeID:string){
-        const result = await this.gameSystemRef.doc(gameSystemID).collection("modes").doc(gameModeID).get();
-        if (!result.exists) throw new Error(`指定されたID${gameSystemID}に対応するゲームが存在しません。`);
-        return result.data() as IGameSystemInfo;
+        const result = await this.getGameModeRef(gameSystemID,gameModeID).get();
+        if (!result.exists) throw new Error(`ゲーム${gameSystemID}に登録されているゲームモード${gameModeID}が存在しません。`);
+        return result.data() as GameModeItem;
     }
-    
+
+    async getGameDifficultyCollection(gameSystemID:string,gameModeID:string){
+        const result = await this.getGameModeRef(gameSystemID,gameModeID).collection("difficulty").get();
+        if (result.empty) throw new Error(`ゲームモード${gameSystemID}/${gameModeID}に登録されている難易度がありません。`);
+        return result.docs as unknown as GameDifficultyItem[];
+    }
+    async getGameDifficultyInfo(gameSystemID:string,gameModeID:string,id:string){
+        const result = await this.getGameModeRef(gameSystemID,gameModeID).collection("difficulty").doc(id).get();
+        if (result.exists) throw new Error(`ゲームモード${gameSystemID}/${gameModeID}に登録されている難易度${id}が存在しません。`);
+        return result.data() as GameDifficultyItem;
+    }
+
+    async getAbilityCollection(gameSystemID:string,gameModeID:string){
+        const result = await this.getGameModeRef(gameSystemID,gameModeID).collection("ability").get();
+        if (result.empty) throw new Error(`ゲームモード${gameSystemID}/${gameModeID}に登録されている能力がありません。`);
+        return result.docs as unknown as AbilityItem[];
+    }
+    async getAbilityInfo(gameSystemID:string,gameModeID:string,id:string){
+        const result = await this.getGameModeRef(gameSystemID,gameModeID).collection("ability").doc(id).get();
+        if (result.exists) throw new Error(`ゲームモード${gameSystemID}/${gameModeID}に登録されている能力${id}が存在しません。`);
+        return result.data() as AbilityItem;
+    }
+
+    //#TODO この調子でRunnerとTarget,HashTagのcollection,infoゲッターを実装する。
+
+
+
     async getRecord(gameSystemID:string,gameModeID:string,recordID:string){
         const result = await this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(recordID).get();
         if (!result.exists) throw new Error(`指定されたゲームID${gameSystemID},モードID${gameModeID}内の記録ID${recordID}に対応するモードが存在しません。`);

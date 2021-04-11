@@ -9,7 +9,6 @@ import { IItemOfResolveTableToName } from "./IItemOfResolveTableToName";
     records:IRecord[];
     targets: TargetItem[];
     difficulties: GameDifficultyItem[];
-    tags:IItemOfResolveTableToName[];
     JDescription?: string
     EDescription?: string
     
@@ -23,5 +22,5 @@ export interface TargetItem extends IItemOfResolveTableToName{
 }
 
 export interface GameDifficultyItem extends IItemOfResolveTableToName{
-    TargetIDsIncludedInTheDifficulty?:number[]
+    TargetIDsIncludedInTheDifficulty:string[]
 }

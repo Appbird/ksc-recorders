@@ -3,11 +3,11 @@
 (詳細な説明はのちに追加)
 
 # 利用したもの
-
-- marked.js
-https://marked.js.org/
-- SimpleMDE - Markdown Editor by Sparksuite
-https://simplemde.com/
+#TODO 後でpackage.jsonに記載されているものもまとめる。
+- Twitter widget.js
+https://developer.twitter.com/en/docs/twitter-for-websites/javascript-api/overview
+- IFrame Player API
+https://developers.google.com/youtube/iframe_api_reference?hl=ja
 
 ## フォント
 - Font Awesome 5

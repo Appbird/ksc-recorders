@@ -6,16 +6,15 @@ export interface IRecordInShort {
     score: number;
     regulation: IRegulation;
     runnerID:string;
-    recordID:string;
+    id:string;
 }
 export interface IRecordInShortResolved extends IRecordInShort {
     regulation: IRegulationResolved;
     runnerName:string;
 }
 
-export interface IRecord{
+export interface IRecord extends IRecordInShort{
     id: string;
-
     //[x] ここの命名をtimeInMiliSecondではなくscoreにしたい…。
     score: number;
     //[x] timestampを追加する

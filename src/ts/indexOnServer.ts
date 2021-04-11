@@ -1,5 +1,5 @@
 import express from "express"
-import { apiDefinition } from "./function/apiDefinition";
+import { apiDefinition } from "./server/function/apiDefinition";
 const app = express();
 app.use("/page",express.static('public'));
 app.use(express.json())

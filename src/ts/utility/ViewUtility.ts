@@ -7,14 +7,17 @@ function escapeSpecialChars(str:string) {
         .replace(/'/g, "&#039;");
 }
 export function htmlToElement(html:string) {
-    const template = document.createElement("template");
+    const template = document.createElement("div");
     template.innerHTML = html;
-    return template.content.firstElementChild;
+    return template.firstElementChild;
 }
-
 export function element(strings:TemplateStringsArray,...values:any){
+    
     const htmlString = strings.reduce(
         (result, str, i) => {
+            if (i===0){
+                
+            }
             const value = values[i-1];
             if (typeof value == "string"){
                 return result + escapeSpecialChars(value) + str;

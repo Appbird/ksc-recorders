@@ -102,7 +102,7 @@ nav {
   transform: scale(1.005);
 }
 
-.c-recordCardsGroup > * {
+.c-recordCardsGroup .c-recordCard {
   margin: 0.5em auto;
 }
 

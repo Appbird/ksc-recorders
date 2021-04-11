@@ -35,27 +35,47 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.convertRecordsIntoRecordGroupResolved = void 0;
-var convertIRecordIntoIRecordInShortWithName_1 = require("./convertIRecordIntoIRecordInShortWithName");
-function convertRecordsIntoRecordGroupResolved(records, info) {
-    return __awaiter(this, void 0, void 0, function () {
-        var copy, _a;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+var express_1 = __importDefault(require("express"));
+var apiDefinition_1 = require("./server/function/apiDefinition");
+var app = express_1.default();
+app.use("/page", express_1.default.static('public'));
+app.use(express_1.default.json());
+apiDefinition_1.apiDefinition.forEach(function (value, key) {
+    app.post("/api" + key, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+        var errorInString, _a, _b, error_1, errorInString;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0:
-                    copy = records.concat();
-                    _a = {
-                        groupName: info.groupName,
-                        lastPost: copy.sort(function (a, b) { return b.timestamp - a.timestamp; })[0].timestamp,
-                        numberOfRecords: info.numberOfRecords,
-                        numberOfRunners: info.numberOfRunners
-                    };
-                    return [4 /*yield*/, Promise.all(records.map(function (record) { return convertIRecordIntoIRecordInShortWithName_1.convertIRecordIntoIRecordInShortWithName(record, info.lang); }))];
-                case 1: return [2 /*return*/, (_a.records = _b.sent(),
-                        _a)];
+                    try {
+                        value.structureCheckerFunction(req.body);
+                    }
+                    catch (error) {
+                        errorInString = String(error);
+                        console.error(errorInString);
+                        res.status(400).json({ isSuccess: false, message: errorInString });
+                        return [2 /*return*/];
+                    }
+                    _c.label = 1;
+                case 1:
+                    _c.trys.push([1, 3, , 4]);
+                    _b = (_a = res.status(200)).json;
+                    return [4 /*yield*/, value.process(req.body)];
+                case 2:
+                    _b.apply(_a, [_c.sent()]);
+                    return [3 /*break*/, 4];
+                case 3:
+                    error_1 = _c.sent();
+                    errorInString = String(error_1);
+                    console.error(errorInString);
+                    res.status(500).json({ isSuccess: false, message: errorInString });
+                    return [2 /*return*/];
+                case 4: return [2 /*return*/];
             }
         });
-    });
-}
-exports.convertRecordsIntoRecordGroupResolved = convertRecordsIntoRecordGroupResolved;
+    }); });
+});
+app.listen(3000, function () { return console.info("start on http://localhost:3000/page/html/main.html"); });

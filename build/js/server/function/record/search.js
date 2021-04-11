@@ -50,7 +50,7 @@ function search(input) {
                 case 0: return [4 /*yield*/, RecordDataBase_1.recordDataBase.getRecordsWithCondition(input.gameSystemEnv.gameSystemID, input.gameSystemEnv.gameModeID, input.orderOfRecordArray, input.abilityIDsCondition, input.abilityIDs, input.targetIDs, input.runnerIDs)];
                 case 1:
                     records = _a.sent();
-                    return [4 /*yield*/, convertRecordsIntoRecordGroup_1.convertRecordsIntoRecordGroup(records.slice(input.startOfRecordArray, input.limitOfRecordArray), {
+                    return [4 /*yield*/, convertRecordsIntoRecordGroup_1.convertRecordsIntoRecordGroupResolved(records.slice(input.startOfRecordArray, input.limitOfRecordArray), {
                             groupName: input.groupName,
                             numberOfRecords: records.length,
                             numberOfRunners: countRunners(records),

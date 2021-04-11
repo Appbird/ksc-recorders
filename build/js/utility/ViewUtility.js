@@ -10,9 +10,9 @@ function escapeSpecialChars(str) {
         .replace(/'/g, "&#039;");
 }
 function htmlToElement(html) {
-    var template = document.createElement("template");
+    var template = document.createElement("div");
     template.innerHTML = html;
-    return template.content.firstElementChild;
+    return template.firstChild;
 }
 exports.htmlToElement = htmlToElement;
 function element(strings) {
@@ -21,6 +21,8 @@ function element(strings) {
         values[_i - 1] = arguments[_i];
     }
     var htmlString = strings.reduce(function (result, str, i) {
+        if (i === 0) {
+        }
         var value = values[i - 1];
         if (typeof value == "string") {
             return result + escapeSpecialChars(value) + str;

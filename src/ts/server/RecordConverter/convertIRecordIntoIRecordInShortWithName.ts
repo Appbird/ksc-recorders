@@ -25,7 +25,7 @@ export async function convertIRecordIntoIRecordInShortWithName(record: IRecord, 
         },
         score: record.score,
         runnerID: record.runnerID,
-        recordID: record.id,
+        id: record.id,
         runnerName: await cotfr.resolveRunnerID(record.runnerID, lang)
     };
 }

@@ -3,7 +3,7 @@
 //#NOTE ここの実装はRecordDataBaseの実装に依存しない。
 import { recordDataBase } from "../../tmpDataBase/RecordDataBase";
 import {IReceivedDataAtServer_recordSearch, IReceivedDataAtClient_recordSearch } from "../../../type/transmission/record/IReceivedData_recordSearch";
-import { convertRecordsIntoRecordGroup } from "../../recordConverter/convertRecordsIntoRecordGroup";
+import { convertRecordsIntoRecordGroupResolved } from "../../recordConverter/convertRecordsIntoRecordGroup";
 import { IRecord } from "../../../type/record/IRecord";
 
 export async function search(input:IReceivedDataAtServer_recordSearch):Promise<IReceivedDataAtClient_recordSearch>{
@@ -12,8 +12,9 @@ export async function search(input:IReceivedDataAtServer_recordSearch):Promise<I
                                         input.abilityIDsCondition,input.abilityIDs,
                                         input.targetIDs,input.runnerIDs);
                     
-           
-    const record = await convertRecordsIntoRecordGroup(
+        if (input.startOfRecordArray === undefined) input.startOfRecordArray = 0;
+        if (input.limitOfRecordArray === undefined) input.limitOfRecordArray = 7;
+    const record = await convertRecordsIntoRecordGroupResolved(
                     records.slice(input.startOfRecordArray,input.limitOfRecordArray) , { 
                         groupName: input.groupName,
                         numberOfRecords: records.length,

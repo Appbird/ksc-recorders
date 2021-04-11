@@ -17,15 +17,18 @@ export interface IReceivedDataAtServer_recordSearch extends IReceivedDataAtServe
     gameSystemEnv:{
         gameSystemID: string;
         gameModeID: string;
+        /** //#NOTE これによる指定は、targetIDsによるものよりも強い指定となる */
+        gameDifficultyID?:string;  
     };
     orderOfRecordArray:OrderOfRecordArray;
-    startOfRecordArray:number;
-    limitOfRecordArray:number;
-    targetIDs:string[];
-    abilityIDs:string[];
+    startOfRecordArray?:number;
+    limitOfRecordArray?:number;
+    targetIDs?:string[];
+    abilityIDs?:string[];
     /** 能力カテゴリを用いた記録検索において、And検索を行うかOr検索を行うか */
-    abilityIDsCondition: "AND" | "OR" | "AllowForOrder";
-    runnerIDs:string[];
+    abilityIDsCondition?: "AND" | "OR" | "AllowForOrder";
+    runnerIDs?:string[];
+    tagIDs?:string[];
     language:LanguageInApplication
     
 }

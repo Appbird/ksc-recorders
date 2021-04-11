@@ -3,7 +3,7 @@ import { LanguageInApplication } from "../type/LanguageInApplication";
 import { IRecordGroupResolved } from "../../type/record/IRecordGroupResolved";
 import { convertIRecordIntoIRecordInShortWithName } from "./convertIRecordIntoIRecordInShortWithName";
 
-export async function convertRecordsIntoRecordGroup(records: IRecord[],
+export async function convertRecordsIntoRecordGroupResolved(records: IRecord[],
     info: { groupName: string; numberOfRecords: number; numberOfRunners: number; lang: LanguageInApplication; }): Promise<IRecordGroupResolved> {
     const copy = records.concat();
     return {

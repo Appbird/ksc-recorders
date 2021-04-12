@@ -16,11 +16,6 @@ describe("正しく記録が選別されるか", () =>{
     //[x] こいつらをどういう配置にしてコンパイルするか…を考えたい！
     //[x] 挙動の確認
     //[x] Firestoreの物に切り替えてもしっかりとチェックが通るかを確認
-    it("そもそもデータベースは存在するか", async () =>{
-        assert.ok(
-            await database.checkExistanceOfGameMode(workID,modeID)
-        )
-    })
     it("無条件でデータを取り出す。", async () =>{
         //*> [0,1,3,2]
         assert.ok(

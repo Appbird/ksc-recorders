@@ -216,7 +216,7 @@ var RecordDataBase = /** @class */ (function () {
                     case 1:
                         records = (_a.sent()).records;
                         records = records.filter(function (record) {
-                            return ((targetIDs.length === 0 || targetIDs.length) ? true : targetIDs.some(function (id) { return id === record.regulation.targetID; })) &&
+                            return ((targetIDs.length === 0) ? true : targetIDs.some(function (id) { return id === record.regulation.targetID; })) &&
                                 ((abilityIDs.length === 0) ? true : _this.ifRecordIncludeThatAbilityIDs(record, abilityIDsCondition, abilityIDs)) &&
                                 ((runnerIDs.length === 0) ? true : runnerIDs.some(function (id) { return id === record.runnerID; }));
                         }).sort(function (a, b) {

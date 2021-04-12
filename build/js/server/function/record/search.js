@@ -35,32 +35,48 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.search = void 0;
-//[x] RecordDataBase,ControllerOfTableForResolvingIDクラスを用いて、必要となる記録データを取り出し、ここでデータの加工を行う。
-//[x] クライアントに与えるべきデータをJSONで出力する。
-//#NOTE ここの実装はRecordDataBaseの実装に依存しない。
-var RecordDataBase_1 = require("../../tmpDataBase/RecordDataBase");
-var convertRecordsIntoRecordGroup_1 = require("../../recordConverter/convertRecordsIntoRecordGroup");
-function search(input) {
+var clone_deep_1 = __importDefault(require("clone-deep"));
+var ControllerOfTableForResolvingID_1 = require("../../recordConverter/ControllerOfTableForResolvingID");
+function search(recordDataBase, input) {
     return __awaiter(this, void 0, void 0, function () {
-        var records, record;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, RecordDataBase_1.recordDataBase.getRecordsWithCondition(input.gameSystemEnv.gameSystemID, input.gameSystemEnv.gameModeID, input.orderOfRecordArray, input.abilityIDsCondition, input.abilityIDs, input.targetIDs, input.runnerIDs)];
+        var _a, cotfr, result;
+        var _this = this;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    if (!(input.condition[0].gameSystemEnv.gameDifficultyID !== undefined)) return [3 /*break*/, 2];
+                    _a = input;
+                    return [4 /*yield*/, prepareForDifficultySearch(recordDataBase, input.condition[0])];
                 case 1:
-                    records = _a.sent();
-                    return [4 /*yield*/, convertRecordsIntoRecordGroup_1.convertRecordsIntoRecordGroupResolved(records.slice(input.startOfRecordArray, input.limitOfRecordArray), {
-                            groupName: input.groupName,
-                            numberOfRecords: records.length,
-                            numberOfRunners: countRunners(records),
-                            lang: input.language
-                        })];
+                    _a.condition = _b.sent();
+                    _b.label = 2;
                 case 2:
-                    record = _a.sent();
+                    cotfr = new ControllerOfTableForResolvingID_1.ControllerOfTableForResolvingID(recordDataBase);
+                    return [4 /*yield*/, Promise.all(input.condition.map(function (input) { return __awaiter(_this, void 0, void 0, function () {
+                            var records;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, recordDataBase.getRecordsWithCondition(input.gameSystemEnv.gameSystemID, input.gameSystemEnv.gameModeID, input.orderOfRecordArray, input.abilityIDsCondition, input.abilityIDs, input.targetIDs, input.runnerIDs)];
+                                    case 1:
+                                        records = (_a.sent());
+                                        if (input.startOfRecordArray === undefined)
+                                            input.startOfRecordArray = 0;
+                                        if (input.limitOfRecordArray === undefined)
+                                            input.limitOfRecordArray = 7;
+                                        return [2 /*return*/, cotfr.convertRecordsIntoRecordGroupResolved(records.slice(input.startOfRecordArray, input.limitOfRecordArray), { groupName: input.groupName, numberOfRecords: records.length, numberOfRunners: countRunners(records), lang: input.language })];
+                                }
+                            });
+                        }); }))];
+                case 3:
+                    result = _b.sent();
                     return [2 /*return*/, {
                             isSucceeded: true,
-                            result: record
+                            result: result
                         }];
             }
         });
@@ -69,4 +85,31 @@ function search(input) {
 exports.search = search;
 function countRunners(record) {
     return new Set(record.map(function (element) { return element.runnerID; })).size;
+}
+function prepareForDifficultySearch(recordDataBase, input) {
+    return __awaiter(this, void 0, void 0, function () {
+        var converter, gameEnv, targetIDs, targetNames;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    converter = new ControllerOfTableForResolvingID_1.ControllerOfTableForResolvingID(recordDataBase);
+                    if (input.gameSystemEnv.gameDifficultyID === undefined)
+                        throw new Error("予期せぬエラーが発生しました。");
+                    gameEnv = input.gameSystemEnv;
+                    return [4 /*yield*/, recordDataBase.getGameDifficultyInfo(gameEnv.gameSystemID, gameEnv.gameModeID, input.gameSystemEnv.gameDifficultyID)];
+                case 1:
+                    targetIDs = (_a.sent()).TargetIDsIncludedInTheDifficulty;
+                    return [4 /*yield*/, Promise.all(targetIDs.map(function (targetID) { return converter.resolveTargetID(gameEnv.gameSystemID, gameEnv.gameModeID, targetID, input.language); }))];
+                case 2:
+                    targetNames = _a.sent();
+                    input.gameSystemEnv.gameDifficultyID = undefined;
+                    return [2 /*return*/, targetIDs.map(function (targetID, index) {
+                            var result = clone_deep_1.default(input);
+                            result.targetIDs = [targetID];
+                            result.groupName = targetNames[index];
+                            return result;
+                        })];
+            }
+        });
+    });
 }

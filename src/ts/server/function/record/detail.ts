@@ -1,11 +1,12 @@
 import { IReceivedDataAtClient_recordDetail, IReceivedDataAtServer_recordDetail } from "../../../type/transmission/record/IReceivedData_recordDetail";
-import { convertRecordIntoRecordResolved } from "../../recordConverter/convertRecordIntoIRecordResolved";
-import { recordDataBase } from "../../tmpDataBase/RecordDataBase";
+import { ControllerOfTableForResolvingID } from "../../recordConverter/ControllerOfTableForResolvingID";
+import { InterfaceOfRecordDatabase } from "../../type/InterfaceOfRecordDatabase";
 
-export async function detail(input:IReceivedDataAtServer_recordDetail):Promise<IReceivedDataAtClient_recordDetail>{
+export async function detail(recordDataBase:InterfaceOfRecordDatabase,input:IReceivedDataAtServer_recordDetail):Promise<IReceivedDataAtClient_recordDetail>{
     const result = await recordDataBase.getRecord(input.gameSystemEnv.gameSystemID,input.gameSystemEnv.gameModeID,input.id)
+    const converter = new ControllerOfTableForResolvingID(recordDataBase)
     return {
         isSucceeded:true,
-        result: await convertRecordIntoRecordResolved(result,input.lang)
+        result: await converter.convertRecordIntoRecordResolved(result,input.lang)
     }
 }

@@ -49,10 +49,10 @@ export class TagsView implements IView{
                     to:"searchResultView",
                     requiredObject: {
                         title:`難易度${gameEnv.gameDifficultyName}の記録`,
-                        required:[{
+                        required:{condition:[{
                             groupName:"", gameSystemEnv:{ gameSystemID: gameEnv.gameSystemID, gameModeID: gameEnv.gameModeID, gameDifficultyID: gameEnv.gameDifficultyID },
                             orderOfRecordArray:order, limitOfRecordArray: 3, language: app.language
-                        }]
+                        }]}
                     }
                 })
         if (options.targetTags)
@@ -60,10 +60,10 @@ export class TagsView implements IView{
                     to:"searchResultView",
                     requiredObject:{
                         title:`計測対象${record.regulation.targetName}の記録。`,
-                        required:[{
+                        required:{condition:[{
                             groupName:"", gameSystemEnv:{ gameSystemID: gameEnv.gameSystemID, gameModeID: gameEnv.gameModeID }, targetIDs:[record.regulation.targetName] ,
                             orderOfRecordArray:order ,language:app.language
-                        }]
+                        }]}
                     }
                 });
         if (options.abilityTags)
@@ -71,10 +71,10 @@ export class TagsView implements IView{
                     to:"searchResultView",
                     requiredObject:{
                         title:`能力${record.regulation.targetName}(ソロ)における、難易度${gameEnv.gameDifficultyName}の記録。`,
-                        required:[{
+                        required:{condition:[{
                             groupName:"", gameSystemEnv:{ gameSystemID: gameEnv.gameSystemID, gameModeID: gameEnv.gameModeID, gameDifficultyID:gameEnv.gameDifficultyID}, abilityIDs:[record.regulation.abilityIDs[index]],
                             orderOfRecordArray:order ,language:app.language
-                        }]
+                        }]}
                     }
                 })
             )
@@ -83,10 +83,10 @@ export class TagsView implements IView{
                 to:"searchResultView",
                 requiredObject:{
                     title:`タグ${tagsViews}における全体の記録。`,
-                    required:[{
+                    required:{condition:[{
                         groupName:"", gameSystemEnv:{ gameSystemID: gameEnv.gameSystemID, gameModeID: gameEnv.gameModeID, gameDifficultyID:"whole"}, tagIDs: [record.tagID[index]],
                         orderOfRecordArray:order ,language:app.language
-                    }]
+                    }]}
                 }
             })
         )

@@ -1,7 +1,7 @@
 
 import { IRecord } from "../../type/record/IRecord";
 import assert  from "assert";
-import { recordDataBase } from "../tmpDataBase/RecordDataBase"
+import { recordDataBase } from "../mockDataBase/RecordDataBase"
 import { checkEqualityBetweenArraysWithConsoleMsg } from "../../utility/arrayUtility";
 import { OrderOfRecordArray } from "../type/OrderOfRecordArray";
 const database = recordDataBase;

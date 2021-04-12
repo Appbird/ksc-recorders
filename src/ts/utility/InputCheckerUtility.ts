@@ -1,14 +1,13 @@
 export function checkInputObjectWithErrorPossibility<CheckType>(actual:any,expectedStructure:TypeValue | TypeValue[],checkedPlace?:string):actual is CheckType{
-    if (actual === undefined) throw new Error(`与えられたオブジェクト${checkedPlace}はundefinedでした。`)
+    if (actual === undefined) throw new Error(`与えられたオブジェクト${checkedPlace}はundefinedでした。場所 : ${checkedPlace}`)
+    if (Array.isArray(actual) && !Array.isArray(expectedStructure)) throw Error(`与えられたオブジェクト${checkedPlace}は配列ではないとされていますが、配列でした。場所 : ${checkedPlace}`)
     if (Array.isArray(expectedStructure)){
-        if (!Array.isArray(actual)) throw Error(`与えられたオブジェクト${checkedPlace}は配列であるとされていますが、配列ではありませんでした。`)
-        for (const element of actual){
-            checkInputObjectWithErrorPossibility(element, expectedStructure[0], `${checkedPlace}`)
-        }
+        if (!Array.isArray(actual)) throw Error(`与えられたオブジェクト${checkedPlace}は配列であるとされていますが、配列ではありませんでした。場所 : ${checkedPlace}`)
+        for (const element of actual)checkInputObjectWithErrorPossibility(element, expectedStructure[0], `${checkedPlace}`)
     }
     for (const [propertyName,expectedSubStructure] of Object.entries(expectedStructure)){
 
-        if (!actual.hasOwnProperty(propertyName)) throw new Error(`キー${propertyName}が存在しません。場所 : ${checkedPlace}`)
+        if (!actual.hasOwnProperty(propertyName) && !(typeof expectedSubStructure === "string"  && expectedSubStructure.endsWith("?"))) throw new Error(`キー${propertyName}が存在しません。場所 : ${checkedPlace}`)
 
         if (typeof actual[propertyName] === "object" && typeof expectedSubStructure !== "string"){
              checkInputObjectWithErrorPossibility(actual[propertyName],expectedSubStructure,`${checkedPlace} / ${propertyName}`)
@@ -23,6 +22,10 @@ export function checkInputObjectWithErrorPossibility<CheckType>(actual:any,expec
 }
 function checkType(actualValue:any,expectedTypeName:string):boolean{
     expectedTypeName = expectedTypeName.replace(/\s/g,"")
+    if (expectedTypeName.endsWith("?")){
+        if (actualValue === undefined) return true;
+        expectedTypeName = expectedTypeName.replace("?","")
+    }
     if (expectedTypeName.endsWith("[]")){
         if (!Array.isArray(actualValue)) return false;
         expectedTypeName = expectedTypeName.replace("[]","")

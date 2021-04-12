@@ -54,19 +54,6 @@ describe("正しく記録が選別されるか", function () {
     //[x] こいつらをどういう配置にしてコンパイルするか…を考えたい！
     //[x] 挙動の確認
     //[x] Firestoreの物に切り替えてもしっかりとチェックが通るかを確認
-    it("そもそもデータベースは存在するか", function () { return __awaiter(void 0, void 0, void 0, function () {
-        var _a, _b;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
-                case 0:
-                    _b = (_a = assert_1.default).ok;
-                    return [4 /*yield*/, database.checkExistanceOfGameMode(workID, modeID)];
-                case 1:
-                    _b.apply(_a, [_c.sent()]);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
     it("無条件でデータを取り出す。", function () { return __awaiter(void 0, void 0, void 0, function () {
         var _a, _b;
         return __generator(this, function (_c) {

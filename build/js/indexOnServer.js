@@ -41,6 +41,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var apiDefinition_1 = require("./server/function/apiDefinition");
+var RecordDataBase_1 = require("./server/mockDataBase/RecordDataBase");
 var app = express_1.default();
 app.use("/page", express_1.default.static('public'));
 app.use(express_1.default.json());
@@ -54,23 +55,31 @@ apiDefinition_1.apiDefinition.forEach(function (value, key) {
                         value.structureCheckerFunction(req.body);
                     }
                     catch (error) {
-                        errorInString = String(error);
-                        console.error(errorInString);
-                        res.status(400).json({ isSuccess: false, message: errorInString });
+                        if (!(error instanceof Error)) {
+                            console.error("\u4E88\u671F\u305B\u306C\u30A8\u30E9\u30FC\u3067\u3059\u3002");
+                            return [2 /*return*/];
+                        }
+                        errorInString = error.message;
+                        console.error(errorInString + "\n" + error.stack);
+                        res.status(500).json({ isSuccess: false, message: errorInString });
                         return [2 /*return*/];
                     }
                     _c.label = 1;
                 case 1:
                     _c.trys.push([1, 3, , 4]);
                     _b = (_a = res.status(200)).json;
-                    return [4 /*yield*/, value.process(req.body)];
+                    return [4 /*yield*/, value.process(RecordDataBase_1.recordDataBase, req.body)];
                 case 2:
                     _b.apply(_a, [_c.sent()]);
                     return [3 /*break*/, 4];
                 case 3:
                     error_1 = _c.sent();
-                    errorInString = String(error_1);
-                    console.error(errorInString);
+                    if (!(error_1 instanceof Error)) {
+                        console.error("\u4E88\u671F\u305B\u306C\u30A8\u30E9\u30FC\u3067\u3059\u3002");
+                        return [2 /*return*/];
+                    }
+                    errorInString = error_1.message;
+                    console.error(errorInString + "\n" + error_1.stack);
                     res.status(500).json({ isSuccess: false, message: errorInString });
                     return [2 /*return*/];
                 case 4: return [2 /*return*/];

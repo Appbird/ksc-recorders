@@ -3,7 +3,7 @@ const articleDOM =  document.getElementById("article")
 if (articleDOM === null) throw new Error("idがarticleである要素を見つけられませんでした。")
 const app = new App("none",articleDOM,"Japanese");
 app.transition("searchResultView",{
-    required:[{
+    required:{condition:[{
         groupName: "ボス1",
         gameSystemEnv: {
             gameSystemID: "0",
@@ -17,7 +17,7 @@ app.transition("searchResultView",{
         abilityIDsCondition: "AND",
         runnerIDs: [],
         language: "Japanese"
-    }],
+    }]},
     title:"検索結果"    
     }
     

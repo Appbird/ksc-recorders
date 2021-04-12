@@ -12,7 +12,7 @@ function escapeSpecialChars(str) {
 function htmlToElement(html) {
     var template = document.createElement("div");
     template.innerHTML = html;
-    return template.firstChild;
+    return template.firstElementChild;
 }
 exports.htmlToElement = htmlToElement;
 function element(strings) {

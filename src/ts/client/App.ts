@@ -1,6 +1,6 @@
 import { IReceivedDataAtClient_recordSearchSuccessfully, IReceivedDataAtServer_recordSearch } from "../type/transmission/record/IReceivedData_recordSearch";
 import { IReceivedDataAtClient_recordDetailSuccessfully, IReceivedDataAtServer_recordDetail } from "../type/transmission/record/IReceivedData_recordDetail";
-import { elementWithoutEscaping } from "../utility/ViewUtility";
+import { element, elementWithoutEscaping } from "../utility/ViewUtility";
 import { PageStates } from "./interface/PageStates";
 import { IAppOnlyUsedToTransition, IAppUsedToReadOptionsAndTransition } from "./interface/AppInterfaces";
 import { RecordGroupView } from "./view/RecordsGroupView";
@@ -10,7 +10,7 @@ import { LanguageInApplication } from "../server/type/LanguageInApplication";
 const marked = require("marked");
 
 interface APIFunctions {
-    record_search:{required:IReceivedDataAtServer_recordSearch[], returned:IReceivedDataAtClient_recordSearchSuccessfully[]},
+    record_search:{required:IReceivedDataAtServer_recordSearch, returned:IReceivedDataAtClient_recordSearchSuccessfully},
     record_detail:{required:IReceivedDataAtServer_recordDetail, returned:IReceivedDataAtClient_recordDetailSuccessfully}
 }
 
@@ -49,7 +49,7 @@ export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptio
     get gameSystemID(){
         return this.option.gameSystemEnvDisplayed.gameSystemID;
     }
-    get gameModeID(){
+    get gameModeID() {
         return this.option.gameSystemEnvDisplayed.gameModeID;
     }
     get superiorScore(){
@@ -64,14 +64,21 @@ export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptio
     get language(){
         return this.option.language
     }
-    transition<T extends keyof PageStates>(nextState:T, requestObject:PageStates[T]){
-        this.clearView();
-        switch (nextState){
-            case "none": break;
-            case "errorView": this.errorView(requestObject as PageStates["errorView"]); break;
-            case "detailView": this.detail(requestObject as PageStates["detailView"]); break;
-            case "searchResultView": this.search(requestObject  as PageStates["searchResultView"]); break;
-            default: throw new Error(`指定されたキー${nextState}に対応するページ状態が存在しません。`);
+    async transition<T extends keyof PageStates>(nextState:T, requestObject:PageStates[T]){
+        try {
+            this.clearView();
+            switch (nextState) {
+                case "none":                break;
+                case "errorView":           await this.errorView(requestObject as PageStates["errorView"]);         break;
+                case "detailView":          await this.detail(requestObject as PageStates["detailView"]);           break;
+                case "searchResultView":    await this.search(requestObject  as PageStates["searchResultView"]);    break;
+                default: throw new Error(`指定されたキー${nextState}に対応するページ状態が存在しません。`);
+            }
+        } catch(error){
+            if (!(error instanceof Error)){ console.error(`予期せぬエラーです。 : ${error}`); return; }
+            const errorInString = error.message;
+            console.error(`${errorInString}\n${error.stack}`);
+            this.displayError("エラーが発生しました。",errorInString,this.articleDOM);
         }
     }
 
@@ -87,46 +94,50 @@ export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptio
 
 
 
-    private accessToAPI<T extends keyof APIFunctions>(functionName:T,requiredObj:APIFunctions[T]["required"]):Promise<APIFunctions[T]["returned"]>{
-        return fetch(`${this.origin}/api/${functionName.replace(/\_/g,"/")}`,{
+    private async accessToAPI<T extends keyof APIFunctions>(functionName:T,requiredObj:APIFunctions[T]["required"]):Promise<APIFunctions[T]["returned"]>{
+        const response = await fetch(`${this.origin}/api/${functionName.replace(/\_/g,"/")}`,{
             method: "POST",
             headers: { "Content-Type" : "application/json" },
             body: JSON.stringify(requiredObj)
-        }).then(
-            (response) => response.json()
-        ).catch(
-            (reason) => {
-                const errorInString = String(reason);
-                console.error(errorInString);
-                this.displayError("通信においてエラーが発生しました。",errorInString.replace(/[eE]rror\s*:/,""),this.articleDOM);
-            }
+        })
+        if (response.status !== 200) throw new Error(
+            `# APIを利用した通信に失敗しました。\n\n## 使用したAPI\n\n${functionName}\n\n## 原因\n\n${(await response.json()).message}\n\n## 入力オブジェクト\n\n${JSON.stringify(requiredObj)}`
         )
+        const result = await response.json()
+        console.log(result)
+        return result
     }
 
 
     //#CTODO ここの型を埋める。
-    private async search(requestConditions:PageStates["searchResultView"]){
-        const result = await this.accessToAPI("record_search",requestConditions.required)
-        result.map(receivedData => this.articleDOM.appendChild(new RecordGroupView(receivedData.result,this).htmlElement))
-        this.option.gameSystemEnvDisplayed = requestConditions[0].gameSystemEnv;
+    private async search(this:App,requestConditions:PageStates["searchResultView"]){
+        const result = (await this.accessToAPI("record_search",requestConditions.required)).result
+        if (requestConditions.title !== undefined) this.articleDOM.appendChild(
+            element`<div>
+            <div class="c-title">
+                <div class="c-title__main">${requestConditions.title}</div>
+            </div>
+            <hr noshade class="u-bold" /></div>`)
+        result.map(receivedData => this.articleDOM.appendChild(new RecordGroupView(receivedData,this).htmlElement))
+        this.option.gameSystemEnvDisplayed = requestConditions.required.condition[0].gameSystemEnv;
         this.state = "searchResultView"
     }
 
 
     //#CTODO　detail関数の実装
-    private async detail(request:PageStates["detailView"]){
+    private async detail(this:App,request:PageStates["detailView"]){
         const detailDiv = this.articleDOM.appendChild(createElementWithIdAndClass({id:"detail"}))
         const relatedRecordDiv = this.articleDOM.appendChild(createElementWithIdAndClass({id:"related"}))
         
         const record = (await this.accessToAPI("record_detail",request)).result;
 
-        const relatedRecord = (await this.accessToAPI("record_search",[{
-            groupName:"同レギュレーションの記録", gameSystemEnv: record.regulation.gameSystemEnvironment, orderOfRecordArray: "LowerFirst", startOfRecordArray:0, limitOfRecordArray:100,
-            targetIDs:[record.regulation.targetID], abilityIDs: record.regulation.abilityIDs, abilityIDsCondition: "AllowForOrder", runnerIDs: [], language: request.lang
-        }]) )[0].result
+        const relatedRecord = (await this.accessToAPI("record_search",{condition:[{
+            groupName:"同レギュレーションの記録", gameSystemEnv: { gameSystemID:record.regulation.gameSystemEnvironment.gameSystemID, gameModeID:record.regulation.gameSystemEnvironment.gameModeID}, orderOfRecordArray: "LowerFirst", startOfRecordArray:0, limitOfRecordArray:100,
+            targetIDs:[record.regulation.targetID], abilityIDs: record.regulation.abilityIDs, abilityIDsCondition: "AllowForOrder", language: request.lang
+        }]}
+        ) ).result[0]
         
-        let rank:number|undefined = relatedRecord.records.findIndex(element => element.id === record.id)
-        if (rank === -1) rank = undefined;
+        let rank:number|undefined = relatedRecord.records.findIndex(element => element.id === record.id) + 1
         detailDiv.appendChild(new RecordDetailView(record,this,rank).htmlElement) 
         relatedRecordDiv.appendChild(new RecordGroupView(relatedRecord,this).htmlElement)
         
@@ -151,9 +162,11 @@ export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptio
         <div class = "c-recordGroupHeader">
             <div class="c-title">
                 <div class="c-title__main">${title}</div>
-                <div class="c-title__sub">Error: Failed to prepare the page.</div>
+                <div class="c-title__sub">Failed to prepare the page.</div>
             </div>
-            <hr noshade class="u-bold">${marked(msg)}</div>`
+            <hr noshade class="u-bold">
+            <div class="u-width95per">${marked(msg)}</div>
+        </div>`
         )
         return;
     }

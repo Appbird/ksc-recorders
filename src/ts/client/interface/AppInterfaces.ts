@@ -5,8 +5,8 @@ export interface IAppOnlyUsedToTransition{
     transition:<T extends keyof PageStates>(nextState:T, requestObject:PageStates[T]) => void
 }
 export interface IAppUsedToReadOptionsAndTransition{
-    gameSystemID:string,
-    gameModeID:string,
+    gameSystemID:string | null,
+    gameModeID:string | null,
     superiorScore:"Lower"|"Higher"
     language:LanguageInApplication,
     transition:<T extends keyof PageStates>(nextState:T, requestObject:PageStates[T]) => void

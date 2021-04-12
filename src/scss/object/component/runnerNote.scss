@@ -1,10 +1,10 @@
 
 
-.c-runnerNote>h1{
+article h1{
     padding:0;
 }
 
-.c-runnerNote>h1::after{
+article h1::after{
     content:"";
     display: inline-block;
     width: 100%;

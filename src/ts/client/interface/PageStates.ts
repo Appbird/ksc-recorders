@@ -6,5 +6,5 @@ export interface PageStates{
     none:undefined,
     errorView:{title:string,message:string}
     detailView:IReceivedDataAtServer_recordDetail
-    searchResultView:{required:IReceivedDataAtServer_recordSearch[],title?:string}
+    searchResultView:{required:IReceivedDataAtServer_recordSearch,title?:string}
 }

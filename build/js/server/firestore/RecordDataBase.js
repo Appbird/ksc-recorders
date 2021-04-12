@@ -41,60 +41,53 @@ var firebaseAdmin_1 = require("../firebaseAdmin");
 //[x] getRecordsWithConditionメソッドの実装
 var RecordDataBase = /** @class */ (function () {
     function RecordDataBase() {
+        var _this = this;
+        this.getRunnersRef = function () { return _this.dataBase.collection("runners"); };
+        this.getGameSystemCollectionRef = function () { return _this.dataBase.collection("works"); };
+        this.getGameSystemRef = function (gameSystemID) { return _this.dataBase.collection("works").doc(gameSystemID); };
+        this.getGameModeRef = function (gameSystemID, gameModeID) { return _this.getGameSystemCollectionRef().doc(gameSystemID).collection("modes").doc(gameModeID); };
+        this.getGameSystemCollection = function () { return _this.getCollection(_this.getGameSystemCollectionRef()); };
+        this.getGameSystemInfo = function (gameSystemID) { return _this.getDoc(_this.getGameSystemCollectionRef().doc(gameSystemID)); };
+        this.getGameModeCollection = function (gameSystemID) { return _this.getCollection(_this.getGameSystemRef(gameSystemID).collection("modes")); };
+        this.getGameModeInfo = function (gameSystemID, gameModeID) { return _this.getDoc(_this.getGameModeRef(gameSystemID, gameModeID)); };
+        this.getGameDifficultyCollection = function (gameSystemID, gameModeID) { return _this.getCollection(_this.getGameModeRef(gameSystemID, gameModeID).collection("difficulty")); };
+        this.getGameDifficultyInfo = function (gameSystemID, gameModeID, id) { return _this.getDoc(_this.getGameModeRef(gameSystemID, gameModeID).collection("difficulty").doc(id)); };
+        this.getAbilityCollection = function (gameSystemID, gameModeID) { return _this.getCollection(_this.getGameModeRef(gameSystemID, gameModeID).collection("ability")); };
+        this.getAbilityInfo = function (gameSystemID, gameModeID, id) { return _this.getDoc(_this.getGameModeRef(gameSystemID, gameModeID).collection("ability").doc(id)); };
+        this.getTargetCollection = function (gameSystemID, gameModeID) { return _this.getCollection(_this.getGameModeRef(gameSystemID, gameModeID).collection("target")); };
+        this.getTargetInfo = function (gameSystemID, gameModeID, id) { return _this.getDoc(_this.getGameModeRef(gameSystemID, gameModeID).collection("target").doc(id)); };
+        this.getRunnerCollection = function () { return _this.getCollection(_this.getRunnersRef()); };
+        this.getRunnerInfo = function (id) { return _this.getDoc(_this.getRunnersRef().doc(id)); };
+        //#TODO テストをするときにはデータベースが保存するハッシュタグの場所を修正する。
+        this.getHashTagCollection = function (gameSystemID) { return _this.getCollection(_this.getGameSystemRef(gameSystemID).collection("hashTag")); };
+        this.getHashTagInfo = function (gameSystemID, id) { return _this.getDoc(_this.getGameSystemRef(gameSystemID).collection("HashTag").doc(id)); };
         this.dataBase = firebaseAdmin_1.firebase.firestore;
     }
-    Object.defineProperty(RecordDataBase.prototype, "runnersRef", {
-        get: function () {
-            return this.dataBase.collection("runners");
-        },
-        enumerable: false,
-        configurable: true
-    });
-    Object.defineProperty(RecordDataBase.prototype, "gameSystemRef", {
-        get: function () {
-            return this.dataBase.collection("works");
-        },
-        enumerable: false,
-        configurable: true
-    });
-    RecordDataBase.prototype.getGameModeRef = function (gameSystemID, gameModeID) {
-        return this.gameSystemRef.doc(gameSystemID).collection("modes").doc(gameModeID);
-    };
-    RecordDataBase.prototype.checkExistanceOfGameMode = function (gameSystemID, gameModeID) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.getGameModeRef(gameSystemID, gameModeID).get()];
-                    case 1: return [2 /*return*/, (_a.sent()).exists];
-                }
-            });
-        });
-    };
-    RecordDataBase.prototype.getGameSystemInfo = function (gameSystemID) {
+    RecordDataBase.prototype.getCollection = function (ref) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.gameSystemRef.doc(gameSystemID).get()];
+                    case 0: return [4 /*yield*/, ref.get()];
                     case 1:
                         result = _a.sent();
-                        if (!result.exists)
-                            throw new Error("\u6307\u5B9A\u3055\u308C\u305FID" + gameSystemID + "\u306B\u5BFE\u5FDC\u3059\u308B\u30B2\u30FC\u30E0\u304C\u5B58\u5728\u3057\u307E\u305B\u3093\u3002");
-                        return [2 /*return*/, result.data()];
+                        if (result.empty)
+                            throw new Error("\u30B3\u30EC\u30AF\u30B7\u30E7\u30F3" + ref.path + "\u304C\u5B58\u5728\u3057\u307E\u305B\u3093\u3002");
+                        return [2 /*return*/, result.docs];
                 }
             });
         });
     };
-    RecordDataBase.prototype.getGameModeInfo = function (gameSystemID, gameModeID) {
+    RecordDataBase.prototype.getDoc = function (ref) {
         return __awaiter(this, void 0, void 0, function () {
             var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, this.gameSystemRef.doc(gameSystemID).collection("modes").doc(gameModeID).get()];
+                    case 0: return [4 /*yield*/, ref.get()];
                     case 1:
                         result = _a.sent();
-                        if (!result.exists)
-                            throw new Error("\u6307\u5B9A\u3055\u308C\u305FID" + gameSystemID + "\u306B\u5BFE\u5FDC\u3059\u308B\u30B2\u30FC\u30E0\u304C\u5B58\u5728\u3057\u307E\u305B\u3093\u3002");
+                        if (result.exists)
+                            throw new Error("\u30C9\u30AD\u30E5\u30E1\u30F3\u30C8" + ref.path + "\u304C\u5B58\u5728\u3057\u307E\u305B\u3093\u3002");
                         return [2 /*return*/, result.data()];
                 }
             });

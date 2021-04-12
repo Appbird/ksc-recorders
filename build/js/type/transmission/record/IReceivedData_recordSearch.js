@@ -7,17 +7,12 @@ function isIReceivedDataAtServer_recordSearch(obj) {
 }
 exports.isIReceivedDataAtServer_recordSearch = isIReceivedDataAtServer_recordSearch;
 var checker = {
-    groupName: "string",
-    gameSystemEnv: {
-        gameSystemID: "string",
-        gameModeID: "string"
-    },
-    orderOfRecordArray: "\"HigherFirst\" | \"LowerFirst\" | \"LaterFirst\" | \"EarlierFirst\"",
-    startOfRecordArray: "number",
-    limitOfRecordArray: "number",
-    targetIDs: "string[]",
-    abilityIDs: "string[]",
-    abilityIDsCondition: "\"AND\" | \"OR\" | \"AllowForOrder\"",
-    runnerIDs: "string[]",
-    language: "\"Japanese\" | \"English\""
+    condition: [{ groupName: "string",
+            gameSystemEnv: {
+                gameSystemID: "string",
+                gameModeID: "string"
+            }, orderOfRecordArray: "\"HigherFirst\" | \"LowerFirst\" | \"LaterFirst\" | \"EarlierFirst\"", startOfRecordArray: "number?",
+            limitOfRecordArray: "number?",
+            targetIDs: "string[]?",
+            abilityIDs: "string[]?", abilityIDsCondition: "\"AND\" | \"OR\" | \"AllowForOrder\"?", runnerIDs: "string[]?", language: "\"Japanese\" | \"English\"" }]
 };

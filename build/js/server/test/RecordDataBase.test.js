@@ -40,7 +40,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var assert_1 = __importDefault(require("assert"));
-var RecordDataBase_1 = require("../tmpDataBase/RecordDataBase");
+var RecordDataBase_1 = require("../mockDataBase/RecordDataBase");
 var arrayUtility_1 = require("../../utility/arrayUtility");
 var database = RecordDataBase_1.recordDataBase;
 describe("正しく記録が選別されるか", function () {

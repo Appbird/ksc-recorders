@@ -30,9 +30,9 @@ export interface InterfaceOfRecordDatabase {
     getRecord: (gameSystemID: string, gameModeID: string,recordID:string) => Promise<IRecord>;
     getRecordsWithCondition: (gameSystemID: string, gameModeID: string,
         order: OrderOfRecordArray,
-        abilityIDsCondition: "AND" | "OR" | "AllowForOrder",
-        abilityIDs: string[],
-        targetIDs: string[],
-        runnerIDs: string[]
+        abilityIDsCondition?: "AND" | "OR" | "AllowForOrder",
+        abilityIDs?: string[],
+        targetIDs?: string[],
+        runnerIDs?: string[]
     ) => Promise<IRecord[]>;
 }

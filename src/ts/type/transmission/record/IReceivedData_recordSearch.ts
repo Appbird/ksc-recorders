@@ -8,11 +8,9 @@ export interface IReceivedDataAtClient_recordSearch extends IReceivedDataAtClien
     result?: IRecordGroupResolved[];
 }
 export interface IReceivedDataAtClient_recordSearchSuccessfully extends IReceivedDataAtClient {
-    result: IRecordGroupResolved;
+    result: IRecordGroupResolved[];
 }
-
-
-export interface IReceivedDataAtServer_recordSearch extends IReceivedDataAtServer {
+export interface SearchCondition{
     groupName:string;
     gameSystemEnv:{
         gameSystemID: string;
@@ -29,25 +27,29 @@ export interface IReceivedDataAtServer_recordSearch extends IReceivedDataAtServe
     abilityIDsCondition?: "AND" | "OR" | "AllowForOrder";
     runnerIDs?:string[];
     tagIDs?:string[];
-    language:LanguageInApplication
+    language:LanguageInApplication}
+
+
+export interface IReceivedDataAtServer_recordSearch extends IReceivedDataAtServer {
+    condition:SearchCondition[]
     
 }
-export function isIReceivedDataAtServer_recordSearch<IReceivedDataAtServer_recordSearch>(obj:unknown):obj is IReceivedDataAtServer_recordSearch{
-    return checkInputObjectWithErrorPossibility<IReceivedDataAtServer_recordSearch[]>(obj,checker,`record/search > data`)
+export function isIReceivedDataAtServer_recordSearch(obj:unknown):obj is IReceivedDataAtServer_recordSearch{
+    return checkInputObjectWithErrorPossibility<IReceivedDataAtServer_recordSearch>(obj,checker,`record/search > data`)
 }
     
 const checker = {
-    groupName:"string",
+    condition:[{groupName:"string",
     gameSystemEnv:{
         gameSystemID: "string",
         gameModeID: "string"
     },
     orderOfRecordArray:`"HigherFirst" | "LowerFirst" | "LaterFirst" | "EarlierFirst"`,
-    startOfRecordArray:"number",
-    limitOfRecordArray:"number",
-    targetIDs:"string[]",
-    abilityIDs:"string[]",
-    abilityIDsCondition: `"AND" | "OR" | "AllowForOrder"`,
-    runnerIDs:"string[]",
-    language:`"Japanese" | "English"`
+    startOfRecordArray:"number?",
+    limitOfRecordArray:"number?",
+    targetIDs:"string[]?",
+    abilityIDs:"string[]?",
+    abilityIDsCondition: `"AND" | "OR" | "AllowForOrder"?`,
+    runnerIDs:"string[]?",
+    language:`"Japanese" | "English"`}]
 }

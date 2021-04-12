@@ -31,10 +31,12 @@ exports.checkInputObjectWithErrorPossibility = void 0;
 function checkInputObjectWithErrorPossibility(actual, expectedStructure, checkedPlace) {
     var e_1, _a, e_2, _b;
     if (actual === undefined)
-        throw new Error("\u4E0E\u3048\u3089\u308C\u305F\u30AA\u30D6\u30B8\u30A7\u30AF\u30C8" + checkedPlace + "\u306Fundefined\u3067\u3057\u305F\u3002");
+        throw new Error("\u4E0E\u3048\u3089\u308C\u305F\u30AA\u30D6\u30B8\u30A7\u30AF\u30C8" + checkedPlace + "\u306Fundefined\u3067\u3057\u305F\u3002\u5834\u6240 : " + checkedPlace);
+    if (Array.isArray(actual) && !Array.isArray(expectedStructure))
+        throw Error("\u4E0E\u3048\u3089\u308C\u305F\u30AA\u30D6\u30B8\u30A7\u30AF\u30C8" + checkedPlace + "\u306F\u914D\u5217\u3067\u306F\u306A\u3044\u3068\u3055\u308C\u3066\u3044\u307E\u3059\u304C\u3001\u914D\u5217\u3067\u3057\u305F\u3002\u5834\u6240 : " + checkedPlace);
     if (Array.isArray(expectedStructure)) {
         if (!Array.isArray(actual))
-            throw Error("\u4E0E\u3048\u3089\u308C\u305F\u30AA\u30D6\u30B8\u30A7\u30AF\u30C8" + checkedPlace + "\u306F\u914D\u5217\u3067\u3042\u308B\u3068\u3055\u308C\u3066\u3044\u307E\u3059\u304C\u3001\u914D\u5217\u3067\u306F\u3042\u308A\u307E\u305B\u3093\u3067\u3057\u305F\u3002");
+            throw Error("\u4E0E\u3048\u3089\u308C\u305F\u30AA\u30D6\u30B8\u30A7\u30AF\u30C8" + checkedPlace + "\u306F\u914D\u5217\u3067\u3042\u308B\u3068\u3055\u308C\u3066\u3044\u307E\u3059\u304C\u3001\u914D\u5217\u3067\u306F\u3042\u308A\u307E\u305B\u3093\u3067\u3057\u305F\u3002\u5834\u6240 : " + checkedPlace);
         try {
             for (var actual_1 = __values(actual), actual_1_1 = actual_1.next(); !actual_1_1.done; actual_1_1 = actual_1.next()) {
                 var element = actual_1_1.value;
@@ -52,7 +54,7 @@ function checkInputObjectWithErrorPossibility(actual, expectedStructure, checked
     try {
         for (var _c = __values(Object.entries(expectedStructure)), _d = _c.next(); !_d.done; _d = _c.next()) {
             var _e = __read(_d.value, 2), propertyName = _e[0], expectedSubStructure = _e[1];
-            if (!actual.hasOwnProperty(propertyName))
+            if (!actual.hasOwnProperty(propertyName) && !(typeof expectedSubStructure === "string" && expectedSubStructure.endsWith("?")))
                 throw new Error("\u30AD\u30FC" + propertyName + "\u304C\u5B58\u5728\u3057\u307E\u305B\u3093\u3002\u5834\u6240 : " + checkedPlace);
             if (typeof actual[propertyName] === "object" && typeof expectedSubStructure !== "string") {
                 checkInputObjectWithErrorPossibility(actual[propertyName], expectedSubStructure, checkedPlace + " / " + propertyName);
@@ -75,6 +77,11 @@ function checkInputObjectWithErrorPossibility(actual, expectedStructure, checked
 exports.checkInputObjectWithErrorPossibility = checkInputObjectWithErrorPossibility;
 function checkType(actualValue, expectedTypeName) {
     expectedTypeName = expectedTypeName.replace(/\s/g, "");
+    if (expectedTypeName.endsWith("?")) {
+        if (actualValue === undefined)
+            return true;
+        expectedTypeName = expectedTypeName.replace("?", "");
+    }
     if (expectedTypeName.endsWith("[]")) {
         if (!Array.isArray(actualValue))
             return false;

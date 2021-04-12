@@ -1,11 +1,10 @@
-import "https://platform.twitter.com/widgets.js"
 import { element } from "../../utility/ViewUtility";
 declare let twttr:{
     widgets:{
-        createTweet:(Tweetid:string, inserted:HTMLDivElement, option:any) => void
+        createTweet:(Tweetid:string, inserted:Element, option?:any) => void
     }
 }
-export class MoviewWidgetCreator{
+export class MovieWidgetCreator{
     //#TODO 動作確認
     private url:URL
     private id:string;
@@ -29,13 +28,14 @@ export class MoviewWidgetCreator{
     private returnId(pathname:string):string{
         switch (this.kind){
             case "youtube":return pathname.split("/")[3];
-            case "twitter": return pathname.split("/")[1];
+            case "twitter": return pathname.split("/")[3];
         }
     }
-    setWidget(insertedHTMLElement:HTMLDivElement){
+    setWidget(insertedHTMLElement:Element){
         switch (this.kind){
             case "twitter":
-                twttr.widgets.createTweet(this.id,insertedHTMLElement, { width:"75%" });
+                console.log(this.id)
+                twttr.widgets.createTweet(this.id,insertedHTMLElement);
             break;
             case "youtube":
                 insertedHTMLElement.appendChild(element`

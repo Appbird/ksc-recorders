@@ -60,17 +60,22 @@ export class ControllerOfTableForResolvingID{
     }
 
     //#NOTE 応用メソッド
-    resolveGameSystemID = (id:string,lang:LanguageInApplication) =>  this.getName(id,lang,this.gameSystem,this.database.getGameSystemInfo)
-    resolveRunnerID     = (id:string,lang:LanguageInApplication) => this.getName(id,lang,this.runner,this.database.getRunnerInfo)
-    resolveGameModeID   = (gameSystemID:string, id:string, lang:LanguageInApplication) => this.getNameBySID(gameSystemID,id,lang,this.gameMode,this.database.getGameModeInfo)
-    resolveTagID        = (gameSystemID: string, id: string, lang: LanguageInApplication) => this.getNameBySID(gameSystemID,id,lang,this.hashTag,this.database.getHashTagInfo)
-    resolveAbilityID    = (gameSystemID:string, gameModeID:string, id:string, lang:LanguageInApplication) => this.getNameBySIDMID(gameSystemID,gameModeID,id,lang,this.ability,this.database.getAbilityInfo)
-    resolveTargetID     = (gameSystemID:string, gameModeID:string, id:string, lang:LanguageInApplication) => this.getNameBySIDMID(gameSystemID,gameModeID,id,lang,this.target,this.database.getTargetInfo)
-    resolveGameDifficultyID = (gameSystemID:string, gameModeID:string, id:string, lang:LanguageInApplication) => this.getNameBySIDMID(gameSystemID,gameModeID,id,lang,this.difficulty,this.database.getGameDifficultyInfo)
+    resolveGameSystemID = (id:string,lang:LanguageInApplication) => this.getName(id,lang,this.gameSystem,   (id) => this.database.getGameSystemInfo(id))
+    resolveRunnerID     = (id:string,lang:LanguageInApplication) => this.getName(id,lang,this.runner,       (id) => this.database.getRunnerInfo(id))
+    resolveGameModeID   = (gameSystemID:string, id:string, lang:LanguageInApplication)      => this.getNameBySID(gameSystemID,id,lang,this.gameMode,(s,id) => this.database.getGameModeInfo(s,id))
+    resolveTagID        = (gameSystemID: string, id: string, lang: LanguageInApplication)   => this.getNameBySID(gameSystemID,id,lang,this.hashTag, (s,id) => this.database.getHashTagInfo(s,id))
+    resolveAbilityID    = (gameSystemID:string, gameModeID:string, id:string, lang:LanguageInApplication)       => this.getNameBySIDMID(gameSystemID,gameModeID,id,lang,this.ability,   (s,m,id) => this.database.getAbilityInfo(s,m,id))
+    resolveTargetID     = (gameSystemID:string, gameModeID:string, id:string, lang:LanguageInApplication)       => this.getNameBySIDMID(gameSystemID,gameModeID,id,lang,this.target,    (s,m,id) => this.database.getTargetInfo(s,m,id))
+    resolveGameDifficultyID = (gameSystemID:string, gameModeID:string, id:string, lang:LanguageInApplication)   => this.getNameBySIDMID(gameSystemID,gameModeID,id,lang,this.difficulty,(s,m,id) => this.database.getGameDifficultyInfo(s,m,id))
     
 
     async convertRecordsIntoRecordGroupResolved(records: IRecord[],
         info: { groupName: string; numberOfRecords: number; numberOfRunners: number; lang: LanguageInApplication; }): Promise<IRecordGroupResolved> {
+        if (records.length === 0) return {
+            groupName: info.groupName,
+            lastPost: 0, numberOfRecords: 0,numberOfRunners: 0,
+            records: []
+        };
         const copy = records.concat();
         return {
             groupName: info.groupName,

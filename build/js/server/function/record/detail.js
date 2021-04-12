@@ -37,20 +37,20 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.detail = void 0;
-var convertRecordIntoIRecordResolved_1 = require("../../recordConverter/convertRecordIntoIRecordResolved");
-var RecordDataBase_1 = require("../../tmpDataBase/RecordDataBase");
-function detail(input) {
+var ControllerOfTableForResolvingID_1 = require("../../recordConverter/ControllerOfTableForResolvingID");
+function detail(recordDataBase, input) {
     return __awaiter(this, void 0, void 0, function () {
-        var result, _a;
+        var result, converter, _a;
         return __generator(this, function (_b) {
             switch (_b.label) {
-                case 0: return [4 /*yield*/, RecordDataBase_1.recordDataBase.getRecord(input.gameSystemEnv.gameSystemID, input.gameSystemEnv.gameModeID, input.id)];
+                case 0: return [4 /*yield*/, recordDataBase.getRecord(input.gameSystemEnv.gameSystemID, input.gameSystemEnv.gameModeID, input.id)];
                 case 1:
                     result = _b.sent();
+                    converter = new ControllerOfTableForResolvingID_1.ControllerOfTableForResolvingID(recordDataBase);
                     _a = {
                         isSucceeded: true
                     };
-                    return [4 /*yield*/, convertRecordIntoIRecordResolved_1.convertRecordIntoRecordResolved(result, input.lang)];
+                    return [4 /*yield*/, converter.convertRecordIntoRecordResolved(result, input.lang)];
                 case 2: return [2 /*return*/, (_a.result = _b.sent(),
                         _a)];
             }

@@ -1,4 +1,4 @@
-import { element } from "../../utility/ViewUtility";
+import { element, elementWithoutEscaping } from "../../utility/ViewUtility";
 import { TagsView } from "./TagsView";
 import { converseMiliSecondsIntoTime, convertNumberIntoDateString } from "../../utility/timeUtility";
 import { IRecordGroupResolved } from "../../type/record/IRecordGroupResolved";
@@ -7,7 +7,6 @@ import { createElementWithIdAndClass } from "../utility/aboutElement";
 import { IView } from "./IView";
 import { IAppUsedToReadOptionsAndTransition } from "../interface/AppInterfaces";
 import { StateInfoView } from "./StateInfoView";
-import { title } from "node:process";
 
 export class RecordGroupView implements IView{
     private _htmlElement = createElementWithIdAndClass({className:"c-recordCardsGroup"})
@@ -21,6 +20,9 @@ export class RecordGroupView implements IView{
         this._htmlElement.appendChild(this.summaryElement)
         this._htmlElement.appendChild(this.recordCardsElement)
         this.setRecordGroupSummary(recordGroup);
+        if (recordGroup.records.length === 0) {
+            this.recordCardsElement.appendChild(element`<div class="u-width95per"><h2>記録が存在しませんでした</h2></div>`)
+        }
         for(const record of recordGroup.records) this.appendRecordCard(record,options);
     }
     get htmlElement(){
@@ -28,15 +30,18 @@ export class RecordGroupView implements IView{
     }
     setRecordGroupSummary(recordGroup:IRecordGroupResolved){
         this.summaryElement.innerHTML = "";
-        const stateInfoDiv = this.summaryElement.appendChild(element`
-        <div class = "c-recordGroupHeader">
-            <div class="c-title">
-            <div class="c-title__main">${recordGroup.groupName}</div>
-            <div class="c-title__sub">${"サブタイトル"}</div>
+        const stateInfoDiv = this.summaryElement.appendChild(elementWithoutEscaping`
+        <div>
+            <div class = "c-recordGroupHeader">
+                <div class="c-title">
+                <div class="c-title__main">${recordGroup.groupName}</div>
+                <div class="c-title__sub">${"サブタイトル"}</div>
+            </div>
+            <div class="stateInfo"></div>
+            <hr noshade class="u-bold">
         </div>
-        <div class="stateInfo"></div>
-        <hr noshade class="u-bold">
         `).getElementsByClassName("stateInfo")[0]
+        if(stateInfoDiv === undefined) throw new Error("予期しないエラーです。")
         stateInfoDiv.appendChild(
             new StateInfoView()
                 .appendInfo(`${recordGroup.numberOfRecords} records`,"list")
@@ -67,6 +72,7 @@ export class RecordGroupView implements IView{
             this.app.transition("detailView",{ gameSystemEnv:{ gameSystemID:rrg.gameSystemID, gameModeID:rrg.gameModeID}, id:record.id, lang:this.app.language})
         })
         TagsView.generateTagViewsForRecord( this.app, ele, record, {abilityTags:true})
+        this.recordCardsElement.appendChild(ele)
         
     }
 }

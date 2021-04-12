@@ -1,5 +1,6 @@
 import express from "express"
 import { apiDefinition } from "./server/function/apiDefinition";
+import { recordDataBase } from "./server/mockDataBase/RecordDataBase";
 const app = express();
 app.use("/page",express.static('public'));
 app.use(express.json())
@@ -9,16 +10,17 @@ apiDefinition.forEach( (value,key) => {
         try {
             value.structureCheckerFunction(req.body)
         } catch(error){
-            
-            const errorInString = String(error);
-            console.error(errorInString);   res.status(400).json({isSuccess:false,message:errorInString})
+            if (!(error instanceof Error)){console.error(`予期せぬエラーです。`); return;}
+            const errorInString = error.message;
+            console.error(`${errorInString}\n${error.stack}`);   res.status(500).json({isSuccess:false,message:errorInString})
             return;
         }
         try { 
-            res.status(200).json(await value.process(req.body))
+            res.status(200).json(await value.process(recordDataBase,req.body))
         }catch(error){
-            const errorInString = String(error);
-            console.error(errorInString);   res.status(500).json({isSuccess:false,message:errorInString})
+            if (!(error instanceof Error)){console.error(`予期せぬエラーです。`); return;}
+            const errorInString = error.message;
+            console.error(`${errorInString}\n${error.stack}`);   res.status(500).json({isSuccess:false,message:errorInString})
             return;
         }
         return;

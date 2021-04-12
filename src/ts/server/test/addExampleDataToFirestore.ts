@@ -1,8 +1,6 @@
 import { firebase } from "../firebaseAdmin";
-import { exampleData } from "./exampledata";
 import { recordsData } from "./exampleRecords";
 
-//#TODO 想定する通りにコードを作る。
  (async () => {
     const ref = await firebase.firestore.collection("works").add({
         "id" : 0, "JName" : "日本語作品名", "EName" : "Title Of a kirby's game",

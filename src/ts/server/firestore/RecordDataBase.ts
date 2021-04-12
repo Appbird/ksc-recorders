@@ -13,72 +13,49 @@ class RecordDataBase implements InterfaceOfRecordDatabase{
         this.dataBase = firebase.firestore;
     }
     
-    private getRunnersRef(){
-        return this.dataBase.collection("runners");
+    private getRunnersRef = () => this.dataBase.collection("runners");
+    
+    private getGameSystemCollectionRef = () => this.dataBase.collection("works");
+    
+    private getGameSystemRef = (gameSystemID:string) => this.dataBase.collection("works").doc(gameSystemID);
+    
+    private getGameModeRef = (gameSystemID:string,gameModeID:string) => this.getGameSystemCollectionRef().doc(gameSystemID).collection("modes").doc(gameModeID);
+    
+    
+
+    private async getCollection<T>(ref:FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>):Promise<T[]>{
+        const result = await ref.get()
+        if (result.empty) throw new Error(`コレクション${ref.path}が存在しません。`);
+        return result.docs as unknown as T[];
     }
-    private getGameSystemCollectionRef(){
-        return this.dataBase.collection("works");
-    }
-    private getGameSystemRef(gameSystemID:string){
-        return this.dataBase.collection("works").doc(gameSystemID);
-    }
-    private getGameModeRef(gameSystemID:string,gameModeID:string){
-        return this.getGameSystemCollectionRef().doc(gameSystemID).collection("modes").doc(gameModeID);
-    }
-    private async checkExistanceOfGameMode(gameSystemID:string,gameModeID:string){
-        return (await this.getGameModeRef(gameSystemID,gameModeID).get()).exists
+    private async getDoc<T>(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>):Promise<T>{
+        const result = await ref.get()
+        if (result.exists) throw new Error(`ドキュメント${ref.path}が存在しません。`);
+        return result.data() as T;
     }
 
+    getGameSystemCollection = () => this.getCollection<IGameSystemInfo>(this.getGameSystemCollectionRef())
+    getGameSystemInfo       = (gameSystemID:string) => this.getDoc<IGameSystemInfo>(this.getGameSystemCollectionRef().doc(gameSystemID))
+
+    getGameModeCollection   = (gameSystemID:string) => this.getCollection<GameModeItem>(this.getGameSystemRef(gameSystemID).collection("modes"))
+    getGameModeInfo         = (gameSystemID:string,gameModeID:string) => this.getDoc<GameModeItem>(this.getGameModeRef(gameSystemID,gameModeID))
+
+    getGameDifficultyCollection     = (gameSystemID:string,gameModeID:string) => this.getCollection<GameDifficultyItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("difficulty"))
+    getGameDifficultyInfo           = (gameSystemID:string,gameModeID:string,id:string) => this.getDoc<GameDifficultyItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("difficulty").doc(id))
+
+    getAbilityCollection    = (gameSystemID:string,gameModeID:string) => this.getCollection<AbilityItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("ability"))
+    getAbilityInfo          = (gameSystemID:string,gameModeID:string,id:string) => this.getDoc<AbilityItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("ability").doc(id))
+
+    getTargetCollection     = (gameSystemID:string,gameModeID:string) => this.getCollection<TargetItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("target"))
+    getTargetInfo           = (gameSystemID:string,gameModeID:string,id:string) => this.getDoc<TargetItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("target").doc(id))
 
 
-    async getGameSystemCollection(){
-        const result = await this.getGameSystemCollectionRef().get();
-        if (result.empty) throw new Error(`登録されているゲームが存在しません。`);
-        //#NOTE ここ無理矢理で不安になる…
-        return result.docs as unknown as IGameSystemInfo[];
-    }
-    async getGameSystemInfo(gameSystemID:string){
-        const result = await this.getGameSystemCollectionRef().doc(gameSystemID).get();
-        if (!result.exists) throw new Error(`指定されたID${gameSystemID}に対応するゲームが存在しません。`);
-        return result.data() as IGameSystemInfo;
-    }
+    getRunnerCollection     = () => this.getCollection<IRunner>(this.getRunnersRef())
+    getRunnerInfo           = (id:string) => this.getDoc<IRunner>(this.getRunnersRef().doc(id))
 
-    async getGameModeCollection(gameSystemID:string){
-        const result = await this.getGameSystemRef(gameSystemID).collection("modes").get()
-        if (result.empty) throw new Error(`ゲーム${gameSystemID}に登録されているゲームモードがありません`);
-        return result.docs as unknown as GameModeItem[];
-    }
-    async getGameModeInfo(gameSystemID:string,gameModeID:string){
-        const result = await this.getGameModeRef(gameSystemID,gameModeID).get();
-        if (!result.exists) throw new Error(`ゲーム${gameSystemID}に登録されているゲームモード${gameModeID}が存在しません。`);
-        return result.data() as GameModeItem;
-    }
-
-    async getGameDifficultyCollection(gameSystemID:string,gameModeID:string){
-        const result = await this.getGameModeRef(gameSystemID,gameModeID).collection("difficulty").get();
-        if (result.empty) throw new Error(`ゲームモード${gameSystemID}/${gameModeID}に登録されている難易度がありません。`);
-        return result.docs as unknown as GameDifficultyItem[];
-    }
-    async getGameDifficultyInfo(gameSystemID:string,gameModeID:string,id:string){
-        const result = await this.getGameModeRef(gameSystemID,gameModeID).collection("difficulty").doc(id).get();
-        if (result.exists) throw new Error(`ゲームモード${gameSystemID}/${gameModeID}に登録されている難易度${id}が存在しません。`);
-        return result.data() as GameDifficultyItem;
-    }
-
-    async getAbilityCollection(gameSystemID:string,gameModeID:string){
-        const result = await this.getGameModeRef(gameSystemID,gameModeID).collection("ability").get();
-        if (result.empty) throw new Error(`ゲームモード${gameSystemID}/${gameModeID}に登録されている能力がありません。`);
-        return result.docs as unknown as AbilityItem[];
-    }
-    async getAbilityInfo(gameSystemID:string,gameModeID:string,id:string){
-        const result = await this.getGameModeRef(gameSystemID,gameModeID).collection("ability").doc(id).get();
-        if (result.exists) throw new Error(`ゲームモード${gameSystemID}/${gameModeID}に登録されている能力${id}が存在しません。`);
-        return result.data() as AbilityItem;
-    }
-
-    //#TODO この調子でRunnerとTarget,HashTagのcollection,infoゲッターを実装する。
-
-
+    //#TODO テストをするときにはデータベースが保存するハッシュタグの場所を修正する。
+    getHashTagCollection    = (gameSystemID:string) => this.getCollection<HashTagItem>(this.getGameSystemRef(gameSystemID).collection("hashTag"))
+    getHashTagInfo          = (gameSystemID:string,id:string) => this.getDoc<HashTagItem>(this.getGameSystemRef(gameSystemID).collection("HashTag").doc(id))
 
     async getRecord(gameSystemID:string,gameModeID:string,recordID:string){
         const result = await this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(recordID).get();

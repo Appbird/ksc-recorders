@@ -22,7 +22,7 @@ export class ControllerOfTableForResolvingID{
 
     private initalized:boolean = false;
     private initErorMsg:string = "初期化がなされていません。まずinit()メソッドを実行してください。(ControllerOfTableForResolvingID)";
-
+    //#NOTE コンストラクター・インジェクションの形を取ったので、モック化に対応できる。
     constructor(database:InterfaceOfRecordDatabase){
         this.database = database
 

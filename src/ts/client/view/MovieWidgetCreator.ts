@@ -20,14 +20,14 @@ export class MovieWidgetCreator{
     }
     private returnKind(hostname:string):"youtube"|"twitter"{
         switch (hostname){
-            case "www.youtube.com":return "youtube"
+            case "youtu.be":return "youtube"
             case "twitter.com": return "twitter"
             default : throw new Error("対応していない記録URLです。(MovieWidgetView)")
         }
     }
     private returnId(pathname:string):string{
         switch (this.kind){
-            case "youtube":return pathname.split("/")[3];
+            case "youtube":return pathname.split("/")[1];
             case "twitter": return pathname.split("/")[3];
         }
     }
@@ -38,9 +38,10 @@ export class MovieWidgetCreator{
                 twttr.widgets.createTweet(this.id,insertedHTMLElement);
             break;
             case "youtube":
+                console.log(`https://www.youtube.com/embed/${this.id}?t=${this.param.get("t")}`)
                 insertedHTMLElement.appendChild(element`
-                <iframe id="ytplayer" type="text/html" width="75%"
-                src="https://${this.url.hostname}}/embed/${this.id}?t=${this.param.get("t")}"
+                <iframe id="ytplayer" type="text/html" width="800px" height="600px"
+                src="https://www.youtube.com/embed/${this.id}?start=${this.param.get("t")}"
                 frameborder="0"></iframe>
                 `)
             break

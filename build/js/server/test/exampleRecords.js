@@ -10,7 +10,7 @@ exports.recordsData = [
             "gameSystemEnvironment": { "gameDifficultyID": "0", "gameModeID": "0", "gameSystemID": "0" },
             "abilityIDs": ["0"], "targetID": "0"
         },
-        "runnerID": "0", "tagID": ["0", "0"], "link": ["https://twitter.com/projectappbird/status/1381617843133771776?s=20"], "note": "# ノート  あいうえお"
+        "runnerID": "0", "tagID": ["0", "0"], "link": ["https://youtu.be/lJjXxEhLhyI?t=6"], "note": "# ノート  あいうえお"
     },
     {
         "id": "1", "score": 129,
@@ -19,7 +19,7 @@ exports.recordsData = [
             "gameSystemEnvironment": { "gameDifficultyID": "0", "gameModeID": "0", "gameSystemID": "0" },
             "abilityIDs": ["2"], "targetID": "1"
         },
-        "runnerID": "0", "tagID": [], "link": ["https://twitter.com/projectappbird/status/1381617843133771776?s=20"], "note": "---"
+        "runnerID": "0", "tagID": [], "link": ["https://youtu.be/lJjXxEhLhyI?t=6"], "note": "---"
     },
     {
         "id": "2", "score": 133,

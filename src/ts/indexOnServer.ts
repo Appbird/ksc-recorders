@@ -2,8 +2,13 @@ import express from "express"
 import { apiDefinition } from "./server/function/apiDefinition";
 import { recordDataBase } from "./server/mockDataBase/RecordDataBase";
 const app = express();
-app.use("/page",express.static('public'));
+app.use("/public",express.static('public'));
 app.use(express.json())
+
+app.use(`/app`,async (req,res) => {
+    res.redirect("/public/main.html")
+}
+)
 
 apiDefinition.forEach( (value,key) => {
     app.post(`/api${key}`,async (req,res) => {
@@ -27,4 +32,4 @@ apiDefinition.forEach( (value,key) => {
     })
 })
 
-app.listen(3000,() => console.info("start on http://localhost:3000/page/html/main.html"))
+app.listen(3000,() => console.info("start on http://localhost:3000/app"))

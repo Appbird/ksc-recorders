@@ -1,5 +1,5 @@
 import { firebase } from "../firebaseAdmin";
-import { recordsData } from "./exampleRecords";
+import { recordsData } from "../mockDataBase/exampleRecords";
 
  (async () => {
     const ref = await firebase.firestore.collection("works").add({

@@ -12,6 +12,7 @@ export interface IReceivedDataAtClient_recordSearchSuccessfully extends IReceive
 }
 export interface SearchCondition{
     groupName:string;
+    groupSubName?:string;
     gameSystemEnv:{
         gameSystemID: string;
         gameModeID: string;

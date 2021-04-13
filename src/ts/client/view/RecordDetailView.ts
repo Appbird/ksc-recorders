@@ -5,7 +5,6 @@ import { IAppUsedToReadOptionsAndTransition } from "../interface/AppInterfaces";
 import { IView } from "./IView";
 import { TagsView } from "./TagsView";
 import { convertNumberToRank } from "../../utility/rankUtility";
-import { IRegulationResolved } from "../../type/foundation/IRegulation";
 import { MovieWidgetCreator } from "./MovieWidgetCreator";
 const marked = require("marked")
 
@@ -38,7 +37,7 @@ export class RecordDetailView implements IView{
                     <div class = "c-evidenceMovie evidenceMovie">
                     </div>
                     <div class="c-title">
-                        <div class="c-title__sub u-underline"><i class="fas fa-link"></i> <a>${recordDetail.link[0]}</a> </div>
+                        <div class="c-title__sub u-underline"><i class="fas fa-link"></i> <a href="${recordDetail.link[0]}">${recordDetail.link[0]}</a> </div>
                     </div>
                     
                     <div class="c-title">

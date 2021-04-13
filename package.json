@@ -23,11 +23,13 @@
   },
   "dependencies": {
     "@types/marked": "^2.0.1",
+    "@types/pako": "^1.0.1",
     "clone-deep": "^4.0.1",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "firebase-admin": "^9.5.0",
     "marked": "^2.0.1",
+    "pako": "^2.0.3",
     "simplemde": "^1.11.2"
   }
 }

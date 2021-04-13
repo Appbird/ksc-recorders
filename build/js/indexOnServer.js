@@ -43,8 +43,14 @@ var express_1 = __importDefault(require("express"));
 var apiDefinition_1 = require("./server/function/apiDefinition");
 var RecordDataBase_1 = require("./server/mockDataBase/RecordDataBase");
 var app = express_1.default();
-app.use("/page", express_1.default.static('public'));
+app.use("/public", express_1.default.static('public'));
 app.use(express_1.default.json());
+app.use("/app", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        res.redirect("/public/main.html");
+        return [2 /*return*/];
+    });
+}); });
 apiDefinition_1.apiDefinition.forEach(function (value, key) {
     app.post("/api" + key, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
         var errorInString, _a, _b, error_1, errorInString;
@@ -87,4 +93,4 @@ apiDefinition_1.apiDefinition.forEach(function (value, key) {
         });
     }); });
 });
-app.listen(3000, function () { return console.info("start on http://localhost:3000/page/html/main.html"); });
+app.listen(3000, function () { return console.info("start on http://localhost:3000/app"); });

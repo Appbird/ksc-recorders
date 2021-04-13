@@ -38,7 +38,7 @@ export class MovieWidgetCreator{
                 twttr.widgets.createTweet(this.id,insertedHTMLElement);
             break;
             case "youtube":
-                console.log(`https://www.youtube.com/embed/${this.id}?t=${this.param.get("t")}`)
+                //#NOTE ここをレスポンシブにできないか…？
                 insertedHTMLElement.appendChild(element`
                 <iframe id="ytplayer" type="text/html" width="800px" height="600px"
                 src="https://www.youtube.com/embed/${this.id}?start=${this.param.get("t")}"

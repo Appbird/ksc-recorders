@@ -21,6 +21,11 @@ hr.u-thin {
   height: 1px;
 }
 
+a {
+  color: #0c1d46;
+  text-decoration: none;
+}
+
 header {
   width: 100%;
   height: 75px;

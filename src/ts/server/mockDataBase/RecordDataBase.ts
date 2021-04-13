@@ -1,7 +1,7 @@
 import { IRecord } from "../../type/record/IRecord";
 import { checkEqualityBetweenArrays } from "../../utility/arrayUtility";
 import { OrderOfRecordArray } from "../type/OrderOfRecordArray";
-import { exampleData } from "../test/exampledata";
+import { exampleData } from "./exampledata";
 import { IRecordDataBase } from "../type/IRecordDataBase";
 import { checkIsUndefined } from "../../utility/undefinedChecker";
 import { InterfaceOfRecordDatabase } from "../type/InterfaceOfRecordDatabase";

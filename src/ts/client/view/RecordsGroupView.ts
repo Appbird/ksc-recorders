@@ -35,7 +35,7 @@ export class RecordGroupView implements IView{
             <div class = "c-recordGroupHeader">
                 <div class="c-title">
                 <div class="c-title__main">${recordGroup.groupName}</div>
-                <div class="c-title__sub">${"サブタイトル"}</div>
+                ${(recordGroup.groupSubName === undefined) ? "" : `<div class="c-title__sub">${recordGroup.groupSubName}</div>`}
             </div>
             <div class="stateInfo"></div>
             <hr noshade class="u-bold">

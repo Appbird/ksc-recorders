@@ -1,21 +1,16 @@
 import App from "./App";
 const articleDOM =  document.getElementById("article")
 if (articleDOM === null) throw new Error("idがarticleである要素を見つけられませんでした。")
+
 const app = new App("none",articleDOM,"Japanese");
+
 app.transition("searchResultView",{
     required:{condition:[{
         groupName: "ボス1",
-        gameSystemEnv: {
-            gameSystemID: "0",
-            gameModeID: "0"
-        },
+        gameSystemEnv: {gameSystemID: "0",gameModeID: "0"},
         orderOfRecordArray:"LowerFirst",
-        startOfRecordArray:0,
-        limitOfRecordArray:2,
         targetIDs: ["1"],
-        abilityIDs: [],
         abilityIDsCondition: "AND",
-        runnerIDs: [],
         language: "Japanese"
     }]},
     title:"検索結果"    

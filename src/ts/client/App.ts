@@ -7,6 +7,7 @@ import { RecordGroupView } from "./view/RecordsGroupView";
 import { RecordDetailView } from "./view/RecordDetailView";
 import { createElementWithIdAndClass } from "./utility/aboutElement";
 import { LanguageInApplication } from "../server/type/LanguageInApplication";
+import { HistoryAdministrator } from "./view/HistoryAdministrator";
 const marked = require("marked");
 
 interface APIFunctions {
@@ -19,6 +20,8 @@ export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptio
     private articleDOM:HTMLElement;
     private origin:string = "http://localhost:3000";
     private state:keyof PageStates;
+    private requiredObj:PageStates[keyof PageStates]
+    private historyAd: HistoryAdministrator;
     private option:{
         gameSystemEnvDisplayed: {
             gameSystemID: string | null,
@@ -29,8 +32,8 @@ export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptio
         language:LanguageInApplication,
     };
 
-    
     constructor(firstState:keyof PageStates,articleDOM:HTMLElement,language:LanguageInApplication){
+        this.historyAd = new HistoryAdministrator(this)
         this.option = {
             gameSystemEnvDisplayed:{
                 gameSystemID:null,
@@ -41,9 +44,15 @@ export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptio
         }
         this.state = firstState;
         this.articleDOM = articleDOM;
-        if (location.href.startsWith(`${this.origin}/page/main.html?record::`)) {
+        if (location.href.startsWith(`${this.origin}/app?record::`)) {
             this.redirectToDetailPage(location.href.replace(`${this.origin}/page/main.html?record::`,"")).catch( (reason) => this.displayError("記録の詳細の表示に失敗しました。",reason))
         }
+    }
+    get nowState(){
+        return this.state;
+    }
+    get nowRequiredObject(){
+        return this.requiredObj;
     }
 
     get gameSystemID(){
@@ -55,16 +64,16 @@ export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptio
     get superiorScore(){
         return this.option.superiorScore;
     }
-    get nowState(){
-        return this.state;
-    }
+
     set language(value:LanguageInApplication){
         this.option.language = value
     }
     get language(){
         return this.option.language
     }
-    async transition<T extends keyof PageStates>(nextState:T, requestObject:PageStates[T]){
+    async transition<T extends keyof PageStates>(nextState:T, requestObject:PageStates[T],ifAppendHistory:boolean = true){
+        
+        if (ifAppendHistory) this.historyAd.appendHistory();
         try {
             this.clearView();
             switch (nextState) {
@@ -74,12 +83,14 @@ export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptio
                 case "searchResultView":    await this.search(requestObject  as PageStates["searchResultView"]);    break;
                 default: throw new Error(`指定されたキー${nextState}に対応するページ状態が存在しません。`);
             }
+            
         } catch(error){
             if (!(error instanceof Error)){ console.error(`予期せぬエラーです。 : ${error}`); return; }
             const errorInString = error.message;
             console.error(`${errorInString}\n${error.stack}`);
             this.displayError("エラーが発生しました。",errorInString,this.articleDOM);
         }
+        this.state = nextState; this.requiredObj = requestObject;
     }
 
 

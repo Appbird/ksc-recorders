@@ -115,7 +115,6 @@ export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptio
             `# APIを利用した通信に失敗しました。\n\n## 使用したAPI\n\n${functionName}\n\n## 原因\n\n${(await response.json()).message}\n\n## 入力オブジェクト\n\n${JSON.stringify(requiredObj)}`
         )
         const result = await response.json()
-        console.log(result)
         return result
     }
 

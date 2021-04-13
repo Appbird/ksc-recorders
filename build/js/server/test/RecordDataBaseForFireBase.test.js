@@ -196,7 +196,7 @@ function checkF(expectedRecordIDs, gameSystemID, gameModeID, order, abilityIDsCo
                 case 1: return [2 /*return*/, _a.apply(void 0, [_b.apply(void 0, [(_c.sent()).slice(0, limits)]), expectedRecordIDs.map(function (expectedRecordID) { return _recordIDs[expectedRecordID]; })])];
                 case 2:
                     error_1 = _c.sent();
-                    console.log(error_1);
+                    console.error(error_1);
                     return [2 /*return*/, false];
                 case 3: return [2 /*return*/];
             }

@@ -23,7 +23,6 @@ export class HistoryAdministrator{
     }
     back(){
         const past = this.transitionPile.pop();
-        console.log(past);
         if (past === undefined) return;
         this.app.transition(past.pageState,past.requiredObject,false)
     }

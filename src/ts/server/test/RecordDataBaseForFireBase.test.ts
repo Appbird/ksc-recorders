@@ -88,8 +88,8 @@ async function checkF(expectedRecordIDs:number[],
                 targetIDs.map( (ele) => _targetIDs[ele]),
                 runnerIDs.map( (ele) => _runnerIDs[ele])
                 )).slice(0,limits)),expectedRecordIDs.map((expectedRecordID) => _recordIDs[expectedRecordID]))
-    }catch(error){
-        console.log(error)
+    }catch(error){ 
+        console.error(error)
         return false;
     }
 }

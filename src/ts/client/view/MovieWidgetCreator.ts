@@ -34,7 +34,6 @@ export class MovieWidgetCreator{
     setWidget(insertedHTMLElement:Element){
         switch (this.kind){
             case "twitter":
-                console.log(this.id)
                 twttr.widgets.createTweet(this.id,insertedHTMLElement);
             break;
             case "youtube":

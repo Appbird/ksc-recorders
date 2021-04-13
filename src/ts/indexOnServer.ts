@@ -2,11 +2,19 @@ import express from "express"
 import { apiDefinition } from "./server/function/apiDefinition";
 import { recordDataBase } from "./server/mockDataBase/RecordDataBase";
 const app = express();
-app.use("/public",express.static('public'));
+app.use("/app",express.static('public'));
 app.use(express.json())
 
-app.use(`/app`,async (req,res) => {
-    res.redirect("/public/main.html")
+app.get(`/app`,async (req,res) => {
+    try{
+        if (typeof req.query.state !== "string" || typeof req.query.required !== "string"){
+            res.redirect("/app/main.html")
+            return;
+        }
+        res.redirect(`/app/main.html?state=${req.query.state}&required=${req.query.required}`)
+    } catch(error){
+        console.error(error);
+    }
 }
 )
 

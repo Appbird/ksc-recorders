@@ -8,3 +8,4 @@ export interface PageStates{
     detailView:IReceivedDataAtServer_recordDetail
     searchResultView:{required:IReceivedDataAtServer_recordSearch,title?:string}
 }
+export const stateView = ["none","errorView","detailView","searchResultView"];

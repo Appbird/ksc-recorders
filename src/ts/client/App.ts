@@ -1,13 +1,14 @@
 import { IReceivedDataAtClient_recordSearchSuccessfully, IReceivedDataAtServer_recordSearch } from "../type/transmission/record/IReceivedData_recordSearch";
 import { IReceivedDataAtClient_recordDetailSuccessfully, IReceivedDataAtServer_recordDetail } from "../type/transmission/record/IReceivedData_recordDetail";
 import { element, elementWithoutEscaping } from "../utility/ViewUtility";
-import { PageStates } from "./interface/PageStates";
+import { PageStates, stateView } from "./interface/PageStates";
 import { IAppOnlyUsedToTransition, IAppUsedToReadOptionsAndTransition } from "./interface/AppInterfaces";
 import { RecordGroupView } from "./view/RecordsGroupView";
 import { RecordDetailView } from "./view/RecordDetailView";
 import { createElementWithIdAndClass } from "./utility/aboutElement";
 import { LanguageInApplication } from "../server/type/LanguageInApplication";
 import { HistoryAdministrator } from "./view/HistoryAdministrator";
+import paco from "pako"
 const marked = require("marked");
 
 interface APIFunctions {
@@ -44,8 +45,9 @@ export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptio
         }
         this.state = firstState;
         this.articleDOM = articleDOM;
+        
         if (location.href.startsWith(`${this.origin}/app?record::`)) {
-            this.redirectToDetailPage(location.href.replace(`${this.origin}/page/main.html?record::`,"")).catch( (reason) => this.displayError("記録の詳細の表示に失敗しました。",reason))
+            this.redirectToDetailPage(location.href.replace(`${this.origin}/app?record::`,"")).catch( (reason) => this.displayError("記録の詳細の表示に失敗しました。",reason))
         }
     }
     get nowState(){

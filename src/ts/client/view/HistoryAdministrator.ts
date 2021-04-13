@@ -11,11 +11,7 @@ export class HistoryAdministrator{
         });
     }
     async appendHistory(){
-        if (0 < this.transitionPile.length){
-            const zippedRequiredObj = await paco.deflate(JSON.stringify(this.app.nowRequiredObject))
-            const base64Str = btoa(String.fromCharCode(...zippedRequiredObj))
-            history.pushState(null,`Kirby-Speed/ScoreRecorders:${this.app.nowState}`,`/app?state=${this.app.nowState}&required=${base64Str}`)
-        }
+        if (0 < this.transitionPile.length) history.pushState(null,`Kirby-Speed/ScoreRecorders:${this.app.nowState}`,`/app?state=${this.app.nowState}`)
         this.transitionPile.push({
             pageState:this.app.nowState,
             requiredObject:this.app.nowRequiredObject

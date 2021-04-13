@@ -43,11 +43,20 @@ var express_1 = __importDefault(require("express"));
 var apiDefinition_1 = require("./server/function/apiDefinition");
 var RecordDataBase_1 = require("./server/mockDataBase/RecordDataBase");
 var app = express_1.default();
-app.use("/public", express_1.default.static('public'));
+app.use("/app", express_1.default.static('public'));
 app.use(express_1.default.json());
-app.use("/app", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+app.get("/app", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
-        res.redirect("/public/main.html");
+        try {
+            if (typeof req.query.state !== "string" || typeof req.query.required !== "string") {
+                res.redirect("/app/main.html");
+                return [2 /*return*/];
+            }
+            res.redirect("/app/main.html?state=" + req.query.state + "&required=" + req.query.required);
+        }
+        catch (error) {
+            console.error(error);
+        }
         return [2 /*return*/];
     });
 }); });

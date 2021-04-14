@@ -1,4 +1,6 @@
-import { IReceivedDataAtServer_getlist_UseId, IReceivedDataAtServer_getlist_UseSIdId, IReceivedDataAtServer_getlist_UseSIdMIdId } from "../../../type/transmission/list/getlist";
+import IReceivedDataAtServer_getlist_UseSIdMIdId from "../../../type/transmission/list/atServer_getlist/IReceivedDataAtServer_getlist_UseSIdMIdId";
+import IReceivedDataAtServer_getlist_UseSIdId from "../../../type/transmission/list/atServer_getlist/IReceivedDataAtServer_getlist_UseSIdId";
+import IReceivedDataAtServer_getlist_UseId from "../../../type/transmission/list/atServer_getlist/IReceivedDataAtServer_getlist_UseId";
 import { IItemOfResolveTableToName } from "../../type/IItemOfResolveTableToName";
 import { InterfaceOfRecordDatabase } from "../../type/InterfaceOfRecordDatabase";
  

@@ -1,7 +1,9 @@
 //[x] RecordDataBase,ControllerOfTableForResolvingIDクラスを用いて、必要となる記録データを取り出し、ここでデータの加工を行う。
 //[x] クライアントに与えるべきデータをJSONで出力する。
 //#NOTE ここの実装はRecordDataBaseの実装に依存しない。
-import {IReceivedDataAtServer_recordSearch, IReceivedDataAtClient_recordSearch, SearchCondition } from "../../../type/transmission/record/IReceivedData_recordSearch";
+import IReceivedDataAtServer_recordSearch from "../../../type/transmission/record/IReceivedDataAtServer_recordSearch";
+import IReceivedDataAtClient_recordSearch from "../../../type/transmission/record/IReceivedDataAtClient_recordSearch";
+import { SearchCondition } from "../../../type/transmission/record/SearchCondition";
 import { IRecord } from "../../../type/record/IRecord";
 import clone from "clone-deep";
 import { ControllerOfTableForResolvingID } from "../../recordConverter/ControllerOfTableForResolvingID";

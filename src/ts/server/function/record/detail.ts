@@ -1,4 +1,5 @@
-import { IReceivedDataAtClient_recordDetail, IReceivedDataAtServer_recordDetail } from "../../../type/transmission/record/IReceivedData_recordDetail";
+import IReceivedDataAtServer_recordDetail from "../../../type/transmission/record/IReceivedDataAtServer_recordDetail";
+import IReceivedDataAtClient_recordDetail from "../../../type/transmission/record/IReceivedDataAtClient_recordDetail";
 import { ControllerOfTableForResolvingID } from "../../recordConverter/ControllerOfTableForResolvingID";
 import { InterfaceOfRecordDatabase } from "../../type/InterfaceOfRecordDatabase";
 

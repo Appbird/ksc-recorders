@@ -1,4 +1,6 @@
-import { IReceivedDataAtServer_pickUp_UseId, IReceivedDataAtServer_pickUp_UseSIdId, IReceivedDataAtServer_pickUp_UseSIdMIdId } from "../../../type/transmission/list/pickUp";
+import IReceivedDataAtServer_pickUp_UseSIdMIdId from "../../../type/transmission/list/atServer_pickup/IReceivedDataAtServer_pickUp_UseSIdMIdId";
+import IReceivedDataAtServer_pickUp_UseSIdId from "../../../type/transmission/list/atServer_pickup/IReceivedDataAtServer_pickUp_UseSIdId";
+import IReceivedDataAtServer_pickUp_UseId from "../../../type/transmission/list/atServer_pickup/IReceivedDataAtServer_pickUp_UseId";
 import { IItemOfResolveTableToName } from "../../type/IItemOfResolveTableToName";
 import { InterfaceOfRecordDatabase } from "../../type/InterfaceOfRecordDatabase";
  

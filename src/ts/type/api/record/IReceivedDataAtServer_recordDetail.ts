@@ -1,4 +1,4 @@
-import { LanguageInApplication } from "../../../server/type/LanguageInApplication";
+import { LanguageInApplication } from "../../LanguageInApplication";
 import { IReceivedDataAtServer } from "../transmissionBase";
 
 export interface IReceivedDataAtServer_recordDetail extends IReceivedDataAtServer {

@@ -1,10 +1,10 @@
 import { IRecord } from "../../type/record/IRecord";
 import { IRunner } from "../../type/record/IRunner";
 import { firebase } from "../firebaseAdmin";
-import { HashTagItem, IGameSystemInfo } from "../type/IGameSystemInfo";
+import { HashTagItem, IGameSystemInfo } from "../../type/list/IGameSystemInfo";
 import { InterfaceOfRecordDatabase } from "../type/InterfaceOfRecordDatabase";
 import { OrderOfRecordArray } from "../type/OrderOfRecordArray";
-import { AbilityItem, GameDifficultyItem, GameModeItem, TargetItem } from "../type/UniqueResolveTableToGameSystem";
+import { AbilityItem, GameDifficultyItem, GameModeItem, TargetItem } from "../../type/list/UniqueResolveTableToGameSystem";
 
 //[x] getRecordsWithConditionメソッドの実装
 class RecordDataBase implements InterfaceOfRecordDatabase{

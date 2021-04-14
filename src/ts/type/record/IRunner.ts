@@ -1,4 +1,4 @@
-import { IItemOfResolveTableToName } from "../../server/type/IItemOfResolveTableToName";
+import { IItemOfResolveTableToName } from "../list/IItemOfResolveTableToName";
 
 export interface IRunner extends IItemOfResolveTableToName{
     JName : string;

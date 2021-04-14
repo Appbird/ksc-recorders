@@ -1,9 +1,13 @@
 .c-recordCard {
     box-shadow: 0px 3px 5px rgba(23, 4, 75, 0.329);
     background: #fff;
+    margin:1em 0;
     border-radius: 6px;
     transition-duration: 0.2s;
     
+}
+.c-recordCard>p {
+    margin: 0 0.5em;
 }
 .c-recordCard:hover{
     transform: scale(1.005);

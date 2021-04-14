@@ -1,4 +1,4 @@
-import { IRecord } from "../../type/record/IRecord";
+import { IRecord } from "../record/IRecord";
 import { IItemOfResolveTableToName } from "./IItemOfResolveTableToName";
 
 /**

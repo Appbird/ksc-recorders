@@ -1,4 +1,4 @@
-import { LanguageInApplication } from "../../server/type/LanguageInApplication";
+import { LanguageInApplication } from "../LanguageInApplication";
 import { OrderOfRecordArray } from "../../server/type/OrderOfRecordArray";
 
 export interface SearchCondition {

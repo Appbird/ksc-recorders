@@ -1,7 +1,7 @@
 import { IRecord } from "../../type/record/IRecord";
 import { OrderOfRecordArray } from "./OrderOfRecordArray";
-import { AbilityItem, GameDifficultyItem, GameModeItem, TargetItem } from "./UniqueResolveTableToGameSystem";
-import { HashTagItem, IGameSystemInfo } from "./IGameSystemInfo";
+import { AbilityItem, GameDifficultyItem, GameModeItem, TargetItem } from "../../type/list/UniqueResolveTableToGameSystem";
+import { HashTagItem, IGameSystemInfo } from "../../type/list/IGameSystemInfo";
 import { IRunner } from "../../type/record/IRunner";
 
 //[x] getRecordsWithConditionメソッドの実装

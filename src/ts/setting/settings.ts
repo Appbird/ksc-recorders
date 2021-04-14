@@ -1,4 +1,4 @@
-import { LanguageInApplication } from "../server/type/LanguageInApplication";
+import { LanguageInApplication } from "../type/LanguageInApplication";
 
 
 export const Settings:ISettings = {

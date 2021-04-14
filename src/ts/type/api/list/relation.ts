@@ -1,5 +1,5 @@
-import { HashTagItem, IGameSystemInfo } from "../../../server/type/IGameSystemInfo";
-import { AbilityItem, GameDifficultyItem, GameModeItem, TargetItem } from "../../../server/type/UniqueResolveTableToGameSystem";
+import { HashTagItem, IGameSystemInfo } from "../../list/IGameSystemInfo";
+import { AbilityItem, GameDifficultyItem, GameModeItem, TargetItem } from "../../list/UniqueResolveTableToGameSystem";
 import { IRunner } from "../../record/IRunner";
 import { IReceivedData } from "../transmissionBase";
 import { IReceivedDataAtServer_getlist_UseId } from "./atServer_getlist/IReceivedDataAtServer_getlist_UseId";
@@ -51,7 +51,7 @@ export interface IReceivedData_pickUpRunner extends IReceivedData{
 }
 export interface IReceivedData_pickUpGameMode extends IReceivedData{
     atServer:IReceivedDataAtServer_pickUp_UseSIdId
-    atClient:IReceivedDataAtClient_pickUp<IGameSystemInfo>
+    atClient:IReceivedDataAtClient_pickUp<GameModeItem>
 }
 export interface IReceivedData_pickUpHashTag extends IReceivedData{
     atServer:IReceivedDataAtServer_pickUp_UseSIdId

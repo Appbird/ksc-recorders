@@ -1,7 +1,7 @@
 import { IRecord, IRecordInShortResolved, IRecordResolved } from "../../type/record/IRecord";
 import { IRecordGroupResolved } from "../../type/record/IRecordGroupResolved";
-import { IItemOfResolveTableToName } from "../type/IItemOfResolveTableToName";
-import { LanguageInApplication } from "../type/LanguageInApplication";
+import { IItemOfResolveTableToName } from "../../type/list/IItemOfResolveTableToName";
+import { LanguageInApplication } from "../../type/LanguageInApplication";
 import { InterfaceOfRecordDatabase } from "../type/InterfaceOfRecordDatabase";
 /**
  * データベースのデータを参照してIDを解決してくれるテーブルマネージャー

@@ -5,7 +5,7 @@ declare let twttr:{
     }
 }
 export class MovieWidgetCreator{
-    //#TODO 動作確認
+    //#CTODO 動作確認
     private url:URL
     private id:string;
     private param:URLSearchParams;

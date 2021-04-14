@@ -1,5 +1,5 @@
 import { IRunner } from "../../type/record/IRunner";
-import { IGameSystemInfo } from "./IGameSystemInfo";
+import { IGameSystemInfo } from "../../type/list/IGameSystemInfo";
 
 
 export interface IRecordDataBase {

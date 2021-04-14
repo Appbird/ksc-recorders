@@ -4,3 +4,7 @@ export function createElementWithIdAndClass(idAndClass:{className?:string,id?:st
     if (idAndClass.id !== undefined)        element.id = idAndClass.id
     return element
 }
+/** valueがundefinedであるとき、空文字列を渡す。 */
+export function writeElement(value:string|undefined,tag:string){
+    return (value === undefined) ? "" : `<${tag}>${value}</${tag}>`
+}

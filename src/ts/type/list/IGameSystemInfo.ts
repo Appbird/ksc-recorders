@@ -1,18 +1,23 @@
-import { IRecord } from "../record/IRecord";
 import { IItemOfResolveTableToName } from "./IItemOfResolveTableToName";
-import { GameModeItem } from "./UniqueResolveTableToGameSystem";
+import { IGameModeItem } from "./UniqueResolveTableToGameSystem";
 
-export interface IGameSystemInfo extends IItemOfResolveTableToName {
+export type IGameSystemInfo = IGameSystemInfoWithoutCollections & CollectionInIGameSystemInfo
+export interface IGameSystemInfoWithoutCollections extends IItemOfResolveTableToName {
     id: string;
     JName: string;
     EName: string;
-    tags:HashTagItem[];
+    recordsNumber:number;
+    runnersNumber:number;
+    dateOfLatestPost:number;
     JDescription?: string;
     EDescription?: string;
-    modes : GameModeItem[];
+}
+export interface CollectionInIGameSystemInfo {
+    tags:IHashTagItem[];
+    modes : IGameModeItem[];
 }
 
 
-export interface HashTagItem extends IItemOfResolveTableToName{
+export interface IHashTagItem extends IItemOfResolveTableToName{
     description?:string;
 }

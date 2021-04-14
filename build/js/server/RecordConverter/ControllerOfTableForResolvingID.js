@@ -37,6 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ControllerOfTableForResolvingID = void 0;
+var aboutLang_1 = require("../../utility/aboutLang");
 var ControllerOfTableForResolvingID = /** @class */ (function () {
     //#NOTE コンストラクター・インジェクションの形を取ったので、モック化に対応できる。
     function ControllerOfTableForResolvingID(database) {
@@ -59,17 +60,6 @@ var ControllerOfTableForResolvingID = /** @class */ (function () {
         this.resolveGameDifficultyID = function (gameSystemID, gameModeID, id, lang) { return _this.getNameBySIDMID(gameSystemID, gameModeID, id, lang, _this.difficulty, function (s, m, id) { return _this.database.getGameDifficultyInfo(s, m, id); }); };
         this.database = database;
     }
-    ControllerOfTableForResolvingID.prototype.selectAppropriateName = function (item, lang) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (lang) {
-                    case "Japanese": return [2 /*return*/, item.JName];
-                    case "English": return [2 /*return*/, item.EName];
-                }
-                return [2 /*return*/];
-            });
-        });
-    };
     // #NOTE 基礎メソッド
     ControllerOfTableForResolvingID.prototype.getName = function (id, lang, cacheList, getDoc) {
         return __awaiter(this, void 0, void 0, function () {
@@ -93,7 +83,7 @@ var ControllerOfTableForResolvingID = /** @class */ (function () {
                         result = _a;
                         if (result === undefined)
                             throw new Error("予期しないエラーです。");
-                        return [2 /*return*/, this.selectAppropriateName(result, lang)];
+                        return [2 /*return*/, aboutLang_1.selectAppropriateName(result, lang)];
                 }
             });
         });
@@ -121,7 +111,7 @@ var ControllerOfTableForResolvingID = /** @class */ (function () {
                         result = _a;
                         if (result === undefined)
                             throw new Error("予期しないエラーです。");
-                        return [2 /*return*/, this.selectAppropriateName(result, lang)];
+                        return [2 /*return*/, aboutLang_1.selectAppropriateName(result, lang)];
                 }
             });
         });
@@ -149,7 +139,7 @@ var ControllerOfTableForResolvingID = /** @class */ (function () {
                         result = _a;
                         if (result === undefined)
                             throw new Error("予期しないエラーです。");
-                        return [2 /*return*/, this.selectAppropriateName(result, lang)];
+                        return [2 /*return*/, aboutLang_1.selectAppropriateName(result, lang)];
                 }
             });
         });

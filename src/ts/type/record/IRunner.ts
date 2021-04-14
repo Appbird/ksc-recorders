@@ -9,6 +9,7 @@ export interface IRunner extends IItemOfResolveTableToName{
     twitterID : string;
     youtubeID : string;
     idOfGameSystemRunnerHavePlayed: string[];
+    idOfGameModeRunnerHavePlayed:string[];
     theDateOfLastPost :number; 
     isCommitteeMember:boolean;
     isMuted:boolean;

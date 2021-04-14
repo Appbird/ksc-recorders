@@ -39,6 +39,6 @@ export const recordsData:IRecord[] = [
           "gameSystemEnvironment"	:{ "gameDifficultyID" :"0", "gameModeID" :"0", "gameSystemID" :"0"},
           "abilityIDs" :["0","1","1","2"], "targetID" :"0"
       },
-      "runnerID":"0", "tagID": [], "link" : ["https://twitter.com/projectappbird/status/1381617843133771776?s=20"], "note" : "---"
+      "runnerID":"1", "tagID": [], "link" : ["https://twitter.com/projectappbird/status/1381617843133771776?s=20"], "note" : "---"
     }
 ]

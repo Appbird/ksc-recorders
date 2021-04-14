@@ -1,31 +1,31 @@
 import { IRecord } from "../../type/record/IRecord";
 import { OrderOfRecordArray } from "./OrderOfRecordArray";
-import { AbilityItem, GameDifficultyItem, GameModeItem, TargetItem } from "../../type/list/UniqueResolveTableToGameSystem";
-import { HashTagItem, IGameSystemInfo } from "../../type/list/IGameSystemInfo";
+import { IAbilityItem, IGameDifficultyItem, IGameModeItem, IGameModeItemWithoutCollections, ITargetItem } from "../../type/list/UniqueResolveTableToGameSystem";
+import { IHashTagItem, IGameSystemInfoWithoutCollections } from "../../type/list/IGameSystemInfo";
 import { IRunner } from "../../type/record/IRunner";
 
 //[x] getRecordsWithConditionメソッドの実装
 export interface InterfaceOfRecordDatabase {
-    getGameSystemCollection: () => Promise<IGameSystemInfo[]>;
-    getGameSystemInfo: (gameSystemID: string) => Promise<IGameSystemInfo>;
+    getGameSystemCollection: () => Promise<IGameSystemInfoWithoutCollections[]>;
+    getGameSystemInfo: (gameSystemID: string) => Promise<IGameSystemInfoWithoutCollections>;
     
-    getGameModeCollection:(gameSystemID: string) => Promise<GameModeItem[]>;
-    getGameModeInfo: (gameSystemID: string, gameModeID: string) => Promise<GameModeItem>;
+    getGameModeCollection:(gameSystemID: string) => Promise<IGameModeItemWithoutCollections[]>;
+    getGameModeInfo: (gameSystemID: string, gameModeID: string) => Promise<IGameModeItemWithoutCollections>;
 
     getRunnerCollection: () => Promise<IRunner[]>;
     getRunnerInfo: (id:string) => Promise<IRunner>;
 
-    getTargetCollection: (gameSystemID: string, gameModeID: string) => Promise<TargetItem[]>;
-    getTargetInfo: (gameSystemID: string, gameModeID: string,id:string) => Promise<TargetItem>;
+    getTargetCollection: (gameSystemID: string, gameModeID: string) => Promise<ITargetItem[]>;
+    getTargetInfo: (gameSystemID: string, gameModeID: string,id:string) => Promise<ITargetItem>;
 
-    getAbilityCollection: (gameSystemID: string, gameModeID: string) => Promise<AbilityItem[]>;
-    getAbilityInfo: (gameSystemID: string, gameModeID: string, id:string) => Promise<AbilityItem>;
+    getAbilityCollection: (gameSystemID: string, gameModeID: string) => Promise<IAbilityItem[]>;
+    getAbilityInfo: (gameSystemID: string, gameModeID: string, id:string) => Promise<IAbilityItem>;
 
-    getGameDifficultyCollection: (gameSystemID: string, gameModeID: string) => Promise<GameDifficultyItem[]>;
-    getGameDifficultyInfo: (gameSystemID: string, gameModeID: string,id:string) => Promise<GameDifficultyItem>;
+    getGameDifficultyCollection: (gameSystemID: string, gameModeID: string) => Promise<IGameDifficultyItem[]>;
+    getGameDifficultyInfo: (gameSystemID: string, gameModeID: string,id:string) => Promise<IGameDifficultyItem>;
 
-    getHashTagCollection: (gameSystemID: string) => Promise<HashTagItem[]>;
-    getHashTagInfo: (gameSystemID: string,id:string) => Promise<HashTagItem>;
+    getHashTagCollection: (gameSystemID: string) => Promise<IHashTagItem[]>;
+    getHashTagInfo: (gameSystemID: string,id:string) => Promise<IHashTagItem>;
 
     getRecord: (gameSystemID: string, gameModeID: string,recordID:string) => Promise<IRecord>;
     getRecordsWithCondition: (gameSystemID: string, gameModeID: string,

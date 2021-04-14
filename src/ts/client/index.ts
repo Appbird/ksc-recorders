@@ -4,19 +4,7 @@ if (articleDOM === null) throw new Error("idがarticleである要素を見つ�
 
 const app = new App("none",articleDOM,"Japanese");
 
-app.transition("searchResultView",{
-    required:{condition:[{
-        groupName: "ボス1",
-        gameSystemEnv: {gameSystemID: "0",gameModeID: "0"},
-        orderOfRecordArray:"LowerFirst",
-        targetIDs: ["1"],
-        abilityIDsCondition: "AND",
-        language: "Japanese"
-    }]},
-    title:"検索結果"    
-    }
-    
-)
+app.transition("gameSystemSelector",undefined)
 
 /* app.detail({
     gameSystemEnv:{

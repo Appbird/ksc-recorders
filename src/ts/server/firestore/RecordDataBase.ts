@@ -1,10 +1,10 @@
 import { IRecord } from "../../type/record/IRecord";
 import { IRunner } from "../../type/record/IRunner";
 import { firebase } from "../firebaseAdmin";
-import { HashTagItem, IGameSystemInfo } from "../../type/list/IGameSystemInfo";
+import { IHashTagItem, IGameSystemInfo, IGameSystemInfoWithoutCollections } from "../../type/list/IGameSystemInfo";
 import { InterfaceOfRecordDatabase } from "../type/InterfaceOfRecordDatabase";
 import { OrderOfRecordArray } from "../type/OrderOfRecordArray";
-import { AbilityItem, GameDifficultyItem, GameModeItem, TargetItem } from "../../type/list/UniqueResolveTableToGameSystem";
+import { IAbilityItem, IGameDifficultyItem, IGameModeItem, IGameModeItemWithoutCollections, ITargetItem } from "../../type/list/UniqueResolveTableToGameSystem";
 
 //[x] getRecordsWithConditionメソッドの実装
 class RecordDataBase implements InterfaceOfRecordDatabase{
@@ -34,28 +34,28 @@ class RecordDataBase implements InterfaceOfRecordDatabase{
         return result.data() as T;
     }
 
-    getGameSystemCollection = () => this.getCollection<IGameSystemInfo>(this.getGameSystemCollectionRef())
-    getGameSystemInfo       = (gameSystemID:string) => this.getDoc<IGameSystemInfo>(this.getGameSystemCollectionRef().doc(gameSystemID))
+    getGameSystemCollection = () => this.getCollection<IGameSystemInfoWithoutCollections>(this.getGameSystemCollectionRef())
+    getGameSystemInfo       = (gameSystemID:string) => this.getDoc<IGameSystemInfoWithoutCollections>(this.getGameSystemCollectionRef().doc(gameSystemID))
 
-    getGameModeCollection   = (gameSystemID:string) => this.getCollection<GameModeItem>(this.getGameSystemRef(gameSystemID).collection("modes"))
-    getGameModeInfo         = (gameSystemID:string,gameModeID:string) => this.getDoc<GameModeItem>(this.getGameModeRef(gameSystemID,gameModeID))
+    getGameModeCollection   = (gameSystemID:string) => this.getCollection<IGameModeItemWithoutCollections>(this.getGameSystemRef(gameSystemID).collection("modes"))
+    getGameModeInfo         = (gameSystemID:string,gameModeID:string) => this.getDoc<IGameModeItemWithoutCollections>(this.getGameModeRef(gameSystemID,gameModeID))
 
-    getGameDifficultyCollection     = (gameSystemID:string,gameModeID:string) => this.getCollection<GameDifficultyItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("difficulty"))
-    getGameDifficultyInfo           = (gameSystemID:string,gameModeID:string,id:string) => this.getDoc<GameDifficultyItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("difficulty").doc(id))
+    getGameDifficultyCollection     = (gameSystemID:string,gameModeID:string) => this.getCollection<IGameDifficultyItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("difficulty"))
+    getGameDifficultyInfo           = (gameSystemID:string,gameModeID:string,id:string) => this.getDoc<IGameDifficultyItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("difficulty").doc(id))
 
-    getAbilityCollection    = (gameSystemID:string,gameModeID:string) => this.getCollection<AbilityItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("ability"))
-    getAbilityInfo          = (gameSystemID:string,gameModeID:string,id:string) => this.getDoc<AbilityItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("ability").doc(id))
+    getAbilityCollection    = (gameSystemID:string,gameModeID:string) => this.getCollection<IAbilityItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("ability"))
+    getAbilityInfo          = (gameSystemID:string,gameModeID:string,id:string) => this.getDoc<IAbilityItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("ability").doc(id))
 
-    getTargetCollection     = (gameSystemID:string,gameModeID:string) => this.getCollection<TargetItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("target"))
-    getTargetInfo           = (gameSystemID:string,gameModeID:string,id:string) => this.getDoc<TargetItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("target").doc(id))
+    getTargetCollection     = (gameSystemID:string,gameModeID:string) => this.getCollection<ITargetItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("target"))
+    getTargetInfo           = (gameSystemID:string,gameModeID:string,id:string) => this.getDoc<ITargetItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("target").doc(id))
 
 
     getRunnerCollection     = () => this.getCollection<IRunner>(this.getRunnersRef())
     getRunnerInfo           = (id:string) => this.getDoc<IRunner>(this.getRunnersRef().doc(id))
 
     //#TODO テストをするときにはデータベースが保存するハッシュタグの場所を修正する。
-    getHashTagCollection    = (gameSystemID:string) => this.getCollection<HashTagItem>(this.getGameSystemRef(gameSystemID).collection("hashTag"))
-    getHashTagInfo          = (gameSystemID:string,id:string) => this.getDoc<HashTagItem>(this.getGameSystemRef(gameSystemID).collection("HashTag").doc(id))
+    getHashTagCollection    = (gameSystemID:string) => this.getCollection<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("hashTag"))
+    getHashTagInfo          = (gameSystemID:string,id:string) => this.getDoc<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("HashTag").doc(id))
 
     async getRecord(gameSystemID:string,gameModeID:string,recordID:string){
         const result = await this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(recordID).get();

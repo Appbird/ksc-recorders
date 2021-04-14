@@ -3,6 +3,7 @@ import { IRecordGroupResolved } from "../../type/record/IRecordGroupResolved";
 import { IItemOfResolveTableToName } from "../../type/list/IItemOfResolveTableToName";
 import { LanguageInApplication } from "../../type/LanguageInApplication";
 import { InterfaceOfRecordDatabase } from "../type/InterfaceOfRecordDatabase";
+import { selectAppropriateName } from "../../utility/aboutLang";
 /**
  * データベースのデータを参照してIDを解決してくれるテーブルマネージャー
  */
@@ -26,19 +27,13 @@ export class ControllerOfTableForResolvingID{
 
     }
 
-    private async selectAppropriateName(item:IItemOfResolveTableToName,lang:LanguageInApplication){
-        switch (lang){
-            case "Japanese": return item.JName
-            case "English": return item.EName
-        }
-    }
     // #NOTE 基礎メソッド
     private async getName(id:string, lang:LanguageInApplication, cacheList:ResolveTable,
         getDoc:(id:string) => Promise<IItemOfResolveTableToName>
     ){
         const result = (this.hashTag.has(id)) ? await cacheList.get(id) : cacheList.set(id,await getDoc(id) ).get(id)
         if (result === undefined) throw new Error("予期しないエラーです。")
-        return this.selectAppropriateName(result,lang)
+        return selectAppropriateName(result,lang)
     }
     private async getNameBySID(gameSystemID:string,id:string,lang:LanguageInApplication,
         cacheList:ResolveTable,
@@ -47,7 +42,7 @@ export class ControllerOfTableForResolvingID{
         const accessKey = `${gameSystemID}/${id}`
         const result = (this.hashTag.has(accessKey)) ? await cacheList.get(accessKey) : cacheList.set(accessKey,await getDoc(gameSystemID,id) ).get(accessKey)
         if (result === undefined) throw new Error("予期しないエラーです。")
-        return this.selectAppropriateName(result,lang)
+        return selectAppropriateName(result,lang)
     }
     private async getNameBySIDMID(gameSystemID:string,gameModeID:string,id:string,lang:LanguageInApplication,
         cacheList:ResolveTable,
@@ -56,7 +51,7 @@ export class ControllerOfTableForResolvingID{
         const accessKey = `${gameSystemID}/${gameModeID}/${id}`
         const result = (this.hashTag.has(accessKey)) ? await cacheList.get(accessKey) : cacheList.set(accessKey,await getDoc(gameSystemID,gameModeID,id) ).get(accessKey)
         if (result === undefined) throw new Error("予期しないエラーです。")
-        return this.selectAppropriateName(result,lang)
+        return selectAppropriateName(result,lang)
     }
 
     //#NOTE 応用メソッド

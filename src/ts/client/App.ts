@@ -1,20 +1,15 @@
-import { IReceivedDataAtClient_recordSearchSuccessfully, IReceivedDataAtServer_recordSearch } from "../type/transmission/record/IReceivedData_recordSearch";
-import { IReceivedDataAtClient_recordDetailSuccessfully, IReceivedDataAtServer_recordDetail } from "../type/transmission/record/IReceivedData_recordDetail";
 import { element, elementWithoutEscaping } from "../utility/ViewUtility";
-import { PageStates, stateView } from "./interface/PageStates";
+import { PageStates } from "./interface/PageStates";
 import { IAppOnlyUsedToTransition, IAppUsedToReadOptionsAndTransition } from "./interface/AppInterfaces";
 import { RecordGroupView } from "./view/RecordsGroupView";
 import { RecordDetailView } from "./view/RecordDetailView";
 import { createElementWithIdAndClass } from "./utility/aboutElement";
-import { LanguageInApplication } from "../server/type/LanguageInApplication";
+import { LanguageInApplication } from "../type/LanguageInApplication";
 import { HistoryAdministrator } from "./view/HistoryAdministrator";
-import paco from "pako"
+import {APIFunctions} from "../type/api/relation"  
+import { GameSystemCardGroup } from "./view/gameSystemGroup";
 const marked = require("marked");
 
-interface APIFunctions {
-    record_search:{required:IReceivedDataAtServer_recordSearch, returned:IReceivedDataAtClient_recordSearchSuccessfully},
-    record_detail:{required:IReceivedDataAtServer_recordDetail, returned:IReceivedDataAtClient_recordDetailSuccessfully}
-}
 
 
 export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptionsAndTransition{
@@ -83,6 +78,7 @@ export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptio
                 case "errorView":           await this.errorView(requestObject as PageStates["errorView"]);         break;
                 case "detailView":          await this.detail(requestObject as PageStates["detailView"]);           break;
                 case "searchResultView":    await this.search(requestObject  as PageStates["searchResultView"]);    break;
+                case "gameSystemSelector":  await this.gameSystemSelector();                                        break;
                 default: throw new Error(`指定されたキー${nextState}に対応するページ状態が存在しません。`);
             }
             
@@ -107,7 +103,7 @@ export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptio
 
 
 
-    private async accessToAPI<T extends keyof APIFunctions>(functionName:T,requiredObj:APIFunctions[T]["required"]):Promise<APIFunctions[T]["returned"]>{
+    private async accessToAPI<T extends keyof APIFunctions>(functionName:T,requiredObj:APIFunctions[T]["atServer"]):Promise<APIFunctions[T]["atClient"]>{
         const response = await fetch(`${this.origin}/api/${functionName.replace(/\_/g,"/")}`,{
             method: "POST",
             headers: { "Content-Type" : "application/json" },
@@ -122,10 +118,10 @@ export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptio
 
 
     //#CTODO ここの型を埋める。
-    private async search(this:App,requestConditions:PageStates["searchResultView"]){
+    private async search(requestConditions:PageStates["searchResultView"]){
         const result = (await this.accessToAPI("record_search",requestConditions.required)).result
         if (requestConditions.title !== undefined) this.articleDOM.appendChild(
-            element`<div>
+            element`<div id="articleTitle">
             <div class="c-title">
                 <div class="c-title__main">${requestConditions.title}</div>
             </div>
@@ -137,7 +133,7 @@ export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptio
 
 
     //#CTODO　detail関数の実装
-    private async detail(this:App,request:PageStates["detailView"]){
+    private async detail(request:PageStates["detailView"]){
         const detailDiv = this.articleDOM.appendChild(createElementWithIdAndClass({id:"detail"}))
         const relatedRecordDiv = this.articleDOM.appendChild(createElementWithIdAndClass({id:"related"}))
         
@@ -156,6 +152,21 @@ export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptio
         this.state = "detailView"
     }
 
+    private async gameSystemSelector(){
+        const result = (await this.accessToAPI("list_gameSystems",{})).result
+        this.articleDOM.appendChild(element`
+                <div id="articleTitle">
+                    <div class="c-title">
+                            <div class="c-title__main">検索する対象とするゲームシステム</div>
+                            <div class="c-title__sub">click the item of game System where the records you want to look was set.</div>
+                    </div>
+                    <hr noshade class="u-bold">
+                </div>
+            `)
+        result.map(receivedData => this.articleDOM.appendChild(new GameSystemCardGroup(result).htmlElement))
+        this.option.gameSystemEnvDisplayed = { gameSystemID:null,gameModeID:null}
+        this.state = "gameSystemSelector"
+    }
 
     private clearView(){
         this.articleDOM.innerHTML = "";

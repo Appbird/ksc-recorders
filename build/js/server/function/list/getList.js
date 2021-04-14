@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.difficulties = exports.abilities = exports.targets = exports.hashTags = exports.gameModeIDs = exports.runners = exports.gameSystems = void 0;
+exports.difficulties = exports.abilities = exports.targets = exports.hashTags = exports.gameModes = exports.runners = exports.gameSystems = void 0;
 function searchBasedOnIDList(inputIdList, data) {
     var idList = inputIdList.concat();
     return data.filter(function (item) {
@@ -60,8 +60,8 @@ function getList_UseId(input, searchFunc) {
                 case 1:
                     result = (_a.sent()).slice(input.start, end);
                     if (input.id === undefined)
-                        return [2 /*return*/, result];
-                    return [2 /*return*/, searchBasedOnIDList(input.id, result)];
+                        return [2 /*return*/, { isSucceeded: true, result: result }];
+                    return [2 /*return*/, { isSucceeded: true, result: searchBasedOnIDList(input.id, result) }];
             }
         });
     });
@@ -79,8 +79,8 @@ function getList_UseSIdId(input, searchFunc) {
                 case 1:
                     result = (_a.sent()).slice(input.start, end);
                     if (input.id === undefined)
-                        return [2 /*return*/, result];
-                    return [2 /*return*/, searchBasedOnIDList(input.id, result)];
+                        return [2 /*return*/, { isSucceeded: true, result: result }];
+                    return [2 /*return*/, { isSucceeded: true, result: searchBasedOnIDList(input.id, result) }];
             }
         });
     });
@@ -98,8 +98,8 @@ function getList_UseSIdMIdId(input, searchFunc) {
                 case 1:
                     result = (_a.sent()).slice(input.start, end);
                     if (input.id === undefined)
-                        return [2 /*return*/, result];
-                    return [2 /*return*/, searchBasedOnIDList(input.id, result)];
+                        return [2 /*return*/, { isSucceeded: true, result: result }];
+                    return [2 /*return*/, { isSucceeded: true, result: searchBasedOnIDList(input.id, result) }];
             }
         });
     });
@@ -110,7 +110,7 @@ exports.gameSystems = function (database, input) { return __awaiter(void 0, void
 exports.runners = function (database, input) { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
     return [2 /*return*/, getList_UseId(input, function () { return database.getRunnerCollection(); })];
 }); }); };
-exports.gameModeIDs = function (database, input) { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
+exports.gameModes = function (database, input) { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
     return [2 /*return*/, getList_UseSIdId(input, function (s) { return database.getGameModeCollection(s); })];
 }); }); };
 exports.hashTags = function (database, input) { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {

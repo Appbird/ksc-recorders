@@ -8,19 +8,19 @@ export const exampleData:IRecordDataBase = {
         {
           "id" : "0","JName" : "ほげ", "EName" : "Hoge",
           "theDateOfRegistered"	: 0,"theNumberOfPost" : 1,
-          "twitterID"	: "----", "youtubeID"	: "----", "idOfGameSystemRunnerHavePlayed" : ["0"], "theDateOfLastPost" :0,
+          "twitterID"	: "----", "youtubeID"	: "----", "idOfGameSystemRunnerHavePlayed":["0"],"idOfGameModeRunnerHavePlayed" : ["0/0"], "theDateOfLastPost" :0,
           "isCommitteeMember":false, "isMuted":false
         },
         {
             "id" : "1","JName" : "ふが", "EName" : "Fuga",
             "theDateOfRegistered"	: 0,"theNumberOfPost" : 3,
-            "twitterID"	: "----", "youtubeID"	: "----", "idOfGameSystemRunnerHavePlayed" : ["0"], "theDateOfLastPost" :0,
+            "twitterID"	: "----", "youtubeID"	: "----","idOfGameSystemRunnerHavePlayed":["0"], "idOfGameModeRunnerHavePlayed" : ["0/0"], "theDateOfLastPost" :0,
             "isCommitteeMember":false, "isMuted":false
         },
         {
             "id" : "2","JName" : "ほげふが", "EName" : "HogeFuga",
             "theDateOfRegistered"	: 0,"theNumberOfPost" : 100,
-            "twitterID"	: "----", "youtubeID"	: "----", "idOfGameSystemRunnerHavePlayed" : ["0"], "theDateOfLastPost" :0,
+            "twitterID"	: "----", "youtubeID"	: "----","idOfGameSystemRunnerHavePlayed":["0"], "idOfGameModeRunnerHavePlayed" : ["0/0"], "theDateOfLastPost" :0,
             "isCommitteeMember":false, "isMuted":false
         }
     ],
@@ -30,6 +30,10 @@ export const exampleData:IRecordDataBase = {
        {
         "id" : "0", "JName" : "日本語作品名", "EName" : "Title Of a kirby's game",
         "JDescription" 	: "ゲームに関する説明を短く記述","EDescription"	: "Description about the game",
+        "dateOfLatestPost":744300400000,
+        "runnersNumber":2,
+        "recordsNumber":4,
+
         "tags":           [{"id":"0","JName":"だいしゃりん","EName":"tag0"}],
         "modes"		:  [ {
           "id":"0",

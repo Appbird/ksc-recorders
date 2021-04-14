@@ -1,5 +1,5 @@
-import { HashTagItem, IGameSystemInfo } from "../../list/IGameSystemInfo";
-import { AbilityItem, GameDifficultyItem, GameModeItem, TargetItem } from "../../list/UniqueResolveTableToGameSystem";
+import { IHashTagItem, IGameSystemInfo, IGameSystemInfoWithoutCollections } from "../../list/IGameSystemInfo";
+import { IAbilityItem, IGameDifficultyItem, IGameModeItem, IGameModeItemWithoutCollections, ITargetItem } from "../../list/UniqueResolveTableToGameSystem";
 import { IRunner } from "../../record/IRunner";
 import { IReceivedData } from "../transmissionBase";
 import { IReceivedDataAtServer_getlist_UseId } from "./atServer_getlist/IReceivedDataAtServer_getlist_UseId";
@@ -13,7 +13,7 @@ import { IReceivedDataAtClient_pickUp } from "./IReceivedDataAtClient_pickUp";
 
 export interface IReceivedData_listGameSystems extends IReceivedData{
     atServer:IReceivedDataAtServer_getlist_UseId
-    atClient:IReceivedDataAtClient_getlist<IGameSystemInfo>
+    atClient:IReceivedDataAtClient_getlist<IGameSystemInfoWithoutCollections>
 }
 export interface IReceivedData_listRunners extends IReceivedData{
     atServer:IReceivedDataAtServer_getlist_UseId
@@ -21,51 +21,51 @@ export interface IReceivedData_listRunners extends IReceivedData{
 }
 export interface IReceivedData_listGameModes extends IReceivedData{
     atServer:IReceivedDataAtServer_getlist_UseSIdId
-    atClient:IReceivedDataAtClient_getlist<GameModeItem>
+    atClient:IReceivedDataAtClient_getlist<IGameModeItemWithoutCollections>
 }
 export interface IReceivedData_listHashTags extends IReceivedData{
     atServer:IReceivedDataAtServer_getlist_UseSIdId
-    atClient:IReceivedDataAtClient_getlist<HashTagItem>
+    atClient:IReceivedDataAtClient_getlist<IHashTagItem>
 }
 export interface IReceivedData_listTargets extends IReceivedData{
     atServer:IReceivedDataAtServer_getlist_UseSIdMIdId
-    atClient:IReceivedDataAtClient_getlist<TargetItem>
+    atClient:IReceivedDataAtClient_getlist<ITargetItem>
 }
 export interface IReceivedData_listAbilities extends IReceivedData{
     atServer:IReceivedDataAtServer_getlist_UseSIdMIdId
-    atClient:IReceivedDataAtClient_getlist<AbilityItem>
+    atClient:IReceivedDataAtClient_getlist<IAbilityItem>
 }
 export interface IReceivedData_listDifficulties extends IReceivedData{
     atServer:IReceivedDataAtServer_getlist_UseSIdMIdId
-    atClient:IReceivedDataAtClient_getlist<GameDifficultyItem>
+    atClient:IReceivedDataAtClient_getlist<IGameDifficultyItem>
 }
 
 
-export interface IReceivedData_pickUpGameSystem extends IReceivedData{
+export interface IReceivedData_listGameSystem extends IReceivedData{
     atServer:IReceivedDataAtServer_pickUp_UseId
-    atClient:IReceivedDataAtClient_pickUp<IGameSystemInfo>
+    atClient:IReceivedDataAtClient_pickUp<IGameSystemInfoWithoutCollections>
 }
-export interface IReceivedData_pickUpRunner extends IReceivedData{
+export interface IReceivedData_listRunner extends IReceivedData{
     atServer:IReceivedDataAtServer_pickUp_UseId
     atClient:IReceivedDataAtClient_pickUp<IRunner>
 }
-export interface IReceivedData_pickUpGameMode extends IReceivedData{
+export interface IReceivedData_listGameMode extends IReceivedData{
     atServer:IReceivedDataAtServer_pickUp_UseSIdId
-    atClient:IReceivedDataAtClient_pickUp<GameModeItem>
+    atClient:IReceivedDataAtClient_pickUp<IGameModeItemWithoutCollections>
 }
-export interface IReceivedData_pickUpHashTag extends IReceivedData{
+export interface IReceivedData_listHashTag extends IReceivedData{
     atServer:IReceivedDataAtServer_pickUp_UseSIdId
-    atClient:IReceivedDataAtClient_pickUp<HashTagItem>
+    atClient:IReceivedDataAtClient_pickUp<IHashTagItem>
 }
-export interface IReceivedData_pickUpTarget extends IReceivedData{
+export interface IReceivedData_listTarget extends IReceivedData{
     atServer:IReceivedDataAtServer_pickUp_UseSIdMIdId
-    atClient:IReceivedDataAtClient_pickUp<TargetItem>
+    atClient:IReceivedDataAtClient_pickUp<ITargetItem>
 }
-export interface IReceivedData_pickUpAbility extends IReceivedData{
+export interface IReceivedData_listAbility extends IReceivedData{
     atServer:IReceivedDataAtServer_pickUp_UseSIdMIdId
-    atClient:IReceivedDataAtClient_pickUp<AbilityItem>
+    atClient:IReceivedDataAtClient_pickUp<IAbilityItem>
 }
-export interface IReceivedData_pickUpDifficulty extends IReceivedData{
+export interface IReceivedData_listDifficulty extends IReceivedData{
     atServer:IReceivedDataAtServer_pickUp_UseSIdMIdId
-    atClient:IReceivedDataAtClient_pickUp<GameDifficultyItem>
+    atClient:IReceivedDataAtClient_pickUp<IGameDifficultyItem>
 }

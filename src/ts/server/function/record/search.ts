@@ -1,14 +1,15 @@
 //[x] RecordDataBase,ControllerOfTableForResolvingIDクラスを用いて、必要となる記録データを取り出し、ここでデータの加工を行う。
 //[x] クライアントに与えるべきデータをJSONで出力する。
 //#NOTE ここの実装はRecordDataBaseの実装に依存しない。
-import IReceivedDataAtServer_recordSearch from "../../../type/transmission/record/IReceivedDataAtServer_recordSearch";
-import IReceivedDataAtClient_recordSearch from "../../../type/transmission/record/IReceivedDataAtClient_recordSearch";
-import { SearchCondition } from "../../../type/transmission/record/SearchCondition";
+import { IReceivedDataAtServer_recordSearch } from "../../../type/transmission/record/IReceivedDataAtServer_recordSearch";
+import { IReceivedDataAtClient_recordSearch } from "../../../type/transmission/record/IReceivedDataAtClient_recordSearch";
+import { SearchCondition } from "../../../type/record/SearchCondition";
 import { IRecord } from "../../../type/record/IRecord";
 import clone from "clone-deep";
 import { ControllerOfTableForResolvingID } from "../../recordConverter/ControllerOfTableForResolvingID";
 import { InterfaceOfRecordDatabase } from "../../type/InterfaceOfRecordDatabase";
-export async function search(recordDataBase:InterfaceOfRecordDatabase,input:IReceivedDataAtServer_recordSearch):Promise<IReceivedDataAtClient_recordSearch>{
+import { IReceivedData_recordSearch } from "../../../type/transmission/record/relation";
+export async function search(recordDataBase:InterfaceOfRecordDatabase,input:IReceivedData_recordSearch["atServer"]):Promise<IReceivedData_recordSearch["atClient"]>{
     
     if (input.condition[0].gameSystemEnv.gameDifficultyID !== undefined) input.condition = await prepareForDifficultySearch(recordDataBase,input.condition[0])
     const cotfr = new ControllerOfTableForResolvingID(recordDataBase)

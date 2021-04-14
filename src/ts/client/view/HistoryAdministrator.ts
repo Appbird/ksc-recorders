@@ -1,5 +1,4 @@
 import { PageStates } from "../interface/PageStates";
-import paco from "pako"
 import {  IAppUsedToReadOptionsAndTransition } from "../interface/AppInterfaces";
 export class HistoryAdministrator{
     private app:IAppUsedToReadOptionsAndTransition;
@@ -12,10 +11,6 @@ export class HistoryAdministrator{
     }
     async appendHistory(){
         if (0 < this.transitionPile.length) history.pushState(null,`Kirby-Speed/ScoreRecorders:${this.app.nowState}`,`/app?state=${this.app.nowState}`)
-        this.transitionPile.push({
-            pageState:this.app.nowState,
-            requiredObject:this.app.nowRequiredObject
-        })
     }
     back(){
         const past = this.transitionPile.pop();
@@ -24,8 +19,9 @@ export class HistoryAdministrator{
     }
 
 }
+type PageState<T> = T extends TransitionItem<infer U> ? U:never 
 
 export interface TransitionItem<T extends keyof PageStates>{
     pageState:T
-    requiredObject:PageStates[T]
+    requiredObject:PageStates["detailView"]
 }

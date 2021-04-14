@@ -1,5 +1,5 @@
 import express from "express"
-import { apiDefinition } from "./server/function/apiDefinition";
+import { apiList } from "./server/function/apiDefinition";
 import { recordDataBase } from "./server/mockDataBase/RecordDataBase";
 const app = express();
 app.use("/app",express.static('public'));
@@ -18,10 +18,10 @@ app.get(`/app`,async (req,res) => {
 }
 )
 
-apiDefinition.forEach( (value,key) => {
+apiList.forEach( (value,key) => {
     app.post(`/api${key}`,async (req,res) => {
         try {
-            value.structureCheckerFunction(req.body)
+            if (!value.validator(req.body)) throw new Error(value.validator.errors?.map(((error,index) => `\n# Error No.${index+1}: ${error.message} \n\n## スキーマの場所 \n\n ${error.schemaPath} ;\n\n## データの場所\n\n${error.dataPath};`)).join("\n\n"))
         } catch(error){
             if (!(error instanceof Error)){console.error(`予期せぬエラーです。`); return;}
             const errorInString = error.message;

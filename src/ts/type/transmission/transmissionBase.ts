@@ -5,3 +5,10 @@ export interface IReceivedDataAtClient{
     result?:any;
     message?:string;
 }
+export interface IReceivedData{
+    atServer:IReceivedDataAtServer;
+    atClient:IReceivedDataAtClient;
+}
+export interface ValidatorOnReceivedDataAtServer<T extends IReceivedDataAtServer>{
+    
+}

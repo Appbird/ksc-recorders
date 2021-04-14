@@ -1,8 +1,8 @@
 import { IReceivedDataAtServer } from "../transmissionBase";
-import { SearchCondition } from "./SearchCondition";
+import { SearchCondition } from "../../record/SearchCondition";
 
 
-export default interface IReceivedDataAtServer_recordSearch extends IReceivedDataAtServer {
+export interface IReceivedDataAtServer_recordSearch extends IReceivedDataAtServer {
     condition: SearchCondition[];
 
 }

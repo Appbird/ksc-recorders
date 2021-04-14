@@ -3,6 +3,6 @@ import { IReceivedDataAtClient } from "../transmissionBase";
 
 
 
-export default interface IReceivedDataAtClient_getlist<T extends IItemOfResolveTableToName> extends IReceivedDataAtClient {
+export interface IReceivedDataAtClient_getlist<T extends IItemOfResolveTableToName> extends IReceivedDataAtClient {
     result: T[];
 }

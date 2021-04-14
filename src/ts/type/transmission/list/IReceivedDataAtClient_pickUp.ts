@@ -2,6 +2,6 @@ import { IItemOfResolveTableToName } from "../../../server/type/IItemOfResolveTa
 import { IReceivedDataAtClient } from "../transmissionBase";
 
 
-export default interface IReceivedDataAtClient_pickUp<T extends IItemOfResolveTableToName> extends IReceivedDataAtClient {
-    item: T;
+export interface IReceivedDataAtClient_pickUp<T extends IItemOfResolveTableToName> extends IReceivedDataAtClient {
+    result: T;
 }

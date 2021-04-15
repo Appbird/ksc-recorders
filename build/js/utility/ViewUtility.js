@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.elementWithoutEscaping = exports.element = exports.htmlToElement = void 0;
+exports.elementWithoutEscaping = exports.element = exports.HTMLConverter = exports.htmlToElement = void 0;
+var LanguageInApplication_1 = require("../type/LanguageInApplication");
 function escapeSpecialChars(str) {
     return str
         .replace(/&/g, "&amp;")
@@ -15,14 +16,42 @@ function htmlToElement(html) {
     return template.firstElementChild;
 }
 exports.htmlToElement = htmlToElement;
+var HTMLConverter = /** @class */ (function () {
+    function HTMLConverter(lang) {
+        this.language = lang;
+    }
+    HTMLConverter.prototype.element = function (strings) {
+        var _this = this;
+        var values = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            values[_i - 1] = arguments[_i];
+        }
+        var htmlString = strings.reduce(function (result, str, i) {
+            var value = values[i - 1];
+            if (typeof value == "string") {
+                return result + escapeSpecialChars(value) + str;
+            }
+            if (Array.isArray(value) && value.every(function (ele) { return typeof ele === "string"; })) {
+                return value[LanguageInApplication_1.LanguageList.findIndex(function (ele) { return ele === _this.language; })];
+            }
+            else {
+                return result + String(value) + str;
+            }
+        });
+        var ele = htmlToElement(htmlString);
+        if (ele === null)
+            throw new Error("与HTMLを要素に変換できませんでした。");
+        return ele;
+    };
+    return HTMLConverter;
+}());
+exports.HTMLConverter = HTMLConverter;
 function element(strings) {
     var values = [];
     for (var _i = 1; _i < arguments.length; _i++) {
         values[_i - 1] = arguments[_i];
     }
     var htmlString = strings.reduce(function (result, str, i) {
-        if (i === 0) {
-        }
         var value = values[i - 1];
         if (typeof value == "string") {
             return result + escapeSpecialChars(value) + str;

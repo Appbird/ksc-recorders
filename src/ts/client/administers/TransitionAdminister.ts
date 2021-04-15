@@ -3,17 +3,20 @@ import { PageStates } from "../interface/PageStates";
 import { RecordGroupView } from "../view/RecordsGroupView";
 import { RecordDetailView } from "../view/RecordDetailView";
 import { createElementWithIdAndClass } from "../utility/aboutElement";
-import { GameSystemCardGroup } from "../view/gameSystemGroup";
+import { GameSystemCardGroup } from "../view/gameSystemCardsGroup";
 const marked = require("marked");
 import App from "../App";
-import { APIAdminister } from "../APICaller";
+import { GameModeCardsGroup } from "../view/gameModeCardsGroup";
+import { StateAdministrator } from "./StateAdminister";
+import { selectAppropriateName } from "../../utility/aboutLang";
 
 
 export class TransitionAdministrator {
     private app:App;
     private articleDOM: HTMLElement;
-
-    constructor(articleDOM: HTMLElement, app:App) {
+    private state:StateAdministrator
+    constructor(articleDOM: HTMLElement, app:App,state:StateAdministrator) {
+        this.state = state;
         this.app = app;
         this.articleDOM = articleDOM;
     }
@@ -28,6 +31,8 @@ export class TransitionAdministrator {
             case "detailView": await this.detail(requestObject as PageStates["detailView"]); break;
             case "searchResultView": await this.search(requestObject as PageStates["searchResultView"]); break;
             case "gameSystemSelector": await this.gameSystemSelector(); break;
+            case "gameModeSeletor": await this.gameModeSelector(requestObject as PageStates["gameModeSeletor"]); break;
+            case "mainMenu": await this.mainMenu(requestObject as PageStates["mainMenu"]); break;
             default: throw new Error(`指定されたキー${nextState}に対応するページ状態が存在しません。`);
         }
 
@@ -83,19 +88,16 @@ export class TransitionAdministrator {
     }
 
     private async gameSystemSelector() {
+        this.app.changeHeader("Kirby-Speed/Score-Recorders","KSSRs")
         const result = (await this.app.accessToAPI("list_gameSystems", {})).result;
-        this.articleDOM.appendChild(element`
-                <div id="articleTitle">
-                    <div class="c-title">
-                            <div class="c-title__main">検索対象とするゲームシステム</div>
-                            <div class="c-title__sub">select the item of title where records you're looking for was set.</div>
-                    </div>
-                    <hr noshade class="u-bold">
-                </div>
-        `);
         this.articleDOM.appendChild(new GameSystemCardGroup(result,this.app).htmlElement);
     }
-
-    
-
+    private async gameModeSelector(required:PageStates["gameModeSeletor"]) {
+        const result = (await this.app.accessToAPI("list_gameModes", {gameSystemEnv:{gameSystemID:required.id}})).result;
+        this.articleDOM.appendChild(new GameModeCardsGroup(required,result,this.app).htmlElement);
+    }
+    private async mainMenu(required:PageStates["mainMenu"]) {
+        this.state.setGameSystemEnv(required)
+        this.app.changeHeader(selectAppropriateName(required.gameSystem,"English"),` ${selectAppropriateName(required.gameMode,"English")}`)
+    }
 }

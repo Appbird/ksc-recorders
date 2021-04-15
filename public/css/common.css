@@ -22,6 +22,10 @@ hr.u-thin {
   height: 1px;
 }
 
+p {
+  margin: 0;
+}
+
 a {
   color: #0c1d46;
   text-decoration: none;
@@ -35,6 +39,34 @@ header {
   display: flex;
   justify-content: space-around;
   align-items: center;
+  overflow-x: hidden;
+}
+
+header > div {
+  width: 70%;
+  overflow-x: hidden;
+  opacity: 1;
+  transform: translateX(0);
+  transition: 0.5s;
+}
+
+header > div.is-onMiddle {
+  opacity: 1;
+  transform: translateX(0);
+  transition: 0.5s;
+}
+
+header > div.is-onRight {
+  opacity: 0;
+  transform: translateX(30vw);
+  transition: 0.5s;
+}
+
+header > div.is-onLeft {
+  opacity: 0;
+  transition: 0.1s;
+  opacity: 0;
+  transform: translateX(-30vw);
 }
 
 main {
@@ -166,6 +198,7 @@ nav {
 .c-title {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   align-items: flex-end;
   padding: 0.5em;
 }
@@ -173,6 +206,23 @@ nav {
 .c-title__main {
   font-weight: 800;
   font-size: xx-large;
+}
+
+.c-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.c-list__item {
+  width: 100%;
+  border-bottom: solid thin #bbb;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.c-list__item:hover {
+  background-color: #eee;
+  transition: 0.1s;
 }
 
 article h1 {
@@ -225,7 +275,7 @@ article h1::after {
   font-weight: 900;
 }
 
-u-unused {
+.u-unused {
   display: none;
 }
 

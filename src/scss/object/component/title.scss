@@ -3,6 +3,7 @@
 .c-title{
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
     align-items: flex-end;
     padding : 0.5em;
 }

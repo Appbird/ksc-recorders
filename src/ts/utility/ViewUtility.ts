@@ -1,3 +1,5 @@
+import { LanguageInApplication, LanguageList } from "../type/LanguageInApplication";
+
 function escapeSpecialChars(str:string) {
     return str
         .replace(/&/g, "&amp;")
@@ -11,13 +13,34 @@ export function htmlToElement(html:string) {
     template.innerHTML = html;
     return template.firstElementChild;
 }
+export class HTMLConverter{
+    private language:LanguageInApplication;
+    constructor(lang:LanguageInApplication){
+        this.language = lang;
+    }
+    element(strings:TemplateStringsArray,...values:any){
+        
+        const htmlString = strings.reduce(
+            (result, str, i) => {
+                const value = values[i-1];
+                if (typeof value == "string"){
+                    return result + escapeSpecialChars(value) + str;
+                } if (Array.isArray(value) && value.every(ele => typeof ele === "string")) {
+                    return value[LanguageList.findIndex( ele => ele === this.language)]
+                } else {
+                    return result + String(value) + str;
+                }
+            }
+        );
+        const ele = htmlToElement(htmlString);
+        if (ele === null) throw new Error("与HTMLを要素に変換できませんでした。")
+        return ele;
+    }
+}
 export function element(strings:TemplateStringsArray,...values:any){
     
     const htmlString = strings.reduce(
         (result, str, i) => {
-            if (i===0){
-                
-            }
             const value = values[i-1];
             if (typeof value == "string"){
                 return result + escapeSpecialChars(value) + str;

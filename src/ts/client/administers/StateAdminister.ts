@@ -1,8 +1,10 @@
 import { PageStates } from "../interface/PageStates";
 import { LanguageInApplication } from "../../type/LanguageInApplication";
+import { IGameSystemInfoWithoutCollections } from "../../type/list/IGameSystemInfo";
+import { IGameModeItem, IGameModeItemWithoutCollections } from "../../type/list/IGameModeItem";
 
-type GameSystemEnvDisplayed = { gameSystemID: string; gameModeID: string; } | { gameSystemID: null; gameModeID: null; } | { gameSystemID: string; gameModeID: null; };
-type GameSystemEnvDisplayedReadOnly = { readonly gameSystemID: string; readonly gameModeID: string; } | { readonly gameSystemID: null; readonly gameModeID: null; } | { readonly gameSystemID: string; readonly gameModeID: null; };
+type GameSystemEnvDisplayed = { gameSystem: IGameSystemInfoWithoutCollections; gameMode: IGameModeItemWithoutCollections; } | { gameSystem: null; gameMode: null; } | { gameSystem: IGameSystemInfoWithoutCollections; gameMode: null; };
+type GameSystemEnvDisplayedReadOnly = { readonly gameSystem: IGameSystemInfoWithoutCollections; readonly gameMode: IGameModeItemWithoutCollections; } | { readonly gameSystem: null; readonly gameMode: null; } | { readonly gameSystem: IGameSystemInfoWithoutCollections; readonly gameMode: null; };
 
 export interface StateAdministerReadOnly {
     readonly state: keyof PageStates;
@@ -12,11 +14,11 @@ export interface StateAdministerReadOnly {
     readonly language: LanguageInApplication;
 }
 
-export class StateAdminister implements StateAdministerReadOnly {
+export class StateAdministrator implements StateAdministerReadOnly {
     private _state: keyof PageStates = "none";
     private _requiredObj: PageStates[keyof PageStates] = undefined;
     private _gameSystemEnvDisplayed: GameSystemEnvDisplayed = {
-        gameSystemID: null, gameModeID: null
+        gameSystem: null, gameMode: null
     };
     private _superiorScore: "LowerFirst" | "HigherFirst" = "LowerFirst";
     private _language: LanguageInApplication;
@@ -27,9 +29,9 @@ export class StateAdminister implements StateAdministerReadOnly {
         this._state = state;
         this._requiredObj = requiredObj;
     }
-    setGameSystemEnv({ gameSystemID, gameModeID }: GameSystemEnvDisplayed) {
-        this._gameSystemEnvDisplayed.gameSystemID = gameSystemID;
-        this._gameSystemEnvDisplayed.gameModeID = gameModeID;
+    setGameSystemEnv({ gameSystem, gameMode }: GameSystemEnvDisplayed) {
+        this._gameSystemEnvDisplayed.gameSystem = gameSystem;
+        this._gameSystemEnvDisplayed.gameMode = gameMode;
     }
     setSuperiorScore(superirorScore: "LowerFirst" | "HigherFirst") { this._superiorScore = superirorScore; }
     setLanguage(language: LanguageInApplication) { this._language = language; }

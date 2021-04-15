@@ -9,8 +9,9 @@ import { ITargetItem } from "./ITargetItem";
  */
 export type IGameModeItem = IGameModeItemWithoutCollections & CollectionsInIGameModeItem
 export interface IGameModeItemWithoutCollections extends IItemOfResolveTableToName{
-    JDescription?: string
-    EDescription?: string
+    runnersNumber:number;
+    recordsNumber:number;
+    dateOfLatestPost:number;
 }
 export interface CollectionsInIGameModeItem{
     targets: ITargetItem[];

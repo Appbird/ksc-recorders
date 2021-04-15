@@ -34,6 +34,9 @@ exports.exampleData = {
             "modes": [{
                     "id": "0",
                     "JName": "モード0",
+                    "dateOfLatestPost": 744300400000,
+                    "runnersNumber": 2,
+                    "recordsNumber": 4,
                     "EName": "Mode0",
                     "targets": [{ "id": "0", "JName": "対象0", "EName": "Target0" }, { "id": "1", "JName": "対象1", "EName": "Target1" }, { "id": "2", "JName": "対象2", "EName": "Target2" }],
                     "abilities": [{ "id": "0", "JName": "能力0", "EName": "Ability0" }, { "id": "1", "JName": "能力1", "EName": "Ability1" }, { "id": "2", "JName": "能力2", "EName": "Ability2" }],

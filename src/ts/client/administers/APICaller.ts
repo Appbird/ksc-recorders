@@ -1,6 +1,6 @@
-import { APIFunctions } from "../type/api/relation";
+import { APIFunctions } from "../../type/api/relation";
 
-export class APIAdminister {
+export class APIAdministrator {
     private origin: string;
     constructor(origin: string = "http://localhost:3000") {
         this.origin = origin;

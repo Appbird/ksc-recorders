@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.selectAppropriateName = void 0;
+exports.selectAppropriateDescription = exports.selectAppropriateName = void 0;
 function selectAppropriateName(item, lang) {
     switch (lang) {
         case "Japanese": return item.JName;
@@ -8,3 +8,10 @@ function selectAppropriateName(item, lang) {
     }
 }
 exports.selectAppropriateName = selectAppropriateName;
+function selectAppropriateDescription(item, lang) {
+    switch (lang) {
+        case "Japanese": return item.JDescription;
+        case "English": return item.EDescription;
+    }
+}
+exports.selectAppropriateDescription = selectAppropriateDescription;

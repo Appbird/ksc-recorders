@@ -1,199 +1,43 @@
-import { element, elementWithoutEscaping } from "../utility/ViewUtility";
 import { PageStates } from "./interface/PageStates";
-import { IAppOnlyUsedToTransition, IAppUsedToReadOptionsAndTransition } from "./interface/AppInterfaces";
-import { RecordGroupView } from "./view/RecordsGroupView";
-import { RecordDetailView } from "./view/RecordDetailView";
-import { createElementWithIdAndClass } from "./utility/aboutElement";
 import { LanguageInApplication } from "../type/LanguageInApplication";
-import { HistoryAdministrator } from "./view/HistoryAdministrator";
-import {APIFunctions} from "../type/api/relation"  
-import { GameSystemCardGroup } from "./view/gameSystemGroup";
-const marked = require("marked");
-
+import { TransitionAdministrator } from "./administers/TransitionAdminister";
+import { StateAdminister as StateAdministrator, StateAdministerReadOnly } from "./administers/StateAdminister";
+import { APIAdminister as APIAdministrator } from "./APICaller";
+import { IAppOnlyUsedToTransition, IAppUsedToReadOptionsAndTransition } from "./interface/AppInterfaces";
+import { HistoryAdministrator } from "./administers/HistoryAdministrator";
+import { APIFunctions } from "../type/api/relation";
 
 
 export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptionsAndTransition{
-    private articleDOM:HTMLElement;
-    private origin:string = "http://localhost:3000";
-    private state:keyof PageStates;
-    private requiredObj:PageStates[keyof PageStates]
-    private historyAd: HistoryAdministrator;
-    private option:{
-        gameSystemEnvDisplayed: {
-            gameSystemID: string | null,
-            gameModeID: string | null,
-            
-        },
-        superiorScore: "Lower"|"Higher",
-        language:LanguageInApplication,
-    };
+    private _state:StateAdministrator;
+    private transitionAd: TransitionAdministrator;
+    private historyAd:HistoryAdministrator;
+    private apiCaller:APIAdministrator = new APIAdministrator();
 
-    constructor(firstState:keyof PageStates,articleDOM:HTMLElement,language:LanguageInApplication){
+    constructor(articleDOM:HTMLElement,language:LanguageInApplication){
+        this.apiCaller = new APIAdministrator();
+        this._state = new StateAdministrator(language);
         this.historyAd = new HistoryAdministrator(this)
-        this.option = {
-            gameSystemEnvDisplayed:{
-                gameSystemID:null,
-                gameModeID:null
-            },
-            superiorScore: "Lower",
-            language : language
-        }
-        this.state = firstState;
-        this.articleDOM = articleDOM;
-        
-        if (location.href.startsWith(`${this.origin}/app?record::`)) {
-            this.redirectToDetailPage(location.href.replace(`${this.origin}/app?record::`,"")).catch( (reason) => this.displayError("記録の詳細の表示に失敗しました。",reason))
-        }
-    }
-    get nowState(){
-        return this.state;
-    }
-    get nowRequiredObject(){
-        return this.requiredObj;
-    }
-
-    get gameSystemID(){
-        return this.option.gameSystemEnvDisplayed.gameSystemID;
-    }
-    get gameModeID() {
-        return this.option.gameSystemEnvDisplayed.gameModeID;
-    }
-    get superiorScore(){
-        return this.option.superiorScore;
-    }
-
-    set language(value:LanguageInApplication){
-        this.option.language = value
-    }
-    get language(){
-        return this.option.language
+        this.transitionAd = new TransitionAdministrator(articleDOM,this);
+    
     }
     async transition<T extends keyof PageStates>(nextState:T, requestObject:PageStates[T],ifAppendHistory:boolean = true){
-        
-        if (ifAppendHistory) this.historyAd.appendHistory();
-        try {
-            this.clearView();
-            switch (nextState) {
-                case "none":                break;
-                case "errorView":           await this.errorView(requestObject as PageStates["errorView"]);         break;
-                case "detailView":          await this.detail(requestObject as PageStates["detailView"]);           break;
-                case "searchResultView":    await this.search(requestObject  as PageStates["searchResultView"]);    break;
-                case "gameSystemSelector":  await this.gameSystemSelector();                                        break;
-                default: throw new Error(`指定されたキー${nextState}に対応するページ状態が存在しません。`);
-            }
-            
-        } catch(error){
-            if (!(error instanceof Error)){ console.error(`予期せぬエラーです。 : ${error}`); return; }
-            const errorInString = error.message;
-            console.error(`${errorInString}\n${error.stack}`);
-            this.displayError("エラーが発生しました。",errorInString,this.articleDOM);
-        }
-        this.state = nextState; this.requiredObj = requestObject;
+        if (ifAppendHistory) this.historyAd.appendHistory()
+        try { this.transitionAd.transition(nextState,requestObject) }
+        catch(error) { this.errorCatcher(error,"ページの遷移に失敗しました。") }
+        this._state.setState(nextState,requestObject);
     }
-
-
-
-    private async redirectToDetailPage(selector:string){
-        const token = selector.split("::")
-        if (token.length !== 4) throw new Error("与URLを元に記録の詳細の表示を試みようとしましたが、渡されたURLの形が不正です。")
-        if (token[0] !== "Japanese" && token[0] !== "English") throw new Error("与URLを元に記録の詳細の表示を試みようとしましたが、指定された言語のデータが存在しません。")
-        this.language = token[0]
-        this.transition("detailView",{ lang:this.language, gameSystemEnv:{ gameSystemID:token[1],gameModeID:token[2] }, id:token[3] })
+    get state():StateAdministerReadOnly{
+        return this.state
     }
-
-
-
-    private async accessToAPI<T extends keyof APIFunctions>(functionName:T,requiredObj:APIFunctions[T]["atServer"]):Promise<APIFunctions[T]["atClient"]>{
-        const response = await fetch(`${this.origin}/api/${functionName.replace(/\_/g,"/")}`,{
-            method: "POST",
-            headers: { "Content-Type" : "application/json" },
-            body: JSON.stringify(requiredObj)
-        })
-        if (response.status !== 200) throw new Error(
-            `# APIを利用した通信に失敗しました。\n\n## 使用したAPI\n\n${functionName}\n\n## 原因\n\n${(await response.json()).message}\n\n## 入力オブジェクト\n\n${JSON.stringify(requiredObj)}`
-        )
-        const result = await response.json()
-        return result
+    accessToAPI<T extends keyof APIFunctions>(functionName: T, requiredObj: APIFunctions[T]["atServer"]): Promise<APIFunctions[T]["atClient"]>{
+        return this.apiCaller.access<T>(functionName,requiredObj)
     }
-
-
-    //#CTODO ここの型を埋める。
-    private async search(requestConditions:PageStates["searchResultView"]){
-        const result = (await this.accessToAPI("record_search",requestConditions.required)).result
-        if (requestConditions.title !== undefined) this.articleDOM.appendChild(
-            element`<div id="articleTitle">
-            <div class="c-title">
-                <div class="c-title__main">${requestConditions.title}</div>
-            </div>
-            <hr noshade class="u-bold" /></div>`)
-        result.map(receivedData => this.articleDOM.appendChild(new RecordGroupView(receivedData,this).htmlElement))
-        this.option.gameSystemEnvDisplayed = requestConditions.required.condition[0].gameSystemEnv;
-        this.state = "searchResultView"
+    errorCatcher(error:any,title:string = "エラーが発生しました。"){
+        if (!(error instanceof Error)){ console.error(`予期せぬエラーです。 : ${error}`); return; }
+        const errorInString = error.message;
+        console.error(`${errorInString}\n${error.stack}`);
+        this.transitionAd.transition("errorView",{title:title,message:errorInString});
     }
-
-
-    //#CTODO　detail関数の実装
-    private async detail(request:PageStates["detailView"]){
-        const detailDiv = this.articleDOM.appendChild(createElementWithIdAndClass({id:"detail"}))
-        const relatedRecordDiv = this.articleDOM.appendChild(createElementWithIdAndClass({id:"related"}))
-        
-        const record = (await this.accessToAPI("record_detail",request)).result;
-
-        const relatedRecord = (await this.accessToAPI("record_search",{condition:[{
-            groupName:"同レギュレーションの記録", gameSystemEnv: { gameSystemID:record.regulation.gameSystemEnvironment.gameSystemID, gameModeID:record.regulation.gameSystemEnvironment.gameModeID}, orderOfRecordArray: "LowerFirst", startOfRecordArray:0, limitOfRecordArray:100,
-            targetIDs:[record.regulation.targetID], abilityIDs: record.regulation.abilityIDs, abilityIDsCondition: "AllowForOrder", language: request.lang
-        }]}
-        ) ).result[0]
-        
-        let rank:number|undefined = relatedRecord.records.findIndex(element => element.id === record.id) + 1
-        detailDiv.appendChild(new RecordDetailView(record,this,rank).htmlElement) 
-        relatedRecordDiv.appendChild(new RecordGroupView(relatedRecord,this).htmlElement)
-        
-        this.state = "detailView"
-    }
-
-    private async gameSystemSelector(){
-        const result = (await this.accessToAPI("list_gameSystems",{})).result
-        this.articleDOM.appendChild(element`
-                <div id="articleTitle">
-                    <div class="c-title">
-                            <div class="c-title__main">検索する対象とするゲームシステム</div>
-                            <div class="c-title__sub">click the item of game System where the records you want to look was set.</div>
-                    </div>
-                    <hr noshade class="u-bold">
-                </div>
-            `)
-        result.map(receivedData => this.articleDOM.appendChild(new GameSystemCardGroup(result).htmlElement))
-        this.option.gameSystemEnvDisplayed = { gameSystemID:null,gameModeID:null}
-        this.state = "gameSystemSelector"
-    }
-
-    private clearView(){
-        this.articleDOM.innerHTML = "";
-    }
-
-
-    private errorView(request:PageStates["errorView"]){
-        this.displayError(request.title,request.message)
-        this.state = "errorView"
-    }
-    
-
-    private displayError(title:string,msg:string, articleDOM:HTMLElement = this.articleDOM){
-        articleDOM.appendChild(
-            elementWithoutEscaping`
-        <div class = "c-recordGroupHeader">
-            <div class="c-title">
-                <div class="c-title__main">${title}</div>
-                <div class="c-title__sub">Failed to prepare the page.</div>
-            </div>
-            <hr noshade class="u-bold">
-            <div class="u-width95per">${marked(msg)}</div>
-        </div>`
-        )
-        return;
-    }
-    
     
 }
-    

@@ -1,5 +1,5 @@
 import { IItemOfResolveTableToName } from "./IItemOfResolveTableToName";
-import { IGameModeItem } from "./UniqueResolveTableToGameSystem";
+import { IGameModeItem } from "./IGameModeItem";
 
 export type IGameSystemInfo = IGameSystemInfoWithoutCollections & CollectionInIGameSystemInfo
 export interface IGameSystemInfoWithoutCollections extends IItemOfResolveTableToName {

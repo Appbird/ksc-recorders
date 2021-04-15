@@ -1,6 +1,9 @@
 import { IRecord } from "../../type/record/IRecord";
 import { OrderOfRecordArray } from "./OrderOfRecordArray";
-import { IAbilityItem, IGameDifficultyItem, IGameModeItem, IGameModeItemWithoutCollections, ITargetItem } from "../../type/list/UniqueResolveTableToGameSystem";
+import { IGameModeItem, IGameModeItemWithoutCollections } from "../../type/list/IGameModeItem";
+import { IGameDifficultyItem } from "../../type/list/IGameDifficultyItem";
+import { ITargetItem } from "../../type/list/ITargetItem";
+import { IAbilityItem } from "../../type/list/IAbilityItem";
 import { IHashTagItem, IGameSystemInfoWithoutCollections } from "../../type/list/IGameSystemInfo";
 import { IRunner } from "../../type/record/IRunner";
 

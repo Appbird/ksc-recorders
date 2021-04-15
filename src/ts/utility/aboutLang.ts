@@ -7,3 +7,9 @@ export function selectAppropriateName(item:IItemOfResolveTableToName,lang:Langua
         case "English": return item.EName
     }
 }
+export function selectAppropriateDescription(item:IItemOfResolveTableToName,lang:LanguageInApplication){
+    switch (lang){
+        case "Japanese": return item.JDescription
+        case "English": return item.EDescription
+    }
+}

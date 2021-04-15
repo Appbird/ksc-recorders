@@ -5,25 +5,21 @@ import { IRecordGroupResolved } from "../../type/record/IRecordGroupResolved";
 import { IRecordInShortResolved } from "../../type/record/IRecord";
 import { createElementWithIdAndClass } from "../utility/aboutElement";
 import { IView } from "./IView";
-import { IAppUsedToReadOptionsAndTransition } from "../interface/AppInterfaces";
 import { StateInfoView } from "./StateInfoView";
+import { IAppUsedToReadOptionsAndTransition } from "../interface/AppInterfaces";
 
 export class RecordGroupView implements IView{
     private _htmlElement = createElementWithIdAndClass({className:"c-recordCardsGroup"})
     private summaryElement = createElementWithIdAndClass({className:"__summary"})
     private recordCardsElement = createElementWithIdAndClass({className:"__recordCards"})
     private app:IAppUsedToReadOptionsAndTransition;
-    constructor(recordGroup:IRecordGroupResolved,app:IAppUsedToReadOptionsAndTransition,options:OptionObject = {
-        displayTags:{gameSystemTags:false,targetTags:false,abilityTags:true}
-    }){
+    constructor(recordGroup:IRecordGroupResolved,app:IAppUsedToReadOptionsAndTransition,optionObj:OptionObject = {displayTags:{gameSystemTags:false,targetTags:false,abilityTags:true}}){
         this.app = app;
         this._htmlElement.appendChild(this.summaryElement)
         this._htmlElement.appendChild(this.recordCardsElement)
         this.setRecordGroupSummary(recordGroup);
-        if (recordGroup.records.length === 0) {
-            this.recordCardsElement.appendChild(element`<div class="u-width95per"><h2>記録が存在しませんでした</h2></div>`)
-        }
-        for(const record of recordGroup.records) this.appendRecordCard(record,options);
+        if (recordGroup.records.length === 0)this.recordCardsElement.appendChild(element`<div class="u-width95per"><h2>記録が存在しませんでした</h2></div>`)
+        for(const record of recordGroup.records) this.appendRecordCard(record,optionObj);
     }
     get htmlElement(){
         return this._htmlElement;
@@ -69,7 +65,7 @@ export class RecordGroupView implements IView{
         //#CTODO カード要素をクリックすると記録詳細画面へ移る。
         ele.addEventListener("click",() => {
             const rrg = record.regulation.gameSystemEnvironment
-            this.app.transition("detailView",{ gameSystemEnv:{ gameSystemID:rrg.gameSystemID, gameModeID:rrg.gameModeID}, id:record.id, lang:this.app.language})
+            this.app.transition("detailView",{ gameSystemEnv:{ gameSystemID:rrg.gameSystemID, gameModeID:rrg.gameModeID}, id:record.id, lang:this.app.state.language})
         })
         TagsView.generateTagViewsForRecord( this.app, ele, record, {abilityTags:true})
         this.recordCardsElement.appendChild(ele)

@@ -1,11 +1,14 @@
 import { IRecord } from "../record/IRecord";
+import { IAbilityItem } from "./IAbilityItem";
+import { IGameDifficultyItem } from "./IGameDifficultyItem";
 import { IItemOfResolveTableToName } from "./IItemOfResolveTableToName";
+import { ITargetItem } from "./ITargetItem";
 
 /**
  * カービィの作品にそれぞれひとつずつ対応するID解決テーブル群
  */
 export type IGameModeItem = IGameModeItemWithoutCollections & CollectionsInIGameModeItem
- export interface IGameModeItemWithoutCollections extends IItemOfResolveTableToName{
+export interface IGameModeItemWithoutCollections extends IItemOfResolveTableToName{
     JDescription?: string
     EDescription?: string
 }
@@ -14,15 +17,4 @@ export interface CollectionsInIGameModeItem{
     difficulties: IGameDifficultyItem[];
     abilities: IAbilityItem[];
     records:IRecord[];
-}
-export interface UniqueResolveTableToGameSystem {
-    GameModeList: IGameModeItem[];
-}
-export interface IAbilityItem extends IItemOfResolveTableToName{
-}
-export interface ITargetItem extends IItemOfResolveTableToName{
-}
-
-export interface IGameDifficultyItem extends IItemOfResolveTableToName{
-    TargetIDsIncludedInTheDifficulty:string[]
 }

@@ -1,5 +1,8 @@
 import { IHashTagItem, IGameSystemInfo, IGameSystemInfoWithoutCollections } from "../../list/IGameSystemInfo";
-import { IAbilityItem, IGameDifficultyItem, IGameModeItem, IGameModeItemWithoutCollections, ITargetItem } from "../../list/UniqueResolveTableToGameSystem";
+import { IGameModeItem, IGameModeItemWithoutCollections } from "../../list/IGameModeItem";
+import { IGameDifficultyItem } from "../../list/IGameDifficultyItem";
+import { ITargetItem } from "../../list/ITargetItem";
+import { IAbilityItem } from "../../list/IAbilityItem";
 import { IRunner } from "../../record/IRunner";
 import { IReceivedData } from "../transmissionBase";
 import { IReceivedDataAtServer_getlist_UseId } from "./atServer_getlist/IReceivedDataAtServer_getlist_UseId";

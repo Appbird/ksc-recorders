@@ -4,7 +4,10 @@ import { firebase } from "../firebaseAdmin";
 import { IHashTagItem, IGameSystemInfo, IGameSystemInfoWithoutCollections } from "../../type/list/IGameSystemInfo";
 import { InterfaceOfRecordDatabase } from "../type/InterfaceOfRecordDatabase";
 import { OrderOfRecordArray } from "../type/OrderOfRecordArray";
-import { IAbilityItem, IGameDifficultyItem, IGameModeItem, IGameModeItemWithoutCollections, ITargetItem } from "../../type/list/UniqueResolveTableToGameSystem";
+import { IGameModeItem, IGameModeItemWithoutCollections } from "../../type/list/IGameModeItem";
+import { IGameDifficultyItem } from "../../type/list/IGameDifficultyItem";
+import { ITargetItem } from "../../type/list/ITargetItem";
+import { IAbilityItem } from "../../type/list/IAbilityItem";
 
 //[x] getRecordsWithConditionメソッドの実装
 class RecordDataBase implements InterfaceOfRecordDatabase{

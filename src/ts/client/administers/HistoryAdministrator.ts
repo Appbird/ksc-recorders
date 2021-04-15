@@ -10,7 +10,7 @@ export class HistoryAdministrator{
         });
     }
     async appendHistory(){
-        if (0 < this.transitionPile.length) history.pushState(null,`Kirby-Speed/ScoreRecorders:${this.app.nowState}`,`/app?state=${this.app.nowState}`)
+        if (0 < this.transitionPile.length) history.pushState(null,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/app?state=${this.app.state.state}`)
     }
     back(){
         const past = this.transitionPile.pop();
@@ -19,8 +19,6 @@ export class HistoryAdministrator{
     }
 
 }
-type PageState<T> = T extends TransitionItem<infer U> ? U:never 
-
 export interface TransitionItem<T extends keyof PageStates>{
     pageState:T
     requiredObject:PageStates["detailView"]

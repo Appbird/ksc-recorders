@@ -1,5 +1,7 @@
 @charset "UTF-8";
 
+@use "choicesjs/choices.scss";
+
 @use "foundation/body.scss";
 @use "foundation/hr.scss";
 @use "foundation/p.scss";
@@ -18,7 +20,9 @@
 @use "object/component/title.scss";
 @use "object/component/list.scss";
 @use "object/component/runnerNote.scss";
+@use "object/component/button.scss";
 
+@use "object/utility/margin.scss";
 @use "object/utility/left-aligined.scss";
 @use "object/utility/fontChanger.scss";
 @use "object/utility/unused.scss";

@@ -1,15 +1,24 @@
 import { LanguageInApplication } from "../type/LanguageInApplication"
 import { IItemOfResolveTableToName } from "../type/list/IItemOfResolveTableToName"
 
-export function selectAppropriateName(item:IItemOfResolveTableToName,lang:LanguageInApplication){
+export function selectAppropriateName(item:{JName:string,EName:string},lang:LanguageInApplication){
     switch (lang){
         case "Japanese": return item.JName
         case "English": return item.EName
     }
 }
-export function selectAppropriateDescription(item:IItemOfResolveTableToName,lang:LanguageInApplication){
+export type MultiLanguageDescription = {JDescription?:string,EDescription?:string};
+export function selectAppropriateDescription(item:MultiLanguageDescription,lang:LanguageInApplication){
     switch (lang){
-        case "Japanese": return item.JDescription
-        case "English": return item.EDescription
+        case "Japanese": return (item.JDescription === undefined) ? "" : item.JDescription
+        case "English": return (item.EDescription === undefined) ? "" : item.EDescription
+    }
+}
+
+export function choiceDescription(item:MultiLanguageDescription|undefined,lang:LanguageInApplication){
+    if (item === undefined) return "";
+    switch (lang){
+        case "Japanese": return (item.JDescription === undefined) ? "" : item.JDescription
+        case "English": return (item.EDescription === undefined) ? "" : item.EDescription
     }
 }

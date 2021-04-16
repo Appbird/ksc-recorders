@@ -62,23 +62,18 @@ app.get("/app", function (req, res) { return __awaiter(void 0, void 0, void 0, f
 }); });
 apiDefinition_1.apiList.forEach(function (value, key) {
     app.post("/api" + key, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-        var errorInString, _a, _b, error_1, errorInString;
+        var _a, _b, error_1;
         var _c;
         return __generator(this, function (_d) {
             switch (_d.label) {
                 case 0:
+                    console.log("\u001B[32m[" + new Date().toLocaleString() + "] start to execute /api" + key + "\u001B[0m\n");
                     try {
                         if (!value.validator(req.body))
-                            throw new Error((_c = value.validator.errors) === null || _c === void 0 ? void 0 : _c.map((function (error, index) { return "\n# Error No." + (index + 1) + ": " + error.message + " \n\n## \u30B9\u30AD\u30FC\u30DE\u306E\u5834\u6240 \n\n " + error.schemaPath + " ;\n\n## \u30C7\u30FC\u30BF\u306E\u5834\u6240\n\n" + error.dataPath + ";"; })).join("\n\n"));
+                            throw new Error((_c = value.validator.errors) === null || _c === void 0 ? void 0 : _c.map((function (error, index) { return "\n## Error No." + (index + 1) + ": " + error.message + " \n\n### \u30B9\u30AD\u30FC\u30DE\u306E\u5834\u6240 \n\n " + error.schemaPath + " ;\n\n### \u30C7\u30FC\u30BF\u306E\u5834\u6240\n\n" + error.dataPath + ";"; })).join("\n\n"));
                     }
                     catch (error) {
-                        if (!(error instanceof Error)) {
-                            console.error("\u4E88\u671F\u305B\u306C\u30A8\u30E9\u30FC\u3067\u3059\u3002");
-                            return [2 /*return*/];
-                        }
-                        errorInString = error.message;
-                        console.error(errorInString + "\n" + error.stack);
-                        res.status(500).json({ isSuccess: false, message: errorInString });
+                        res.status(400).json(errorCatcher(key, error));
                         return [2 /*return*/];
                     }
                     _d.label = 1;
@@ -91,17 +86,21 @@ apiDefinition_1.apiList.forEach(function (value, key) {
                     return [3 /*break*/, 4];
                 case 3:
                     error_1 = _d.sent();
-                    if (!(error_1 instanceof Error)) {
-                        console.error("\u4E88\u671F\u305B\u306C\u30A8\u30E9\u30FC\u3067\u3059\u3002");
-                        return [2 /*return*/];
-                    }
-                    errorInString = error_1.message;
-                    console.error(errorInString + "\n" + error_1.stack);
-                    res.status(500).json({ isSuccess: false, message: errorInString });
-                    return [2 /*return*/];
+                    res.status(500).json(errorCatcher(key, error_1));
+                    return [3 /*break*/, 4];
                 case 4: return [2 /*return*/];
             }
         });
     }); });
 });
 app.listen(3000, function () { return console.info("start on http://localhost:3000/app"); });
+function errorCatcher(key, error) {
+    console.log("\u001B[31m[" + new Date().toLocaleString() + "] failed to execute /api" + key + "\u001B[0m\n");
+    if (!(error instanceof Error)) {
+        console.error("\u4E88\u671F\u305B\u306C\u30A8\u30E9\u30FC\u3067\u3059\u3002");
+        return { isSuccess: false, message: String(error) };
+    }
+    var errorInString = error.message;
+    console.error(errorInString + "\n" + error.stack);
+    return { isSuccess: false, message: errorInString };
+}

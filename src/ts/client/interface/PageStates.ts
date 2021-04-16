@@ -7,9 +7,10 @@ export interface PageStates{
     none:undefined,
     errorView:{title:string,message:string}
     detailView:APIFunctions["record_detail"]["atServer"]
+    searchConditionSelectorView:{gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections}|null
     searchResultView:{required:APIFunctions["record_search"]["atServer"],title?:string}
-    gameSystemSelector:undefined
+    gameSystemSelector:null
     gameModeSeletor:IGameSystemInfoWithoutCollections,
-    mainMenu:{gameSystem:IGameSystemInfoWithoutCollections, gameMode:IGameModeItemWithoutCollections}
+    mainMenu:null|{gameSystem:IGameSystemInfoWithoutCollections, gameMode:IGameModeItemWithoutCollections}
 }
-export const stateView = ["none","errorView","detailView","searchResultView","gameSystemSelector","mainMenu"];
+export const stateView = ["none","errorView","detailView","searchConditionSelectorView","searchResultView","gameSystemSelector","mainMenu"];

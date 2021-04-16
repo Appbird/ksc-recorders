@@ -1,0 +1,10 @@
+.choices__list.choices__list--single>.choices__item{
+    font-size:2.0em;
+}
+.choices__list.choices__list--multiple>.choices__item{
+    font-size:1.5em;
+    border-radius: 3px;
+}
+.choices__list.choices__list--dropdown .choices__item.choices__item--choice{
+    font-size:1.5em;
+}

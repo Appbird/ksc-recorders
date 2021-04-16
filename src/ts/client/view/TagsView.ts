@@ -9,18 +9,21 @@ type TagKind = "ability"|"target"|"gameSystem"|"hashTag"
 export class TagsView implements IView{
     private element:HTMLElement = createElementWithIdAndClass({className:"c-tags"})
     private app:IAppUsedToReadOptionsAndTransition
-    constructor(app:IAppUsedToReadOptionsAndTransition){
+    private setClickEnventListener:boolean;
+    constructor(app:IAppUsedToReadOptionsAndTransition,{setClickEnventListener=true}:{setClickEnventListener?:boolean}={}){
         this.app = app;
+        this.setClickEnventListener = setClickEnventListener;
     }
     appendTag<T extends keyof PageStates>(tagName:string,kind:TagKind,transitionInfo:TransitionInfo<T>){
-        this.element.appendChild(
+        const ele = this.element.appendChild(
         element`
             <div class = "c-tag --${kind}">
                 <div class="c-iconWithDescription">
                 <i class="${this.convert(kind)}"></i> ${tagName}
                 </div>
             </div>`
-        ).addEventListener("click",()=> {
+        )
+        if (this.setClickEnventListener)ele.addEventListener("click",()=> {
             this.app.transition(transitionInfo.to,transitionInfo.requiredObject)
         })
         
@@ -40,9 +43,10 @@ export class TagsView implements IView{
 
 
     static generateTagViewsForRecord(app:IAppUsedToReadOptionsAndTransition,inserted:Element,record:IRecordInShortResolved | IRecordResolved,
-        {gameSystemTags = false,targetTags = false, abilityTags = false, hashTags = false, }:OptionInfo
-    ){
-        const tagsViews = [new TagsView(app),new TagsView(app),new TagsView(app)];
+        {gameSystemTags = false,targetTags = false, abilityTags = false, hashTags = false,setClickListener = true }:OptionInfo
+    ){ 
+        const opt = {setClickEnventListener:setClickListener}
+        const tagsViews = [new TagsView(app,opt),new TagsView(app,opt),new TagsView(app,opt)];
         const gameEnv = record.regulation.gameSystemEnvironment;
         const order = app.state.superiorScore
         if (gameSystemTags) 
@@ -104,4 +108,4 @@ export class TagsView implements IView{
 function assureRecordIsFull(record:IRecordInShortResolved | IRecordResolved):record is IRecordResolved{ 
     return "tagID" in record
 }
-interface OptionInfo{gameSystemTags?:boolean,targetTags?:boolean,abilityTags?:boolean,hashTags?:boolean}
+interface OptionInfo{gameSystemTags?:boolean,targetTags?:boolean,abilityTags?:boolean,hashTags?:boolean,setClickListener?:boolean}

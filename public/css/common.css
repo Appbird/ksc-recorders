@@ -1,4 +1,17 @@
 @import url("https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300&family=Montserrat:wght@100&family=Quicksand:wght@300&display=swap");
+.choices__list.choices__list--single > .choices__item {
+  font-size: 2em;
+}
+
+.choices__list.choices__list--multiple > .choices__item {
+  font-size: 1.5em;
+  border-radius: 3px;
+}
+
+.choices__list.choices__list--dropdown .choices__item.choices__item--choice {
+  font-size: 1.5em;
+}
+
 body {
   font-family: "Quicksand", "M PLUS Rounded 1c", sans-serif;
   color: #0c1d46;
@@ -166,10 +179,17 @@ nav {
 }
 
 .c-tag {
-  cursor: pointer;
   margin: 0.1em;
   padding: 0.3em;
   border-radius: 0.5em;
+}
+
+.c-tag {
+  cursor: default;
+}
+
+.c-tag:not(.c-recordCard .c-tag) {
+  cursor: pointer;
 }
 
 .c-tag.--hashTag {
@@ -238,6 +258,28 @@ article h1::after {
   margin: 0;
   padding: 0;
   background-color: #bbb;
+}
+
+.c-button {
+  background-color: #5c5c5c;
+  color: #fff;
+  border-radius: 0.5em;
+  padding: 0.5em 0;
+  text-align: center;
+  font-size: 2em;
+  font-weight: 500;
+  transition: 0.1s;
+  cursor: pointer;
+}
+
+.c-button:hover {
+  background-color: #383838;
+  color: #fff;
+  transition: 0.1s;
+}
+
+.u-margin2em {
+  margin: 2em;
 }
 
 .u-left-aligined-forFlex {
@@ -313,6 +355,12 @@ article h1::after {
   width: 95%;
   margin-left: 2.5%;
   margin-right: 2.5%;
+}
+
+.u-width50per {
+  width: 50%;
+  margin-left: 25%;
+  margin-right: 25%;
 }
 
 /*# sourceMappingURL=common.css.map */

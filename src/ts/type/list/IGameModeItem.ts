@@ -12,6 +12,7 @@ export interface IGameModeItemWithoutCollections extends IItemOfResolveTableToNa
     runnersNumber:number;
     recordsNumber:number;
     dateOfLatestPost:number;
+    maxNumberOfPlayer:number;
 }
 export interface CollectionsInIGameModeItem{
     targets: ITargetItem[];

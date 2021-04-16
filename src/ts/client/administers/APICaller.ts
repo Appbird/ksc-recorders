@@ -6,15 +6,17 @@ export class APIAdministrator {
         this.origin = origin;
     }
     async access<T extends keyof APIFunctions>(functionName: T, requiredObj: APIFunctions[T]["atServer"]): Promise<APIFunctions[T]["atClient"]> {
-        const response = await fetch(`${this.origin}/api/${functionName.replace(/\_/g, "/")}`, {
+        const convertedName = functionName.replace(/\_/g, "/");
+        const response = await fetch(`${this.origin}/api/${convertedName}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(requiredObj)
         });
-        if (response.status !== 200)
-            throw new Error(
-                `# APIを利用した通信に失敗しました。\n\n## 使用したAPI\n\n${functionName}\n\n## 原因\n\n${(await response.json()).message}\n\n## 入力オブジェクト\n\n${JSON.stringify(requiredObj)}`
-            );
+        if (response.status !== 200){
+            let responseData = "";
+            try{responseData = (await response.json()).message} catch(error) { responseData = "メッセージがありませんでした。" }
+            throw new Error(`# API: ${convertedName}へのリクエストの結果\n\n### ${response.status} : ${response.statusText} \n\n${responseData}\n\n# 入力\n\n${JSON.stringify(requiredObj)}`);
+        }
         const result = await response.json();
         return result;
     }

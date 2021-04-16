@@ -4,10 +4,15 @@
     flex-wrap: wrap;
 }
 .c-tag{
-    cursor: pointer;
     margin: 0.1em;
     padding: 0.3em;
     border-radius : 0.5em;
+}
+.c-tag{
+    cursor: default;
+}
+.c-tag:not(.c-recordCard .c-tag){
+    cursor: pointer;
 }
 
 .c-tag.--hashTag{

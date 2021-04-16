@@ -3,32 +3,38 @@ import { LanguageInApplication } from "../type/LanguageInApplication";
 import { TransitionAdministrator } from "./administers/TransitionAdminister";
 import { StateAdministrator, StateAdministerReadOnly } from "./administers/StateAdminister";
 import { APIAdministrator } from "./administers/APICaller";
-import { IAppOnlyUsedToTransition, IAppUsedToReadOptionsAndTransition } from "./interface/AppInterfaces";
+import { IAppOnlyUsedToTransition, IAppUsedToReadOptionsAndTransition, IAppUsedToReadOptionsTransitionUseAPI } from "./interface/AppInterfaces";
 import { HistoryAdministrator } from "./administers/HistoryAdministrator";
 import { APIFunctions } from "../type/api/relation";
 import { HeaderController } from "./administers/HeaderController";
 
 
-export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptionsAndTransition{
+export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptionsAndTransition,IAppUsedToReadOptionsTransitionUseAPI{
     private _state:StateAdministrator;
     private transitionAd: TransitionAdministrator;
     private historyAd:HistoryAdministrator;
     private header:HeaderController = new HeaderController();
     private apiCaller:APIAdministrator = new APIAdministrator();
 
-    constructor(articleDOM:HTMLElement,language:LanguageInApplication){
+    constructor(articleDOM:HTMLElement,language:LanguageInApplication,){
         this._state = new StateAdministrator(language);
         this.historyAd = new HistoryAdministrator(this)
         this.transitionAd = new TransitionAdministrator(articleDOM,this,this._state);
     }
     async transition<T extends keyof PageStates>(nextState:T, requestObject:PageStates[T],ifAppendHistory:boolean = true){
         if (ifAppendHistory) this.historyAd.appendHistory()
-        try { this.transitionAd.transition(nextState,requestObject) }
-        catch(error) { this.errorCatcher(error,"ページの遷移に失敗しました。") }
+        try { 
+            await this.transitionAd.transition(nextState,requestObject)
+        } catch(error) {
+            this.errorCatcher(error,"ページの遷移に失敗しました。")
+        }
         this._state.setState(nextState,requestObject);
     }
     get state():StateAdministerReadOnly{
         return this._state
+    }
+    setLanguage(lang:LanguageInApplication){
+        this._state.setLanguage(lang);
     }
     changeHeader(str:string,sub:string){
         return this.header.changeHeaderRightLeft(str,sub);    

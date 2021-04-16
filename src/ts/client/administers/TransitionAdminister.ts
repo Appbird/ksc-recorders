@@ -9,12 +9,15 @@ import App from "../App";
 import { GameModeCardsGroup } from "../view/gameModeCardsGroup";
 import { StateAdministrator } from "./StateAdminister";
 import { selectAppropriateName } from "../../utility/aboutLang";
+import { SearchConditionSelectorView } from "../view/searchConditionSelector";
+import { IGameSystemInfoWithoutCollections } from "../../type/list/IGameSystemInfo";
+import { IGameModeItemWithoutCollections } from "../../type/list/IGameModeItem";
 
 
 export class TransitionAdministrator {
     private app:App;
     private articleDOM: HTMLElement;
-    private state:StateAdministrator
+    private state:StateAdministrator;
     constructor(articleDOM: HTMLElement, app:App,state:StateAdministrator) {
         this.state = state;
         this.app = app;
@@ -29,12 +32,14 @@ export class TransitionAdministrator {
             case "none": break;
             case "errorView": await this.errorView(requestObject as PageStates["errorView"]); break;
             case "detailView": await this.detail(requestObject as PageStates["detailView"]); break;
+            case "searchConditionSelectorView" : await this.searchConditionSelector(requestObject as PageStates["searchConditionSelectorView"]);break;
             case "searchResultView": await this.search(requestObject as PageStates["searchResultView"]); break;
             case "gameSystemSelector": await this.gameSystemSelector(); break;
             case "gameModeSeletor": await this.gameModeSelector(requestObject as PageStates["gameModeSeletor"]); break;
             case "mainMenu": await this.mainMenu(requestObject as PageStates["mainMenu"]); break;
             default: throw new Error(`指定されたキー${nextState}に対応するページ状態が存在しません。`);
         }
+        this.articleDOM.appendChild(element`<div class="u-space20vh"></div>`)
 
     }
 
@@ -48,7 +53,7 @@ export class TransitionAdministrator {
                 <div class="c-title__sub">Failed to prepare the page.</div>
             </div>
             <hr noshade class="u-bold">
-            <div class="u-width95per">${marked(request.message)}</div>
+            <div class="u-width90per">${marked(request.message)}</div>
         </div>`
         );
         return;
@@ -96,8 +101,34 @@ export class TransitionAdministrator {
         const result = (await this.app.accessToAPI("list_gameModes", {gameSystemEnv:{gameSystemID:required.id}})).result;
         this.articleDOM.appendChild(new GameModeCardsGroup(required,result,this.app).htmlElement);
     }
+    private async searchConditionSelector(requestObject:PageStates["searchConditionSelectorView"]){
+        if (requestObject !== null) this.changeDisplayedGameMode(requestObject)
+        if (requestObject === null && !StateAdministrator.checkGameSystemEnvIsSet(this.state.gameSystemEnvDisplayed)) throw new Error("閲覧するゲームタイトル/ゲームモードが設定されていません。")
+        const difficulties = (await this.app.accessToAPI("list_difficulties",{
+            gameSystemEnv:{gameSystemID:getGameSystemID(this.state), gameModeID:getGameModeID(this.state)}
+        })).result
+        const abilities = (await this.app.accessToAPI("list_abilities",{
+            gameSystemEnv:{gameSystemID:getGameSystemID(this.state), gameModeID:getGameModeID(this.state)}
+        })).result
+        this.articleDOM.appendChild(new SearchConditionSelectorView(this.app,difficulties,abilities).htmlElement)
+    }
+
     private async mainMenu(required:PageStates["mainMenu"]) {
+        if (required === null) return;
+        this.changeDisplayedGameMode(required);
+    }
+
+    private changeDisplayedGameMode(required:{gameSystem:IGameSystemInfoWithoutCollections, gameMode:IGameModeItemWithoutCollections}){
         this.state.setGameSystemEnv(required)
         this.app.changeHeader(selectAppropriateName(required.gameSystem,"English"),` ${selectAppropriateName(required.gameMode,"English")}`)
     }
+}
+
+function getGameSystemID(state:StateAdministrator){
+    if (state.gameSystemEnvDisplayed.gameSystem === null || state.gameSystemEnvDisplayed.gameMode === null) throw new Error("閲覧するゲームタイトル/ゲームモードが設定されていません。")
+    return state.gameSystemEnvDisplayed.gameSystem.id
+}
+function getGameModeID(state:StateAdministrator){
+    if (state.gameSystemEnvDisplayed.gameSystem === null || state.gameSystemEnvDisplayed.gameMode === null) throw new Error("閲覧するゲームタイトル/ゲームモードが設定されていません。")
+    return state.gameSystemEnvDisplayed.gameMode.id
 }

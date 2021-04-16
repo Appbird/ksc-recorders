@@ -37,7 +37,7 @@ interface apiInterface<Received extends IReceivedData>{
 export const apiList = new APIList();
 
 apiList.set<APIFunctions["record_search"]> ("/record/search", isIReceivedDataAtServer_recordSearch, search)
-apiList.set<APIFunctions["record_detail"]> ("/record/search", isIReceivedDataAtServer_recordDetail, detail)
+apiList.set<APIFunctions["record_detail"]> ("/record/detail", isIReceivedDataAtServer_recordDetail, detail)
 
 apiList.set<APIFunctions["list_gameSystems"]>  ("/list/gameSystems", isIReceivedDataAtServer_getlist_UseId, gameSystems)
 apiList.set<APIFunctions["list_runners"]>      ("/list/runners", isIReceivedDataAtServer_getlist_UseId, runners)
@@ -45,7 +45,7 @@ apiList.set<APIFunctions["list_gameModes"]>    ("/list/gameModes", isIReceivedDa
 apiList.set<APIFunctions["list_hashTags"]>     ("/list/hashTags",isIReceivedDataAtServer_getlist_UseSIdId,hashTags)
 apiList.set<APIFunctions["list_difficulties"]> ("/list/difficulties", isIReceivedDataAtServer_getlist_UseSIdMIdId, difficulties)
 apiList.set<APIFunctions["list_abilities"]>    ("/list/abilities", isIReceivedDataAtServer_getlist_UseSIdMIdId, abilities)
-apiList.set<APIFunctions["list_targets"]>      ("/list/gameTargets", isIReceivedDataAtServer_getlist_UseSIdMIdId, targets)
+apiList.set<APIFunctions["list_targets"]>      ("/list/targets", isIReceivedDataAtServer_getlist_UseSIdMIdId, targets)
 
 apiList.set<APIFunctions["list_gameSystem"]> ("/list/gameSystem", isIReceivedDataAtServer_pickUp_UseId, gameSystem)
 apiList.set<APIFunctions["list_runner"]>     ("/list/runner", isIReceivedDataAtServer_pickUp_UseId, runner)

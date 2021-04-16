@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.selectAppropriateDescription = exports.selectAppropriateName = void 0;
+exports.choiceDescription = exports.selectAppropriateDescription = exports.selectAppropriateName = void 0;
 function selectAppropriateName(item, lang) {
     switch (lang) {
         case "Japanese": return item.JName;
@@ -10,8 +10,17 @@ function selectAppropriateName(item, lang) {
 exports.selectAppropriateName = selectAppropriateName;
 function selectAppropriateDescription(item, lang) {
     switch (lang) {
-        case "Japanese": return item.JDescription;
-        case "English": return item.EDescription;
+        case "Japanese": return (item.JDescription === undefined) ? "" : item.JDescription;
+        case "English": return (item.EDescription === undefined) ? "" : item.EDescription;
     }
 }
 exports.selectAppropriateDescription = selectAppropriateDescription;
+function choiceDescription(item, lang) {
+    if (item === undefined)
+        return "";
+    switch (lang) {
+        case "Japanese": return (item.JDescription === undefined) ? "" : item.JDescription;
+        case "English": return (item.EDescription === undefined) ? "" : item.EDescription;
+    }
+}
+exports.choiceDescription = choiceDescription;

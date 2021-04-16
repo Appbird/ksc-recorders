@@ -3,8 +3,11 @@ const articleDOM =  document.getElementById("article")
 if (articleDOM === null) throw new Error("idがarticleである要素を見つけられませんでした。")
 
 const app = new App(articleDOM,"Japanese");
-
-app.transition("gameSystemSelector",undefined)
+(async () => {
+    const result1 = (await app.accessToAPI("list_gameSystem",{id:"0"})).result
+    const result2 = (await app.accessToAPI("list_gameMode",{gameSystemEnv:{gameSystemID:"0"},id:"0"})).result
+    app.transition("searchConditionSelectorView",{gameSystem:result1,gameMode:result2})
+})();
 
 /* app.detail({
     gameSystemEnv:{

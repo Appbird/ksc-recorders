@@ -40,4 +40,7 @@ export class StateAdministrator implements StateAdministerReadOnly {
     get gameSystemEnvDisplayed(): GameSystemEnvDisplayedReadOnly { return this._gameSystemEnvDisplayed; }
     get superiorScore() { return this._superiorScore; }
     get language() { return this._language; }
+    static checkGameSystemEnvIsSet(gameSystemEnvDisplayed:GameSystemEnvDisplayedReadOnly):gameSystemEnvDisplayed is { readonly gameSystem: IGameSystemInfoWithoutCollections; readonly gameMode: IGameModeItemWithoutCollections; }{
+       return !(gameSystemEnvDisplayed.gameSystem === null || gameSystemEnvDisplayed.gameMode === null);
+    }
 }

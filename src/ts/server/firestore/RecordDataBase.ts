@@ -68,7 +68,7 @@ class RecordDataBase implements InterfaceOfRecordDatabase{
 
     async getRecordsWithCondition(gameSystemID:string, gameModeID:string,
         order:OrderOfRecordArray ,
-        abilityIDsCondition: "AND" | "OR" | "AllowForOrder",
+        abilityIDsCondition: "AND" | "OR" | "AllowForOrder" = "AND",
         abilityIDs:string[] = [],
         targetIDs:string[] = [],
         runnerIDs:string[] = []

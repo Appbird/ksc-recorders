@@ -27,14 +27,14 @@ var APIList = /** @class */ (function () {
 }());
 exports.apiList = new APIList();
 exports.apiList.set("/record/search", IReceivedDataAtServer_recordSearch_validator_1.isIReceivedDataAtServer_recordSearch, search_1.search);
-exports.apiList.set("/record/search", IReceivedDataAtServer_recordDetail_validator_1.isIReceivedDataAtServer_recordDetail, detail_1.detail);
+exports.apiList.set("/record/detail", IReceivedDataAtServer_recordDetail_validator_1.isIReceivedDataAtServer_recordDetail, detail_1.detail);
 exports.apiList.set("/list/gameSystems", IReceivedDataAtServer_getlist_UseId_validator_1.isIReceivedDataAtServer_getlist_UseId, getList_1.gameSystems);
 exports.apiList.set("/list/runners", IReceivedDataAtServer_getlist_UseId_validator_1.isIReceivedDataAtServer_getlist_UseId, getList_1.runners);
 exports.apiList.set("/list/gameModes", IReceivedDataAtServer_getlist_UseSIdId_validator_1.isIReceivedDataAtServer_getlist_UseSIdId, getList_1.gameModes);
 exports.apiList.set("/list/hashTags", IReceivedDataAtServer_getlist_UseSIdId_validator_1.isIReceivedDataAtServer_getlist_UseSIdId, getList_1.hashTags);
 exports.apiList.set("/list/difficulties", IReceivedDataAtServer_getlist_UseSIdMIdId_validator_1.isIReceivedDataAtServer_getlist_UseSIdMIdId, getList_1.difficulties);
 exports.apiList.set("/list/abilities", IReceivedDataAtServer_getlist_UseSIdMIdId_validator_1.isIReceivedDataAtServer_getlist_UseSIdMIdId, getList_1.abilities);
-exports.apiList.set("/list/gameTargets", IReceivedDataAtServer_getlist_UseSIdMIdId_validator_1.isIReceivedDataAtServer_getlist_UseSIdMIdId, getList_1.targets);
+exports.apiList.set("/list/targets", IReceivedDataAtServer_getlist_UseSIdMIdId_validator_1.isIReceivedDataAtServer_getlist_UseSIdMIdId, getList_1.targets);
 exports.apiList.set("/list/gameSystem", IReceivedDataAtServer_pickUp_UseId_validator_1.isIReceivedDataAtServer_pickUp_UseId, pickUp_1.gameSystem);
 exports.apiList.set("/list/runner", IReceivedDataAtServer_pickUp_UseId_validator_1.isIReceivedDataAtServer_pickUp_UseId, pickUp_1.runner);
 exports.apiList.set("/list/gameMode", IReceivedDataAtServer_pickUp_UseSIdId_validator_1.isIReceivedDataAtServer_pickUp_UseSIdId, pickUp_1.gameMode);

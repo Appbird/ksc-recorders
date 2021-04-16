@@ -1,0 +1,16 @@
+.c-button{
+    background-color: rgb(92, 92, 92); color: #fff;
+    border-radius: 0.5em;
+    padding:0.5em 0;
+    text-align: center;
+    font-size: 2em;
+    font-weight: 500;
+    
+    transition: 0.1s;
+    cursor:pointer;
+}
+.c-button:hover{
+    
+    background-color: rgb(56, 56, 56); color: #fff;
+    transition: 0.1s;
+}

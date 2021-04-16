@@ -109,6 +109,7 @@ var RecordDataBase = /** @class */ (function () {
         });
     };
     RecordDataBase.prototype.getRecordsWithCondition = function (gameSystemID, gameModeID, order, abilityIDsCondition, abilityIDs, targetIDs, runnerIDs) {
+        if (abilityIDsCondition === void 0) { abilityIDsCondition = "AND"; }
         if (abilityIDs === void 0) { abilityIDs = []; }
         if (targetIDs === void 0) { targetIDs = []; }
         if (runnerIDs === void 0) { runnerIDs = []; }

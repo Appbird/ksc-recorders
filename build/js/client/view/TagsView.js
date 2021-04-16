@@ -81,7 +81,7 @@ var TagsView = /** @class */ (function () {
             record.tagName.forEach(function (tag, index) { return tagsViews[1].appendTag((tag === undefined ? "Not Found" : tag), "hashTag", {
                 to: "searchResultView",
                 requiredObject: {
-                    title: "\u30BF\u30B0" + tagsViews + "\u306B\u304A\u3051\u308B\u5168\u4F53\u306E\u8A18\u9332\u3002",
+                    title: "\u30BF\u30B0" + tag + "\u306B\u304A\u3051\u308B\u5168\u4F53\u306E\u8A18\u9332\u3002",
                     required: { condition: [{
                                 groupName: "", gameSystemEnv: { gameSystemID: gameEnv.gameSystemID, gameModeID: gameEnv.gameModeID, gameDifficultyID: "whole" }, tagIDs: [record.tagID[index]],
                                 orderOfRecordArray: order, language: app.state.language

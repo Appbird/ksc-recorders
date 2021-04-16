@@ -68,13 +68,14 @@ var SearchConditionSelectorView = /** @class */ (function () {
         context.appendChild(this.difficultyColumn);
         context.appendChild(this.targetColumn);
         context.appendChild(this.abilityColumn);
+        //#TODO ヘッダの下にp要素を加えて説明を書く。
         this.difficultyColumn.appendChild(ViewUtility_1.element(templateObject_2 || (templateObject_2 = __makeTemplateObject(["\n            <div class=\"c-title is-onMiddle\">\n                <div class = \"c-title__sub u-biggerChara\">\u96E3\u6613\u5EA6</div> <div class = \"c-title__sub\">Difficulty</div>\n            </div>"], ["\n            <div class=\"c-title is-onMiddle\">\n                <div class = \"c-title__sub u-biggerChara\">\u96E3\u6613\u5EA6</div> <div class = \"c-title__sub\">Difficulty</div>\n            </div>"]))));
         this.targetColumn.appendChild(ViewUtility_1.element(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n            <div class=\"c-title is-onMiddle\">\n                <div class = \"c-title__sub u-biggerChara\">\u8A08\u6E2C\u5BFE\u8C61</div> <div class = \"c-title__sub\">Target</div>\n            </div>"], ["\n            <div class=\"c-title is-onMiddle\">\n                <div class = \"c-title__sub u-biggerChara\">\u8A08\u6E2C\u5BFE\u8C61</div> <div class = \"c-title__sub\">Target</div>\n            </div>"]))));
         this.abilityColumn.appendChild(ViewUtility_1.element(templateObject_4 || (templateObject_4 = __makeTemplateObject(["\n            <div class=\"c-title is-onMiddle\">\n                <div class = \"c-title__sub u-biggerChara\">\u80FD\u529B</div> <div class = \"c-title__sub\">Ability</div>\n            </div>"], ["\n            <div class=\"c-title is-onMiddle\">\n                <div class = \"c-title__sub u-biggerChara\">\u80FD\u529B</div> <div class = \"c-title__sub\">Ability</div>\n            </div>"]))));
         this.difficultyChoicesElement = this.difficultyColumn.appendChild(document.createElement("select"));
         this.difficultyChoices = this.generateChoices(this.difficultyChoicesElement, this.difficulties);
         this.targetChoicesElement = this.targetColumn.appendChild(document.createElement("select"));
-        this.targetChoices = this.generateChoices(this.targetChoicesElement, [], { maxItemCount: 10, disable: true });
+        this.targetChoices = this.generateChoices(this.targetChoicesElement, [], { maxItemCount: 10, disable: true, needMultipleSelect: true });
         //#CTODO 思えばモードによって最大プレイ人数が変わるので、データベースにそのデータを組み込んでおく必要がある。
         var maxNubmerOfPlayer = this.app.state.gameSystemEnvDisplayed.gameMode.maxNumberOfPlayer;
         this.abilityChoicesElement = this.abilityColumn.appendChild(document.createElement("select"));
@@ -83,8 +84,12 @@ var SearchConditionSelectorView = /** @class */ (function () {
         });
         this.difficultyChoicesElement.addEventListener("hideDropdown", function () {
             _this.targetChoices.enable();
-            if (_this.difficultySelectedID === _this.difficultyChoices.getValue(true) || _this.difficultyChoices === undefined)
+            if (_this.difficultySelectedID === _this.difficultyChoices.getValue(true))
                 return;
+            if (_this.difficultyChoices.getValue(true) === undefined) {
+                _this.targetChoices.disable();
+                return;
+            }
             var selected = _this.difficultyChoices.getValue(true);
             _this.difficultySelectedID = (Array.isArray(selected)) ? selected[0] : selected;
             _this.setTargetChoices();
@@ -111,23 +116,30 @@ var SearchConditionSelectorView = /** @class */ (function () {
     };
     SearchConditionSelectorView.prototype.generateCondition = function (targetSelected, abilitySelected, gameSystemID, gameModeID) {
         var _this = this;
+        if (targetSelected.length === 0) {
+            return [{
+                    groupName: "", groupSubName: "",
+                    gameSystemEnv: {
+                        gameSystemID: gameSystemID,
+                        gameModeID: gameModeID,
+                        gameDifficultyID: (this.difficultySelectedID === null) ? "whole" : this.difficultySelectedID
+                    },
+                    language: this.app.state.language, startOfRecordArray: 0, limitOfRecordArray: 3,
+                    orderOfRecordArray: this.app.state.superiorScore, abilityIDs: abilitySelected
+                }];
+        }
         return targetSelected.map(function (id, index) {
-            var _a;
-            var result = (_a = _this.targets.find(function (target) { return target.id === id; })) === null || _a === void 0 ? void 0 : _a.JName;
-            console.log(id);
+            var result = _this.targets.find(function (target) { return target.id === id; });
+            console.log(_this.targets);
             return {
-                groupName: (result === undefined) ? "" : result,
+                groupName: (result === undefined) ? "" : aboutLang_1.selectAppropriateName(result, _this.app.state.language),
                 groupSubName: index + 1 + "\u6226\u76EE",
                 gameSystemEnv: {
                     gameSystemID: gameSystemID,
-                    gameModeID: gameModeID,
-                    gameDifficultyID: (_this.difficultySelectedID === null) ? undefined : _this.difficultySelectedID
+                    gameModeID: gameModeID
                 },
-                language: _this.app.state.language,
-                startOfRecordArray: 0, limitOfRecordArray: 3,
-                orderOfRecordArray: _this.app.state.superiorScore,
-                abilityIDs: abilitySelected,
-                targetIDs: (id === undefined) ? undefined : [id]
+                language: _this.app.state.language, startOfRecordArray: 0, limitOfRecordArray: 3, orderOfRecordArray: _this.app.state.superiorScore,
+                abilityIDs: abilitySelected, targetIDs: [id]
             };
         });
     };
@@ -155,6 +167,7 @@ var SearchConditionSelectorView = /** @class */ (function () {
                             })];
                     case 2:
                         result = _a.sent();
+                        this.targets = result.result;
                         this.targetChoices.setChoices(result.result.map(function (ele) {
                             return { value: ele.id, label: aboutLang_1.selectAppropriateName(ele, _this.app.state.language) };
                         }));
@@ -173,7 +186,7 @@ var SearchConditionSelectorView = /** @class */ (function () {
     };
     SearchConditionSelectorView.prototype.generateChoices = function (insertedElement, data, _a) {
         var _this = this;
-        var _b = _a === void 0 ? {} : _a, _c = _b.needMultipleSelect, needMultipleSelect = _c === void 0 ? false : _c, _d = _b.maxItemCount, maxItemCount = _d === void 0 ? 1 : _d, _e = _b.needDuplicatedSelect, needDuplicatedSelect = _e === void 0 ? false : _e, _f = _b.removeItemButton, removeItemButton = _f === void 0 ? true : _f, _g = _b.disable, disable = _g === void 0 ? false : _g, maxItemText = _b.maxItemText, _h = _b.placeholderValue, placeholderValue = _h === void 0 ? undefined : _h;
+        var _b = _a === void 0 ? {} : _a, _c = _b.needMultipleSelect, needMultipleSelect = _c === void 0 ? false : _c, _d = _b.maxItemCount, maxItemCount = _d === void 0 ? 1 : _d, _e = _b.needDuplicatedSelect, needDuplicatedSelect = _e === void 0 ? false : _e, _f = _b.removeItemButton, removeItemButton = _f === void 0 ? true : _f, _g = _b.disable, disable = _g === void 0 ? false : _g, maxItemText = _b.maxItemText, _h = _b.placeholderValue, placeholderValue = _h === void 0 ? undefined : _h, _j = _b.noChoiceText, noChoiceText = _j === void 0 ? { JDescription: "選べるものがありません", EDescription: "There are no item to select." } : _j, _k = _b.noResultText, noResultText = _k === void 0 ? { JDescription: "検索に合致するものがありませんでした。", EDescription: "No item were found." } : _k;
         insertedElement.multiple = needMultipleSelect;
         insertedElement.disabled = disable;
         var result = new choices_js_1.default(insertedElement, {
@@ -182,7 +195,9 @@ var SearchConditionSelectorView = /** @class */ (function () {
             maxItemCount: maxItemCount,
             maxItemText: aboutLang_1.choiceDescription(maxItemText, this.app.state.language),
             removeItemButton: removeItemButton,
-            shouldSort: true
+            shouldSort: true,
+            noChoicesText: aboutLang_1.choiceDescription(noChoiceText, this.app.state.language),
+            noResultsText: aboutLang_1.choiceDescription(noResultText, this.app.state.language)
         });
         if (!needDuplicatedSelect)
             return result;

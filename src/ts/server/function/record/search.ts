@@ -11,8 +11,8 @@ import { InterfaceOfRecordDatabase } from "../../type/InterfaceOfRecordDatabase"
 import { IReceivedData_recordSearch } from "../../../type/api/record/relation";
 export async function search(recordDataBase:InterfaceOfRecordDatabase,input:IReceivedData_recordSearch["atServer"]):Promise<IReceivedData_recordSearch["atClient"]>{
     
-    if (input.condition[0].gameSystemEnv.gameDifficultyID !== undefined) input.condition = await prepareForDifficultySearch(recordDataBase,input.condition[0])
     const cotfr = new ControllerOfTableForResolvingID(recordDataBase)
+    if (input.condition[0].gameSystemEnv.gameDifficultyID !== undefined) input.condition = await prepareForDifficultySearch(cotfr,recordDataBase,input.condition[0])
 
     const result = await Promise.all(
         input.condition.map( async input => {
@@ -41,13 +41,14 @@ function countRunners(record:IRecord[]):number{
     return new Set(record.map((element) => element.runnerID)).size
 }
 
-async function prepareForDifficultySearch(recordDataBase:InterfaceOfRecordDatabase,input:SearchCondition):Promise<SearchCondition[]>{
-    
-    const converter = new ControllerOfTableForResolvingID(recordDataBase)
-    
+async function prepareForDifficultySearch(converter:ControllerOfTableForResolvingID,recordDataBase:InterfaceOfRecordDatabase,input:SearchCondition):Promise<SearchCondition[]>{
+  
     if (input.gameSystemEnv.gameDifficultyID === undefined) throw new Error("予期せぬエラーが発生しました。")
     const gameEnv = input.gameSystemEnv;
-    const targetIDs:string[] = (await recordDataBase.getGameDifficultyInfo(gameEnv.gameSystemID,gameEnv.gameModeID,input.gameSystemEnv.gameDifficultyID)).TargetIDsIncludedInTheDifficulty;
+    let targetIDs:string[]
+    if (input.gameSystemEnv.gameDifficultyID === "whole") targetIDs = (await recordDataBase.getTargetCollection(gameEnv.gameSystemID,gameEnv.gameModeID)).map((ele) => ele.id)
+    else targetIDs = (await recordDataBase.getGameDifficultyInfo(gameEnv.gameSystemID,gameEnv.gameModeID,input.gameSystemEnv.gameDifficultyID)).TargetIDsIncludedInTheDifficulty;
+    
     const targetNames = await Promise.all(
         targetIDs.map( targetID => converter.resolveTargetID(gameEnv.gameSystemID,gameEnv.gameModeID,targetID,input.language))
     )

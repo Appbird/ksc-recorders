@@ -44,34 +44,33 @@ var clone_deep_1 = __importDefault(require("clone-deep"));
 var ControllerOfTableForResolvingID_1 = require("../../recordConverter/ControllerOfTableForResolvingID");
 function search(recordDataBase, input) {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, cotfr, result;
+        var cotfr, _a, result;
         var _this = this;
         return __generator(this, function (_b) {
             switch (_b.label) {
                 case 0:
+                    cotfr = new ControllerOfTableForResolvingID_1.ControllerOfTableForResolvingID(recordDataBase);
                     if (!(input.condition[0].gameSystemEnv.gameDifficultyID !== undefined)) return [3 /*break*/, 2];
                     _a = input;
-                    return [4 /*yield*/, prepareForDifficultySearch(recordDataBase, input.condition[0])];
+                    return [4 /*yield*/, prepareForDifficultySearch(cotfr, recordDataBase, input.condition[0])];
                 case 1:
                     _a.condition = _b.sent();
                     _b.label = 2;
-                case 2:
-                    cotfr = new ControllerOfTableForResolvingID_1.ControllerOfTableForResolvingID(recordDataBase);
-                    return [4 /*yield*/, Promise.all(input.condition.map(function (input) { return __awaiter(_this, void 0, void 0, function () {
-                            var records;
-                            return __generator(this, function (_a) {
-                                switch (_a.label) {
-                                    case 0: return [4 /*yield*/, recordDataBase.getRecordsWithCondition(input.gameSystemEnv.gameSystemID, input.gameSystemEnv.gameModeID, input.orderOfRecordArray, input.abilityIDsCondition, input.abilityIDs, input.targetIDs, input.runnerIDs)];
-                                    case 1:
-                                        records = (_a.sent());
-                                        if (input.startOfRecordArray === undefined)
-                                            input.startOfRecordArray = 0;
-                                        if (input.limitOfRecordArray === undefined)
-                                            input.limitOfRecordArray = 7;
-                                        return [2 /*return*/, cotfr.convertRecordsIntoRecordGroupResolved(records.slice(input.startOfRecordArray, input.limitOfRecordArray), { groupName: input.groupName, numberOfRecords: records.length, numberOfRunners: countRunners(records), lang: input.language })];
-                                }
-                            });
-                        }); }))];
+                case 2: return [4 /*yield*/, Promise.all(input.condition.map(function (input) { return __awaiter(_this, void 0, void 0, function () {
+                        var records;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, recordDataBase.getRecordsWithCondition(input.gameSystemEnv.gameSystemID, input.gameSystemEnv.gameModeID, input.orderOfRecordArray, input.abilityIDsCondition, input.abilityIDs, input.targetIDs, input.runnerIDs)];
+                                case 1:
+                                    records = (_a.sent());
+                                    if (input.startOfRecordArray === undefined)
+                                        input.startOfRecordArray = 0;
+                                    if (input.limitOfRecordArray === undefined)
+                                        input.limitOfRecordArray = 7;
+                                    return [2 /*return*/, cotfr.convertRecordsIntoRecordGroupResolved(records.slice(input.startOfRecordArray, input.limitOfRecordArray), { groupName: input.groupName, numberOfRecords: records.length, numberOfRunners: countRunners(records), lang: input.language })];
+                            }
+                        });
+                    }); }))];
                 case 3:
                     result = _b.sent();
                     return [2 /*return*/, {
@@ -86,21 +85,26 @@ exports.search = search;
 function countRunners(record) {
     return new Set(record.map(function (element) { return element.runnerID; })).size;
 }
-function prepareForDifficultySearch(recordDataBase, input) {
+function prepareForDifficultySearch(converter, recordDataBase, input) {
     return __awaiter(this, void 0, void 0, function () {
-        var converter, gameEnv, targetIDs, targetNames;
+        var gameEnv, targetIDs, targetNames;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    converter = new ControllerOfTableForResolvingID_1.ControllerOfTableForResolvingID(recordDataBase);
                     if (input.gameSystemEnv.gameDifficultyID === undefined)
                         throw new Error("予期せぬエラーが発生しました。");
                     gameEnv = input.gameSystemEnv;
-                    return [4 /*yield*/, recordDataBase.getGameDifficultyInfo(gameEnv.gameSystemID, gameEnv.gameModeID, input.gameSystemEnv.gameDifficultyID)];
+                    if (!(input.gameSystemEnv.gameDifficultyID === "whole")) return [3 /*break*/, 2];
+                    return [4 /*yield*/, recordDataBase.getTargetCollection(gameEnv.gameSystemID, gameEnv.gameModeID)];
                 case 1:
+                    targetIDs = (_a.sent()).map(function (ele) { return ele.id; });
+                    return [3 /*break*/, 4];
+                case 2: return [4 /*yield*/, recordDataBase.getGameDifficultyInfo(gameEnv.gameSystemID, gameEnv.gameModeID, input.gameSystemEnv.gameDifficultyID)];
+                case 3:
                     targetIDs = (_a.sent()).TargetIDsIncludedInTheDifficulty;
-                    return [4 /*yield*/, Promise.all(targetIDs.map(function (targetID) { return converter.resolveTargetID(gameEnv.gameSystemID, gameEnv.gameModeID, targetID, input.language); }))];
-                case 2:
+                    _a.label = 4;
+                case 4: return [4 /*yield*/, Promise.all(targetIDs.map(function (targetID) { return converter.resolveTargetID(gameEnv.gameSystemID, gameEnv.gameModeID, targetID, input.language); }))];
+                case 5:
                     targetNames = _a.sent();
                     input.gameSystemEnv.gameDifficultyID = undefined;
                     return [2 /*return*/, targetIDs.map(function (targetID, index) {

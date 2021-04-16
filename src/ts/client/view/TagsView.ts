@@ -87,7 +87,7 @@ export class TagsView implements IView{
             record.tagName.forEach( (tag,index) => tagsViews[1].appendTag((tag === undefined ? "Not Found" : tag),"hashTag",{
                 to:"searchResultView",
                 requiredObject:{
-                    title:`タグ${tagsViews}における全体の記録。`,
+                    title:`タグ${tag}における全体の記録。`,
                     required:{condition:[{
                         groupName:"", gameSystemEnv:{ gameSystemID: gameEnv.gameSystemID, gameModeID: gameEnv.gameModeID, gameDifficultyID:"whole"}, tagIDs: [record.tagID[index]],
                         orderOfRecordArray:order ,language:app.state.language

@@ -51,6 +51,7 @@ export class SearchConditionSelectorView implements IView{
         context.appendChild(this.difficultyColumn)
         context.appendChild(this.targetColumn)
         context.appendChild(this.abilityColumn)
+        //#TODO ヘッダの下にp要素を加えて説明を書く。
         this.difficultyColumn.appendChild(
             element`
             <div class="c-title is-onMiddle">
@@ -73,7 +74,7 @@ export class SearchConditionSelectorView implements IView{
         this.difficultyChoices = this.generateChoices(this.difficultyChoicesElement,this.difficulties)
 
         this.targetChoicesElement = this.targetColumn.appendChild( document.createElement("select"))
-        this.targetChoices = this.generateChoices(this.targetChoicesElement,[],{maxItemCount:10,disable:true})
+        this.targetChoices = this.generateChoices(this.targetChoicesElement,[],{maxItemCount:10,disable:true,needMultipleSelect:true})
         
         //#CTODO 思えばモードによって最大プレイ人数が変わるので、データベースにそのデータを組み込んでおく必要がある。
         const maxNubmerOfPlayer = this.app.state.gameSystemEnvDisplayed.gameMode.maxNumberOfPlayer;
@@ -86,7 +87,10 @@ export class SearchConditionSelectorView implements IView{
         
         this.difficultyChoicesElement.addEventListener("hideDropdown",() => {
             this.targetChoices.enable();
-            if (this.difficultySelectedID === this.difficultyChoices.getValue(true) || this.difficultyChoices === undefined) return;
+            if (this.difficultySelectedID === this.difficultyChoices.getValue(true)) return;
+            if (this.difficultyChoices.getValue(true) === undefined) {
+                this.targetChoices.disable(); return;
+            }
             const selected = this.difficultyChoices.getValue(true);
             this.difficultySelectedID = (Array.isArray(selected)) ? selected[0] : selected;
             this.setTargetChoices()
@@ -113,22 +117,29 @@ export class SearchConditionSelectorView implements IView{
         }});
     }
     private generateCondition(targetSelected:string[],abilitySelected:string[],gameSystemID:string,gameModeID:string){
-        return targetSelected.map( (id,index) => {
-            const result = this.targets.find((target) => target.id === id)?.JName;
-            console.log(id)
-            return {
-                groupName: (result === undefined) ? "":result,
-                groupSubName:`${index+1}戦目`,
+        if (targetSelected.length === 0){
+            return [{
+                groupName: "", groupSubName:"",
                 gameSystemEnv:{
                     gameSystemID:gameSystemID,
                     gameModeID:gameModeID,
-                    gameDifficultyID:(this.difficultySelectedID === null) ? undefined: this.difficultySelectedID
+                    gameDifficultyID:(this.difficultySelectedID === null) ? "whole": this.difficultySelectedID
                 },
-                language:this.app.state.language,
-                startOfRecordArray:0,limitOfRecordArray:3,
-                orderOfRecordArray:this.app.state.superiorScore,
-                abilityIDs:abilitySelected,
-                targetIDs:(id === undefined) ? undefined:[id]
+                language:this.app.state.language, startOfRecordArray:0,limitOfRecordArray:3,
+                orderOfRecordArray:this.app.state.superiorScore, abilityIDs:abilitySelected
+            }]
+        }
+        return targetSelected.map( (id,index) => {
+            const result = this.targets.find((target) => target.id === id);
+            console.log(this.targets)
+            return {
+                groupName: (result === undefined) ? "":selectAppropriateName(result,this.app.state.language),
+                groupSubName:`${index+1}戦目`,
+                gameSystemEnv:{
+                    gameSystemID:gameSystemID,
+                    gameModeID:gameModeID},
+                language:this.app.state.language, startOfRecordArray:0,limitOfRecordArray:3, orderOfRecordArray:this.app.state.superiorScore,
+                abilityIDs:abilitySelected, targetIDs:[id]
             }
         })
     }
@@ -145,6 +156,7 @@ export class SearchConditionSelectorView implements IView{
                 gameSystemEnv:{gameSystemID:asg.gameSystem.id,gameModeID:asg.gameMode.id},
                 id:selectedTargetItem.TargetIDsIncludedInTheDifficulty
             })
+            this.targets = result.result;
             this.targetChoices.setChoices(result.result.map(ele => {
                return {value:ele.id, label:selectAppropriateName(ele,this.app.state.language)}
             }))
@@ -157,8 +169,12 @@ export class SearchConditionSelectorView implements IView{
     private generateChoices(insertedElement:HTMLSelectElement,data:IItemOfResolveTableToName[],{
             needMultipleSelect=false,maxItemCount=1,needDuplicatedSelect=false,
             removeItemButton=true,disable=false,
-            maxItemText,placeholderValue = undefined
-        }:{needMultipleSelect?:boolean,placeholderValue?:string,needDuplicatedSelect?:boolean,maxItemCount?:number,removeItemButton?:boolean,disable?:boolean,maxItemText?:MultiLanguageDescription} = {} 
+            maxItemText,placeholderValue = undefined,noChoiceText = {JDescription:"選べるものがありません",EDescription:"There are no item to select."},
+            noResultText = {JDescription:"検索に合致するものがありませんでした。",EDescription:"No item were found."}
+        }:{needMultipleSelect?:boolean,placeholderValue?:string,
+            needDuplicatedSelect?:boolean,maxItemCount?:number,
+            removeItemButton?:boolean,disable?:boolean,maxItemText?:MultiLanguageDescription,
+            noChoiceText?:MultiLanguageDescription, noResultText?:MultiLanguageDescription} = {} 
         ){
         insertedElement.multiple = needMultipleSelect;
         insertedElement.disabled = disable;
@@ -170,7 +186,9 @@ export class SearchConditionSelectorView implements IView{
                 maxItemCount: maxItemCount,
                 maxItemText: choiceDescription(maxItemText,this.app.state.language),
                 removeItemButton: removeItemButton,
-                shouldSort:true
+                shouldSort:true,
+                noChoicesText:choiceDescription(noChoiceText,this.app.state.language),
+                noResultsText:choiceDescription(noResultText,this.app.state.language)
             })
         if (!needDuplicatedSelect) return result;
         insertedElement.addEventListener("addItem",(event:any) => {

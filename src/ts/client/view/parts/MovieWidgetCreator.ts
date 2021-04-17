@@ -6,16 +6,17 @@ declare let twttr:{
 }
 export class MovieWidgetCreator{
     //#CTODO 動作確認
-    private url:URL
-    private id:string;
-    private param:URLSearchParams;
-    private kind:"youtube"|"twitter"
-    constructor(href:string){
+    private url:URL|null = null;
+    private id:string|null = null;
+    private param:URLSearchParams|null = null;
+    private kind:"youtube"|"twitter"|null = null;
+    constructor(href?:string){
+        if (href === undefined) return;
+    }
+    set(href:string){
         this.url = new URL(href);
         this.param = this.url.searchParams;
-
         this.kind = this.returnKind(this.url.hostname)
-
         this.id = this.returnId(this.url.pathname);
     }
     private returnKind(hostname:string):"youtube"|"twitter"{
@@ -26,12 +27,14 @@ export class MovieWidgetCreator{
         }
     }
     private returnId(pathname:string):string{
+        if (this.kind === null) throw new Error("[MovieWidgetCreator] returnIdメソッドを実行する前にsetメソッドを実行してURLをセットしてください。") 
         switch (this.kind){
             case "youtube":return pathname.split("/")[1];
             case "twitter": return pathname.split("/")[3];
         }
     }
     setWidget(insertedHTMLElement:Element){
+        if (this.param === null || this.id === null || this.kind === null)throw new Error("[MovieWidgetCreator] setWidgetメソッドを実行する前にsetメソッドを実行してURLをセットしてください。") 
         switch (this.kind){
             case "twitter":
                 twttr.widgets.createTweet(this.id,insertedHTMLElement);

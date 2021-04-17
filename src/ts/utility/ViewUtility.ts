@@ -18,15 +18,17 @@ export class HTMLConverter{
     constructor(lang:LanguageInApplication){
         this.language = lang;
     }
-    element(strings:TemplateStringsArray,...values:any){
+    element(strings:TemplateStringsArray,...values:(string|{[key:string]:string}|undefined|null)[]){
         
         const htmlString = strings.reduce(
             (result, str, i) => {
                 const value = values[i-1];
+                if (value === null) return result + "null" + str;
+                if (value === undefined) return result + "undefined" + str;
                 if (typeof value == "string"){
                     return result + escapeSpecialChars(value) + str;
-                } if (Array.isArray(value) && value.every(ele => typeof ele === "string")) {
-                    return value[LanguageList.findIndex( ele => ele === this.language)]
+                }else if (typeof value === "object" && Object.entries(value).every(ele => typeof ele === "string")) {
+                    return result + (value[this.language] === undefined ) ? "":value[this.language] + str
                 } else {
                     return result + String(value) + str;
                 }

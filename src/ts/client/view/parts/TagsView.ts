@@ -1,20 +1,20 @@
-import { IRecordInShortResolved, IRecordResolved } from "../../type/record/IRecord";
-import { element } from "../../utility/ViewUtility";
-import {  IAppUsedToReadOptionsAndTransition } from "../interface/AppInterfaces";
-import { PageStates } from "../interface/PageStates";
-import { createElementWithIdAndClass } from "../utility/aboutElement";
-import { IView } from "./IView";
-import { TransitionInfo } from "../type/TransitionInfo";
+import { IRecordInShortResolved, IRecordResolved } from "../../../type/record/IRecord";
+import { element } from "../../../utility/ViewUtility";
+import {  IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
+import { PageStates } from "../state/PageStates";
+import { createElementWithIdAndClass } from "../../utility/aboutElement";
+import { IView } from "../IView";
+import { TransitionInfo } from "../../type/TransitionInfo";
 type TagKind = "ability"|"target"|"gameSystem"|"hashTag"
 export class TagsView implements IView{
     private element:HTMLElement = createElementWithIdAndClass({className:"c-tags"})
-    private app:IAppUsedToReadOptionsAndTransition
+    private app:IAppUsedToReadAndChangeOnlyPageState
     private setClickEnventListener:boolean;
-    constructor(app:IAppUsedToReadOptionsAndTransition,{setClickEnventListener=true}:{setClickEnventListener?:boolean}={}){
+    constructor(app:IAppUsedToReadAndChangeOnlyPageState,{setClickEnventListener=true}:{setClickEnventListener?:boolean}={}){
         this.app = app;
         this.setClickEnventListener = setClickEnventListener;
     }
-    appendTag<T extends keyof PageStates>(tagName:string,kind:TagKind,transitionInfo:TransitionInfo<T>){
+    appendTag<T extends keyof PageStates>(tagName:string,kind:TagKind,transitionInfo:TransitionInfo<T>,{title=""}:{title?:string}={}){
         const ele = this.element.appendChild(
         element`
             <div class = "c-tag --${kind}">
@@ -42,7 +42,7 @@ export class TagsView implements IView{
     }
 
 
-    static generateTagViewsForRecord(app:IAppUsedToReadOptionsAndTransition,inserted:Element,record:IRecordInShortResolved | IRecordResolved,
+    static generateTagViewsForRecord(app:IAppUsedToReadAndChangeOnlyPageState,inserted:Element,record:IRecordInShortResolved | IRecordResolved,
         {gameSystemTags = false,targetTags = false, abilityTags = false, hashTags = false,setClickListener = true }:OptionInfo
     ){ 
         const opt = {setClickEnventListener:setClickListener}
@@ -53,47 +53,41 @@ export class TagsView implements IView{
                 tagsViews[0].appendTag(`${gameEnv.gameSystemName}/${gameEnv.gameModeName}/${gameEnv.gameDifficultyName}`,"gameSystem",{
                     to:"searchResultView",
                     requiredObject: {
-                        title:`難易度${gameEnv.gameDifficultyName}の記録`,
-                        required:{condition:[{
+                        condition:[{
                             groupName:"", gameSystemEnv:{ gameSystemID: gameEnv.gameSystemID, gameModeID: gameEnv.gameModeID, gameDifficultyID: gameEnv.gameDifficultyID },
                             orderOfRecordArray:order, limitOfRecordArray: 3, language: app.state.language
-                        }]}
+                        }]
                     }
-                })
+                    },{title:`難易度${gameEnv.gameDifficultyName}の記録`}
+                )
         if (targetTags)
                 tagsViews[0].appendTag(record.regulation.targetName,"target",{
                     to:"searchResultView",
-                    requiredObject:{
-                        title:`計測対象${record.regulation.targetName}の記録。`,
-                        required:{condition:[{
+                    requiredObject:{condition:[{
                             groupName:"", gameSystemEnv:{ gameSystemID: gameEnv.gameSystemID, gameModeID: gameEnv.gameModeID }, targetIDs:[record.regulation.targetName] ,
                             orderOfRecordArray:order ,language:app.state.language
                         }]}
-                    }
-                });
+                    },{title:`計測対象${record.regulation.targetName}の記録。`}
+                );
         if (abilityTags)
                 record.regulation.abilityNames.forEach( (ability,index) => tagsViews[1].appendTag((ability === undefined ? "Not Found" : ability),"ability",{
                     to:"searchResultView",
-                    requiredObject:{
-                        title:`能力${record.regulation.targetName}(ソロ)における、難易度${gameEnv.gameDifficultyName}の記録。`,
-                        required:{condition:[{
+                    requiredObject:{condition:[{
                             groupName:"", gameSystemEnv:{ gameSystemID: gameEnv.gameSystemID, gameModeID: gameEnv.gameModeID, gameDifficultyID:gameEnv.gameDifficultyID}, abilityIDs:[record.regulation.abilityIDs[index]],
                             orderOfRecordArray:order ,language:app.state.language
                         }]}
-                    }
-                })
+                    },{title:`能力${record.regulation.targetName}(ソロ)における、難易度${gameEnv.gameDifficultyName}の記録。`}
+                )
             )
         if (hashTags && assureRecordIsFull(record))
             record.tagName.forEach( (tag,index) => tagsViews[1].appendTag((tag === undefined ? "Not Found" : tag),"hashTag",{
                 to:"searchResultView",
-                requiredObject:{
-                    title:`タグ${tag}における全体の記録。`,
-                    required:{condition:[{
+                requiredObject:{condition:[{
                         groupName:"", gameSystemEnv:{ gameSystemID: gameEnv.gameSystemID, gameModeID: gameEnv.gameModeID, gameDifficultyID:"whole"}, tagIDs: [record.tagID[index]],
                         orderOfRecordArray:order ,language:app.state.language
                     }]}
-                }
-            })
+                },{title:`タグ${tag}における全体の記録。`}
+            )
         )
         
 

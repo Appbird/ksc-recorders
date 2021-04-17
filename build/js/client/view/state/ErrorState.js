@@ -1,4 +1,17 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __makeTemplateObject = (this && this.__makeTemplateObject) || function (cooked, raw) {
     if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
     return cooked;
@@ -39,36 +52,28 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.TransitionAdministrator = void 0;
-var PageStates_1 = require("../view/state/PageStates");
-var ViewUtility_1 = require("../../utility/ViewUtility");
-var TransitionAdministrator = /** @class */ (function () {
-    function TransitionAdministrator(articleDOM, app, state) {
-        this.state = state;
-        this.app = app;
-        this.articleDOM = articleDOM;
+exports.S_ErrorState = void 0;
+var marked_1 = __importDefault(require("marked"));
+var ViewUtility_1 = require("../../../utility/ViewUtility");
+var PageStateClass_1 = require("./PageStateClass");
+var S_ErrorState = /** @class */ (function (_super) {
+    __extends(S_ErrorState, _super);
+    function S_ErrorState() {
+        return _super !== null && _super.apply(this, arguments) || this;
     }
-    TransitionAdministrator.prototype.clearView = function () {
-        this.articleDOM.innerHTML = "";
-    };
-    TransitionAdministrator.prototype.transition = function (nextState, requestObject, _a) {
-        var _b = (_a === void 0 ? {} : _a).title, title = _b === void 0 ? "" : _b;
+    S_ErrorState.prototype.init = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var pageState;
-            return __generator(this, function (_c) {
-                this.clearView();
-                if (title !== "")
-                    this.articleDOM.appendChild(ViewUtility_1.elementWithoutEscaping(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n        <div class=\"c-title\">\n            <div class=\"c-title__main\">", "</div>\n        </div>"], ["\n        <div class=\"c-title\">\n            <div class=\"c-title__main\">", "</div>\n        </div>"])), title));
-                if (PageStates_1.pageStates[nextState] === undefined)
-                    throw new Error("\u6307\u5B9A\u3055\u308C\u305F\u30AD\u30FC" + nextState + "\u306B\u5BFE\u5FDC\u3059\u308B\u30DA\u30FC\u30B8\u72B6\u614B\u304C\u5B58\u5728\u3057\u307E\u305B\u3093\u3002");
-                pageState = new PageStates_1.pageStates[nextState](this.app, this.articleDOM, requestObject);
-                this.state.setState(nextState, pageState.requiredObject);
+            return __generator(this, function (_a) {
+                this.articleDOM.appendChild(ViewUtility_1.elementWithoutEscaping(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n        <div class = \"c-recordGroupHeader\">\n            <div class=\"c-title\">\n                <div class=\"c-title__main\">", "</div>\n                <div class=\"c-title__sub\">Failed to prepare the page.</div>\n            </div>\n            <hr noshade class=\"u-bold\">\n            <div class=\"u-width90per\">", "</div>\n        </div>"], ["\n        <div class = \"c-recordGroupHeader\">\n            <div class=\"c-title\">\n                <div class=\"c-title__main\">", "</div>\n                <div class=\"c-title__sub\">Failed to prepare the page.</div>\n            </div>\n            <hr noshade class=\"u-bold\">\n            <div class=\"u-width90per\">", "</div>\n        </div>"])), this.requiredObj.title, marked_1.default(this.requiredObj.title)));
                 return [2 /*return*/];
             });
         });
     };
-    return TransitionAdministrator;
-}());
-exports.TransitionAdministrator = TransitionAdministrator;
+    return S_ErrorState;
+}(PageStateClass_1.PageStateBaseClass));
+exports.S_ErrorState = S_ErrorState;
 var templateObject_1;

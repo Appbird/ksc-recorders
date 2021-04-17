@@ -1,4 +1,4 @@
-import { element } from "../../utility/ViewUtility";
+import { element } from "../../../utility/ViewUtility";
 declare let twttr:{
     widgets:{
         createTweet:(Tweetid:string, inserted:Element, option?:any) => void

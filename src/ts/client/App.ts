@@ -1,15 +1,16 @@
-import { PageStates } from "./interface/PageStates";
+import { PageStates, RequiredObjectType } from "./view/state/PageStates";
 import { LanguageInApplication } from "../type/LanguageInApplication";
 import { TransitionAdministrator } from "./administers/TransitionAdminister";
 import { StateAdministrator, StateAdministerReadOnly } from "./administers/StateAdminister";
 import { APIAdministrator } from "./administers/APICaller";
-import { IAppOnlyUsedToTransition, IAppUsedToReadOptionsAndTransition, IAppUsedToReadOptionsTransitionUseAPI } from "./interface/AppInterfaces";
 import { HistoryAdministrator } from "./administers/HistoryAdministrator";
 import { APIFunctions } from "../type/api/relation";
 import { HeaderController } from "./administers/HeaderController";
+import { IGameSystemInfoWithoutCollections } from "../type/list/IGameSystemInfo";
+import { IGameModeItemWithoutCollections } from "../type/list/IGameModeItem";
 
 
-export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptionsAndTransition,IAppUsedToReadOptionsTransitionUseAPI{
+export default class App {
     private _state:StateAdministrator;
     private transitionAd: TransitionAdministrator;
     private historyAd:HistoryAdministrator;
@@ -21,10 +22,10 @@ export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptio
         this.historyAd = new HistoryAdministrator(this)
         this.transitionAd = new TransitionAdministrator(articleDOM,this,this._state);
     }
-    async transition<T extends keyof PageStates>(nextState:T, requestObject:PageStates[T],ifAppendHistory:boolean = true){
+    async transition<T extends keyof PageStates>(nextState:T, requestObject:RequiredObjectType<PageStates[T]>,{ifAppendHistory=false,title=""}:{ifAppendHistory?:boolean,title?:string} = {}){
         if (ifAppendHistory) this.historyAd.appendHistory()
         try { 
-            await this.transitionAd.transition(nextState,requestObject)
+            await this.transitionAd.transition(nextState,requestObject,{title:title})
         } catch(error) {
             this.errorCatcher(error,"ページの遷移に失敗しました。")
         }
@@ -36,8 +37,10 @@ export default class App implements IAppOnlyUsedToTransition,IAppUsedToReadOptio
     setLanguage(lang:LanguageInApplication){
         this._state.setLanguage(lang);
     }
-    changeHeader(str:string,sub:string){
-        return this.header.changeHeaderRightLeft(str,sub);    
+    changeTargetGameMode(gameSystemEnv:{gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections}){
+
+        this._state.setGameSystemEnv(gameSystemEnv)
+        return this.header.changeHeaderRightLeft(gameSystemEnv.gameSystem.EName,gameSystemEnv.gameMode.EName);    
     }
     accessToAPI<T extends keyof APIFunctions>(functionName: T, requiredObj: APIFunctions[T]["atServer"]): Promise<APIFunctions[T]["atClient"]>{
         return this.apiCaller.access<T>(functionName,requiredObj)

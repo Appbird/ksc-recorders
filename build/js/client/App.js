@@ -49,24 +49,24 @@ var App = /** @class */ (function () {
         this.historyAd = new HistoryAdministrator_1.HistoryAdministrator(this);
         this.transitionAd = new TransitionAdminister_1.TransitionAdministrator(articleDOM, this, this._state);
     }
-    App.prototype.transition = function (nextState, requestObject, ifAppendHistory) {
-        if (ifAppendHistory === void 0) { ifAppendHistory = true; }
+    App.prototype.transition = function (nextState, requestObject, _a) {
+        var _b = _a === void 0 ? {} : _a, _c = _b.ifAppendHistory, ifAppendHistory = _c === void 0 ? false : _c, _d = _b.title, title = _d === void 0 ? "" : _d;
         return __awaiter(this, void 0, void 0, function () {
             var error_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
+            return __generator(this, function (_e) {
+                switch (_e.label) {
                     case 0:
                         if (ifAppendHistory)
                             this.historyAd.appendHistory();
-                        _a.label = 1;
+                        _e.label = 1;
                     case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        return [4 /*yield*/, this.transitionAd.transition(nextState, requestObject)];
+                        _e.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, this.transitionAd.transition(nextState, requestObject, { title: title })];
                     case 2:
-                        _a.sent();
+                        _e.sent();
                         return [3 /*break*/, 4];
                     case 3:
-                        error_1 = _a.sent();
+                        error_1 = _e.sent();
                         this.errorCatcher(error_1, "ページの遷移に失敗しました。");
                         return [3 /*break*/, 4];
                     case 4:
@@ -86,8 +86,9 @@ var App = /** @class */ (function () {
     App.prototype.setLanguage = function (lang) {
         this._state.setLanguage(lang);
     };
-    App.prototype.changeHeader = function (str, sub) {
-        return this.header.changeHeaderRightLeft(str, sub);
+    App.prototype.changeTargetGameMode = function (gameSystemEnv) {
+        this._state.setGameSystemEnv(gameSystemEnv);
+        return this.header.changeHeaderRightLeft(gameSystemEnv.gameSystem.EName, gameSystemEnv.gameMode.EName);
     };
     App.prototype.accessToAPI = function (functionName, requiredObj) {
         return this.apiCaller.access(functionName, requiredObj);

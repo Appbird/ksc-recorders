@@ -1,6 +1,6 @@
-import { element } from "../../utility/ViewUtility";
-import { createElementWithIdAndClass } from "../utility/aboutElement";
-import { IView } from "./IView";
+import { element } from "../../../utility/ViewUtility";
+import { createElementWithIdAndClass } from "../../utility/aboutElement";
+import { IView } from "../IView";
 
 export class StateInfoView implements IView{
     private element:HTMLElement = createElementWithIdAndClass({className:"c-stateInfo"})

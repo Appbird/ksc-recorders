@@ -62,7 +62,7 @@ var HistoryAdministrator = /** @class */ (function () {
         var past = this.transitionPile.pop();
         if (past === undefined)
             return;
-        this.app.transition(past.pageState, past.requiredObject, false);
+        this.app.transition(past.pageState, past.requiredObject, { ifAppendHistory: false });
     };
     return HistoryAdministrator;
 }());

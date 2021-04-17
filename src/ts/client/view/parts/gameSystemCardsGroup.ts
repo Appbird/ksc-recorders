@@ -1,15 +1,15 @@
-import { element, elementWithoutEscaping } from "../../utility/ViewUtility";
-import { createElementWithIdAndClass, writeElement } from "../utility/aboutElement";
-import { IView } from "./IView";
-import {IGameSystemInfoWithoutCollections} from "../../type/list/IGameSystemInfo"
-import {convertNumberIntoDateString}from "../../utility/timeUtility"
-import { selectAppropriateName, selectAppropriateDescription } from "../../utility/aboutLang"
-import { IAppUsedToReadOptionsAndTransition } from "../interface/AppInterfaces";
+import { element, elementWithoutEscaping } from "../../../utility/ViewUtility";
+import { createElementWithIdAndClass, writeElement } from "../../utility/aboutElement";
+import { IView } from "../IView";
+import {IGameSystemInfoWithoutCollections} from "../../../type/list/IGameSystemInfo"
+import {convertNumberIntoDateString}from "../../../utility/timeUtility"
+import { selectAppropriateName, selectAppropriateDescription } from "../../../utility/aboutLang"
+import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
 export class GameSystemCardGroup implements IView{
     //#CTODO 実装する。
-        private app:IAppUsedToReadOptionsAndTransition;
+        private app:IAppUsedToReadAndChangeOnlyPageState;
         private element = createElementWithIdAndClass({className:"c-recordCardGroup u-width90per"})
-        constructor(info:IGameSystemInfoWithoutCollections[],app:IAppUsedToReadOptionsAndTransition){
+        constructor(info:IGameSystemInfoWithoutCollections[],app:IAppUsedToReadAndChangeOnlyPageState){
             this.app = app;
             this.element.appendChild(element`
                 <div id="articleTitle">

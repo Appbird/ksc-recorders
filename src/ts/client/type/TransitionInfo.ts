@@ -1,6 +1,6 @@
-import { PageStates } from "../interface/PageStates";
+import { PageStates, RequiredObjectType } from "../view/state/PageStates";
 
 export interface TransitionInfo<T extends keyof PageStates> {
     to: T;
-    requiredObject: PageStates[T];
+    requiredObject: RequiredObjectType<PageStates[T]>;
 }

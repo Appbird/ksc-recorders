@@ -1,20 +1,20 @@
-import { element, elementWithoutEscaping } from "../../utility/ViewUtility";
+import { element, elementWithoutEscaping } from "../../../utility/ViewUtility";
 import { TagsView } from "./TagsView";
-import { converseMiliSecondsIntoTime, convertNumberIntoDateString } from "../../utility/timeUtility";
-import { IRecordGroupResolved } from "../../type/record/IRecordGroupResolved";
-import { IRecordInShortResolved } from "../../type/record/IRecord";
-import { createElementWithIdAndClass } from "../utility/aboutElement";
-import { IView } from "./IView";
+import { converseMiliSecondsIntoTime, convertNumberIntoDateString } from "../../../utility/timeUtility";
+import { IRecordGroupResolved } from "../../../type/record/IRecordGroupResolved";
+import { IRecordInShortResolved } from "../../../type/record/IRecord";
+import { createElementWithIdAndClass } from "../../utility/aboutElement";
+import { IView } from "../IView";
 import { StateInfoView } from "./StateInfoView";
-import { IAppUsedToReadOptionsAndTransition } from "../interface/AppInterfaces";
+import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
 
 export class RecordGroupView implements IView{
     private _htmlElement = createElementWithIdAndClass({className:"c-recordCardsGroup"})
     private summaryElement = createElementWithIdAndClass({className:"__summary"})
     private recordCardsElement = createElementWithIdAndClass({className:"__recordCards"})
-    private app:IAppUsedToReadOptionsAndTransition;
+    private app:IAppUsedToReadAndChangeOnlyPageState;
     private option:OptionObjectSet;
-    constructor(recordGroup:IRecordGroupResolved,app:IAppUsedToReadOptionsAndTransition,
+    constructor(recordGroup:IRecordGroupResolved,app:IAppUsedToReadAndChangeOnlyPageState,
         {
             displayTags={gameSystemTags:false,targetTags:false,abilityTags:true},
             setClickListener=false

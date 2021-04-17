@@ -5,7 +5,7 @@ var StateAdministrator = /** @class */ (function () {
     function StateAdministrator(language) {
         if (language === void 0) { language = "Japanese"; }
         this._state = "none";
-        this._requiredObj = undefined;
+        this._requiredObj = null;
         this._gameSystemEnvDisplayed = {
             gameSystem: null, gameMode: null
         };
@@ -51,6 +51,24 @@ var StateAdministrator = /** @class */ (function () {
     StateAdministrator.checkGameSystemEnvIsSet = function (gameSystemEnvDisplayed) {
         return !(gameSystemEnvDisplayed.gameSystem === null || gameSystemEnvDisplayed.gameMode === null);
     };
+    Object.defineProperty(StateAdministrator.prototype, "gameSystemIDDisplayed", {
+        get: function () {
+            if (this._gameSystemEnvDisplayed.gameSystem === null)
+                throw new Error("閲覧ターゲットとなるゲームタイトルが設定されていません。");
+            return this._gameSystemEnvDisplayed.gameSystem.id;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(StateAdministrator.prototype, "gameModeIDDisplayed", {
+        get: function () {
+            if (this._gameSystemEnvDisplayed.gameMode === null)
+                throw new Error("閲覧ターゲットとなるゲームモードが設定されていません。");
+            return this._gameSystemEnvDisplayed.gameMode.id;
+        },
+        enumerable: false,
+        configurable: true
+    });
     return StateAdministrator;
 }());
 exports.StateAdministrator = StateAdministrator;

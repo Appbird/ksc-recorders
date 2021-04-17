@@ -1,20 +1,20 @@
-import { IRecordResolved } from "../../type/record/IRecord";
-import { converseMiliSecondsIntoTime } from "../../utility/timeUtility";
-import {  elementWithoutEscaping } from "../../utility/ViewUtility";
-import { IAppUsedToReadOptionsAndTransition } from "../interface/AppInterfaces";
-import { IView } from "./IView";
+import { IRecordResolved } from "../../../type/record/IRecord";
+import { converseMiliSecondsIntoTime } from "../../../utility/timeUtility";
+import {  elementWithoutEscaping } from "../../../utility/ViewUtility";
+import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
+import { IView } from "../IView";
 import { TagsView } from "./TagsView";
-import { convertNumberToRank } from "../../utility/rankUtility";
+import { convertNumberToRank } from "../../../utility/rankUtility";
 import { MovieWidgetCreator } from "./MovieWidgetCreator";
 const marked = require("marked")
 
 export class RecordDetailView implements IView{
     private _htmlElement = document.createElement("div");
-    private app:IAppUsedToReadOptionsAndTransition
+    private app:IAppUsedToReadAndChangeOnlyPageState
     /**
      * @param rankOfTheRecord 0を指定すると順位表記を消すことが出来る。
      */
-    constructor(recordDetail:IRecordResolved,app:IAppUsedToReadOptionsAndTransition,rankOfTheRecord:number){
+    constructor(recordDetail:IRecordResolved,app:IAppUsedToReadAndChangeOnlyPageState,rankOfTheRecord:number){
         this.app = app;
         this.adjustViewAccordingToRecord(recordDetail,rankOfTheRecord)
     }

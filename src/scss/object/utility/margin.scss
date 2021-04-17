@@ -1,3 +1,16 @@
+.u-margin05em{
+    margin:0.5em;
+}
 .u-margin2em{
     margin:2em;
+}
+
+.u-marginUpDown05em{
+    margin:0.5em 0;
+}
+.u-marginUpDown05emToChildren>*{
+    margin:0.5em 0;
+}
+.u-marginUpDown2emToChildren>*{
+    margin:2em 0;
 }

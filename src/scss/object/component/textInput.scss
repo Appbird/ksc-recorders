@@ -1,0 +1,19 @@
+.c-textInput{
+    font-family: 'Quicksand','M PLUS Rounded 1c', sans-serif;
+    border:0;
+    text-overflow: clip;
+    transform: translateY(0.2em);
+}
+.c-textInput.u-smallerChara{
+    font-family: 'Quicksand','M PLUS Rounded 1c', sans-serif;
+    font-size: 1.2em;
+    width:90%;
+}
+.c-textInput.u-biggerChara{
+    font-family: 'Quicksand','M PLUS Rounded 1c', sans-serif;
+    font-size: 3em;
+    width:100%;
+}
+.c-textInput::placeholder{
+    color:rgb(185, 185, 185)
+}

@@ -5,7 +5,7 @@ import { IGameModeItemWithoutCollections } from "../../type/list/IGameModeItem";
 
 type GameSystemEnvDisplayed = { gameSystem: IGameSystemInfoWithoutCollections; gameMode: IGameModeItemWithoutCollections; } | { gameSystem: null; gameMode: null; } | { gameSystem: IGameSystemInfoWithoutCollections; gameMode: null; };
 type GameSystemEnvDisplayedReadOnly = { readonly gameSystem: IGameSystemInfoWithoutCollections; readonly gameMode: IGameModeItemWithoutCollections; } | { readonly gameSystem: null; readonly gameMode: null; } | { readonly gameSystem: IGameSystemInfoWithoutCollections; readonly gameMode: null; };
-
+export type TargetGameMode = { gameSystem: IGameSystemInfoWithoutCollections; gameMode: IGameModeItemWithoutCollections; };
 export interface StateAdministerReadOnly {
     readonly state: keyof PageStates;
     readonly requiredObj: RequiredObjectType<PageStates[keyof PageStates]>;

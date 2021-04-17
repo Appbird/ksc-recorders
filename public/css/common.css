@@ -36,6 +36,7 @@ hr.u-thin {
 }
 
 p {
+  font-size: 1.2em;
   margin: 0;
 }
 
@@ -132,6 +133,29 @@ nav {
   width: 80%;
   height: 20em;
   background-color: black;
+}
+
+.c-textInput {
+  font-family: "Quicksand", "M PLUS Rounded 1c", sans-serif;
+  border: 0;
+  text-overflow: clip;
+  transform: translateY(0.2em);
+}
+
+.c-textInput.u-smallerChara {
+  font-family: "Quicksand", "M PLUS Rounded 1c", sans-serif;
+  font-size: 1.2em;
+  width: 90%;
+}
+
+.c-textInput.u-biggerChara {
+  font-family: "Quicksand", "M PLUS Rounded 1c", sans-serif;
+  font-size: 3em;
+  width: 100%;
+}
+
+.c-textInput::placeholder {
+  color: #b9b9b9;
 }
 
 .c-iconWithDescription {
@@ -278,8 +302,24 @@ article h1::after {
   transition: 0.1s;
 }
 
+.u-margin05em {
+  margin: 0.5em;
+}
+
 .u-margin2em {
   margin: 2em;
+}
+
+.u-marginUpDown05em {
+  margin: 0.5em 0;
+}
+
+.u-marginUpDown05emToChildren > * {
+  margin: 0.5em 0;
+}
+
+.u-marginUpDown2emToChildren > * {
+  margin: 2em 0;
 }
 
 .u-left-aligined-forFlex {

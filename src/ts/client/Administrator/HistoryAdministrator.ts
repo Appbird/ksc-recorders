@@ -10,6 +10,7 @@ export class HistoryAdministrator{
         });
     }
     async appendHistory(){
+        console.log("a");
         history.pushState(null,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/app?state=${this.app.state.state}`)
         this.transitionPile.push({
             pageState:this.app.state.state,

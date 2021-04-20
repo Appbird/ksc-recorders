@@ -22,7 +22,11 @@ var S_SpinnerExhibition = /** @class */ (function (_super) {
     }
     S_SpinnerExhibition.prototype.init = function () {
         this.generateLoadingSpinner("");
-        this.generateLoadingSpinner("--shortcake");
+        this.generateLoadingSpinner("u-background--shortcake");
+        this.generateLoadingSpinner("u-background--difficulty");
+        this.generateLoadingSpinner("u-background--ns");
+        this.generateLoadingSpinner("u-background--ds");
+        this.generateLoadingSpinner("u-background--iceCream");
     };
     return S_SpinnerExhibition;
 }(PageStateClass_1.PageStateBaseClass));

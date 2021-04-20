@@ -23,14 +23,11 @@
     position: relative;
     top: 0em; left: 0em;
   }
-  .c-loadingSpinner>.__spinner{
+  .c-loadingSpinner>.__spinner.--star{
     background: url("../icon/IcoonMono/star.svg");
     background-size: cover;
   }
-  .c-loadingSpinner>.__spinner.--shortcake{
-    background: url("../icon/IcoonMono/shortcake.svg");
-    background-size: cover;
-  }
+
   
   
 .c-loadingSpinner>.__spinner.--delay1,.c-loadingSpinner>.__spinner.--delay1::after {

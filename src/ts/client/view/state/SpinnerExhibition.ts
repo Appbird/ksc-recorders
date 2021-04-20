@@ -6,6 +6,10 @@ export class S_SpinnerExhibition
         
         init(){
             this.generateLoadingSpinner("");
-            this.generateLoadingSpinner("--shortcake");
+            this.generateLoadingSpinner("u-background--shortcake");
+            this.generateLoadingSpinner("u-background--difficulty");
+            this.generateLoadingSpinner("u-background--ns");
+            this.generateLoadingSpinner("u-background--ds");
+            this.generateLoadingSpinner("u-background--iceCream");
         }
 }

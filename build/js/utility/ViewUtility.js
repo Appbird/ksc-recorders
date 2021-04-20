@@ -19,7 +19,7 @@ var HTMLConverter = /** @class */ (function () {
     function HTMLConverter(lang) {
         this.language = lang;
     }
-    HTMLConverter.prototype.element = function (strings) {
+    HTMLConverter.prototype.elementWithoutEscaping = function (strings) {
         var _this = this;
         var values = [];
         for (var _i = 1; _i < arguments.length; _i++) {
@@ -32,7 +32,7 @@ var HTMLConverter = /** @class */ (function () {
             if (value === undefined)
                 return result + "undefined" + str;
             if (typeof value == "string") {
-                return result + escapeSpecialChars(value) + str;
+                return result + value + str;
             }
             else if (typeof value === "object") {
                 return result + ((value[_this.language] === undefined) ? "undefined" : value[_this.language]) + str;

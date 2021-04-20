@@ -12,6 +12,7 @@ export class MovieWidgetCreator{
     private kind:"youtube"|"twitter"|null = null;
     constructor(href?:string){
         if (href === undefined) return;
+        this.set(href);
     }
     set(href:string){
         this.url = new URL(href);

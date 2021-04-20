@@ -1,5 +1,5 @@
 import { element, elementWithoutEscaping } from "../../../utility/ViewUtility";
-import { createElementWithIdAndClass, writeElement } from "../../utility/aboutElement";
+import { createElementWithIdAndClass, generateIcooonHTML, writeElement } from "../../utility/aboutElement";
 import { IView } from "../IView";
 import {IGameSystemInfoWithoutCollections} from "../../../type/list/IGameSystemInfo"
 import {convertNumberIntoDateString}from "../../../utility/timeUtility"
@@ -26,7 +26,7 @@ export class GameSystemCardGroup implements IView{
             const card = this.element.appendChild(elementWithoutEscaping`
             <div class="c-recordCard">
                 <div class = "c-title">
-                    <div class = "c-title__main u-smallerChara"><i class="fas fa-star"></i> ${selectAppropriateName(info,this.app.state.language)}</div>
+                    <div class = "c-title__main u-smallerChara">${generateIcooonHTML(info)} ${selectAppropriateName(info,this.app.state.language)}</div>
                 </div>
                 ${writeElement(selectAppropriateDescription(info,this.app.state.language),"p")}
                 <hr noshade class="u-thin">

@@ -69,9 +69,7 @@ var App = /** @class */ (function () {
                         error_1 = _e.sent();
                         this.errorCatcher(error_1, "ページの遷移に失敗しました。");
                         return [3 /*break*/, 4];
-                    case 4:
-                        this._state.setState(nextState, requestObject);
-                        return [2 /*return*/];
+                    case 4: return [2 /*return*/];
                 }
             });
         });

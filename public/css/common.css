@@ -126,6 +126,14 @@ nav {
   box-shadow: inset 0 0 2px #777;
 }
 
+.c-icooon {
+  width: 1.5em;
+  height: 1.5em;
+  margin: 0.3em;
+  transform: translateY(0.5em);
+  display: inline-block;
+}
+
 .c-balloon {
   position: relative;
   display: inline-block;
@@ -197,13 +205,8 @@ nav {
   left: 0em;
 }
 
-.c-loadingSpinner > .__spinner {
+.c-loadingSpinner > .__spinner.--star {
   background: url("../icon/IcoonMono/star.svg");
-  background-size: cover;
-}
-
-.c-loadingSpinner > .__spinner.--shortcake {
-  background: url("../icon/IcoonMono/shortcake.svg");
   background-size: cover;
 }
 
@@ -266,7 +269,7 @@ nav {
 .c-textInput.u-smallerChara {
   font-family: "Quicksand", "M PLUS Rounded 1c", sans-serif;
   font-size: 1.2em;
-  width: 90%;
+  width: 100%;
 }
 
 .c-textInput.u-biggerChara {
@@ -421,6 +424,81 @@ article h1::after {
   background-color: #383838;
   color: #fff;
   transition: 0.1s;
+}
+
+.u-background--star {
+  background: url("../icon/IcoonMono/star.svg");
+  background-size: cover;
+}
+
+.u-background--shortcake {
+  background: url("../icon/IcoonMono/shortcake.svg");
+  background-size: cover;
+}
+
+.u-background--difficulty {
+  background: url("../icon/IcoonMono/difficulty.svg");
+  background-size: cover;
+}
+
+.u-background--flag {
+  background: url("../icon/IcoonMono/flag2.svg");
+  background-size: cover;
+}
+
+.u-background--punch {
+  background: url("../icon/IcoonMono/punch.svg");
+  background-size: cover;
+}
+
+.u-background--iceCream {
+  background: url("../icon/IcoonMono/iceCream.svg");
+  background-size: cover;
+}
+
+.u-background--ns {
+  background: url("../icon/IcoonMono/somethinglikeNintendoSwitch.svg");
+  background-size: cover;
+}
+
+.u-background--ds {
+  background: url("../icon/IcoonMono/somethinglike3ds.svg");
+  background-size: cover;
+}
+
+.u-background--ramen {
+  background: url("../icon/IcoonMono/ramen.svg");
+  background-size: cover;
+}
+
+.u-background--notebook {
+  background: url("../icon/IcoonMono/notebook.svg");
+  background-size: cover;
+}
+
+.u-background--heart {
+  background: url("../icon/IcoonMono/heart.svg");
+  background-size: cover;
+}
+
+.u-background--gear {
+  background: url("../icon/IcoonMono/gear.svg");
+  background-size: cover;
+}
+
+.u-background--tag {
+  background: url("../icon/IcoonMono/tag.svg");
+  background-size: cover;
+}
+
+.u-background--time {
+  background: url("../icon/IcoonMono/time.svg");
+  background-size: cover;
+}
+
+.u-background--link {
+  background: url("../icon/IcoonMono/link.svg");
+  background-size: cover;
 }
 
 .u-margin05em {

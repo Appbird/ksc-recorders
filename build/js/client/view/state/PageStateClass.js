@@ -16,7 +16,7 @@ var PageStateBaseClass = /** @class */ (function () {
     }
     /** ローディングスピナーをページ中に表示します。 */
     PageStateBaseClass.prototype.generateLoadingSpinner = function (spinnerKindClassName, message) {
-        if (spinnerKindClassName === void 0) { spinnerKindClassName = ""; }
+        if (spinnerKindClassName === void 0) { spinnerKindClassName = "u-background--star"; }
         this.loadingDisplayElement.appendChild(ViewUtility_1.element(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n        <div class=\"u-width50per u-marginUpDown5em\">\n            <div class=\"c-loadingSpinner \">\n                <div class=\"__spinner --delay0 ", "\"></div>\n                <div class=\"__spinner --delay1 ", "\"></div>\n                <div class=\"__spinner --delay2 ", "\"></div>\n            </div>\n        </div>\n        "], ["\n        <div class=\"u-width50per u-marginUpDown5em\">\n            <div class=\"c-loadingSpinner \">\n                <div class=\"__spinner --delay0 ", "\"></div>\n                <div class=\"__spinner --delay1 ", "\"></div>\n                <div class=\"__spinner --delay2 ", "\"></div>\n            </div>\n        </div>\n        "])), spinnerKindClassName, spinnerKindClassName, spinnerKindClassName));
         if (message === undefined)
             return;

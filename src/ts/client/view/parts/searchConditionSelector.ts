@@ -1,8 +1,8 @@
 import { IAbilityItem } from "../../../type/list/IAbilityItem";
 import { IGameDifficultyItem } from "../../../type/list/IGameDifficultyItem";
-import { element } from "../../../utility/ViewUtility";
+import { element, elementWithoutEscaping } from "../../../utility/ViewUtility";
 import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
-import { createElementWithIdAndClass } from "../../utility/aboutElement";
+import { createElementWithIdAndClass, generateIcooonHTML } from "../../utility/aboutElement";
 import { IView } from "../IView";
 import { selectAppropriateName } from "../../../utility/aboutLang";
 import { ITargetItem } from "../../../type/list/ITargetItem";
@@ -41,21 +41,21 @@ export class SearchConditionSelectorView implements IView{
 
         //#TODO ヘッダの下にp要素を加えて説明を書く。
         this.difficultyColumn.appendChild(
-            element`
+            elementWithoutEscaping`
             <div class="c-title">
-                <div class = "c-title__sub u-biggerChara">難易度</div> <div class = "c-title__sub">Difficulty</div>
+                <div class = "c-title__sub u-biggerChara">${generateIcooonHTML({icooonName:"difficulty"})}難易度</div> <div class = "c-title__sub">Difficulty</div>
             </div>`
         )
         this.targetColumn.appendChild(
-            element`
+            elementWithoutEscaping`
             <div class="c-title">
-                <div class = "c-title__sub u-biggerChara">計測対象</div> <div class = "c-title__sub">Target</div>
+                <div class = "c-title__sub u-biggerChara">${generateIcooonHTML({icooonName:"flag"})}計測対象</div> <div class = "c-title__sub">Target</div>
             </div>`
         )
         this.abilityColumn.appendChild(
-            element`
+            elementWithoutEscaping`
             <div class="c-title">
-                <div class = "c-title__sub u-biggerChara">能力</div> <div class = "c-title__sub">Ability</div>
+                <div class = "c-title__sub u-biggerChara">${generateIcooonHTML({icooonName:"star"})}能力</div> <div class = "c-title__sub">Ability</div>
             </div>`
         )
         this.difficultyChoices = new SelectChoicesCapsuled(this.difficultyColumn.appendChild( document.createElement("select") ),difficulties,{language:this.app.state.language})

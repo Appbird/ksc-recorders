@@ -29,7 +29,6 @@ export default class App {
         } catch(error) {
             this.errorCatcher(error,"ページの遷移に失敗しました。")
         }
-        this._state.setState(nextState,requestObject);
     }
     get state():StateAdministerReadOnly{
         return this._state

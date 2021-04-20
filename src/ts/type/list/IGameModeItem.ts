@@ -1,3 +1,4 @@
+import { icooonResolvable } from "../foundation/icooonResolvable";
 import { IRecord } from "../record/IRecord";
 import { IAbilityItem } from "./IAbilityItem";
 import { IGameDifficultyItem } from "./IGameDifficultyItem";
@@ -9,7 +10,7 @@ import { ITargetItem } from "./ITargetItem";
  */
 export type ScoreType = "score"|"time";
 export type IGameModeItem = IGameModeItemWithoutCollections & CollectionsInIGameModeItem
-export interface IGameModeItemWithoutCollections extends IItemOfResolveTableToName{
+export interface IGameModeItemWithoutCollections extends IItemOfResolveTableToName,icooonResolvable{
     runnersNumber:number;
     recordsNumber:number;
     dateOfLatestPost:number;

@@ -15,6 +15,7 @@ var MovieWidgetCreator = /** @class */ (function () {
         this.kind = null;
         if (href === undefined)
             return;
+        this.set(href);
     }
     MovieWidgetCreator.prototype.set = function (href) {
         this.url = new URL(href);

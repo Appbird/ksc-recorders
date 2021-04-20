@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.findElementByClassNameWithErrorPossibility = exports.writeElement = exports.createElementWithIdTagClass = exports.createElementWithIdAndClass = void 0;
+exports.generateIcooonHTML = exports.findElementByClassNameWithErrorPossibility = exports.writeElement = exports.createElementWithIdTagClass = exports.createElementWithIdAndClass = void 0;
 function createElementWithIdAndClass(idAndClass) {
     if (idAndClass === void 0) { idAndClass = {}; }
     var element = document.createElement("div");
@@ -33,3 +33,7 @@ function findElementByClassNameWithErrorPossibility(findPlace, className) {
     return place[0];
 }
 exports.findElementByClassNameWithErrorPossibility = findElementByClassNameWithErrorPossibility;
+function generateIcooonHTML(info) {
+    return "<i class=\"c-icooon u-background--" + ((info.icooonName === undefined) ? "star" : info.icooonName) + "\"></i>";
+}
+exports.generateIcooonHTML = generateIcooonHTML;

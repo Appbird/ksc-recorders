@@ -9,9 +9,11 @@ https://developer.twitter.com/en/docs/twitter-for-websites/javascript-api/overvi
 - IFrame Player API
 https://developers.google.com/youtube/iframe_api_reference?hl=ja
 
-## フォント
+## フォント / アイコン
 - Font Awesome 5
 https://fontawesome.com/
+- ICOOON MONO
+https://icooon-mono.com/
 - Montserrat
 https://fonts.google.com/specimen/Montserrat
 - Quicksand

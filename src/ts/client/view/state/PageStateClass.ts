@@ -15,7 +15,7 @@ export abstract class PageStateBaseClass<T,AppInterface extends IAppUsedToRead> 
     }
     abstract init():Promise<void>|void;
     /** ローディングスピナーをページ中に表示します。 */
-    protected generateLoadingSpinner(spinnerKindClassName:string = "",message?:String){
+    protected generateLoadingSpinner(spinnerKindClassName:string = "u-background--star",message?:String){
         this.loadingDisplayElement.appendChild(element`
         <div class="u-width50per u-marginUpDown5em">
             <div class="c-loadingSpinner ">

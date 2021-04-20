@@ -1,3 +1,5 @@
+import { icooonResolvable } from "../../type/foundation/icooonResolvable";
+
 export function createElementWithIdAndClass(idAndClass:{className?:string,id?:string} = {}){
     
     const element = document.createElement("div");
@@ -21,4 +23,8 @@ export function findElementByClassNameWithErrorPossibility(findPlace:Element,cla
     const place = findPlace.getElementsByClassName(className)
     if (place[0] === undefined)throw new Error(`要素${className}が見つかりませんでした。`)
     return place[0]
+}
+
+export function generateIcooonHTML(info:icooonResolvable){
+    return `<i class="c-icooon u-background--${(info.icooonName === undefined) ? "star":info.icooonName}"></i>`
 }

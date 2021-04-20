@@ -49,6 +49,7 @@ var HistoryAdministrator = /** @class */ (function () {
     HistoryAdministrator.prototype.appendHistory = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
+                console.log("a");
                 history.pushState(null, "Kirby-Speed/ScoreRecorders:" + this.app.state.state, "/app?state=" + this.app.state.state);
                 this.transitionPile.push({
                     pageState: this.app.state.state,

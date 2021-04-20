@@ -1,5 +1,5 @@
-import { element, elementWithoutEscaping } from "../../../utility/ViewUtility";
-import { createElementWithIdAndClass, writeElement } from "../../utility/aboutElement";
+import { elementWithoutEscaping } from "../../../utility/ViewUtility";
+import { createElementWithIdAndClass, generateIcooonHTML, writeElement } from "../../utility/aboutElement";
 import { IView } from "../IView";
 import {IGameSystemInfoWithoutCollections} from "../../../type/list/IGameSystemInfo"
 import {convertNumberIntoDateString}from "../../../utility/timeUtility"
@@ -14,10 +14,10 @@ export class GameModeCardsGroup implements IView{
         constructor(gameSystemInfo:IGameSystemInfoWithoutCollections,info:IGameModeItemWithoutCollections[],app:IAppUsedToReadAndChangeOnlyPageState){
             this.gameSystemInfo = gameSystemInfo;
             this.app = app;
-            this.element.appendChild(element`
+            this.element.appendChild(elementWithoutEscaping`
                 <div id="articleTitle">
                     <div class="c-title">
-                            <div class="c-title__main"><i class="fas fa-star"></i>${selectAppropriateName(gameSystemInfo,this.app.state.language)}</div>
+                            <div class="c-title__main"> ${generateIcooonHTML(gameSystemInfo)} ${selectAppropriateName(gameSystemInfo,this.app.state.language)}</div>
                             <div class="c-title__sub">select the item of game mode where records you're looking for was set.</div>
                     </div>
                     <hr noshade class="u-bold">
@@ -29,7 +29,7 @@ export class GameModeCardsGroup implements IView{
             const card = this.element.appendChild(elementWithoutEscaping`
             <div class="c-list__item">
                 <div class = "c-title">
-                    <div class = "c-title__main u-smallerChara"><i class="far fa-star"></i> ${selectAppropriateName(info,this.app.state.language)}</div>
+                    <div class = "c-title__main u-smallerChara">${generateIcooonHTML(info)} ${selectAppropriateName(info,this.app.state.language)}</div>
                 </div>
                 ${writeElement(selectAppropriateDescription(info,this.app.state.language),"p")}
                 

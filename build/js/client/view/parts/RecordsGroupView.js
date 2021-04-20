@@ -24,7 +24,7 @@ var RecordCardView_1 = require("./RecordCardView");
 var RecordGroupView = /** @class */ (function () {
     function RecordGroupView(recordGroup, app, _a) {
         var e_1, _b;
-        var _c = _a === void 0 ? {} : _a, _d = _c.displayTags, displayTags = _d === void 0 ? { gameSystemTags: false, targetTags: false, abilityTags: true } : _d, _e = _c.setClickListener, setClickListener = _e === void 0 ? false : _e;
+        var _c = _a === void 0 ? {} : _a, _d = _c.displayTags, displayTags = _d === void 0 ? { gameSystemTags: false, targetTags: false, abilityTags: true } : _d, _e = _c.setClickListener, setClickListener = _e === void 0 ? true : _e;
         this._htmlElement = aboutElement_1.createElementWithIdAndClass({ className: "c-recordCardsGroup" });
         this.summaryElement = aboutElement_1.createElementWithIdAndClass({ className: "__summary" });
         this.recordCardsElement = aboutElement_1.createElementWithIdAndClass({ className: "__recordCards" });

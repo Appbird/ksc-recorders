@@ -18,7 +18,7 @@ export class HTMLConverter{
     constructor(lang:LanguageInApplication){
         this.language = lang;
     }
-    element(strings:TemplateStringsArray,...values:(string|{[key:string]:string}|undefined|null)[]){
+    elementWithoutEscaping(strings:TemplateStringsArray,...values:(string|{[key:string]:string}|undefined|null)[]){
         
         const htmlString = strings.reduce(
             (result, str, i) => {
@@ -26,7 +26,7 @@ export class HTMLConverter{
                 if (value === null) return result + "null" + str;
                 if (value === undefined) return result + "undefined" + str;
                 if (typeof value == "string"){
-                    return result + escapeSpecialChars(value) + str;
+                    return result + value + str;
                 }else if (typeof value === "object") {
                     return result + ((value[this.language] === undefined ) ? "undefined":value[this.language]) + str
                 } else {

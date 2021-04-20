@@ -18,7 +18,7 @@ export class RecordGroupView implements IView{
     constructor(recordGroup:IRecordGroupResolved,app:IAppUsedToReadAndChangeOnlyPageState,
         {
             displayTags={gameSystemTags:false,targetTags:false,abilityTags:true},
-            setClickListener=false
+            setClickListener=true
         }:OptionObject = {}){
         this.app = app;
         this.option = {displayTags:displayTags,setClickListener:setClickListener};

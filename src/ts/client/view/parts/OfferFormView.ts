@@ -5,7 +5,7 @@ import { choiceDescription } from "../../../utility/aboutLang";
 import { converseMiliSecondsIntoTime, convertScoreIntoNumber, convertTimeIntoNumber } from "../../../utility/timeUtility";
 import { element, HTMLConverter } from "../../../utility/ViewUtility";
 import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
-import { createElementWithIdAndClass, createElementWithIdTagClass, findElementByClassNameWithErrorPossibility } from "../../utility/aboutElement";
+import { createElementWithIdAndClass, createElementWithIdTagClass, findElementByClassNameWithErrorPossibility, generateIcooonHTML } from "../../utility/aboutElement";
 import { IView } from "../IView";
 import { MovieWidgetCreator } from "./MovieWidgetCreator";
 import { SelectChoicesCapsuled } from "./SelectChoicesCapsuled";
@@ -41,7 +41,7 @@ export class OfferFormView implements IView {
 
         this.htmlConverter = new HTMLConverter(this.app.state.language);
 
-        this.element.appendChild(this.htmlConverter.element`<h1>${{Japanese:"リンク"}}</h1>`)
+        this.element.appendChild(this.htmlConverter.elementWithoutEscaping`<h1>${generateIcooonHTML({icooonName:"link"})}${{Japanese:"リンク"}}</h1>`)
         this.evidenceMovieElement = this.element.appendChild(createElementWithIdAndClass({ className: "c-evidenceMovie" }));
         this.evidenceMovie = new MovieWidgetCreator();
 
@@ -66,9 +66,9 @@ export class OfferFormView implements IView {
 
         this.simpleMDE = new SimpleMDE({
             element:this.element.appendChild(
-                        this.htmlConverter.element`
+                        this.htmlConverter.elementWithoutEscaping`
                                 <div class="offerForm__noteInput">
-                                    <h1><>${{Japanese:"走者ノート"}}</h1>
+                                    <h1>${generateIcooonHTML({icooonName:"notebook"})}${{Japanese:"走者ノート"}}</h1>
                                     <ul class="u-margin05em">
                                         <li>${{Japanese:"[任意] 記録を出すうえで必要となる事項を書きます。"}}</li>
                                         <li>${{Japanese:"markdownでの記述が出来ます。"}}</li>
@@ -84,7 +84,7 @@ export class OfferFormView implements IView {
         
         
         this.errorDisplay = this.element.appendChild(element`<div class="u-width90per u-margin2em u-redChara"></div>`).appendChild(document.createElement("h3"))
-        this.element.appendChild(this.htmlConverter.element`<div class="u-width50per u-margin2em"><div class="c-button">決定</div></div>`)
+        this.element.appendChild(this.htmlConverter.elementWithoutEscaping`<div class="u-width50per u-margin2em"><div class="c-button">決定</div></div>`)
             .addEventListener("click",() => this.whenDecide())
 
             
@@ -189,17 +189,16 @@ export class OfferFormView implements IView {
     private createTextInput(): { link: TextInputCapsuled; score: TextInputCapsuled; } {
         const offerForm__textInputElement = this.element.appendChild(
             //#TODO 英語訳の追加
-            createElementWithIdAndClass({ className: "offerForm__textInput" })).appendChild(this.htmlConverter.element`
+            createElementWithIdAndClass({ className: "offerForm__textInput" })).appendChild(this.htmlConverter.elementWithoutEscaping`
             <div class="offerForm__textInput">
                 <div class="c-title offerForm__textInput__link">
-                    <i class="fas fa-link" ></i>
                 </div>
                 <ul class="u-margin05em offerForm__textInput__linkDescription">
                     <li>${{ Japanese: "<strong class='u-redChara'>[必須]</strong> 登録する記録の証拠となる動画へのリンクを貼ります。", English: "English Description" }}</li>
                     <li>${{ Japanese: "TwitterかYoutubeのいずれかのリンクのみを受け付けます。", English: "English Description" }}</li>
                     <li>${{ Japanese: "Youtubeへのリンクの場合、動画の開始秒数を指定することが出来ます。" }}</li>
                 </ul>
-            <h1>記録</h1>
+            <h1>${generateIcooonHTML({icooonName:"time"})}${{Japanese:"記録"}}</h1>
                 <div class="c-title offerForm__textInput__score">
                 </div>
                 <ul class="u-margin05em offerForm__textInput__scoreDescription">
@@ -228,9 +227,9 @@ export class OfferFormView implements IView {
     }
     
     private createDifficultyChoices(difficulties: IGameDifficultyItem[]) {
-        const difficultySelector = this.element.appendChild(this.htmlConverter.element`
+        const difficultySelector = this.element.appendChild(this.htmlConverter.elementWithoutEscaping`
         <div class="offerForm__difficultySelector">
-            <h1>難易度</h1>
+            <h1>${generateIcooonHTML({icooonName:"difficulty"})}${{Japanese:"難易度"}}</h1>
             <div class="offerForm__difficultySelector__Choices">
             </div>
             <ul class="u-margin05em">
@@ -243,9 +242,9 @@ export class OfferFormView implements IView {
     }
 
     private createTargetChoices(targets: ITargetItem[]) {
-        const targetSelector = this.element.appendChild(this.htmlConverter.element`
+        const targetSelector = this.element.appendChild(this.htmlConverter.elementWithoutEscaping`
         <div class="offerForm__targetSelector">
-            <h1>計測対象</h1>
+            <h1>${generateIcooonHTML({icooonName:"flag"})}${{Japanese:"計測対象"}}</h1>
             <div class="offerForm__targetSelector__Choices">
             </div>
             <ul class="u-margin05em">
@@ -259,9 +258,9 @@ export class OfferFormView implements IView {
 
     private createAbilityChoices(abilities: IAbilityItem[]) {
         const maxNumberOfPlayer = this.app.state.gameSystemEnvDisplayed.gameMode?.maxNumberOfPlayer
-        const abilitySelector = this.element.appendChild(this.htmlConverter.element`
+        const abilitySelector = this.element.appendChild(this.htmlConverter.elementWithoutEscaping`
         <div class="offerForm__abilitySelector">
-            <h1>自機の能力</h1>
+            <h1>${generateIcooonHTML({icooonName:"star"})}${{Japanese:"自機の能力"}}</h1>
             <div class="offerForm__abilitySelector__Choices">
             </div>
             <ul class="u-margin05em">
@@ -282,9 +281,9 @@ export class OfferFormView implements IView {
     }
 
     private createTagInputChoices() {
-        const tagSegment = this.element.appendChild(this.htmlConverter.element`
+        const tagSegment = this.element.appendChild(this.htmlConverter.elementWithoutEscaping`
         <div class="offerForm__tagInput">
-        <h1>タグ</h1>
+        <h1>${generateIcooonHTML({icooonName:"tag"})}${{Japanese:"タグ"}}</h1>
             <div class="offerForm__tagInput__Choices">
             </div>
             <ul class="u-margin05em">

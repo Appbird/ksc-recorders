@@ -1,7 +1,7 @@
 import { PageStates, RequiredObjectType } from "../view/state/PageStates";
 import { LanguageInApplication } from "../../type/LanguageInApplication";
 import { IGameSystemInfoWithoutCollections } from "../../type/list/IGameSystemInfo";
-import { IGameModeItemWithoutCollections } from "../../type/list/IGameModeItem";
+import { IGameModeItemWithoutCollections, ScoreType } from "../../type/list/IGameModeItem";
 
 type GameSystemEnvDisplayed = { gameSystem: IGameSystemInfoWithoutCollections; gameMode: IGameModeItemWithoutCollections; } | { gameSystem: null; gameMode: null; } | { gameSystem: IGameSystemInfoWithoutCollections; gameMode: null; };
 type GameSystemEnvDisplayedReadOnly = { readonly gameSystem: IGameSystemInfoWithoutCollections; readonly gameMode: IGameModeItemWithoutCollections; } | { readonly gameSystem: null; readonly gameMode: null; } | { readonly gameSystem: IGameSystemInfoWithoutCollections; readonly gameMode: null; };
@@ -14,6 +14,7 @@ export interface StateAdministerReadOnly {
     readonly language: LanguageInApplication;
     readonly gameSystemIDDisplayed:string;
     readonly gameModeIDDisplayed:string;
+    readonly scoreType:ScoreType
 }
 
 export class StateAdministrator implements StateAdministerReadOnly {
@@ -35,22 +36,36 @@ export class StateAdministrator implements StateAdministerReadOnly {
         this._gameSystemEnvDisplayed.gameSystem = gameSystem;
         this._gameSystemEnvDisplayed.gameMode = gameMode;
     }
-    setSuperiorScore(superirorScore: "LowerFirst" | "HigherFirst") { this._superiorScore = superirorScore; }
     setLanguage(language: LanguageInApplication) { this._language = language; }
     get state() { return this._state; }
     get requiredObj() { return this._requiredObj; }
     get gameSystemEnvDisplayed(): GameSystemEnvDisplayedReadOnly { return this._gameSystemEnvDisplayed; }
-    get superiorScore() { return this._superiorScore; }
     get language() { return this._language; }
+    get superiorScore():"LowerFirst" | "HigherFirst" { 
+       switch(this.scoreType){
+           case "score": return "HigherFirst";
+           case "time" : return "LowerFirst";
+       }
+    }
     static checkGameSystemEnvIsSet(gameSystemEnvDisplayed:GameSystemEnvDisplayedReadOnly):gameSystemEnvDisplayed is { readonly gameSystem: IGameSystemInfoWithoutCollections; readonly gameMode: IGameModeItemWithoutCollections; }{
        return !(gameSystemEnvDisplayed.gameSystem === null || gameSystemEnvDisplayed.gameMode === null);
     }
+    /**現在ページ中で閲覧対象としているゲームシステム(ターゲットゲームモード)のIDを返します。  
+     * @throws ターゲットゲームシステムが設定されていないとき例外を投げる。*/
     get gameSystemIDDisplayed(){
         if (this._gameSystemEnvDisplayed.gameSystem === null) throw new Error("閲覧ターゲットとなるゲームタイトルが設定されていません。")
         return this._gameSystemEnvDisplayed.gameSystem.id;
     }
+    /** 現在ページ中で閲覧対象としているゲームモード(ターゲットゲームモード)のIDを返します。  
+     * @throws ターゲットゲームモードが設定されていないとき例外を投げる。*/
     get gameModeIDDisplayed(){
         if (this._gameSystemEnvDisplayed.gameMode === null) throw new Error("閲覧ターゲットとなるゲームモードが設定されていません。")
         return this._gameSystemEnvDisplayed.gameMode.id;
+    }
+    /** サーバーに保存されている記録の数値がスコアなのか撃破時間かを表す。
+     *  @throws ゲームモードが設定されていないとき例外を投げる。*/
+    get scoreType(){
+        if (this._gameSystemEnvDisplayed.gameMode === null) throw new Error("閲覧ターゲットとなるゲームモードが設定されていません。")
+        return this._gameSystemEnvDisplayed.gameMode.scoreType;
     }
 }

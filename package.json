@@ -24,6 +24,7 @@
   "dependencies": {
     "@types/marked": "^2.0.1",
     "@types/pako": "^1.0.1",
+    "@types/simplemde": "^1.11.7",
     "choices.js": "^9.0.1",
     "clone-deep": "^4.0.1",
     "ejs": "^3.1.6",

@@ -9,6 +9,8 @@ import { S_GameModeSelector } from "./GameModeSelector";
 import { S_MainMenu } from "./mainMenu";
 import { IAppUsedToRead } from "../../interface/AppInterfaces";
 import { PageStateBaseClass } from "./PageStateClass";
+import { S_OfferForm } from "./offerForm";
+import { S_SendRecordOffer } from "./sendRecordOffer";
 
 export type RequiredObjectType<StateClass> = StateClass extends PageStateBaseClass<infer U,IAppUsedToRead>? U : never;
 export type UsedIAppLimited<IAppLimited> = IAppLimited extends PageStateBaseClass<any,infer U>? U:never;
@@ -21,7 +23,9 @@ export interface PageStates{
     searchResultView:S_SearchResult,
     gameSystemSelector:S_GameSystemSelector,
     gameModeSeletor:S_GameModeSelector,
-    mainMenu:S_MainMenu
+    mainMenu:S_MainMenu,
+    offerForm:S_OfferForm,
+    sendRecordOffer:S_SendRecordOffer
 }
 export const pageStates:PageStatesConstructorObj= {
     none:S_None,
@@ -31,7 +35,9 @@ export const pageStates:PageStatesConstructorObj= {
     searchResultView:S_SearchResult,
     gameSystemSelector:S_GameSystemSelector,
     gameModeSeletor:S_GameModeSelector,
-    mainMenu:S_MainMenu
+    mainMenu:S_MainMenu,
+    offerForm:S_OfferForm,
+    sendRecordOffer:S_SendRecordOffer
 }
 export const stateView = ["none","errorView","detailView","searchConditionSelectorView","searchResultView","gameSystemSelector","mainMenu"];
 

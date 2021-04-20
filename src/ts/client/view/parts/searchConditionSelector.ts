@@ -127,11 +127,8 @@ export class SearchConditionSelectorView implements IView{
             const selectedTargetItem = this.difficultyChoices.data.find((ele) => ele.id === this.difficultySelectedID)
             if (selectedTargetItem === undefined)throw new Error(`# エラーの内容\n\nID${selectedTargetItem}に対応した難易度が存在しません。`)
 
-            const asg = this.app.state.gameSystemEnvDisplayed;
-            if (asg.gameSystem === null || asg.gameMode === null) throw new Error()
-
             const result = await this.app.accessToAPI("list_targets",{
-                gameSystemEnv:{gameSystemID:asg.gameSystem.id,gameModeID:asg.gameMode.id},id:selectedTargetItem.TargetIDsIncludedInTheDifficulty
+                gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed,gameModeID:this.app.state.gameModeIDDisplayed},id:selectedTargetItem.TargetIDsIncludedInTheDifficulty
             })
 
             this.targetChoices.setChoices(result.result)

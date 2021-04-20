@@ -2,6 +2,7 @@
 
 @use "choicesjs/choices.scss";
 
+
 @use "foundation/body.scss";
 @use "foundation/hr.scss";
 @use "foundation/p.scss";
@@ -11,6 +12,7 @@
 @use "layout/main.scss";
 @use "layout/scrollBar.scss";
 
+@use "object/component/c-loadingSpinner.scss";
 @use "object/component/moviePlaceHolder.scss";
 @use "object/component/textInput.scss";
 @use "object/component/iconWithDescription.scss";

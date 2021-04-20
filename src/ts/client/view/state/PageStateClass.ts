@@ -1,16 +1,39 @@
+import { element } from "../../../utility/ViewUtility";
 import { IAppUsedToRead } from "../../interface/AppInterfaces";
+import { createElementWithIdAndClass } from "../../utility/aboutElement";
 
 export abstract class PageStateBaseClass<T,AppInterface extends IAppUsedToRead> implements IPageStateBaseClass<T> {
     protected app:AppInterface;
     protected requiredObj:T;
     protected articleDOM:HTMLElement;
+    private loadingDisplayElement:HTMLElement;
     constructor(app:AppInterface,articleDOM:HTMLElement,requiredObj:T){
         this.app = app;
         this.requiredObj = requiredObj;
         this.articleDOM = articleDOM;
+        this.loadingDisplayElement = this.articleDOM.appendChild(document.createElement("div"))
         this.init();
     }
     abstract init():Promise<void>|void;
+    /** ローディングスピナーをページ中に表示します。 */
+    protected generateLoadingSpinner(spinnerKindClassName:string = "",message?:String){
+        this.loadingDisplayElement.appendChild(element`
+        <div class="c-loadingSpinner">
+            <div class="__spinner --delay0 ${spinnerKindClassName}"></div>
+            <div class="__spinner --delay1 ${spinnerKindClassName}"></div>
+            <div class="__spinner --delay2 ${spinnerKindClassName}"></div>
+        </div>
+        `)
+        if (message === undefined) return;
+        this.loadingDisplayElement.appendChild(element`
+        <div class="c-balloon-top">
+            <p>${message}</p>
+        </div>
+        `).firstElementChild
+    }
+    protected deleteLoadingSpinner(){
+        this.loadingDisplayElement.innerHTML = "";
+    }
     get requiredObject():T{
         return this.requiredObj
     }

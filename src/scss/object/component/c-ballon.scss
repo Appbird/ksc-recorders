@@ -1,0 +1,41 @@
+.c-balloon {
+    position: relative;
+    display: inline-block;
+    margin: 1.5em 0;
+    padding: 2vw;
+    min-width: 120px;
+    width: 100%;
+    text-align: center;
+    color: #555;
+    font-size: 16px;
+    background: #FFF;
+    border: solid 3px #555;
+    border-radius: 6px;
+    box-sizing: border-box;
+  }
+  
+  .c-balloon:before {
+    content: "";
+    position: absolute;
+    top: -24px;
+    left: 50%;
+    margin-left: -15px;
+    border: 12px solid transparent;
+    border-bottom: 12px solid #FFF;
+    z-index: 2;
+  }
+  
+  .c-balloon:after {
+    content: "";
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    margin-left: -17px;
+    border: 14px solid transparent;
+    border-bottom: 14px solid #555;
+    z-index: 1;
+  }
+  .c-balloon>p {
+    margin: 0;
+    padding: 0;
+  }

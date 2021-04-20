@@ -7,6 +7,7 @@ import { createElementWithIdAndClass } from "../../utility/aboutElement";
 import { IView } from "../IView";
 import { StateInfoView } from "./StateInfoView";
 import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
+import { OptionObjectSet, OptionObject, RecordCardView } from "./RecordCardView";
 
 export class RecordGroupView implements IView{
     private _htmlElement = createElementWithIdAndClass({className:"c-recordCardsGroup"})
@@ -57,33 +58,8 @@ export class RecordGroupView implements IView{
         this.recordCardsElement.innerHTML = "";
     }
     appendRecordCard(record:IRecordInShortResolved){
-        //[x] これをElementとして出力して、TagをDOM操作で後付けしたい
-        const ele = element`
-            <div class = "c-recordCard u-width95per">
-                <div class = "c-title --withUnderline">
-                    <div class = "c-title__main">${converseMiliSecondsIntoTime(record.score)}</div>
-                    <div class="c-iconWithDescription">
-                        <i class="fas fa-user"></i>${record.runnerName}
-                    </div>
-                </div>
-            ${(!this.option.displayTags.gameSystemTags && !this.option.displayTags.targetTags && this.option.displayTags.abilityTags) ? ``: `<hr noshade class="u-thin">`}
-            </div>`
-        //#CTODO カード要素をクリックすると記録詳細画面へ移る。
-        ele.addEventListener("click",() => {
-            const rrg = record.regulation.gameSystemEnvironment
-            this.app.transition("detailView",{ gameSystemEnv:{ gameSystemID:rrg.gameSystemID, gameModeID:rrg.gameModeID}, id:record.id, lang:this.app.state.language})
-        })
-        TagsView.generateTagViewsForRecord( this.app, ele, record, {abilityTags:true,setClickListener:false})
-        this.recordCardsElement.appendChild(ele)
+        this._htmlElement.appendChild(new RecordCardView(this.app,record,this.option).htmlElement)
         
     }
 }
 
-interface OptionObject{
-    displayTags?:{gameSystemTags?:boolean,targetTags?:boolean,abilityTags?:boolean}
-    setClickListener?:boolean
-}
-interface OptionObjectSet{
-    displayTags:{gameSystemTags?:boolean,targetTags?:boolean,abilityTags?:boolean}
-    setClickListener:boolean
-}

@@ -1,11 +1,11 @@
 import { PageStates, RequiredObjectType } from "./view/state/PageStates";
 import { LanguageInApplication } from "../type/LanguageInApplication";
-import { TransitionAdministrator } from "./administers/TransitionAdminister";
-import { StateAdministrator, StateAdministerReadOnly } from "./administers/StateAdminister";
-import { APIAdministrator } from "./administers/APICaller";
-import { HistoryAdministrator } from "./administers/HistoryAdministrator";
+import { TransitionAdministrator } from "./Administrator/TransitionAdminister";
+import { StateAdministrator, StateAdministerReadOnly } from "./Administrator/StateAdminister";
+import { APIAdministrator } from "./Administrator/APICaller";
+import { HistoryAdministrator } from "./Administrator/HistoryAdministrator";
 import { APIFunctions } from "../type/api/relation";
-import { HeaderController } from "./administers/HeaderController";
+import { HeaderController } from "./Administrator/HeaderController";
 import { IGameSystemInfoWithoutCollections } from "../type/list/IGameSystemInfo";
 import { IGameModeItemWithoutCollections } from "../type/list/IGameModeItem";
 
@@ -38,7 +38,7 @@ export default class App {
         this._state.setLanguage(lang);
     }
     changeTargetGameMode(gameSystemEnv:{gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections}){
-
+        if (this.state.gameSystemEnvDisplayed.gameSystem?.id === gameSystemEnv.gameSystem.id && this.state.gameSystemEnvDisplayed.gameMode?.id === gameSystemEnv.gameMode.id) return;
         this._state.setGameSystemEnv(gameSystemEnv)
         return this.header.changeHeaderRightLeft(gameSystemEnv.gameSystem.EName,gameSystemEnv.gameMode.EName);    
     }

@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.elementWithoutEscaping = exports.element = exports.HTMLConverter = exports.htmlToElement = void 0;
-var LanguageInApplication_1 = require("../type/LanguageInApplication");
 function escapeSpecialChars(str) {
     return str
         .replace(/&/g, "&amp;")
@@ -28,11 +27,15 @@ var HTMLConverter = /** @class */ (function () {
         }
         var htmlString = strings.reduce(function (result, str, i) {
             var value = values[i - 1];
+            if (value === null)
+                return result + "null" + str;
+            if (value === undefined)
+                return result + "undefined" + str;
             if (typeof value == "string") {
                 return result + escapeSpecialChars(value) + str;
             }
-            if (Array.isArray(value) && value.every(function (ele) { return typeof ele === "string"; })) {
-                return value[LanguageInApplication_1.LanguageList.findIndex(function (ele) { return ele === _this.language; })];
+            else if (typeof value === "object") {
+                return result + ((value[_this.language] === undefined) ? "undefined" : value[_this.language]) + str;
             }
             else {
                 return result + String(value) + str;

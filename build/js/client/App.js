@@ -36,11 +36,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var TransitionAdminister_1 = require("./administers/TransitionAdminister");
-var StateAdminister_1 = require("./administers/StateAdminister");
-var APICaller_1 = require("./administers/APICaller");
-var HistoryAdministrator_1 = require("./administers/HistoryAdministrator");
-var HeaderController_1 = require("./administers/HeaderController");
+var TransitionAdminister_1 = require("./Administrator/TransitionAdminister");
+var StateAdminister_1 = require("./Administrator/StateAdminister");
+var APICaller_1 = require("./Administrator/APICaller");
+var HistoryAdministrator_1 = require("./Administrator/HistoryAdministrator");
+var HeaderController_1 = require("./Administrator/HeaderController");
 var App = /** @class */ (function () {
     function App(articleDOM, language) {
         this.header = new HeaderController_1.HeaderController();
@@ -87,6 +87,9 @@ var App = /** @class */ (function () {
         this._state.setLanguage(lang);
     };
     App.prototype.changeTargetGameMode = function (gameSystemEnv) {
+        var _a, _b;
+        if (((_a = this.state.gameSystemEnvDisplayed.gameSystem) === null || _a === void 0 ? void 0 : _a.id) === gameSystemEnv.gameSystem.id && ((_b = this.state.gameSystemEnvDisplayed.gameMode) === null || _b === void 0 ? void 0 : _b.id) === gameSystemEnv.gameMode.id)
+            return;
         this._state.setGameSystemEnv(gameSystemEnv);
         return this.header.changeHeaderRightLeft(gameSystemEnv.gameSystem.EName, gameSystemEnv.gameMode.EName);
     };

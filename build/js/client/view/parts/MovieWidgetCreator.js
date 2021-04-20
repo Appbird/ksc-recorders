@@ -8,11 +8,20 @@ exports.MovieWidgetCreator = void 0;
 var ViewUtility_1 = require("../../../utility/ViewUtility");
 var MovieWidgetCreator = /** @class */ (function () {
     function MovieWidgetCreator(href) {
+        //#CTODO 動作確認
+        this.url = null;
+        this.id = null;
+        this.param = null;
+        this.kind = null;
+        if (href === undefined)
+            return;
+    }
+    MovieWidgetCreator.prototype.set = function (href) {
         this.url = new URL(href);
         this.param = this.url.searchParams;
         this.kind = this.returnKind(this.url.hostname);
         this.id = this.returnId(this.url.pathname);
-    }
+    };
     MovieWidgetCreator.prototype.returnKind = function (hostname) {
         switch (hostname) {
             case "youtu.be": return "youtube";
@@ -21,12 +30,16 @@ var MovieWidgetCreator = /** @class */ (function () {
         }
     };
     MovieWidgetCreator.prototype.returnId = function (pathname) {
+        if (this.kind === null)
+            throw new Error("[MovieWidgetCreator] returnIdメソッドを実行する前にsetメソッドを実行してURLをセットしてください。");
         switch (this.kind) {
             case "youtube": return pathname.split("/")[1];
             case "twitter": return pathname.split("/")[3];
         }
     };
     MovieWidgetCreator.prototype.setWidget = function (insertedHTMLElement) {
+        if (this.param === null || this.id === null || this.kind === null)
+            throw new Error("[MovieWidgetCreator] setWidgetメソッドを実行する前にsetメソッドを実行してURLをセットしてください。");
         switch (this.kind) {
             case "twitter":
                 twttr.widgets.createTweet(this.id, insertedHTMLElement);

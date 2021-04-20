@@ -1,4 +1,5 @@
 import { IRegulation } from "../../foundation/IRegulation";
+import { LanguageInApplication } from "../../LanguageInApplication";
 import { IRecord, IRecordResolved } from "../../record/IRecord";
 import { IReceivedData, IReceivedDataAtClient, IReceivedDataAtServer } from "../transmissionBase";
 
@@ -17,7 +18,8 @@ export interface IOfferedRecord{
     score: number;
     regulation: IRegulation;
     runnerID: string;
-    tagID: string[];
+    tagName: string[];
+    languageOfTagName:LanguageInApplication;
     link: string[];
     note: string;
 }

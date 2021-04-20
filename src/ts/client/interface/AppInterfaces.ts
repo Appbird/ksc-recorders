@@ -2,7 +2,7 @@ import { APIFunctions, APIFunctions_noChanging } from "../../type/api/relation";
 import { LanguageInApplication } from "../../type/LanguageInApplication";
 import { IGameModeItemWithoutCollections } from "../../type/list/IGameModeItem";
 import { IGameSystemInfoWithoutCollections } from "../../type/list/IGameSystemInfo";
-import { StateAdministerReadOnly } from "../administers/StateAdminister";
+import { StateAdministerReadOnly } from "../Administrator/StateAdminister";
 import { PageStates, RequiredObjectType } from "../view/state/PageStates";
 
 

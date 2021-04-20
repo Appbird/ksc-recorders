@@ -1,8 +1,7 @@
 export function converseMiliSecondsIntoTime(timeInMiliSeconds:number):string{
-    const miliSeconds = timeInMiliSeconds % 100;
-    const timeInSecond = Math.floor(timeInMiliSeconds/100);
-    const minutes = Math.floor(timeInMiliSeconds / 6000)
-    const seconds = timeInSecond % 6000;
+    const minutes = Math.floor(timeInMiliSeconds / 6000);
+    const seconds = Math.floor(timeInMiliSeconds % 6000 / 100);
+    const miliSeconds = Math.floor(timeInMiliSeconds % 100);
     return `${WriteNumberIn2Digits(minutes)}:${WriteNumberIn2Digits(seconds)}.${WriteNumberIn2Digits(miliSeconds)}`
 }
 function WriteNumberIn2Digits(num:number):string{
@@ -23,7 +22,7 @@ export function convertScoreIntoNumber(score:string):number{
 }
 export function convertTimeIntoNumber(score:string):number{
     if (/^([0-9]+:[0-9]{2}.[0-9]{2})$/.test(score)) return converseTimeIntoMiliSeconds(score);
-    if (/^([0-9]+.[0-9]{2})$/.test(score)) return (() => {const array = score.split("."); return Number(array[0]) * 60 + Number(array[1])})();
+    if (/^([0-9]+.[0-9]{2})$/.test(score)) return (() => {const array = score.split("."); return Number(array[0]) * 100 + Number(array[1])})();
     const timePoints = score.replace(/\s/g,"").split("-");
     if (timePoints.every(ele => /^([0-9]{1,}:[0-9]{2}.[0-9]{2})$/.test(ele)))
             return Math.abs(converseTimeIntoMiliSeconds(timePoints[0]) - converseTimeIntoMiliSeconds(timePoints[1]))

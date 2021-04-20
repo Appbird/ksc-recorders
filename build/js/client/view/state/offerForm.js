@@ -12,10 +12,6 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-var __makeTemplateObject = (this && this.__makeTemplateObject) || function (cooked, raw) {
-    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
-    return cooked;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -52,28 +48,39 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.S_ErrorState = void 0;
-var marked_1 = __importDefault(require("marked"));
-var ViewUtility_1 = require("../../../utility/ViewUtility");
+exports.S_OfferForm = void 0;
+var OfferFormView_1 = require("../parts/OfferFormView");
 var PageStateClass_1 = require("./PageStateClass");
-var S_ErrorState = /** @class */ (function (_super) {
-    __extends(S_ErrorState, _super);
-    function S_ErrorState() {
+var S_OfferForm = /** @class */ (function (_super) {
+    __extends(S_OfferForm, _super);
+    function S_OfferForm() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    S_ErrorState.prototype.init = function () {
+    S_OfferForm.prototype.init = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var difficulties, abilities, view;
             return __generator(this, function (_a) {
-                this.articleDOM.appendChild(ViewUtility_1.elementWithoutEscaping(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n        <div class = \"c-recordGroupHeader\">\n            <div class=\"c-title\">\n                <div class=\"c-title__main\">", "</div>\n                <div class=\"c-title__sub\">Failed to prepare the page.</div>\n            </div>\n            <hr noshade class=\"u-bold\">\n            <div class=\"u-width90per\">", "</div>\n        </div>"], ["\n        <div class = \"c-recordGroupHeader\">\n            <div class=\"c-title\">\n                <div class=\"c-title__main\">", "</div>\n                <div class=\"c-title__sub\">Failed to prepare the page.</div>\n            </div>\n            <hr noshade class=\"u-bold\">\n            <div class=\"u-width90per\">", "</div>\n        </div>"])), this.requiredObj.title, marked_1.default(this.requiredObj.message)));
-                return [2 /*return*/];
+                switch (_a.label) {
+                    case 0:
+                        if (this.requiredObj.targetGameMode !== undefined)
+                            this.app.changeTargetGameMode(this.requiredObj.targetGameMode);
+                        return [4 /*yield*/, this.app.accessToAPI("list_difficulties", { gameSystemEnv: { gameSystemID: this.app.state.gameSystemIDDisplayed, gameModeID: this.app.state.gameModeIDDisplayed }
+                            })];
+                    case 1:
+                        difficulties = (_a.sent()).result;
+                        return [4 /*yield*/, this.app.accessToAPI("list_abilities", {
+                                gameSystemEnv: { gameSystemID: this.app.state.gameSystemIDDisplayed, gameModeID: this.app.state.gameModeIDDisplayed }
+                            })];
+                    case 2:
+                        abilities = (_a.sent()).result;
+                        view = new OfferFormView_1.OfferFormView(this.app, difficulties, abilities, this.requiredObj.runnerID);
+                        this.articleDOM.appendChild(view.htmlElement);
+                        return [2 /*return*/];
+                }
             });
         });
     };
-    return S_ErrorState;
+    return S_OfferForm;
 }(PageStateClass_1.PageStateBaseClass));
-exports.S_ErrorState = S_ErrorState;
-var templateObject_1;
+exports.S_OfferForm = S_OfferForm;

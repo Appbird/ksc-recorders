@@ -14,7 +14,7 @@ export class S_ErrorState
                 <div class="c-title__sub">Failed to prepare the page.</div>
             </div>
             <hr noshade class="u-bold">
-            <div class="u-width90per">${marked(this.requiredObj.title)}</div>
+            <div class="u-width90per">${marked(this.requiredObj.message)}</div>
         </div>`
         );
         return;

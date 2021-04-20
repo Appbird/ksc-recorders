@@ -27,8 +27,8 @@ export class HTMLConverter{
                 if (value === undefined) return result + "undefined" + str;
                 if (typeof value == "string"){
                     return result + escapeSpecialChars(value) + str;
-                }else if (typeof value === "object" && Object.entries(value).every(ele => typeof ele === "string")) {
-                    return result + (value[this.language] === undefined ) ? "":value[this.language] + str
+                }else if (typeof value === "object") {
+                    return result + ((value[this.language] === undefined ) ? "undefined":value[this.language]) + str
                 } else {
                     return result + String(value) + str;
                 }

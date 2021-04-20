@@ -4,9 +4,9 @@ import { element } from "../../../utility/ViewUtility";
 import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
 import { createElementWithIdAndClass } from "../../utility/aboutElement";
 import { IView } from "../IView";
-import { selectAppropriateDescription, selectAppropriateName } from "../../../utility/aboutLang";
+import { selectAppropriateName } from "../../../utility/aboutLang";
 import { ITargetItem } from "../../../type/list/ITargetItem";
-import { StateAdministrator } from "../../administers/StateAdminister";
+import { StateAdministrator } from "../../Administrator/StateAdminister";
 import { SelectChoicesCapsuled } from "./SelectChoicesCapsuled";
 
 export class SearchConditionSelectorView implements IView{
@@ -22,11 +22,9 @@ export class SearchConditionSelectorView implements IView{
 
 
     private app:IAppUsedToReadAndChangeOnlyPageState
-    private difficultySelectedID:string|null;
     constructor(app:IAppUsedToReadAndChangeOnlyPageState, difficulties:IGameDifficultyItem[], abilities:IAbilityItem[]){
         this.app = app;
         if (!StateAdministrator.checkGameSystemEnvIsSet(this.app.state.gameSystemEnvDisplayed)) throw new Error("閲覧する記録のゲームタイトルとゲームモードが設定されていません。")
-        this.difficultySelectedID = null;
 
         this.element.appendChild(element`
         <div class="articleTitle">
@@ -65,19 +63,17 @@ export class SearchConditionSelectorView implements IView{
         this.targetChoices = new SelectChoicesCapsuled(this.targetColumn.appendChild( document.createElement("select")),[],{language:this.app.state.language,maxItemCount:10,disable:true,needMultipleSelect:true})
         
         //#CTODO 思えばモードによって最大プレイ人数が変わるので、データベースにそのデータを組み込んでおく必要がある。
-        const maxNubmerOfPlayer = this.app.state.gameSystemEnvDisplayed.gameMode.maxNumberOfPlayer;
+        const maxNumberOfPlayer = this.app.state.gameSystemEnvDisplayed.gameMode.maxNumberOfPlayer;
         this.abilityChoices = new SelectChoicesCapsuled(this.abilityColumn.appendChild( document.createElement("select") ),abilities,
-            {   maxItemCount:maxNubmerOfPlayer,needDuplicatedSelect:true,needMultipleSelect:true,language:this.app.state.language,
+            {   maxItemCount:maxNumberOfPlayer,needDuplicatedSelect:true,needMultipleSelect:true,language:this.app.state.language,
                 maxItemText:
-                    {JDescription:`このゲームモードは最大${maxNubmerOfPlayer}人プレイまで対応しています。`,
-                    EDescription:`This mode can be played with at most ${maxNubmerOfPlayer} kirbys (friends)!`}
+                    {JDescription:`このゲームモードは最大${maxNumberOfPlayer}人プレイまで対応しています。`,
+                    EDescription:`This mode can be played with at most ${maxNumberOfPlayer} kirbys (friends)!`}
             })
         
-        this.difficultyChoices.addEventListener("hideDropdown",() => {
+        this.difficultyChoices.addEventListener("change",() => {
             this.targetChoices.enable();
-            if (this.difficultySelectedID === this.difficultyChoices.getValue(true)) return;
             if (this.difficultyChoices.getValue(true) === undefined) { this.targetChoices.disable(); return; }
-            this.difficultySelectedID = this.difficultyChoices.getValueAsValue(true)
             this.setTargetChoices()
         })
 
@@ -98,12 +94,13 @@ export class SearchConditionSelectorView implements IView{
         },{title:"検索画面"});
     }
     private generateCondition(targetSelected:string[],abilitySelected:string[],gameSystemID:string,gameModeID:string){
+        const difficultySelectedID = this.difficultyChoices.getValueAsValue();
         if (targetSelected.length === 0){
             return [{
                 groupName: "", groupSubName:"",
                 gameSystemEnv:{
                     gameSystemID:gameSystemID, gameModeID:gameModeID,
-                    gameDifficultyID:(this.difficultySelectedID === null) ? "whole": this.difficultySelectedID
+                    gameDifficultyID:(difficultySelectedID === null) ? "whole": difficultySelectedID
                 },
                 language:this.app.state.language, startOfRecordArray:0,limitOfRecordArray:3,
                 orderOfRecordArray:this.app.state.superiorScore, abilityIDs:abilitySelected
@@ -121,11 +118,12 @@ export class SearchConditionSelectorView implements IView{
         })
     }
     private async setTargetChoices(){
+        const difficultySelectedID = this.difficultyChoices.getValueAsValue();
         this.targetChoices.clearChoices();
         this.targetChoices.clearStore()
         try{
-            const selectedTargetItem = this.difficultyChoices.data.find((ele) => ele.id === this.difficultySelectedID)
-            if (selectedTargetItem === undefined)throw new Error(`# エラーの内容\n\nID${selectedTargetItem}に対応した難易度が存在しません。`)
+            const selectedTargetItem = this.difficultyChoices.data.find((ele) => ele.id === difficultySelectedID)
+            if (selectedTargetItem === undefined)throw new Error(`# エラーの内容\n\nID${difficultySelectedID}に対応した難易度が存在しません。`)
 
             const result = await this.app.accessToAPI("list_targets",{
                 gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed,gameModeID:this.app.state.gameModeIDDisplayed},id:selectedTargetItem.TargetIDsIncludedInTheDifficulty

@@ -1,8 +1,6 @@
 import { IOfferedRecord } from "../../../type/api/record/IReceivedData_recordWrite";
-import { HTMLConverter } from "../../../utility/ViewUtility";
+import { element, HTMLConverter } from "../../../utility/ViewUtility";
 import { IAppUsedToChangeState } from "../../interface/AppInterfaces";
-import { createElementWithIdAndClass } from "../../utility/aboutElement";
-import { RecordCardView } from "../parts/RecordCardView";
 import { PageStateBaseClass } from "./PageStateClass";
 
 export class S_SendRecordOffer
@@ -11,6 +9,10 @@ export class S_SendRecordOffer
             const htmlConverter = new HTMLConverter(this.app.state.language);
             try {
                 this.generateLoadingSpinner();
+                this.articleDOM.appendChild(element`<div class="u-width90per">
+                    <h1>内容</h1><p>${JSON.stringify(this.requiredObj)}</p>
+                </div>`)
+                /*
                 const result = await this.app.accessToAPI("record_write",{record:this.requiredObj});
                 const record = result.result
                 this.deleteLoadingSpinner();
@@ -28,6 +30,7 @@ export class S_SendRecordOffer
                     displayTags: {abilityTags:true,targetTags:true,gameSystemTags:true},
                     setClickListener:false
                 }).htmlElement)
+                */
             } catch(error){
                 if (error instanceof Error) return;
             }

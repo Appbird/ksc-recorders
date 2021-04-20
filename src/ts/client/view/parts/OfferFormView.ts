@@ -4,7 +4,6 @@ import { ITargetItem } from "../../../type/list/ITargetItem";
 import { choiceDescription } from "../../../utility/aboutLang";
 import { converseMiliSecondsIntoTime, convertScoreIntoNumber, convertTimeIntoNumber } from "../../../utility/timeUtility";
 import { element, HTMLConverter } from "../../../utility/ViewUtility";
-import { TargetGameMode } from "../../administers/StateAdminister";
 import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
 import { createElementWithIdAndClass, createElementWithIdTagClass, findElementByClassNameWithErrorPossibility } from "../../utility/aboutElement";
 import { IView } from "../IView";
@@ -12,16 +11,11 @@ import { MovieWidgetCreator } from "./MovieWidgetCreator";
 import { SelectChoicesCapsuled } from "./SelectChoicesCapsuled";
 import { TextInputCapsuled } from "./TextInputCapsuled";
 import SimpleMDE from "simplemde";
-import { IItemOfResolveTableToName } from "../../../type/list/IItemOfResolveTableToName";
-
-export class TextChoicesCapsuled{
-    private html
-}  
+import { TextChoicesCapsuled } from "./TextChoicesCapsuled";
 
 export class OfferFormView implements IView {
     private element: HTMLDivElement = createElementWithIdAndClass({ className: "offerForm u-width95per u-marginUpDown2emToChildren" });
     private app: IAppUsedToReadAndChangeOnlyPageState;
-    private targetGameMode: TargetGameMode;
 
     private evidenceMovieElement: HTMLDivElement;
     private evidenceMovie: MovieWidgetCreator;
@@ -42,49 +36,67 @@ export class OfferFormView implements IView {
 
     private simpleMDE:SimpleMDE;
     private errorDisplay:HTMLElement;
-    constructor(app: IAppUsedToReadAndChangeOnlyPageState, gameMode: TargetGameMode, difficulties: IGameDifficultyItem[], abilities: IAbilityItem[],runnerID:string) {
+    constructor(app: IAppUsedToReadAndChangeOnlyPageState, difficulties: IGameDifficultyItem[], abilities: IAbilityItem[],runnerID:string) {
         this.app = app;
-        this.targetGameMode = gameMode;
 
         this.htmlConverter = new HTMLConverter(this.app.state.language);
 
+        this.element.appendChild(this.htmlConverter.element`<h1>${{Japanese:"リンク"}}</h1>`)
         this.evidenceMovieElement = this.element.appendChild(createElementWithIdAndClass({ className: "c-evidenceMovie" }));
         this.evidenceMovie = new MovieWidgetCreator();
 
         const textInputs = this.createTextInput();
-        //#TODO エラーを表す要素をフィールドに作る。
         this.URLInput = textInputs.link;
         this.scoreInput = textInputs.score;
 
         this.difficultyChoices = this.createDifficultyChoices(difficulties);
         this.targetChoices = this.createTargetChoices([]);
         this.abilityChoices = this.createAbilityChoices(abilities);
+        this.tagInput = this.createTagInputChoices();
 
 
         this.runnerID = runnerID;
 
+        //#TODO 追加されるタグの色を対応させる。
+        
         this.setTargetDropdownEventListener();
         this.setURLInputChangeEventListener();
         this.setScoreInputChangeEventListener();
+        
 
         this.simpleMDE = new SimpleMDE({
-            element:this.element.appendChild(createElementWithIdAndClass({className:"offerForm__runnerNote"})),
+            element:this.element.appendChild(
+                        this.htmlConverter.element`
+                                <div class="offerForm__noteInput">
+                                    <h1><>${{Japanese:"走者ノート"}}</h1>
+                                    <ul class="u-margin05em">
+                                        <li>${{Japanese:"[任意] 記録を出すうえで必要となる事項を書きます。"}}</li>
+                                        <li>${{Japanese:"markdownでの記述が出来ます。"}}</li>
+                                        <li>${{ Japanese: "10秒に一度オートセーブを行います。" }}</li>
+                                    </ul>
+                                </div>
+                                `).appendChild(createElementWithIdTagClass({className:"offerForm__runnerNote"},"textarea")),
             autosave:{
-                enabled:true,uniqueId:"offerForm__runnerNote"
-            }
-    });
+                enabled:true, uniqueId:"offerForm__runnerNote"
+            },
+            spellChecker:false
+        });
         
-        //#CTODO 続きを実装する。
+        
         this.errorDisplay = this.element.appendChild(element`<div class="u-width90per u-margin2em u-redChara"></div>`).appendChild(document.createElement("h3"))
         this.element.appendChild(this.htmlConverter.element`<div class="u-width50per u-margin2em"><div class="c-button">決定</div></div>`)
-        .addEventListener("click",() => this.whenDecide())
+            .addEventListener("click",() => this.whenDecide())
+
+            
+        this.element.appendChild(createElementWithIdAndClass({className:"u-space3em"}))
     }
     private whenDecide(){
         const abilityIDs = this.abilityChoices.getValueAsArray();
         const targetID = this.targetChoices.getValueAsValue()
         const difficultyID = this.difficultyChoices.getValueAsValue();
-        if (!(this.isTextInputRight && difficultyID === undefined && targetID === undefined && abilityIDs.length === 0 )){
-                this.errorDisplay.textContent = "入力されていない箇所が存在します。"
+        if (this.isTextInputRight || difficultyID === undefined || targetID === undefined || abilityIDs.length === 0 ){
+                this.errorDisplay.textContent = "[Error] 入力されていない必須項目が存在します。"
+                return;
             }
         this.app.transition("sendRecordOffer",{
             score:(() => {
@@ -95,7 +107,8 @@ export class OfferFormView implements IView {
                 }
             })(),
             runnerID:this.runnerID,
-            tagID:[],
+            tagName:this.tagInput.valueAsArray,
+            languageOfTagName:this.app.state.language,
             link:[this.URLInput.value],
             note:this.simpleMDE.value(),
             regulation:{
@@ -123,9 +136,9 @@ export class OfferFormView implements IView {
             } catch (error) {
                 const errorBaseMsg = choiceDescription({ JDescription: "入力されたタイム/記録が不正です。", EDescription: "invalid time/score string." }, this.app.state.language);
                 if (!(error instanceof Error)) {
-                    this.URLInput.setError(errorBaseMsg); return;
+                    this.scoreInput.setError(errorBaseMsg); return;
                 }
-                this.URLInput.setError(errorBaseMsg);
+                this.scoreInput.setError(errorBaseMsg);
             }
         });
     }
@@ -146,68 +159,66 @@ export class OfferFormView implements IView {
         });
     }
     private setTargetDropdownEventListener() {
-        this.difficultyChoices.addEventListener("hideDropdown", () => {
-            this.targetChoices.enable();
-            if (this.difficultyChoices.getValue(true) === undefined) { this.targetChoices.disable(); return; }
-            this.setTargetChoices();
+        this.difficultyChoices.addEventListener("change", () => {
+                this.targetChoices.enable();
+                if (this.difficultyChoices.getValue(true) === undefined) { this.targetChoices.disable(); return; }
+                this.setTargetChoices();
         });
     }
-    private async setTargetChoices() {
-        const difficultySelectedID = this.targetChoices.getValueAsValue(true);
-        this.targetChoices.clearChoices();
-        this.targetChoices.clearStore();
-        try {
-            const selectedTargetItem = this.difficultyChoices.data.find((ele) => ele.id === difficultySelectedID);
-            if (selectedTargetItem === undefined)
-                throw new Error(`# エラーの内容\n\nID${selectedTargetItem}に対応した難易度が存在しません。`);
+        private async setTargetChoices() {
+            
+            this.targetChoices.clearChoices();
+            this.targetChoices.clearStore();
+            try {
+                const selectedTargetItem = this.difficultyChoices.data.find((ele) => ele.id === this.difficultyChoices.getValueAsValue(true));
+                if (selectedTargetItem === undefined) throw new Error(`# エラーの内容\n\nID ${this.difficultyChoices.getValueAsValue(true)} に対応した難易度が存在しません。`);
 
-            const result = await this.app.accessToAPI("list_targets", {
-                gameSystemEnv: { gameSystemID: this.app.state.gameSystemIDDisplayed, gameModeID: this.app.state.gameModeIDDisplayed }, id: selectedTargetItem.TargetIDsIncludedInTheDifficulty
-            });
+                const result = await this.app.accessToAPI("list_targets", {
+                    gameSystemEnv: { gameSystemID: this.app.state.gameSystemIDDisplayed, gameModeID: this.app.state.gameModeIDDisplayed }, id: selectedTargetItem.TargetIDsIncludedInTheDifficulty
+                });
+                
+                this.targetChoices.setChoices(result.result);
 
-            this.targetChoices.setChoices(result.result);
-
-        } catch (error) {
-            console.error(error);
-            if (!(error instanceof Error))
-                return [];
-            this.app.transition("errorView", { title: "難易度に対応する計測対象の取得に失敗しました。", message: `${error.message}` });
+            } catch (error) {
+                console.error(error);
+                if (!(error instanceof Error)) return;
+                this.app.transition("errorView", { title: "難易度に対応する計測対象の取得に失敗しました。", message: `${error.message}` });
+            }
         }
-    }
+        //#CH ここあたりのコードを分離したいけどするべきか迷う
     private createTextInput(): { link: TextInputCapsuled; score: TextInputCapsuled; } {
         const offerForm__textInputElement = this.element.appendChild(
             //#TODO 英語訳の追加
             createElementWithIdAndClass({ className: "offerForm__textInput" })).appendChild(this.htmlConverter.element`
             <div class="offerForm__textInput">
-                <div class="c-title">
+                <div class="c-title offerForm__textInput__link">
                     <i class="fas fa-link" ></i>
                 </div>
-                <ul class="u-margin05em">
-                    <li>${{ Japanese: "登録する記録の証拠となる動画へのリンクを貼ります。", English: "English Description" }}</li>
+                <ul class="u-margin05em offerForm__textInput__linkDescription">
+                    <li>${{ Japanese: "<strong class='u-redChara'>[必須]</strong> 登録する記録の証拠となる動画へのリンクを貼ります。", English: "English Description" }}</li>
                     <li>${{ Japanese: "TwitterかYoutubeのいずれかのリンクのみを受け付けます。", English: "English Description" }}</li>
                     <li>${{ Japanese: "Youtubeへのリンクの場合、動画の開始秒数を指定することが出来ます。" }}</li>
                 </ul>
-                <div class="c-title">
+            <h1>記録</h1>
+                <div class="c-title offerForm__textInput__score">
                 </div>
-                <ul class="u-margin05em">
+                <ul class="u-margin05em offerForm__textInput__scoreDescription">
+                    <li>${{Japanese:"<strong class='u-redChara'>[必須]</strong> 計測区間で得たスコア,あるいはかかった時間を記述します。"}}</li>
                     <li><strong>${{ Japanese: "01:00:00 / 02:12.32-03:12.32 / 60.00といった形式でも入力が出来ます。" }}</strong></li>
                     <li>${{ Japanese: "この場合、全て01:00.00に統一されます。" }}</li>
                 </ul>
             </div>`
             );
-        const found_result__textInput = offerForm__textInputElement.getElementsByClassName("c-title");
-        const found_result__error = offerForm__textInputElement.getElementsByClassName("u-margin05em");
-        if (found_result__textInput.length < 2 || found_result__error.length < 2)
-            throw new Error("unexpected Error.");
-
-        const link_errorInput = createElementWithIdTagClass({ className: "u-redChara" }, "li");
-        found_result__error[0].prepend(link_errorInput);
-        const score_errorInput = createElementWithIdTagClass({ className: "u-redChara" }, "li");
-        found_result__error[1].prepend(score_errorInput);
+        const element_textInput_link = findElementByClassNameWithErrorPossibility(offerForm__textInputElement,"offerForm__textInput__link")
+        const element_textInput_score = findElementByClassNameWithErrorPossibility(offerForm__textInputElement,"offerForm__textInput__score");
+        const element_linkDescription = findElementByClassNameWithErrorPossibility(offerForm__textInputElement,"offerForm__textInput__linkDescription");
+        const element_scoreDescription = findElementByClassNameWithErrorPossibility(offerForm__textInputElement,"offerForm__textInput__scoreDescription");
+    
+        const link_errorInput = element_linkDescription.appendChild(createElementWithIdTagClass({ className: "u-redChara u-bolderChara" }, "li"));
+        const score_errorInput = element_scoreDescription.appendChild(createElementWithIdTagClass({ className: "u-redChara u-bolderChara" }, "li"));
         return {
-            link: new TextInputCapsuled(found_result__textInput[0], "link to the movie", link_errorInput, "u-smallerChara"),
-            score: new TextInputCapsuled(found_result__textInput[1],
-                (() => {
+            link: new TextInputCapsuled(element_textInput_link, "link to the movie", link_errorInput, "u-smallerChara"),
+            score: new TextInputCapsuled(element_textInput_score, (() => {
                     switch (this.app.state.scoreType) {
                         case "score": return "0";
                         case "time": return "00:00.00";
@@ -215,45 +226,75 @@ export class OfferFormView implements IView {
                 })(), score_errorInput, "u-biggerChara")
         };
     }
+    
     private createDifficultyChoices(difficulties: IGameDifficultyItem[]) {
         const difficultySelector = this.element.appendChild(this.htmlConverter.element`
         <div class="offerForm__difficultySelector">
+            <h1>難易度</h1>
             <div class="offerForm__difficultySelector__Choices">
             </div>
             <ul class="u-margin05em">
-                <li>${{ Japanese: "取得した記録がどの難易度で取られたかを入力します。" }}</li>
+                <li>${{ Japanese: "<strong class='u-redChara'>[必須]</strong> 取得した記録がどの難易度で取られたかを入力します。" }}</li>
             </ul>
         </div>`);
         return new SelectChoicesCapsuled(
             findElementByClassNameWithErrorPossibility(difficultySelector, "offerForm__difficultySelector__Choices").appendChild(document.createElement("select")),
-            difficulties, { language: this.app.state.language });
+            difficulties, { language: this.app.state.language,needMultipleSelect:false });
     }
+
     private createTargetChoices(targets: ITargetItem[]) {
         const targetSelector = this.element.appendChild(this.htmlConverter.element`
         <div class="offerForm__targetSelector">
+            <h1>計測対象</h1>
             <div class="offerForm__targetSelector__Choices">
             </div>
             <ul class="u-margin05em">
-                <li>${{ Japanese: "どの敵を倒したか / どのステージをクリアしたかを入力します。" }}</li>
+                <li>${{ Japanese: "<strong class='u-redChara'>[必須]</strong> どの敵を倒したか / どのステージをクリアしたかを入力します。" }}</li>
             </ul>
         </div>`);
         return new SelectChoicesCapsuled(
             findElementByClassNameWithErrorPossibility(targetSelector, "offerForm__targetSelector__Choices").appendChild(document.createElement("select")),
-            targets, { language: this.app.state.language, needMultipleSelect: true });
+            targets, { language: this.app.state.language, needMultipleSelect: false });
     }
+
     private createAbilityChoices(abilities: IAbilityItem[]) {
+        const maxNumberOfPlayer = this.app.state.gameSystemEnvDisplayed.gameMode?.maxNumberOfPlayer
         const abilitySelector = this.element.appendChild(this.htmlConverter.element`
         <div class="offerForm__abilitySelector">
+            <h1>自機の能力</h1>
             <div class="offerForm__abilitySelector__Choices">
             </div>
             <ul class="u-margin05em">
-                    <li>${{ Japanese: "この記録を取った時のカービィのコピー能力を選びます。" }}</li>
+                    <li>${{ Japanese: "<strong class='u-redChara'>[必須]</strong> この記録を取った時のカービィのコピー能力を選びます。" }}</li>
                     <li>${{ Japanese: "<strong>順序が考慮される</strong>ので注意してください。" }}</li>
+                    <li>${{ Japanese: `このゲームモードは${maxNumberOfPlayer}人プレイまで対応しています。` }}</li>
             </ul>
         </div>`);
         return new SelectChoicesCapsuled(
             findElementByClassNameWithErrorPossibility(abilitySelector, "offerForm__abilitySelector__Choices").appendChild(document.createElement("select")),
-            abilities, { language: this.app.state.language, needMultipleSelect: true, needDuplicatedSelect: true });
+            abilities, { language: this.app.state.language, 
+                maxItemCount:this.app.state.gameSystemEnvDisplayed.gameMode?.maxNumberOfPlayer,
+                needMultipleSelect: true, needDuplicatedSelect: true ,
+                maxItemText:
+                    {JDescription:`このゲームモードは最大${maxNumberOfPlayer}人プレイまで対応しています。`,
+                    EDescription:`This mode can be played with at most ${maxNumberOfPlayer} kirbys (friends)!`}
+            });
+    }
+
+    private createTagInputChoices() {
+        const tagSegment = this.element.appendChild(this.htmlConverter.element`
+        <div class="offerForm__tagInput">
+        <h1>タグ</h1>
+            <div class="offerForm__tagInput__Choices">
+            </div>
+            <ul class="u-margin05em">
+                    <li>${{ Japanese: "[任意] 使ったTAにおけるテクニックの名前などをタグとして登録します。" }}</li>
+                    <li>${{ Japanese: "検索がより容易になります。" }}</li>
+            </ul>
+        </div>`);
+        return new TextChoicesCapsuled(
+            findElementByClassNameWithErrorPossibility(tagSegment,"offerForm__tagInput__Choices").appendChild(document.createElement("input"))
+        )
     }
 
     get htmlElement() {

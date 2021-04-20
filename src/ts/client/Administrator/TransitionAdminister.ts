@@ -12,6 +12,7 @@ export class TransitionAdministrator {
         this.state = state;
         this.app = app;
         this.articleDOM = articleDOM;
+        
     }
     private clearView() {
         this.articleDOM.innerHTML = "";
@@ -24,6 +25,7 @@ export class TransitionAdministrator {
         </div>`)
         if (pageStates[nextState] === undefined) throw new Error(`指定されたキー${nextState}に対応するページ状態が存在しません。`);
         const pageState = new pageStates[nextState](this.app,this.articleDOM,requestObject);
+        await pageState.init();
         this.state.setState(nextState,pageState.requiredObject)
 
     }

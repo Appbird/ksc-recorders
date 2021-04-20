@@ -52,28 +52,52 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.S_ErrorState = void 0;
-var marked_1 = __importDefault(require("marked"));
+exports.S_SendRecordOffer = void 0;
 var ViewUtility_1 = require("../../../utility/ViewUtility");
 var PageStateClass_1 = require("./PageStateClass");
-var S_ErrorState = /** @class */ (function (_super) {
-    __extends(S_ErrorState, _super);
-    function S_ErrorState() {
+var S_SendRecordOffer = /** @class */ (function (_super) {
+    __extends(S_SendRecordOffer, _super);
+    function S_SendRecordOffer() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    S_ErrorState.prototype.init = function () {
+    S_SendRecordOffer.prototype.init = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var htmlConverter;
             return __generator(this, function (_a) {
-                this.articleDOM.appendChild(ViewUtility_1.elementWithoutEscaping(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n        <div class = \"c-recordGroupHeader\">\n            <div class=\"c-title\">\n                <div class=\"c-title__main\">", "</div>\n                <div class=\"c-title__sub\">Failed to prepare the page.</div>\n            </div>\n            <hr noshade class=\"u-bold\">\n            <div class=\"u-width90per\">", "</div>\n        </div>"], ["\n        <div class = \"c-recordGroupHeader\">\n            <div class=\"c-title\">\n                <div class=\"c-title__main\">", "</div>\n                <div class=\"c-title__sub\">Failed to prepare the page.</div>\n            </div>\n            <hr noshade class=\"u-bold\">\n            <div class=\"u-width90per\">", "</div>\n        </div>"])), this.requiredObj.title, marked_1.default(this.requiredObj.message)));
+                htmlConverter = new ViewUtility_1.HTMLConverter(this.app.state.language);
+                try {
+                    this.generateLoadingSpinner();
+                    this.articleDOM.appendChild(ViewUtility_1.element(templateObject_1 || (templateObject_1 = __makeTemplateObject(["<div class=\"u-width90per\">\n                    <h1>\u5185\u5BB9</h1><p>", "</p>\n                </div>"], ["<div class=\"u-width90per\">\n                    <h1>\u5185\u5BB9</h1><p>", "</p>\n                </div>"])), JSON.stringify(this.requiredObj)));
+                    /*
+                    const result = await this.app.accessToAPI("record_write",{record:this.requiredObj});
+                    const record = result.result
+                    this.deleteLoadingSpinner();
+    
+                    const articleElement = this.articleDOM.appendChild(createElementWithIdAndClass({className:"u-width95per"}))
+                    articleElement.appendChild(htmlConverter.element`
+                    <div>
+                        <h1>${ {Japanese:"記録が投稿されました！"} }</h1>
+                        <p>${ {Japanese:"記録が承認されるとユーザーページに通知が行きます。"} }</p>
+                        <p>${result.message}</p>
+                    </div>
+                    `)
+                    
+                    articleElement.appendChild(new RecordCardView(this.app,record,{
+                        displayTags: {abilityTags:true,targetTags:true,gameSystemTags:true},
+                        setClickListener:false
+                    }).htmlElement)
+                    */
+                }
+                catch (error) {
+                    if (error instanceof Error)
+                        return [2 /*return*/];
+                }
                 return [2 /*return*/];
             });
         });
     };
-    return S_ErrorState;
+    return S_SendRecordOffer;
 }(PageStateClass_1.PageStateBaseClass));
-exports.S_ErrorState = S_ErrorState;
+exports.S_SendRecordOffer = S_SendRecordOffer;
 var templateObject_1;

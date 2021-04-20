@@ -17,10 +17,10 @@ var __values = (this && this.__values) || function(o) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RecordGroupView = void 0;
 var ViewUtility_1 = require("../../../utility/ViewUtility");
-var TagsView_1 = require("./TagsView");
 var timeUtility_1 = require("../../../utility/timeUtility");
 var aboutElement_1 = require("../../utility/aboutElement");
 var StateInfoView_1 = require("./StateInfoView");
+var RecordCardView_1 = require("./RecordCardView");
 var RecordGroupView = /** @class */ (function () {
     function RecordGroupView(recordGroup, app, _a) {
         var e_1, _b;
@@ -71,20 +71,9 @@ var RecordGroupView = /** @class */ (function () {
         this.recordCardsElement.innerHTML = "";
     };
     RecordGroupView.prototype.appendRecordCard = function (record) {
-        var _this = this;
-        //[x] これをElementとして出力して、TagをDOM操作で後付けしたい
-        var ele = ViewUtility_1.element(templateObject_3 || (templateObject_3 = __makeTemplateObject(["\n            <div class = \"c-recordCard u-width95per\">\n                <div class = \"c-title --withUnderline\">\n                    <div class = \"c-title__main\">", "</div>\n                    <div class=\"c-iconWithDescription\">\n                        <i class=\"fas fa-user\"></i>", "\n                    </div>\n                </div>\n            ", "\n            </div>"], ["\n            <div class = \"c-recordCard u-width95per\">\n                <div class = \"c-title --withUnderline\">\n                    <div class = \"c-title__main\">", "</div>\n                    <div class=\"c-iconWithDescription\">\n                        <i class=\"fas fa-user\"></i>", "\n                    </div>\n                </div>\n            ", "\n            </div>"
-            //#CTODO カード要素をクリックすると記録詳細画面へ移る。
-        ])), timeUtility_1.converseMiliSecondsIntoTime(record.score), record.runnerName, (!this.option.displayTags.gameSystemTags && !this.option.displayTags.targetTags && this.option.displayTags.abilityTags) ? "" : "<hr noshade class=\"u-thin\">");
-        //#CTODO カード要素をクリックすると記録詳細画面へ移る。
-        ele.addEventListener("click", function () {
-            var rrg = record.regulation.gameSystemEnvironment;
-            _this.app.transition("detailView", { gameSystemEnv: { gameSystemID: rrg.gameSystemID, gameModeID: rrg.gameModeID }, id: record.id, lang: _this.app.state.language });
-        });
-        TagsView_1.TagsView.generateTagViewsForRecord(this.app, ele, record, { abilityTags: true, setClickListener: false });
-        this.recordCardsElement.appendChild(ele);
+        this._htmlElement.appendChild(new RecordCardView_1.RecordCardView(this.app, record, this.option).htmlElement);
     };
     return RecordGroupView;
 }());
 exports.RecordGroupView = RecordGroupView;
-var templateObject_1, templateObject_2, templateObject_3;
+var templateObject_1, templateObject_2;

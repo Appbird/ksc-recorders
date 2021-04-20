@@ -52,7 +52,7 @@ export class SelectChoicesCapsuled<T extends IItemOfResolveTableToName> {
             result.setChoices(data.map((ele) => { return { value: ele.id, label: selectAppropriateName(ele, language) }; }));
         });
     }
-    addEventListener(eventType: "addItem" | "click" | "hideDropdown", callback: (event: any) => void) {
+    addEventListener(eventType: "addItem" | "click" | "hideDropdown" | "change", callback: (event: any) => void) {
         this._insertedElement.addEventListener(eventType, callback);
     }
     getValue(valueOnly: boolean = true) {
@@ -60,8 +60,7 @@ export class SelectChoicesCapsuled<T extends IItemOfResolveTableToName> {
     }
     getValueAsValue(valueOnly: boolean = true): string {
         let choiced = this._choices.getValue(valueOnly);
-        if (Array.isArray(choiced))
-            return choiced[0];
+        if (Array.isArray(choiced)) return choiced[0];
         return choiced;
     }
     getValueAsArray(valueOnly: boolean = true): string[] {

@@ -44,7 +44,7 @@ exports.SearchConditionSelectorView = void 0;
 var ViewUtility_1 = require("../../../utility/ViewUtility");
 var aboutElement_1 = require("../../utility/aboutElement");
 var aboutLang_1 = require("../../../utility/aboutLang");
-var StateAdminister_1 = require("../../administers/StateAdminister");
+var StateAdminister_1 = require("../../Administrator/StateAdminister");
 var SelectChoicesCapsuled_1 = require("./SelectChoicesCapsuled");
 var SearchConditionSelectorView = /** @class */ (function () {
     function SearchConditionSelectorView(app, difficulties, abilities) {
@@ -56,7 +56,6 @@ var SearchConditionSelectorView = /** @class */ (function () {
         this.app = app;
         if (!StateAdminister_1.StateAdministrator.checkGameSystemEnvIsSet(this.app.state.gameSystemEnvDisplayed))
             throw new Error("閲覧する記録のゲームタイトルとゲームモードが設定されていません。");
-        this.difficultySelectedID = null;
         this.element.appendChild(ViewUtility_1.element(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n        <div class=\"articleTitle\">\n            <div class=\"c-title\">\n                <div class = \"c-title__main\"><i class=\"fas fa-star\"></i>\u8A18\u9332\u691C\u7D22</div> <div class = \"c-title__sub\">Set conditions to search records!</div>\n            </div>\n            <hr noshade class=\"u-bold\">\n        </div>"], ["\n        <div class=\"articleTitle\">\n            <div class=\"c-title\">\n                <div class = \"c-title__main\"><i class=\"fas fa-star\"></i>\u8A18\u9332\u691C\u7D22</div> <div class = \"c-title__sub\">Set conditions to search records!</div>\n            </div>\n            <hr noshade class=\"u-bold\">\n        </div>"]))));
         var context = this.element.appendChild(aboutElement_1.createElementWithIdAndClass({ className: "u-width90per" }));
         context.appendChild(this.difficultyColumn);
@@ -69,19 +68,16 @@ var SearchConditionSelectorView = /** @class */ (function () {
         this.difficultyChoices = new SelectChoicesCapsuled_1.SelectChoicesCapsuled(this.difficultyColumn.appendChild(document.createElement("select")), difficulties, { language: this.app.state.language });
         this.targetChoices = new SelectChoicesCapsuled_1.SelectChoicesCapsuled(this.targetColumn.appendChild(document.createElement("select")), [], { language: this.app.state.language, maxItemCount: 10, disable: true, needMultipleSelect: true });
         //#CTODO 思えばモードによって最大プレイ人数が変わるので、データベースにそのデータを組み込んでおく必要がある。
-        var maxNubmerOfPlayer = this.app.state.gameSystemEnvDisplayed.gameMode.maxNumberOfPlayer;
-        this.abilityChoices = new SelectChoicesCapsuled_1.SelectChoicesCapsuled(this.abilityColumn.appendChild(document.createElement("select")), abilities, { maxItemCount: maxNubmerOfPlayer, needDuplicatedSelect: true, needMultipleSelect: true, language: this.app.state.language, maxItemText: { JDescription: "\u3053\u306E\u30B2\u30FC\u30E0\u30E2\u30FC\u30C9\u306F\u6700\u5927" + maxNubmerOfPlayer + "\u4EBA\u30D7\u30EC\u30A4\u307E\u3067\u5BFE\u5FDC\u3057\u3066\u3044\u307E\u3059\u3002",
-                EDescription: "This mode can be played with at most " + maxNubmerOfPlayer + " kirbys (friends)!" }
+        var maxNumberOfPlayer = this.app.state.gameSystemEnvDisplayed.gameMode.maxNumberOfPlayer;
+        this.abilityChoices = new SelectChoicesCapsuled_1.SelectChoicesCapsuled(this.abilityColumn.appendChild(document.createElement("select")), abilities, { maxItemCount: maxNumberOfPlayer, needDuplicatedSelect: true, needMultipleSelect: true, language: this.app.state.language, maxItemText: { JDescription: "\u3053\u306E\u30B2\u30FC\u30E0\u30E2\u30FC\u30C9\u306F\u6700\u5927" + maxNumberOfPlayer + "\u4EBA\u30D7\u30EC\u30A4\u307E\u3067\u5BFE\u5FDC\u3057\u3066\u3044\u307E\u3059\u3002",
+                EDescription: "This mode can be played with at most " + maxNumberOfPlayer + " kirbys (friends)!" }
         });
-        this.difficultyChoices.addEventListener("hideDropdown", function () {
+        this.difficultyChoices.addEventListener("change", function () {
             _this.targetChoices.enable();
-            if (_this.difficultySelectedID === _this.difficultyChoices.getValue(true))
-                return;
             if (_this.difficultyChoices.getValue(true) === undefined) {
                 _this.targetChoices.disable();
                 return;
             }
-            _this.difficultySelectedID = _this.difficultyChoices.getValueAsValue(true);
             _this.setTargetChoices();
         });
         //#CTODO いいボタンのデザインを探してくる。
@@ -101,12 +97,13 @@ var SearchConditionSelectorView = /** @class */ (function () {
     };
     SearchConditionSelectorView.prototype.generateCondition = function (targetSelected, abilitySelected, gameSystemID, gameModeID) {
         var _this = this;
+        var difficultySelectedID = this.difficultyChoices.getValueAsValue();
         if (targetSelected.length === 0) {
             return [{
                     groupName: "", groupSubName: "",
                     gameSystemEnv: {
                         gameSystemID: gameSystemID, gameModeID: gameModeID,
-                        gameDifficultyID: (this.difficultySelectedID === null) ? "whole" : this.difficultySelectedID
+                        gameDifficultyID: (difficultySelectedID === null) ? "whole" : difficultySelectedID
                     },
                     language: this.app.state.language, startOfRecordArray: 0, limitOfRecordArray: 3,
                     orderOfRecordArray: this.app.state.superiorScore, abilityIDs: abilitySelected
@@ -125,24 +122,21 @@ var SearchConditionSelectorView = /** @class */ (function () {
     };
     SearchConditionSelectorView.prototype.setTargetChoices = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var selectedTargetItem, asg, result, error_1;
-            var _this = this;
+            var difficultySelectedID, selectedTargetItem, result, error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        difficultySelectedID = this.difficultyChoices.getValueAsValue();
                         this.targetChoices.clearChoices();
                         this.targetChoices.clearStore();
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 3, , 4]);
-                        selectedTargetItem = this.difficultyChoices.data.find(function (ele) { return ele.id === _this.difficultySelectedID; });
+                        selectedTargetItem = this.difficultyChoices.data.find(function (ele) { return ele.id === difficultySelectedID; });
                         if (selectedTargetItem === undefined)
-                            throw new Error("# \u30A8\u30E9\u30FC\u306E\u5185\u5BB9\n\nID" + selectedTargetItem + "\u306B\u5BFE\u5FDC\u3057\u305F\u96E3\u6613\u5EA6\u304C\u5B58\u5728\u3057\u307E\u305B\u3093\u3002");
-                        asg = this.app.state.gameSystemEnvDisplayed;
-                        if (asg.gameSystem === null || asg.gameMode === null)
-                            throw new Error();
+                            throw new Error("# \u30A8\u30E9\u30FC\u306E\u5185\u5BB9\n\nID" + difficultySelectedID + "\u306B\u5BFE\u5FDC\u3057\u305F\u96E3\u6613\u5EA6\u304C\u5B58\u5728\u3057\u307E\u305B\u3093\u3002");
                         return [4 /*yield*/, this.app.accessToAPI("list_targets", {
-                                gameSystemEnv: { gameSystemID: asg.gameSystem.id, gameModeID: asg.gameMode.id }, id: selectedTargetItem.TargetIDsIncludedInTheDifficulty
+                                gameSystemEnv: { gameSystemID: this.app.state.gameSystemIDDisplayed, gameModeID: this.app.state.gameModeIDDisplayed }, id: selectedTargetItem.TargetIDsIncludedInTheDifficulty
                             })];
                     case 2:
                         result = _a.sent();

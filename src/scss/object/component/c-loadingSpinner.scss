@@ -1,6 +1,6 @@
 .c-loadingSpinner {
     margin: 25% auto 0;
-    width: 50%;
+    width: 100%;
     display:flex;
     justify-content:space-between;
   }
@@ -9,41 +9,63 @@
     width: 1.5em;
     height: 1.5em;
     display: inline-block;
-    -webkit-animation: sk-bouncedelay 5s infinite ease both;
-    animation: sk-bouncedelay 5s infinite ease both;
+    animation: sk-bouncedelay 5s infinite ease-in-out;
+    transform-origin:50% 50%;
+  }
+  .c-loadingSpinner>.__spinner::after {
+    content: "";
+    width: 1.5em; height: 1.5em;
+    border-radius: 50%;
+    display: inline-block;
+    background-color: rgb(75, 75, 75);
+    animation: sk-bouncedelay__after 5s infinite ease-in-out;
+
+    position: relative;
+    top: 0em; left: 0em;
   }
   .c-loadingSpinner>.__spinner{
-    background-image:url();
+    background: url("../icon/IcoonMono/star.svg");
+    background-size: cover;
+  }
+  .c-loadingSpinner>.__spinner.--shortcake{
+    background: url("../icon/IcoonMono/shortcake.svg");
+    background-size: cover;
   }
   
   
-.c-loadingSpinner>.__spinner.--delay1 {
-    animation-delay: -0.35s;
-  }
-.c-loadingSpinner>.__spinner.--delay2 {
-  animation-delay: -0.7s;
+.c-loadingSpinner>.__spinner.--delay1,.c-loadingSpinner>.__spinner.--delay1::after {
+    animation-delay: 0.35s;
+}
+.c-loadingSpinner>.__spinner.--delay2,.c-loadingSpinner>.__spinner.--delay2::after {
+  animation-delay: 0.7s;
 }
   
 
 @keyframes sk-bouncedelay {
-    0%, 15%, 85%, 100% {
-      -webkit-transform: scale(0.5) rotate(360deg);
-      transform: scale(0.5) rotate(360deg);
-      border-radius: 100%;
+    0%, 10%{
+      transform: scale(0.5) rotate(450deg);
     }
-    20%, 70% {
-      -webkit-transform: scale(2.0) rotate(-125deg);
-      transform: scale(2.0) rotate(-125deg);
-      border-radius: 15%;
+    20%{
+      transform: scale(2.1) rotate(-10deg);
     }
     30% {
-      -webkit-transform: scale(2.0) rotate(-100deg);
-      transform: scale(2.0) rotate(-100deg);
-      border-radius: 0%;
+      transform: scale(2.0) rotate(0deg);
     }
-    50% {
-      -webkit-transform: scale(2.0) rotate(-110deg);
-      transform: scale(2.0) rotate(-110deg);
-      border-radius: 0%;
+    70% {
+      transform: scale(2.0) rotate(0deg);
+    }
+    80% {
+      transform: scale(1.9) rotate(-25deg);
+    }
+    90%,100% {
+      transform: scale(0.5) rotate(-480deg);
+    }
+  }
+  @keyframes sk-bouncedelay__after {
+    0%, 10%, 94%, 100% {
+      transform: scale(1.5);
+    }
+    20%, 83% {
+      transform: scale(0);
     }
   }

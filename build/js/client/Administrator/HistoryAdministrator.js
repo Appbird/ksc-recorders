@@ -1,21 +1,4 @@
 "use strict";
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = function (d, b) {
-        extendStatics = Object.setPrototypeOf ||
-            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-            function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-        return extendStatics(d, b);
-    };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-var __makeTemplateObject = (this && this.__makeTemplateObject) || function (cooked, raw) {
-    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
-    return cooked;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -52,28 +35,35 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.S_ErrorState = void 0;
-var marked_1 = __importDefault(require("marked"));
-var ViewUtility_1 = require("../../../utility/ViewUtility");
-var PageStateClass_1 = require("./PageStateClass");
-var S_ErrorState = /** @class */ (function (_super) {
-    __extends(S_ErrorState, _super);
-    function S_ErrorState() {
-        return _super !== null && _super.apply(this, arguments) || this;
+exports.HistoryAdministrator = void 0;
+var HistoryAdministrator = /** @class */ (function () {
+    function HistoryAdministrator(app) {
+        var _this = this;
+        this.transitionPile = [];
+        this.app = app;
+        window.addEventListener('popstate', function (e) {
+            _this.back();
+        });
     }
-    S_ErrorState.prototype.init = function () {
+    HistoryAdministrator.prototype.appendHistory = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                this.articleDOM.appendChild(ViewUtility_1.elementWithoutEscaping(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n        <div class = \"c-recordGroupHeader\">\n            <div class=\"c-title\">\n                <div class=\"c-title__main\">", "</div>\n                <div class=\"c-title__sub\">Failed to prepare the page.</div>\n            </div>\n            <hr noshade class=\"u-bold\">\n            <div class=\"u-width90per\">", "</div>\n        </div>"], ["\n        <div class = \"c-recordGroupHeader\">\n            <div class=\"c-title\">\n                <div class=\"c-title__main\">", "</div>\n                <div class=\"c-title__sub\">Failed to prepare the page.</div>\n            </div>\n            <hr noshade class=\"u-bold\">\n            <div class=\"u-width90per\">", "</div>\n        </div>"])), this.requiredObj.title, marked_1.default(this.requiredObj.message)));
+                history.pushState(null, "Kirby-Speed/ScoreRecorders:" + this.app.state.state, "/app?state=" + this.app.state.state);
+                this.transitionPile.push({
+                    pageState: this.app.state.state,
+                    requiredObject: this.app.state.requiredObj
+                });
                 return [2 /*return*/];
             });
         });
     };
-    return S_ErrorState;
-}(PageStateClass_1.PageStateBaseClass));
-exports.S_ErrorState = S_ErrorState;
-var templateObject_1;
+    HistoryAdministrator.prototype.back = function () {
+        var past = this.transitionPile.pop();
+        if (past === undefined)
+            return;
+        this.app.transition(past.pageState, past.requiredObject, { ifAppendHistory: false });
+    };
+    return HistoryAdministrator;
+}());
+exports.HistoryAdministrator = HistoryAdministrator;

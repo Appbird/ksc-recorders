@@ -8,10 +8,12 @@ import { APIFunctions } from "../type/api/relation";
 import { HeaderController } from "./Administrator/HeaderController";
 import { IGameSystemInfoWithoutCollections } from "../type/list/IGameSystemInfo";
 import { IGameModeItemWithoutCollections } from "../type/list/IGameModeItem";
+import { LoginAdministrator } from "./Administrator/LoginAdministrator";
 
 
 export default class App {
     private _state:StateAdministrator;
+    private loginAd:LoginAdministrator;
     private transitionAd: TransitionAdministrator;
     private historyAd:HistoryAdministrator;
     private header:HeaderController = new HeaderController();

@@ -334,11 +334,12 @@ article.is-seqEnd:before {
   transition-duration: 0.2s;
 }
 
-.c-recordCard > p {
-  margin: 0 0.5em;
+.c-recordCard.is-disable {
+  box-shadow: none;
+  background: #cccccc;
 }
 
-.c-recordCard:hover {
+.c-recordCard:hover:not(.is-disable) {
   transform: scale(1.005);
 }
 
@@ -499,6 +500,11 @@ article h1::after {
   background-size: cover;
 }
 
+.u-background--person {
+  background: url("../icon/IcoonMono/person.svg");
+  background-size: cover;
+}
+
 .u-background--iceCream {
   background: url("../icon/IcoonMono/iceCream.svg");
   background-size: cover;
@@ -585,6 +591,13 @@ article h1::after {
 .u-left-aligined-forFlex {
   display: flex;
   justify-content: flex-end;
+  align-items: flex-end;
+}
+
+.u-flex-direction-column {
+  display: flex;
+  flex-direction: column;
+  flex-flow: wrap;
 }
 
 .u-font--ForNumber {

@@ -4,11 +4,11 @@
     margin:1em 0;
     border-radius: 6px;
     transition-duration: 0.2s;
-    
 }
-.c-recordCard>p {
-    margin: 0 0.5em;
+.c-recordCard.is-disable {
+    box-shadow: none;
+    background: rgb(204, 204, 204);
 }
-.c-recordCard:hover{
+.c-recordCard:hover:not(.is-disable){
     transform: scale(1.005);
 }

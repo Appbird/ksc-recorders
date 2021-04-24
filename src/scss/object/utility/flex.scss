@@ -1,0 +1,10 @@
+.u-left-aligined-forFlex{
+    display:flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+.u-flex-direction-column{
+    display:flex;
+    flex-direction: column;
+    flex-flow: wrap;
+}

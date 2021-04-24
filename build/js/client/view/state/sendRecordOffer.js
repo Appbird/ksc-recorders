@@ -67,7 +67,7 @@ var S_SendRecordOffer = /** @class */ (function (_super) {
             return __generator(this, function (_a) {
                 htmlConverter = new ViewUtility_1.HTMLConverter(this.app.state.language);
                 try {
-                    this.generateLoadingSpinner();
+                    this.generateLoadingSpinner("cloud");
                     this.articleDOM.appendChild(ViewUtility_1.element(templateObject_1 || (templateObject_1 = __makeTemplateObject(["<div class=\"u-width90per\">\n                    <h1>\u5185\u5BB9</h1><p>", "</p>\n                </div>"], ["<div class=\"u-width90per\">\n                    <h1>\u5185\u5BB9</h1><p>", "</p>\n                </div>"])), JSON.stringify(this.requiredObj)));
                     /*
                     const result = await this.app.accessToAPI("record_write",{record:this.requiredObj});

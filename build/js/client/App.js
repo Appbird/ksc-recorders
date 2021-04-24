@@ -43,14 +43,21 @@ var HistoryAdministrator_1 = require("./Administrator/HistoryAdministrator");
 var HeaderController_1 = require("./Administrator/HeaderController");
 var App = /** @class */ (function () {
     function App(articleDOM, language) {
+        var _this = this;
         this.header = new HeaderController_1.HeaderController();
         this.apiCaller = new APICaller_1.APIAdministrator();
         this._state = new StateAdminister_1.StateAdministrator(language);
         this.historyAd = new HistoryAdministrator_1.HistoryAdministrator(this);
         this.transitionAd = new TransitionAdminister_1.TransitionAdministrator(articleDOM, this, this._state);
+        var header = document.getElementById("header");
+        if (header === null)
+            return;
+        header.addEventListener("click", function () {
+            _this.transition("mainMenu", null);
+        });
     }
     App.prototype.transition = function (nextState, requestObject, _a) {
-        var _b = _a === void 0 ? {} : _a, _c = _b.ifAppendHistory, ifAppendHistory = _c === void 0 ? false : _c, _d = _b.title, title = _d === void 0 ? "" : _d;
+        var _b = _a === void 0 ? {} : _a, _c = _b.ifAppendHistory, ifAppendHistory = _c === void 0 ? true : _c, _d = _b.title, title = _d === void 0 ? "" : _d;
         return __awaiter(this, void 0, void 0, function () {
             var error_1;
             return __generator(this, function (_e) {

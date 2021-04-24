@@ -59,16 +59,25 @@ var TransitionAdministrator = /** @class */ (function () {
             return __generator(this, function (_c) {
                 switch (_c.label) {
                     case 0:
-                        this.clearView();
                         if (title !== "")
                             this.articleDOM.appendChild(ViewUtility_1.elementWithoutEscaping(templateObject_1 || (templateObject_1 = __makeTemplateObject(["\n        <div class=\"c-title\">\n            <div class=\"c-title__main\">", "</div>\n        </div>"], ["\n        <div class=\"c-title\">\n            <div class=\"c-title__main\">", "</div>\n        </div>"])), title));
+                        this.articleDOM.classList.add("is-seqStart");
+                        return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(function () { return resolve(undefined); }, 400); })];
+                    case 1:
+                        _c.sent();
+                        this.clearView();
                         if (PageStates_1.pageStates[nextState] === undefined)
                             throw new Error("\u6307\u5B9A\u3055\u308C\u305F\u30AD\u30FC" + nextState + "\u306B\u5BFE\u5FDC\u3059\u308B\u30DA\u30FC\u30B8\u72B6\u614B\u304C\u5B58\u5728\u3057\u307E\u305B\u3093\u3002");
                         pageState = new PageStates_1.pageStates[nextState](this.app, this.articleDOM, requestObject);
                         return [4 /*yield*/, pageState.init()];
-                    case 1:
+                    case 2:
                         _c.sent();
                         this.state.setState(nextState, pageState.requiredObject);
+                        this.articleDOM.classList.add("is-seqEnd");
+                        return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(function () { return resolve(undefined); }, 300); })];
+                    case 3:
+                        _c.sent();
+                        this.articleDOM.classList.remove("is-seqStart", "is-seqEnd");
                         return [2 /*return*/];
                 }
             });

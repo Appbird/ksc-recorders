@@ -13,15 +13,16 @@ export abstract class PageStateBaseClass<T,AppInterface extends IAppUsedToRead> 
         this.articleDOM = articleDOM;
         this.loadingDisplayElement = this.articleDOM.appendChild(createElementWithIdAndClass({className:""}))
     }
+    /** @abstract ページステートの開発者がページの初期化を実装します。 */
     abstract init():Promise<void>|void;
     /** ローディングスピナーをページ中に表示します。 */
     protected generateLoadingSpinner(spinnerKindClassName:string = "u-background--star",message?:String){
         this.loadingDisplayElement.appendChild(element`
         <div class="u-width50per u-marginUpDown5em">
             <div class="c-loadingSpinner ">
-                <div class="__spinner --delay0 ${spinnerKindClassName}"></div>
-                <div class="__spinner --delay1 ${spinnerKindClassName}"></div>
-                <div class="__spinner --delay2 ${spinnerKindClassName}"></div>
+                <div class="__spinner --delay0 u-background--${spinnerKindClassName}"></div>
+                <div class="__spinner --delay1 u-background--${spinnerKindClassName}"></div>
+                <div class="__spinner --delay2 u-background--${spinnerKindClassName}"></div>
             </div>
         </div>
         `)

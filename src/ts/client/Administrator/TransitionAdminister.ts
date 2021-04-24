@@ -18,15 +18,23 @@ export class TransitionAdministrator {
         this.articleDOM.innerHTML = "";
     }
     async transition<T extends keyof PageStates>(nextState: T, requestObject:RequiredObjectType<PageStates[T]>,{title=""}:{title?:string}={}) {
-        this.clearView();
+        
         if (title !== "")this.articleDOM.appendChild(elementWithoutEscaping`
         <div class="c-title">
             <div class="c-title__main">${title}</div>
         </div>`)
+        this.articleDOM.classList.add("is-seqStart")
+        await new Promise((resolve) => setTimeout(()=>resolve(undefined),400));
+
+        this.clearView();
         if (pageStates[nextState] === undefined) throw new Error(`指定されたキー${nextState}に対応するページ状態が存在しません。`);
         const pageState = new pageStates[nextState](this.app,this.articleDOM,requestObject);
         await pageState.init();
         this.state.setState(nextState,pageState.requiredObject)
+
+        this.articleDOM.classList.add("is-seqEnd")
+        await new Promise((resolve) => setTimeout(()=>resolve(undefined),300));
+        this.articleDOM.classList.remove("is-seqStart","is-seqEnd")
 
     }
 }

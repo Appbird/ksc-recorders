@@ -54,7 +54,7 @@ var app = new App_1.default(articleDOM, "Japanese");
                 return [4 /*yield*/, app.accessToAPI("list_gameMode", { gameSystemEnv: { gameSystemID: "0" }, id: "0" })];
             case 2:
                 result2 = (_a.sent()).result;
-                return [4 /*yield*/, app.transition("searchConditionSelectorView", { gameSystem: result1, gameMode: result2 })];
+                return [4 /*yield*/, app.transition("offerForm", { targetGameMode: { gameSystem: result1, gameMode: result2 }, runnerID: "0" })];
             case 3:
                 _a.sent();
                 return [2 /*return*/];

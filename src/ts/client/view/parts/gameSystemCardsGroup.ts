@@ -42,8 +42,6 @@ export class GameSystemCardGroup implements IView{
                     </div>
                 </div>
             </div>`) as HTMLElement;
-            //#TODO clickイベントで、gameModeSelector画面への遷移を行う。
-            //#TODO GameModeListGroupの実装。
             card.addEventListener("click",() => this.app.transition("gameModeSeletor",info));
         }
         get htmlElement(){

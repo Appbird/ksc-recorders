@@ -1,6 +1,6 @@
 import { IAbilityItem } from "../../../type/list/IAbilityItem";
 import { IGameDifficultyItem } from "../../../type/list/IGameDifficultyItem";
-import { element, elementWithoutEscaping } from "../../../utility/ViewUtility";
+import { element, elementWithoutEscaping, HTMLConverter } from "../../../utility/ViewUtility";
 import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
 import { createElementWithIdAndClass, generateIcooonHTML } from "../../utility/aboutElement";
 import { IView } from "../IView";
@@ -19,7 +19,7 @@ export class SearchConditionSelectorView implements IView{
     private difficultyChoices:SelectChoicesCapsuled<IGameDifficultyItem>;
     private targetChoices:SelectChoicesCapsuled<ITargetItem>;
     private abilityChoices:SelectChoicesCapsuled<IAbilityItem>;
-
+    private htmlConverter:HTMLConverter;
 
     private app:IAppUsedToReadAndChangeOnlyPageState
     constructor(app:IAppUsedToReadAndChangeOnlyPageState, difficulties:IGameDifficultyItem[], abilities:IAbilityItem[]){
@@ -34,28 +34,50 @@ export class SearchConditionSelectorView implements IView{
             <hr noshade class="u-bold">
         </div>`)
         const context = this.element.appendChild(createElementWithIdAndClass({className:"u-width90per"}))
-
+        this.htmlConverter = new HTMLConverter(this.app.state.language)
         context.appendChild(this.difficultyColumn)
         context.appendChild(this.targetColumn)
         context.appendChild(this.abilityColumn)
-
-        //#TODO ヘッダの下にp要素を加えて説明を書く。
+        
+        //#CTODO ヘッダの下にp要素を加えて説明を書く。
         this.difficultyColumn.appendChild(
-            elementWithoutEscaping`
-            <div class="c-title">
-                <div class = "c-title__sub u-biggerChara">${generateIcooonHTML({icooonName:"difficulty"})}難易度</div> <div class = "c-title__sub">Difficulty</div>
+            this.htmlConverter.elementWithoutEscaping`
+            <div>
+                <div class="c-title">
+                    <div class = "c-title__sub u-biggerChara">${generateIcooonHTML({icooonName:"difficulty"})}難易度</div> <div class = "c-title__sub">Difficulty</div>
+                </div>
+                <hr noshade class="u-thin">
+                <ul class="u-margin05em">
+                    <li>${{Japanese:"検索したい難易度を指定してください。"}}</li>
+                </ul>
             </div>`
         )
         this.targetColumn.appendChild(
-            elementWithoutEscaping`
-            <div class="c-title">
-                <div class = "c-title__sub u-biggerChara">${generateIcooonHTML({icooonName:"flag"})}計測対象</div> <div class = "c-title__sub">Target</div>
+            this.htmlConverter.elementWithoutEscaping`
+            <div>
+                <div class="c-title">
+                    <div class = "c-title__sub u-biggerChara">${generateIcooonHTML({icooonName:"flag"})}計測対象</div> <div class = "c-title__sub">Target</div>
+                    
+                </div>
+                <hr noshade class="u-thin">
+                <ul class="u-margin05em">
+                        <li>${{Japanese:"検索したい記録の敵を指定してください。それぞれの敵について並列に検索をします。"}}</li>
+                        <li>${{Japanese:"何も指定しなかった場合、難易度の敵を全て列挙して検索します。"}}</li>
+                </ul>
             </div>`
         )
+        const maxNumberOfPlayer = this.app.state.gameSystemEnvDisplayed.gameMode.maxNumberOfPlayer;
         this.abilityColumn.appendChild(
-            elementWithoutEscaping`
-            <div class="c-title">
-                <div class = "c-title__sub u-biggerChara">${generateIcooonHTML({icooonName:"star"})}能力</div> <div class = "c-title__sub">Ability</div>
+            this.htmlConverter.elementWithoutEscaping`
+            <div>
+                <div class="c-title">
+                    <div class = "c-title__sub u-biggerChara">${generateIcooonHTML({icooonName:"star"})}能力</div> <div class = "c-title__sub">Ability</div>
+                </div>
+                <hr noshade class="u-thin">
+                <ul class="u-margin05em">
+                        <li>${{Japanese:"検索したい記録の自機の能力を検索して下さい。順序を考慮します。"}}</li>
+                        <li>${{Japanese:`このゲームモードは${maxNumberOfPlayer}人プレイにまで対応しています。`}}</li>
+                </ul>
             </div>`
         )
         this.difficultyChoices = new SelectChoicesCapsuled(this.difficultyColumn.appendChild( document.createElement("select") ),difficulties,{language:this.app.state.language})
@@ -63,7 +85,7 @@ export class SearchConditionSelectorView implements IView{
         this.targetChoices = new SelectChoicesCapsuled(this.targetColumn.appendChild( document.createElement("select")),[],{language:this.app.state.language,maxItemCount:10,disable:true,needMultipleSelect:true})
         
         //#CTODO 思えばモードによって最大プレイ人数が変わるので、データベースにそのデータを組み込んでおく必要がある。
-        const maxNumberOfPlayer = this.app.state.gameSystemEnvDisplayed.gameMode.maxNumberOfPlayer;
+        
         this.abilityChoices = new SelectChoicesCapsuled(this.abilityColumn.appendChild( document.createElement("select") ),abilities,
             {   maxItemCount:maxNumberOfPlayer,needDuplicatedSelect:true,needMultipleSelect:true,language:this.app.state.language,
                 maxItemText:

@@ -8,7 +8,7 @@ import { TagsView } from "./TagsView";
 export class RecordCardView implements IView{
     private app:IAppUsedToReadAndChangeOnlyPageState
     private ele:HTMLElement;
-    constructor(app:IAppUsedToReadAndChangeOnlyPageState,record:IRecordInShortResolved,option:OptionObjectSet&{setClickListener?:boolean}) {
+    constructor(app:IAppUsedToReadAndChangeOnlyPageState,record:IRecordInShortResolved,option:OptionObjectSet) {
         this.app = app;
             //[x] これをElementとして出力して、TagをDOM操作で後付けしたい
             this.ele = element`

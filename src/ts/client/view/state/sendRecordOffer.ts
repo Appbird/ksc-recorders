@@ -8,7 +8,7 @@ export class S_SendRecordOffer
         async init(){
             const htmlConverter = new HTMLConverter(this.app.state.language);
             try {
-                this.generateLoadingSpinner();
+                this.generateLoadingSpinner("cloud");
                 this.articleDOM.appendChild(element`<div class="u-width90per">
                     <h1>内容</h1><p>${JSON.stringify(this.requiredObj)}</p>
                 </div>`)

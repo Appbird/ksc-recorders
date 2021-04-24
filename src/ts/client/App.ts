@@ -21,8 +21,13 @@ export default class App {
         this._state = new StateAdministrator(language);
         this.historyAd = new HistoryAdministrator(this)
         this.transitionAd = new TransitionAdministrator(articleDOM,this,this._state);
+        const header = document.getElementById("header");
+        if (header === null) return;
+        header.addEventListener("click",() => {
+            this.transition("mainMenu",null)
+        })
     }
-    async transition<T extends keyof PageStates>(nextState:T, requestObject:RequiredObjectType<PageStates[T]>,{ifAppendHistory=false,title=""}:{ifAppendHistory?:boolean,title?:string} = {}){
+    async transition<T extends keyof PageStates>(nextState:T, requestObject:RequiredObjectType<PageStates[T]>,{ifAppendHistory=true,title=""}:{ifAppendHistory?:boolean,title?:string} = {}){
         if (ifAppendHistory) this.historyAd.appendHistory()
         try { 
             await this.transitionAd.transition(nextState,requestObject,{title:title})

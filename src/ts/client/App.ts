@@ -8,10 +8,11 @@ import { APIFunctions } from "../type/api/relation";
 import { HeaderController } from "./Administrator/HeaderController";
 import { IGameSystemInfoWithoutCollections } from "../type/list/IGameSystemInfo";
 import { IGameModeItemWithoutCollections } from "../type/list/IGameModeItem";
-import { LoginAdministrator } from "./Administrator/LoginAdministrator";
+import { LoginAdministrator, LoginAdministratorReadOnly } from "./Administrator/LoginAdministrator";
+import { IAppUsedToChangeState } from "./interface/AppInterfaces";
 
 
-export default class App {
+export default class App implements IAppUsedToChangeState{
     private _state:StateAdministrator;
     private loginAd:LoginAdministrator;
     private transitionAd: TransitionAdministrator;
@@ -19,8 +20,9 @@ export default class App {
     private header:HeaderController = new HeaderController();
     private apiCaller:APIAdministrator = new APIAdministrator();
 
-    constructor(articleDOM:HTMLElement,language:LanguageInApplication,){
+    constructor(articleDOM:HTMLElement,language:LanguageInApplication){
         this._state = new StateAdministrator(language);
+        this.loginAd = new LoginAdministrator()
         this.historyAd = new HistoryAdministrator(this)
         this.transitionAd = new TransitionAdministrator(articleDOM,this,this._state);
         const header = document.getElementById("header");
@@ -28,6 +30,23 @@ export default class App {
         header.addEventListener("click",() => {
             this.transition("mainMenu",null)
         })
+    }
+    async login(){
+        try{
+            await this.loginAd.login();
+        }catch(error){
+            this.errorCatcher(error);
+        }
+    }
+    async logout(){
+        try{
+            return this.loginAd.logout();
+        }catch(error){
+            this.errorCatcher(error);
+        }
+    }
+    get loginAdministratorReadOnly():LoginAdministratorReadOnly{
+        return this.loginAd;
     }
     async transition<T extends keyof PageStates>(nextState:T, requestObject:RequiredObjectType<PageStates[T]>,{ifAppendHistory=true,title=""}:{ifAppendHistory?:boolean,title?:string} = {}){
         if (ifAppendHistory) this.historyAd.appendHistory()

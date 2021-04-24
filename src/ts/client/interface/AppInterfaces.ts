@@ -2,14 +2,15 @@ import { APIFunctions, APIFunctions_noChanging } from "../../type/api/relation";
 import { LanguageInApplication } from "../../type/LanguageInApplication";
 import { IGameModeItemWithoutCollections } from "../../type/list/IGameModeItem";
 import { IGameSystemInfoWithoutCollections } from "../../type/list/IGameSystemInfo";
+import { LoginAdministratorReadOnly } from "../Administrator/LoginAdministrator";
 import { StateAdministerReadOnly } from "../Administrator/StateAdminister";
 import { PageStates, RequiredObjectType } from "../view/state/PageStates";
 
 
 export interface IAppUsedToRead{
-    state:StateAdministerReadOnly,
+    state:StateAdministerReadOnly;
+    loginAdministratorReadOnly:LoginAdministratorReadOnly;
     accessToAPI:<T extends keyof APIFunctions_noChanging>(functionName: T, requiredObj: APIFunctions[T]["atServer"]) => Promise<APIFunctions[T]["atClient"]>
-    /* 入力要求画面を要するのであれば、入力要求画面自体はAppのステートを変えないので、ここに分類される。 */
 }
 export interface IAppUsedToReadAndChangeOnlyPageState/*IAppUsedToReadAndChangeOnlyPageState*/ extends IAppUsedToRead{
     accessToAPI:<T extends keyof APIFunctions_noChanging>(functionName: T, requiredObj: APIFunctions[T]["atServer"]) => Promise<APIFunctions[T]["atClient"]>
@@ -17,7 +18,9 @@ export interface IAppUsedToReadAndChangeOnlyPageState/*IAppUsedToReadAndChangeOn
     transition<T extends keyof PageStates>(nextState:T, requestObject:RequiredObjectType<PageStates[T]>,{ifAppendHistory,title}:{ifAppendHistory?:boolean,title?:string}):void
 }
 export interface IAppUsedToReadAndChangePage extends IAppUsedToReadAndChangeOnlyPageState{
-    changeTargetGameMode:(gameSystemEnv:{gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections}) =>  Promise<void>
+    login():Promise<void>
+    logout():Promise<void>
+    changeTargetGameMode:(gameSystemEnv:{gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections}) =>  Promise<void> | undefined
     setLanguage(lang:LanguageInApplication):void;
 }
 export interface IAppUsedToChangeState extends IAppUsedToReadAndChangePage{

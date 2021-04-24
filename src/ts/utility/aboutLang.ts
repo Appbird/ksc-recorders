@@ -15,8 +15,9 @@ export function selectAppropriateDescription(item:MultiLanguageDescription,lang:
     }
 }
 
-export function choiceDescription(item:MultiLanguageDescription|undefined,lang:LanguageInApplication){
+export function choiceDescription(item:MultiLanguageDescription|undefined|null,lang:LanguageInApplication){
     if (item === undefined) return "";
+    if (item === null) return "";
     switch (lang){
         case "Japanese": return (item.JDescription === undefined) ? "" : item.JDescription
         case "English": return (item.EDescription === undefined) ? "" : item.EDescription

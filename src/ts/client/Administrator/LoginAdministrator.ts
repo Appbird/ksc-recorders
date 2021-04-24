@@ -1,29 +1,29 @@
-import App from "../App";
 import firebase from "../firebase"
-export class LoginAdministrator{
-    private iconAboutloginUser:HTMLImageElement;
-    private app:App;
+export interface LoginAdministratorReadOnly{
+    isUserLogin:boolean;
+    loginUserName:string|null;
+    loginUserIconPicture:string|null|undefined;
+    getIDToken():Promise<string>
+}
+export class LoginAdministrator implements LoginAdministratorReadOnly{
     private provider:firebase.auth.GoogleAuthProvider;
-    constructor(app:App){
+    constructor(){
         const result = document.querySelector("header>img.c-userIcon")
         if (result === null) throw new Error("予期せぬエラーです。")
-        this.iconAboutloginUser = result as HTMLImageElement;
         this.provider = new firebase.auth.GoogleAuthProvider();
-        this.app = app;
         firebase.auth().useDeviceLanguage();
 
     }
     /**@throw */
     async login(){
-        try{
-            await firebase.auth().signInWithPopup(this.provider);
-        }catch(error){
-            this.app.errorCatcher(error);
-        }
+        await firebase.auth().signInWithPopup(this.provider);
     }
     /**@throw */
     async logout(){
         await firebase.auth().signOut()
+    }
+    get isUserLogin(){
+        return firebase.auth().currentUser !== null;
     }
     /**@throw */
     get loginUserName(){
@@ -38,7 +38,7 @@ export class LoginAdministrator{
         return firebase.auth().currentUser?.photoURL;
     }
     /**@throw */
-    get IDToken(){
+    getIDToken(){
         const user = firebase.auth().currentUser;
         if ( user === null ) throw new Error("ログインしていません。")
         return user.getIdToken(true);

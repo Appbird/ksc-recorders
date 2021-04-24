@@ -15,18 +15,21 @@ import { S_SpinnerExhibition } from "./SpinnerExhibition";
 
 export type RequiredObjectType<StateClass> = StateClass extends PageStateBaseClass<infer U,IAppUsedToRead>? U : never;
 export type UsedIAppLimited<IAppLimited> = IAppLimited extends PageStateBaseClass<any,infer U>? U:never;
-export interface PageStates{
+export type PageStates = PageStatesWithRequiredObject & PageStateWithoutRequiredObject;
+export interface PageStatesWithRequiredObject{
     //#NOTE それぞれのステートが初期条件として必要とするオブジェクトの型をここに記述する。
-    none:S_None,
     errorView:S_ErrorState,
     detailView:S_SearchDetail,
-    searchConditionSelectorView:S_SearchConditionSelector,
     searchResultView:S_SearchResult,
-    gameSystemSelector:S_GameSystemSelector,
     gameModeSeletor:S_GameModeSelector,
+    sendRecordOffer:S_SendRecordOffer
+}
+export interface PageStateWithoutRequiredObject{
+    none:S_None,
+    searchConditionSelectorView:S_SearchConditionSelector,
+    gameSystemSelector:S_GameSystemSelector,
     mainMenu:S_MainMenu,
     offerForm:S_OfferForm,
-    sendRecordOffer:S_SendRecordOffer,
     spinnerExhibition:S_SpinnerExhibition
 }
 export const pageStates:PageStatesConstructorObj= {
@@ -42,5 +45,3 @@ export const pageStates:PageStatesConstructorObj= {
     sendRecordOffer:S_SendRecordOffer,
     spinnerExhibition:S_SpinnerExhibition
 }
-export const stateView = ["none","errorView","detailView","searchConditionSelectorView","searchResultView","gameSystemSelector","mainMenu"];
-

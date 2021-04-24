@@ -8,7 +8,7 @@ app.use(express.json())
 app.get(`/app`,async (req,res) => {
     try{
         if (typeof req.query.state !== "string" || typeof req.query.required !== "string"){
-            res.redirect("/app/main.html")
+            res.redirect("/app/index.html")
             return;
         }
         res.redirect(`/app/main.html?state=${req.query.state}&required=${req.query.required}`)
@@ -32,7 +32,7 @@ apiList.forEach( (value,key) => {
     })
 })
 
-app.listen(3000,() => console.info("start on http://localhost:3000/app"))
+app.listen(5000,() => console.info("start on http://localhost:5000/app"))
 
 function errorCatcher(key:string,error:any){
     console.log(`\u001b[31m[${new Date().toLocaleString()}] failed to execute /api${key}\u001b[0m\n`)

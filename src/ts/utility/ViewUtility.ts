@@ -18,7 +18,8 @@ export class HTMLConverter{
     constructor(lang:LanguageInApplication){
         this.language = lang;
     }
-    elementWithoutEscaping(strings:TemplateStringsArray,...values:(string|{[key:string]:string}|undefined|null)[]){
+    elementWithoutEscaping(strings:TemplateStringsArray,
+        ...values:(string|{Japanese?:string, English?:string})[]){
         
         const htmlString = strings.reduce(
             (result, str, i) => {

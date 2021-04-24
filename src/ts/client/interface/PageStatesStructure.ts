@@ -1,5 +1,4 @@
-import { S_ErrorState } from "../view/state/ErrorState";
-import { IPageStateBaseClass, PageStateBaseClass } from "../view/state/PageStateClass";
+import { IPageStateBaseClass} from "../view/state/PageStateClass";
 import { IAppUsedToRead } from "./AppInterfaces";
 
 export interface PageStatesConstructorObj {

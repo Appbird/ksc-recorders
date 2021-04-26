@@ -1,15 +1,15 @@
-import { isIReceivedDataAtServer_getlist_UseId } from "../../type/api/list/atServer_getlist/IReceivedDataAtServer_getlist_UseId.validator";
-import { isIReceivedDataAtServer_getlist_UseSIdId } from "../../type/api/list/atServer_getlist/IReceivedDataAtServer_getlist_UseSIdId.validator";
-import { isIReceivedDataAtServer_getlist_UseSIdMIdId } from "../../type/api/list/atServer_getlist/IReceivedDataAtServer_getlist_UseSIdMIdId.validator";
-import { isIReceivedDataAtServer_pickUp_UseId } from "../../type/api/list/atServer_pickup/IReceivedDataAtServer_pickUp_UseId.validator";
-import { isIReceivedDataAtServer_pickUp_UseSIdId } from "../../type/api/list/atServer_pickup/IReceivedDataAtServer_pickUp_UseSIdId.validator";
-import { isIReceivedDataAtServer_pickUp_UseSIdMIdId } from "../../type/api/list/atServer_pickup/IReceivedDataAtServer_pickUp_UseSIdMIdId.validator";
-import { isIReceivedDataAtServer_recordDetail } from "../../type/api/record/IReceivedDataAtServer_recordDetail.validator";
-import { isIReceivedDataAtServer_recordSearch } from "../../type/api/record/IReceivedDataAtServer_recordSearch.validator";
+import { isIReceivedDataAtServer_getlist_UseId } from "../../../../src/ts/type/api/list/atServer_getlist/IReceivedDataAtServer_getlist_UseId.validator";
+import { isIReceivedDataAtServer_getlist_UseSIdId } from "../../../../src/ts/type/api/list/atServer_getlist/IReceivedDataAtServer_getlist_UseSIdId.validator";
+import { isIReceivedDataAtServer_getlist_UseSIdMIdId } from "../../../../src/ts/type/api/list/atServer_getlist/IReceivedDataAtServer_getlist_UseSIdMIdId.validator";
+import { isIReceivedDataAtServer_pickUp_UseId } from "../../../../src/ts/type/api/list/atServer_pickup/IReceivedDataAtServer_pickUp_UseId.validator";
+import { isIReceivedDataAtServer_pickUp_UseSIdId } from "../../../../src/ts/type/api/list/atServer_pickup/IReceivedDataAtServer_pickUp_UseSIdId.validator";
+import { isIReceivedDataAtServer_pickUp_UseSIdMIdId } from "../../../../src/ts/type/api/list/atServer_pickup/IReceivedDataAtServer_pickUp_UseSIdMIdId.validator";
+import { isIReceivedDataAtServer_recordDetail } from "../../../../src/ts/type/api/record/IReceivedDataAtServer_recordDetail.validator";
+import { isIReceivedDataAtServer_recordSearch } from "../../../../src/ts/type/api/record/IReceivedDataAtServer_recordSearch.validator";
 //#TODO 出来ることならTypeScript_json_validatorの出力結果を一つにまとめたい。--collection trueオプションをどう使えばいいのだろうか…。
-import { APIFunctions } from "../../type/api/relation";
-import { IReceivedData } from "../../type/api/transmissionBase";
-import { ValidateFunction } from '../../type/api/ValidateFunction';
+import { APIFunctions } from "../../../../src/ts/type/api/relation";
+import { IReceivedData, IReceivedDataAtClient, IReceivedDataAtServer } from "../../../../src/ts/type/api/transmissionBase";
+import { ValidateFunction } from '../../../../src/ts/type/api/ValidateFunction';
 import { InterfaceOfRecordDatabase } from "../type/InterfaceOfRecordDatabase";
 import { abilities, difficulties, gameModes, gameSystems, hashTags, runners, targets } from "./list/getList";
 import { ability, difficulty, gameMode, gameSystem, hashTag, runner, target } from "./list/pickUp";
@@ -19,7 +19,7 @@ import { search } from "./record/search";
 class APIList{
     private apiDefinition = new Map<string,apiInterface<IReceivedData>>()
     constructor(){}
-    set<U extends IReceivedData>(title:string,validateFunction:ValidateFunction<U["atServer"]>,process:ProcessFunction<U>){
+    set<U extends IReceivedData>(title:string,validateFunction:ValidateFunction<U["atServer"]>,process:ProcessFunction<U["atServer"],U["atClient"]>){
         return this.apiDefinition.set(title,{validator:validateFunction, process:process})
     }
     forEach(callback:(value:apiInterface<IReceivedData>,key:string) => void){
@@ -27,11 +27,11 @@ class APIList{
     }
 }
 
-type ProcessFunction<Received extends IReceivedData> = (recordDatabase:InterfaceOfRecordDatabase,input:Received["atServer"]) => Promise<Received["atClient"]>;
+type ProcessFunction<AtServer extends IReceivedDataAtServer,AtClient extends IReceivedDataAtClient > = (recordDatabase:InterfaceOfRecordDatabase,input:AtServer) => Promise<AtClient>;
 
 interface apiInterface<Received extends IReceivedData>{    
     validator:ValidateFunction<Received["atServer"]>
-    process:ProcessFunction<Received>
+    process:ProcessFunction<Received["atServer"],Received["atClient"]>
 }
 
 export const apiList = new APIList();

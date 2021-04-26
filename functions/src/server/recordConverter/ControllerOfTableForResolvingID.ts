@@ -1,9 +1,9 @@
-import { IRecord, IRecordInShortResolved, IRecordResolved } from "../../type/record/IRecord";
-import { IRecordGroupResolved } from "../../type/record/IRecordGroupResolved";
-import { IItemOfResolveTableToName } from "../../type/list/IItemOfResolveTableToName";
-import { LanguageInApplication } from "../../type/LanguageInApplication";
+import { IRecord, IRecordInShortResolved, IRecordResolved } from "../../../../src/ts/type/record/IRecord";
+import { IRecordGroupResolved } from "../../../../src/ts/type/record/IRecordGroupResolved";
+import { IItemOfResolveTableToName } from "../../../../src/ts/type/list/IItemOfResolveTableToName";
+import { LanguageInApplication } from "../../../../src/ts/type/LanguageInApplication";
 import { InterfaceOfRecordDatabase } from "../type/InterfaceOfRecordDatabase";
-import { selectAppropriateName } from "../../utility/aboutLang";
+import { selectAppropriateName } from "../../../../src/ts/utility/aboutLang";
 /**
  * データベースのデータを参照してIDを解決してくれるテーブルマネージャー
  */

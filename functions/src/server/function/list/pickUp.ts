@@ -1,9 +1,9 @@
-import { IReceivedDataAtServer_pickUp_UseSIdMIdId } from "../../../type/api/list/atServer_pickup/IReceivedDataAtServer_pickUp_UseSIdMIdId";
-import { IReceivedDataAtServer_pickUp_UseSIdId } from "../../../type/api/list/atServer_pickup/IReceivedDataAtServer_pickUp_UseSIdId";
-import { IReceivedDataAtServer_pickUp_UseId } from "../../../type/api/list/atServer_pickup/IReceivedDataAtServer_pickUp_UseId";
-import { IItemOfResolveTableToName } from "../../../type/list/IItemOfResolveTableToName";
+import { IReceivedDataAtServer_pickUp_UseSIdMIdId } from "../../../../../src/ts/type/api/list/atServer_pickup/IReceivedDataAtServer_pickUp_UseSIdMIdId";
+import { IReceivedDataAtServer_pickUp_UseSIdId } from "../../../../../src/ts/type/api/list/atServer_pickup/IReceivedDataAtServer_pickUp_UseSIdId";
+import { IReceivedDataAtServer_pickUp_UseId } from "../../../../../src/ts/type/api/list/atServer_pickup/IReceivedDataAtServer_pickUp_UseId";
+import { IItemOfResolveTableToName } from "../../../../../src/ts/type/list/IItemOfResolveTableToName";
 import { InterfaceOfRecordDatabase } from "../../type/InterfaceOfRecordDatabase";
-import { IReceivedDataAtClient_pickUp } from "../../../type/api/list/IReceivedDataAtClient_pickUp";
+import { IReceivedDataAtClient_pickUp } from "../../../../../src/ts/type/api/list/IReceivedDataAtClient_pickUp";
  
 async function pickUp_UseId<T extends IItemOfResolveTableToName>(input:IReceivedDataAtServer_pickUp_UseId, searchFunc:(id:string)=>Promise<T>):Promise<IReceivedDataAtClient_pickUp<T>>{
     return {isSucceeded:true,result: await searchFunc(input.id)}

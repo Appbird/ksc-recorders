@@ -1,9 +1,9 @@
-import { IRecord } from "../../type/record/IRecord";
-import { checkEqualityBetweenArrays } from "../../utility/arrayUtility";
-import { OrderOfRecordArray } from "../type/OrderOfRecordArray";
+import { IRecord } from "../../../../src/ts/type/record/IRecord";
+import { checkEqualityBetweenArrays } from "../../../../src/ts/utility/arrayUtility";
+import { OrderOfRecordArray } from "../../../../src/ts/type/record/OrderOfRecordArray";
 import { exampleData } from "./exampledata";
 import { IRecordDataBase } from "../type/IRecordDataBase";
-import { checkIsUndefined } from "../../utility/undefinedChecker";
+import { checkIsUndefined } from ".../../../src/ts/utility/undefinedChecker";
 import { InterfaceOfRecordDatabase } from "../type/InterfaceOfRecordDatabase";
 
 export class RecordDataBase implements InterfaceOfRecordDatabase{

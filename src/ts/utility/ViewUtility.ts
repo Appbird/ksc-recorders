@@ -1,4 +1,4 @@
-import { LanguageInApplication, LanguageList } from "../type/LanguageInApplication";
+import { LanguageInApplication } from "../type/LanguageInApplication";
 
 function escapeSpecialChars(str:string) {
     return str

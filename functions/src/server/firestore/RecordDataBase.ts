@@ -1,13 +1,13 @@
-import { IRecord } from "../../type/record/IRecord";
-import { IRunner } from "../../type/record/IRunner";
+import { IRecord } from "../../../../src/ts/type/record/IRecord";
+import { IRunner } from "../../../../src/ts/type/record/IRunner";
 import { firebase } from "../firebaseAdmin";
-import { IHashTagItem, IGameSystemInfo, IGameSystemInfoWithoutCollections } from "../../type/list/IGameSystemInfo";
+import { IHashTagItem, IGameSystemInfoWithoutCollections } from "../../../../src/ts/type/list/IGameSystemInfo";
 import { InterfaceOfRecordDatabase } from "../type/InterfaceOfRecordDatabase";
-import { OrderOfRecordArray } from "../type/OrderOfRecordArray";
-import { IGameModeItem, IGameModeItemWithoutCollections } from "../../type/list/IGameModeItem";
-import { IGameDifficultyItem } from "../../type/list/IGameDifficultyItem";
-import { ITargetItem } from "../../type/list/ITargetItem";
-import { IAbilityItem } from "../../type/list/IAbilityItem";
+import { OrderOfRecordArray } from "../../../../src/ts/type/record/OrderOfRecordArray";
+import { IGameModeItemWithoutCollections } from "../../../../src/ts/type/list/IGameModeItem";
+import { IGameDifficultyItem } from "../../../../src/ts/type/list/IGameDifficultyItem";
+import { ITargetItem } from "../../../../src/ts/type/list/ITargetItem";
+import { IAbilityItem } from "../../../../src/ts/type/list/IAbilityItem";
 
 //[x] getRecordsWithConditionメソッドの実装
 class RecordDataBase implements InterfaceOfRecordDatabase{

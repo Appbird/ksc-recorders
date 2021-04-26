@@ -1,5 +1,4 @@
 import { LanguageInApplication } from "../type/LanguageInApplication"
-import { IItemOfResolveTableToName } from "../type/list/IItemOfResolveTableToName"
 
 export function selectAppropriateName(item:{JName:string,EName:string},lang:LanguageInApplication){
     switch (lang){

@@ -1,4 +1,3 @@
-import { gameSystem } from "../../../server/function/list/pickUp";
 import { TargetGameMode } from "../../Administrator/StateAdminister";
 import { IAppUsedToReadAndChangePage } from "../../interface/AppInterfaces";
 import { OfferFormView } from "../parts/OfferFormView";

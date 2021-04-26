@@ -1,4 +1,4 @@
-import { IRecord } from "../../type/record/IRecord";
+import { IRecord } from "../../../../src/ts/type/record/IRecord";
 
 //#CTODO id群をしっかりnumberからstringに変えておく
 export const recordsData:IRecord[] = [

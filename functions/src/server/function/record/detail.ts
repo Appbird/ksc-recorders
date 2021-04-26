@@ -1,5 +1,5 @@
-import { IReceivedDataAtServer_recordDetail } from "../../../type/api/record/IReceivedDataAtServer_recordDetail";
-import { IReceivedDataAtClient_recordDetail } from "../../../type/api/record/IReceivedDataAtClient_recordDetail";
+import { IReceivedDataAtServer_recordDetail } from "../../../../../src/ts/type/api/record/IReceivedDataAtServer_recordDetail";
+import { IReceivedDataAtClient_recordDetail } from "../../../../../src/ts/type/api/record/IReceivedDataAtClient_recordDetail";
 import { ControllerOfTableForResolvingID } from "../../recordConverter/ControllerOfTableForResolvingID";
 import { InterfaceOfRecordDatabase } from "../../type/InterfaceOfRecordDatabase";
 

@@ -1,5 +1,5 @@
 import { LanguageInApplication } from "../LanguageInApplication";
-import { OrderOfRecordArray } from "../../server/type/OrderOfRecordArray";
+import { OrderOfRecordArray } from "./OrderOfRecordArray";
 
 export interface SearchCondition {
     groupName: string;

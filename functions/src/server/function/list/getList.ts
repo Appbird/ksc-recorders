@@ -1,9 +1,9 @@
-import { IReceivedDataAtServer_getlist_UseSIdMIdId } from "../../../type/api/list/atServer_getlist/IReceivedDataAtServer_getlist_UseSIdMIdId";
-import { IReceivedDataAtServer_getlist_UseSIdId } from "../../../type/api/list/atServer_getlist/IReceivedDataAtServer_getlist_UseSIdId";
-import { IReceivedDataAtServer_getlist_UseId } from "../../../type/api/list/atServer_getlist/IReceivedDataAtServer_getlist_UseId";
-import { IItemOfResolveTableToName } from "../../../type/list/IItemOfResolveTableToName";
+import { IReceivedDataAtServer_getlist_UseSIdMIdId } from "../../../../../src/ts/type/api/list/atServer_getlist/IReceivedDataAtServer_getlist_UseSIdMIdId";
+import { IReceivedDataAtServer_getlist_UseSIdId } from "../../../../../src/ts/type/api/list/atServer_getlist/IReceivedDataAtServer_getlist_UseSIdId";
+import { IReceivedDataAtServer_getlist_UseId } from "../../../../../src/ts/type/api/list/atServer_getlist/IReceivedDataAtServer_getlist_UseId";
+import { IItemOfResolveTableToName } from "../../../../../src/ts/type/list/IItemOfResolveTableToName";
 import { InterfaceOfRecordDatabase } from "../../type/InterfaceOfRecordDatabase";
-import { IReceivedDataAtClient_getlist } from "../../../type/api/list/IReceivedDataAtClient_getlist";
+import { IReceivedDataAtClient_getlist } from "../../../../../src/ts/type/api/list/IReceivedDataAtClient_getlist";
  
 function searchBasedOnIDList<T extends IItemOfResolveTableToName>(inputIdList:string[],data:T[]):T[]{
     const idList = inputIdList.concat();

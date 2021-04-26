@@ -1,8 +1,8 @@
-import { IRecord } from "../../type/record/IRecord";
+import { IRecord } from "../../../../src/ts/type/record/IRecord";
 import assert  from "assert";
 import { recordDataBase } from "../firestore/RecordDataBase"
-import { checkEqualityBetweenArraysWithConsoleMsg } from "../../utility/arrayUtility";
-import { OrderOfRecordArray } from "../type/OrderOfRecordArray";
+import { checkEqualityBetweenArraysWithConsoleMsg } from "../../../../src/ts/utility/arrayUtility";
+import { OrderOfRecordArray } from "../../../../src/ts/type/record/OrderOfRecordArray";
 const database = recordDataBase;
 
 const workID = "fpNF4dAftZV2ffQJLvv6"

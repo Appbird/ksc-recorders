@@ -1,5 +1,5 @@
 @charset "UTF-8";
-
+@use "../../foundation/variables.scss" as variables;
 .c-title{
     display: flex;
     justify-content: space-between;
@@ -11,4 +11,10 @@
 .c-title__main{
     font-weight: 800;
     font-size: xx-large;
+}
+@media screen and (max-width:variables.$mobileMaxWidth) {
+    .c-title__main {font-size: x-large;}
+}
+@media screen and (min-width:variables.$mobileMaxWidth) {
+    .c-title__main {font-size: xx-large;}
 }

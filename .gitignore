@@ -3,5 +3,4 @@ node_modules/
 *.code-workspace
 *.tsbuildinfo
 secret/
-public/icon/
 build/js/

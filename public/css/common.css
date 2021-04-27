@@ -52,7 +52,7 @@ a {
 
 header {
   width: 100%;
-  height: 5em;
+  height: 10vh;
   z-index: 2;
   box-shadow: 0px 3px 5px rgba(23, 4, 75, 0.171);
   background-color: #fff;
@@ -60,7 +60,7 @@ header {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  overflow-x: hidden;
+  overflow: hidden;
   transition: 0.3s;
   cursor: pointer;
 }
@@ -71,7 +71,6 @@ header:hover {
 }
 
 header > div {
-  width: 70%;
   overflow-x: hidden;
   opacity: 1;
   transform: translateX(0);
@@ -112,6 +111,16 @@ article {
   overflow-x: hidden;
 }
 
+@media screen and (max-width: 800px) {
+  article {
+    width: 90%;
+  }
+}
+@media screen and (min-width: 800px) {
+  article {
+    width: 70%;
+  }
+}
 nav {
   min-width: 200px;
   width: 20%;
@@ -139,12 +148,22 @@ article:before {
   content: "";
   width: 70%;
   height: 0;
+  z-index: 50;
   background-color: white;
   position: absolute;
-  z-index: 50;
   box-shadow: 0px 3px 3px rgba(23, 4, 75, 0.329);
 }
 
+@media screen and (max-width: 800px) {
+  article:before {
+    width: 90%;
+  }
+}
+@media screen and (min-width: 800px) {
+  article:before {
+    width: 70%;
+  }
+}
 article.is-seqStart:before {
   height: 100%;
   opacity: 1;
@@ -413,6 +432,16 @@ article.is-seqEnd:before {
   font-size: xx-large;
 }
 
+@media screen and (max-width: 800px) {
+  .c-title__main {
+    font-size: x-large;
+  }
+}
+@media screen and (min-width: 800px) {
+  .c-title__main {
+    font-size: xx-large;
+  }
+}
 .c-list {
   display: flex;
   flex-direction: column;
@@ -475,88 +504,128 @@ article h1::after {
   font-size: xx-large;
 }
 
+@media screen and (max-width: 800px) {
+  .p-titlePostHeader__main {
+    font-size: x-large;
+  }
+}
+@media screen and (min-width: 800px) {
+  .p-titlePostHeader__main {
+    font-size: xx-large;
+  }
+}
 .u-background--star {
-  background: url("../icon/IcoonMono/star.svg");
+  background: url("../icon/IcooonMono/star.svg");
   background-size: cover;
 }
 
 .u-background--shortcake {
-  background: url("../icon/IcoonMono/shortcake.svg");
+  background: url("../icon/IcooonMono/shortcake.svg");
   background-size: cover;
 }
 
 .u-background--difficulty {
-  background: url("../icon/IcoonMono/difficulty.svg");
+  background: url("../icon/IcooonMono/difficulty.svg");
   background-size: cover;
 }
 
 .u-background--flag {
-  background: url("../icon/IcoonMono/flag2.svg");
+  background: url("../icon/IcooonMono/flag2.svg");
   background-size: cover;
 }
 
 .u-background--punch {
-  background: url("../icon/IcoonMono/punch.svg");
+  background: url("../icon/IcooonMono/punch.svg");
   background-size: cover;
 }
 
 .u-background--person {
-  background: url("../icon/IcoonMono/person.svg");
+  background: url("../icon/IcooonMono/person.svg");
   background-size: cover;
 }
 
 .u-background--iceCream {
-  background: url("../icon/IcoonMono/iceCream.svg");
+  background: url("../icon/IcooonMono/iceCream.svg");
   background-size: cover;
 }
 
 .u-background--ns {
-  background: url("../icon/IcoonMono/somethinglikeNintendoSwitch.svg");
+  background: url("../icon/IcooonMono/somethinglikeNintendoSwitch.svg");
   background-size: cover;
 }
 
 .u-background--ds {
-  background: url("../icon/IcoonMono/somethinglike3ds.svg");
+  background: url("../icon/IcooonMono/somethinglike3ds.svg");
   background-size: cover;
 }
 
 .u-background--ramen {
-  background: url("../icon/IcoonMono/ramen.svg");
+  background: url("../icon/IcooonMono/ramen.svg");
   background-size: cover;
 }
 
 .u-background--notebook {
-  background: url("../icon/IcoonMono/notebook.svg");
+  background: url("../icon/IcooonMono/notebook.svg");
   background-size: cover;
 }
 
 .u-background--heart {
-  background: url("../icon/IcoonMono/heart.svg");
+  background: url("../icon/IcooonMono/heart.svg");
   background-size: cover;
 }
 
 .u-background--gear {
-  background: url("../icon/IcoonMono/gear.svg");
+  background: url("../icon/IcooonMono/gear.svg");
   background-size: cover;
 }
 
 .u-background--tag {
-  background: url("../icon/IcoonMono/tag.svg");
+  background: url("../icon/IcooonMono/tag.svg");
   background-size: cover;
 }
 
 .u-background--time {
-  background: url("../icon/IcoonMono/time.svg");
+  background: url("../icon/IcooonMono/time.svg");
   background-size: cover;
 }
 
 .u-background--link {
-  background: url("../icon/IcoonMono/link.svg");
+  background: url("../icon/IcooonMono/link.svg");
   background-size: cover;
 }
 
 .u-background--cloud {
-  background: url("../icon/IcoonMono/cloud.svg");
+  background: url("../icon/IcooonMono/cloud.svg");
+  background-size: cover;
+}
+
+.u-background--feather {
+  background: url("../icon/IcooonMono/feather.svg");
+  background-size: cover;
+}
+
+.u-background--key {
+  background: url("../icon/IcooonMono/key.svg");
+  background-size: cover;
+}
+
+.u-background--menu {
+  background: url("../icon/IcooonMono/menu.svg");
+  background-size: cover;
+}
+
+.u-background--writing {
+  background: url("../icon/IcooonMono/writing.svg");
+  background-size: cover;
+}
+
+.u-background--login {
+  background: url("../icon/IcooonMono/login.svg");
+  background-size: cover;
+}
+
+.u-background--logout, .u-background--exit {
+  background: url("../icon/IcooonMono/exit.svg");
   background-size: cover;
 }
 
@@ -694,6 +763,10 @@ article h1::after {
   width: 60%;
   margin-left: 20%;
   margin-right: 20%;
+}
+
+.u-width30perWithoutMargin {
+  width: 30%;
 }
 
 /*# sourceMappingURL=common.css.map */

@@ -1,3 +1,4 @@
+@use "../../foundation/variables.scss" as variables;
 .p-titlePostHeader{
     display: flex;
     flex-direction:column;
@@ -7,4 +8,10 @@
 .p-titlePostHeader__main{
     font-weight: 800;
     font-size: xx-large;
+}
+@media screen and (max-width:variables.$mobileMaxWidth) {
+    .p-titlePostHeader__main {font-size: x-large;}
+}
+@media screen and (min-width:variables.$mobileMaxWidth) {
+    .p-titlePostHeader__main {font-size: xx-large;}
 }

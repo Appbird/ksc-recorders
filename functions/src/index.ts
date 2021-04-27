@@ -7,7 +7,6 @@ const app = express();
 app.use(express.json())
 apiList.forEach( (value,key) => {
     app.post(`/api${key}`,async (req,res) => {
-        console.log(`\u001b[32m[${new Date().toLocaleString()}] start to execute /api${key}\u001b[0m\n`)
         try {
             if (!value.validator(req.body)) throw new Error(value.validator.errors?.map(((error,index) => `\n## Error No.${index+1}: ${error.message} \n\n### スキーマの場所 \n\n ${error.schemaPath} ;\n\n### データの場所\n\n${error.dataPath};`)).join("\n\n"))
         } catch(error){  res.status(400).json(errorCatcher(key,error)); return; }
@@ -15,16 +14,18 @@ apiList.forEach( (value,key) => {
         try { 
             res.status(200).json(await value.process(recordDataBase,req.body))
         }catch(error){ res.status(500).json(errorCatcher(key,error))}
+        console.log(`\u001b[32m[${new Date().toLocaleString()}] Process /api${key} was completed Successfully! \u001b[0m\n`)
+        
         return;
     })
 })
 
 exports.app = functions.https.onRequest(app);
-console.log("abc");
 
 function errorCatcher(key:string,error:any){
     console.log(`\u001b[31m[${new Date().toLocaleString()}] failed to execute /api${key}\u001b[0m\n`)
     if (!(error instanceof Error)){
+        
         console.error(`予期せぬエラーです。`); 
         return {isSuccess:false,message:String(error)};
     }

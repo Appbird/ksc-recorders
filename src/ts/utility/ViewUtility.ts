@@ -1,4 +1,6 @@
+import { MultiLanguageString } from "../type/foundation/MultiLanguageString";
 import { LanguageInApplication } from "../type/LanguageInApplication";
+import { choiceString } from "./aboutLang";
 
 function escapeSpecialChars(str:string) {
     return str
@@ -19,20 +21,12 @@ export class HTMLConverter{
         this.language = lang;
     }
     elementWithoutEscaping(strings:TemplateStringsArray,
-        ...values:(string|{Japanese?:string, English?:string})[]){
+        ...values:(string|MultiLanguageString)[]){
         
         const htmlString = strings.reduce(
             (result, str, i) => {
                 const value = values[i-1];
-                if (value === null) return result + "null" + str;
-                if (value === undefined) return result + "undefined" + str;
-                if (typeof value == "string"){
-                    return result + value + str;
-                }else if (typeof value === "object") {
-                    return result + ((value[this.language] === undefined ) ? "undefined":value[this.language]) + str
-                } else {
-                    return result + String(value) + str;
-                }
+                return result + choiceString(value,this.language) + str
             }
         );
         const ele = htmlToElement(htmlString);

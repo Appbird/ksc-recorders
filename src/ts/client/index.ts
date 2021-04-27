@@ -4,5 +4,5 @@ if (articleDOM === null) throw new Error("idがarticleである要素を見つ�
 const app = new App(articleDOM,"Japanese");
 (async () => {
     await app.init();
-    app.transition("gameSystemSelector",null);
+    app.transition("mainMenu",null);
 })();

@@ -56,6 +56,7 @@ export default class App implements IAppUsedToChangeState{
         return this.loginAd;
     }
     async transition<T extends keyof PageStates>(nextState:T, requestObject:RequiredObjectType<PageStates[T]>,{ifAppendHistory=true,title=""}:{ifAppendHistory?:boolean,title?:string} = {}){
+        scrollToTop();
         if (ifAppendHistory) this.historyAd.appendHistory()
         try { 
             await this.transitionAd.transition(nextState,requestObject,{title:title})
@@ -85,3 +86,9 @@ export default class App implements IAppUsedToChangeState{
     }
     
 }
+
+const scrollToTop = () => {
+    var scrolled = ( window.pageYOffset !== undefined ) ? window.pageYOffset: document.documentElement.scrollTop;
+    window.scrollTo( 0, Math.floor( scrolled / 2 ) );
+    if ( scrolled > 2 ) { window.setTimeout( scrollToTop, 30 );}
+  };

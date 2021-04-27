@@ -1,8 +1,11 @@
 import { IGameModeItemWithoutCollections } from "../../../type/list/IGameModeItem";
 import { IGameSystemInfoWithoutCollections } from "../../../type/list/IGameSystemInfo";
-import { HTMLConverter } from "../../../utility/ViewUtility";
+import { element, HTMLConverter } from "../../../utility/ViewUtility";
 import { IAppUsedToReadAndChangePage } from "../../interface/AppInterfaces";
+import { MultiLanguageString } from "../../../type/foundation/MultiLanguageString";
+import { MultiLanguageStringWithICon } from "../../../type/foundation/MultiLanguageStringWithICon";
 import { PageStateBaseClass } from "./PageStateClass";
+import { choiceString } from "../../../utility/aboutLang";
 
 export class S_MainMenu
     extends PageStateBaseClass<null|{gameSystem:IGameSystemInfoWithoutCollections, gameMode:IGameModeItemWithoutCollections},IAppUsedToReadAndChangePage>{
@@ -12,10 +15,9 @@ export class S_MainMenu
             this.htmlConverter = new HTMLConverter(this.app.state.language)
         }
         init(){
-            //#TODO ここに機能へつながるリンクを列挙する。ヘッダをクリックするとこのページに遷移する。
+            //#CTODO ここに機能へつながるリンクを列挙する。ヘッダをクリックするとこのページに遷移する。
             
-            if (this.requiredObj === null) return;
-            this.app.changeTargetGameMode(this.requiredObj);
+            if (this.requiredObj !== null) this.app.changeTargetGameMode(this.requiredObj);
 
             const main = this.articleDOM.appendChild(this.htmlConverter.elementWithoutEscaping`
             <div>
@@ -27,24 +29,24 @@ export class S_MainMenu
                 
                 <div class="u-space2em"></div>
                 <div class="u-width90per">
-                  
-                <div class="u-space3em"></div>
             </div>
             `)
             const mainMenu = main.appendChild(this.htmlConverter.elementWithoutEscaping`
-                <div class="c-list">
+                <div class="c-list u-width90per">
                     <div class="c-title">
                         <div class="c-title__main">メインメニュー</div>
                         <div class="c-title__sub">Main Menu</div>
                     </div>
                     <hr noshade class="u-thin">
+                    
                 </div>
             `)
             this.generateMainMenuInfo().map(info => mainMenu.appendChild(
                 this.generateMainMenuItem(info)
             ));
+            main.appendChild(element`<div class="u-space3em"></div>`)
             const detailMenu = main.appendChild(this.htmlConverter.elementWithoutEscaping`
-                <div class="c-list">
+                <div class="c-list u-width90per">
                     <div class="c-title">
                         <div class="c-title__main">詳細設定 / その他</div>
                         <div class="c-title__sub">Detail Settings / etc.</div>
@@ -55,15 +57,16 @@ export class S_MainMenu
             this.generateDetailMenuInfo().map(info => detailMenu.appendChild(
                 this.generateDetailMenuItem(info)
             ));
+            main.appendChild(element`<div class="u-space3em"></div>`)
 
         }
         generateMainMenuItem({title,remarks,description,to}:RequiredObjectToGenerateItem){
             
             const item = this.htmlConverter.elementWithoutEscaping`
-            <div class="c-recordCard">
+            <div class="c-recordCard ${(to !== undefined) ? "":"is-disable"}">
                     <div class = "c-title">
                         <div class = "c-title__main"><i class="c-icooon u-background--${title.icon}"></i>${title}</div>
-                        ${ (remarks === undefined) ? ``:`<div class = "c-title__sub"><i class="c-icooon u-background--${remarks.icon}"></i> ${remarks}</div>`}
+                        ${ (remarks === undefined) ? ``:`<div class = "c-title__sub"><i class="c-icooon u-background--${remarks.icon}"></i> ${choiceString(remarks,this.app.state.language)}</div>`}
                     </div>
                     <hr noshade class="u-thin">
                     <div class = "u-width95per">${description}</div>
@@ -75,7 +78,7 @@ export class S_MainMenu
         generateDetailMenuItem({title,description,to}:RequiredObjectToGenerateItem){
             
             const item = this.htmlConverter.elementWithoutEscaping`
-            <div class="c-recordCard">
+            <div class="c-recordCard ${(to !== undefined) ? "":"is-disable"}"">
                     <div class = "c-title">
                         <div class = "c-title__main u-smallerChara"><i class="c-icooon u-background--${title.icon}"></i>${title}</div>
                     </div>
@@ -89,15 +92,16 @@ export class S_MainMenu
 
 
         generateMainMenuInfo():RequiredObjectToGenerateItem[]{
-           const userName = (this.app.loginAdministratorReadOnly.loginUserName === null) ? "":this.app.loginAdministratorReadOnly.loginUserName;
            const asg = this.app.state.gameSystemEnvDisplayed;
            const isSetTargetGameMode = asg.gameSystem!==null && asg.gameMode!==null
+
            const isLogIn = this.app.loginAdministratorReadOnly.isUserLogin;
+           const userName = (isLogIn) ? this.app.loginAdministratorReadOnly.loginUserName:"";
            const targetGameMode = {
                ja:(isSetTargetGameMode) ? `${asg.gameSystem?.JName} / ${asg.gameMode?.JName}`:`未設定`,
                en:(isSetTargetGameMode) ? `${asg.gameSystem?.EName} / ${asg.gameMode?.EName}`:`未設定`
            }
-           //#TODO まともに日本語訳
+           //#TODO まともに日本語訳をする
             return [{
                 title:{
                     Japanese:(isLogIn) ?  "ログアウト":"サインイン / ログイン",
@@ -105,8 +109,8 @@ export class S_MainMenu
                     icon:"star"
                 },
                 remarks:(isLogIn) ? {
-                    Japanese:userName,
-                    English:userName,
+                    Japanese:String(userName),
+                    English:String(userName),
                     icon:"person"
                 } : undefined,
                 description:{
@@ -161,7 +165,8 @@ export class S_MainMenu
                  },
                  description:{
                      Japanese:"取り扱うゲームタイトルとゲームモードを増やすことができます。"
-                 }
+                 },
+                 to:undefined
              },{
                  title:{
                      Japanese:"クレジット",
@@ -180,12 +185,4 @@ export class S_MainMenu
 type RequiredObjectToGenerateItem = {
     title:MultiLanguageStringWithICon,remarks?:MultiLanguageStringWithICon,description:MultiLanguageString,
     to?:()=>void
-}
-type MultiLanguageStringWithICon = MultiLanguageString & IcooonKind
-interface MultiLanguageString{
-    Japanese?:string;
-    English?:string;
-}
-interface IcooonKind{
-    icon:string;
 }

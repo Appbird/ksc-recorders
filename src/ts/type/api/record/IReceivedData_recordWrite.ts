@@ -1,6 +1,6 @@
 import { IRegulation } from "../../foundation/IRegulation";
 import { LanguageInApplication } from "../../LanguageInApplication";
-import { IRecord, IRecordResolved } from "../../record/IRecord";
+import { IRecordResolved } from "../../record/IRecord";
 import { IReceivedData, IReceivedDataAtClient, IReceivedDataAtServer } from "../transmissionBase";
 
 export interface IReceivedData_recordWrite extends IReceivedData {

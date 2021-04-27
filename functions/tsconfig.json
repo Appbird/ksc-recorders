@@ -7,9 +7,10 @@
     "sourceMap": true,
     "strict": true,
     "target": "es2017",
+    "esModuleInterop": true
   },
   "compileOnSave": true,
   "include": [
-    "../src"
+    "src","../src/ts/types","../src/ts/utility"
   ]
 }

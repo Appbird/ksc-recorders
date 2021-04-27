@@ -1,6 +1,6 @@
 import { IAbilityItem } from "../../../type/list/IAbilityItem";
 import { IGameDifficultyItem } from "../../../type/list/IGameDifficultyItem";
-import { element, elementWithoutEscaping, HTMLConverter } from "../../../utility/ViewUtility";
+import { element, HTMLConverter } from "../../../utility/ViewUtility";
 import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
 import { createElementWithIdAndClass, generateIcooonHTML } from "../../utility/aboutElement";
 import { IView } from "../IView";
@@ -152,12 +152,13 @@ export class SearchConditionSelectorView implements IView{
             })
 
             this.targetChoices.setChoices(result.result)
-
+            return;
         } catch(error) {
             console.error(error);
             if (!(error instanceof Error)) return [];
             this.app.transition("errorView",{title:"難易度に対応する計測対象の取得に失敗しました。", message:`${error.message}`})
         }
+        return;
     }
    
     get htmlElement(){

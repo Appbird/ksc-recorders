@@ -1,6 +1,5 @@
 import { element, elementWithoutEscaping } from "../../../utility/ViewUtility";
-import { TagsView } from "./TagsView";
-import { converseMiliSecondsIntoTime, convertNumberIntoDateString } from "../../../utility/timeUtility";
+import { convertNumberIntoDateString } from "../../../utility/timeUtility";
 import { IRecordGroupResolved } from "../../../type/record/IRecordGroupResolved";
 import { IRecordInShortResolved } from "../../../type/record/IRecord";
 import { createElementWithIdAndClass } from "../../utility/aboutElement";

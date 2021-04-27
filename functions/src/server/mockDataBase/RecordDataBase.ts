@@ -3,7 +3,7 @@ import { checkEqualityBetweenArrays } from "../../../../src/ts/utility/arrayUtil
 import { OrderOfRecordArray } from "../../../../src/ts/type/record/OrderOfRecordArray";
 import { exampleData } from "./exampledata";
 import { IRecordDataBase } from "../type/IRecordDataBase";
-import { checkIsUndefined } from ".../../../src/ts/utility/undefinedChecker";
+import { checkIsUndefined } from "../../../../src/ts/utility/undefinedChecker"
 import { InterfaceOfRecordDatabase } from "../type/InterfaceOfRecordDatabase";
 
 export class RecordDataBase implements InterfaceOfRecordDatabase{

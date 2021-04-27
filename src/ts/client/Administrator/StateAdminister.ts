@@ -23,7 +23,6 @@ export class StateAdministrator implements StateAdministerReadOnly {
     private _gameSystemEnvDisplayed: GameSystemEnvDisplayed = {
         gameSystem: null, gameMode: null
     };
-    private _superiorScore: "LowerFirst" | "HigherFirst" = "LowerFirst";
     private _language: LanguageInApplication;
     constructor(language:LanguageInApplication = "Japanese"){
         this._language = language;

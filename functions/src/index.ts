@@ -1,24 +1,10 @@
+import * as functions from "firebase-functions"
 import express from "express"
 import { apiList } from "./server/function/apiDefinition";
 import { recordDataBase } from "./server/mockDataBase/RecordDataBase";
+
 const app = express();
-//#TODO firebaseに対応したコードに
-app.use("/app",express.static('public'));
 app.use(express.json())
-
-app.get(`/app`,async (req,res) => {
-    try{
-        if (typeof req.query.state !== "string" || typeof req.query.required !== "string"){
-            res.redirect("/app/index.html")
-            return;
-        }
-        res.redirect(`/app/main.html?state=${req.query.state}&required=${req.query.required}`)
-    } catch(error){
-        console.error(error);
-    }
-}
-)
-
 apiList.forEach( (value,key) => {
     app.post(`/api${key}`,async (req,res) => {
         console.log(`\u001b[32m[${new Date().toLocaleString()}] start to execute /api${key}\u001b[0m\n`)
@@ -33,7 +19,8 @@ apiList.forEach( (value,key) => {
     })
 })
 
-app.listen(5000,() => console.info("start on http://localhost:5000/app"))
+exports.app = functions.https.onRequest(app);
+console.log("abc");
 
 function errorCatcher(key:string,error:any){
     console.log(`\u001b[31m[${new Date().toLocaleString()}] failed to execute /api${key}\u001b[0m\n`)

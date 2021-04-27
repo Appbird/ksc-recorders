@@ -1,5 +1,5 @@
 import { IRecord } from "../../../../src/ts/type/record/IRecord";
-import assert  from "assert";
+import * as assert from "assert";
 import { recordDataBase } from "../firestore/RecordDataBase"
 import { checkEqualityBetweenArraysWithConsoleMsg } from "../../../../src/ts/utility/arrayUtility";
 import { OrderOfRecordArray } from "../../../../src/ts/type/record/OrderOfRecordArray";

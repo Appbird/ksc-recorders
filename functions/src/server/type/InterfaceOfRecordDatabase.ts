@@ -1,11 +1,11 @@
 import { IRecord } from "../../../../src/ts/type/record/IRecord";
-import { OrderOfRecordArray } from "../../../../src/ts//type/record/OrderOfRecordArray";
-import { IGameModeItemWithoutCollections } from "../../../../src/ts//type/list/IGameModeItem";
+import { OrderOfRecordArray } from "../../../../src/ts/type/record/OrderOfRecordArray";
+import { IGameModeItemWithoutCollections } from "../../../../src/ts/type/list/IGameModeItem";
 import { IGameDifficultyItem } from "../../../../src/ts/type/list/IGameDifficultyItem";
 import { ITargetItem } from "../../../../src/ts/type/list/ITargetItem";
 import { IAbilityItem } from "../../../../src/ts/type/list/IAbilityItem";
-import { IHashTagItem, IGameSystemInfoWithoutCollections } from "../../../../src/ts//type/list/IGameSystemInfo";
-import { IRunner } from "../../../../src/ts//type/record/IRunner";
+import { IHashTagItem, IGameSystemInfoWithoutCollections } from "../../../../src/ts/type/list/IGameSystemInfo";
+import { IRunner } from "../../../../src/ts/type/record/IRunner";
 
 //[x] getRecordsWithConditionメソッドの実装
 export interface InterfaceOfRecordDatabase {

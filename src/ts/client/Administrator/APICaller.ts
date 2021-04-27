@@ -2,7 +2,7 @@ import { APIFunctions } from "../../type/api/relation";
 
 export class APIAdministrator {
     private origin: string;
-    constructor(origin: string = "http://localhost:3000") {
+    constructor(origin: string = "http://localhost:5000") {
         this.origin = origin;
     }
     async access<T extends keyof APIFunctions>(functionName: T, requiredObj: APIFunctions[T]["atServer"]): Promise<APIFunctions[T]["atClient"]> {

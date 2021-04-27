@@ -1,12 +1,11 @@
 import { IOfferedRecord } from "../../../type/api/record/IReceivedData_recordWrite";
-import { element, HTMLConverter } from "../../../utility/ViewUtility";
+import { element } from "../../../utility/ViewUtility";
 import { IAppUsedToChangeState } from "../../interface/AppInterfaces";
 import { PageStateBaseClass } from "./PageStateClass";
 
 export class S_SendRecordOffer
     extends PageStateBaseClass<IOfferedRecord,IAppUsedToChangeState>{
         async init(){
-            const htmlConverter = new HTMLConverter(this.app.state.language);
             try {
                 this.generateLoadingSpinner("cloud");
                 this.articleDOM.appendChild(element`<div class="u-width90per">

@@ -10,11 +10,10 @@ import { IGameSystemInfoWithoutCollections } from "../type/list/IGameSystemInfo"
 import { IGameModeItemWithoutCollections } from "../type/list/IGameModeItem";
 import { LoginAdministrator, LoginAdministratorReadOnly } from "./Administrator/LoginAdministrator";
 import { IAppUsedToChangeState } from "./interface/AppInterfaces";
-
-
+import firebase from "firebase/app";
 export default class App implements IAppUsedToChangeState{
     private _state:StateAdministrator;
-    private loginAd:LoginAdministrator;
+    private loginAd:LoginAdministrator | null = null;
     private transitionAd: TransitionAdministrator;
     private historyAd:HistoryAdministrator;
     private header:HeaderController = new HeaderController();
@@ -22,7 +21,6 @@ export default class App implements IAppUsedToChangeState{
 
     constructor(articleDOM:HTMLElement,language:LanguageInApplication){
         this._state = new StateAdministrator(language);
-        this.loginAd = new LoginAdministrator()
         this.historyAd = new HistoryAdministrator(this)
         this.transitionAd = new TransitionAdministrator(articleDOM,this,this._state);
         const header = document.getElementById("header");
@@ -31,7 +29,14 @@ export default class App implements IAppUsedToChangeState{
             this.transition("mainMenu",null)
         })
     }
+    async init(){
+        const response = await fetch('/__/firebase/init.json')
+        if (response.status !== 200) console.log("Failed");
+        firebase.initializeApp(await response.json());
+        this.loginAd = new LoginAdministrator();
+    }
     async login(){
+        if (this.loginAd === null) throw new Error("firebaseが初期化されていません。")
         try{
             await this.loginAd.login();
         }catch(error){
@@ -39,6 +44,7 @@ export default class App implements IAppUsedToChangeState{
         }
     }
     async logout(){
+        if (this.loginAd === null) throw new Error("firebaseが初期化されていません。")
         try{
             return this.loginAd.logout();
         }catch(error){
@@ -46,6 +52,7 @@ export default class App implements IAppUsedToChangeState{
         }
     }
     get loginAdministratorReadOnly():LoginAdministratorReadOnly{
+        if (this.loginAd === null) throw new Error("firebaseが初期化されていません。")
         return this.loginAd;
     }
     async transition<T extends keyof PageStates>(nextState:T, requestObject:RequiredObjectType<PageStates[T]>,{ifAppendHistory=true,title=""}:{ifAppendHistory?:boolean,title?:string} = {}){

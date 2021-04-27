@@ -1,7 +1,4 @@
 {
-  "compilerOptions": {
-    "strictFunctionTypes": false
-  },
   "include": [
     ".eslintrc.js"
   ]

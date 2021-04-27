@@ -1,5 +1,5 @@
-import { IHashTagItem, IGameSystemInfo, IGameSystemInfoWithoutCollections } from "../../list/IGameSystemInfo";
-import { IGameModeItem, IGameModeItemWithoutCollections } from "../../list/IGameModeItem";
+import { IHashTagItem, IGameSystemInfoWithoutCollections } from "../../list/IGameSystemInfo";
+import { IGameModeItemWithoutCollections } from "../../list/IGameModeItem";
 import { IGameDifficultyItem } from "../../list/IGameDifficultyItem";
 import { ITargetItem } from "../../list/ITargetItem";
 import { IAbilityItem } from "../../list/IAbilityItem";

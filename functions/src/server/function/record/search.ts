@@ -3,11 +3,11 @@
 //#NOTE ここの実装はRecordDataBaseの実装に依存しない。
 import { SearchCondition } from "../../../../../src/ts/type/record/SearchCondition";
 import { IRecord } from "../../../../../src/ts/type/record/IRecord";
-//#TODO こっちのnpmでcloneをインストールする
-import clone from "clone-deep";
 import { ControllerOfTableForResolvingID } from "../../recordConverter/ControllerOfTableForResolvingID";
 import { InterfaceOfRecordDatabase } from "../../type/InterfaceOfRecordDatabase";
 import { IReceivedData_recordSearch } from "../../../../../src/ts/type/api/record/relation";
+import clone from "clone-deep";
+
 export async function search(recordDataBase:InterfaceOfRecordDatabase,input:IReceivedData_recordSearch["atServer"]):Promise<IReceivedData_recordSearch["atClient"]>{
     
     const cotfr = new ControllerOfTableForResolvingID(recordDataBase)

@@ -18,7 +18,7 @@ export class HeaderController{
         if (href === null || href===undefined){
             this.icon.src = "./icon/icooonMono/person.svg"; return;
         }
-        this.logInState.innerHTML = `Log in\n<strong>${userName}</strong>`
+        this.logInState.innerHTML = `Log in<br><strong>${userName}</strong>`
         this.icon.src = href;
     }
     deleteUserIcon(){

@@ -4,7 +4,7 @@ import { recordsData } from "./exampleRecords";
 export const exampleData:IRecordDataBase = {
 
 
-    "runnersTable" : [
+    "runners" : [
         {
           "id" : "0","JName" : "ほげ", "EName" : "Hoge",
           "theDateOfRegistered"	: 0,"theNumberOfPost" : 1,
@@ -26,7 +26,7 @@ export const exampleData:IRecordDataBase = {
     ],
 
 
-    "gameSystemInfo": [ 
+    "titles": [ 
        {
         "id" : "0", "JName" : "星のカービィ スターアライズ", "EName" : "Kirby Star Allies",
         "JDescription" 	: "なかまを とっかえひっかえして だいぼうけん。フレンズ能力で 道をきりひらけ！","EDescription"	: "Description about the game",
@@ -52,6 +52,7 @@ export const exampleData:IRecordDataBase = {
                               {"id":"1","JName":"難易度1","EName":"Difficulty1","TargetIDsIncludedInTheDifficulty":["0","1","2"]},
                               {"id":"2","JName":"難易度2","EName":"Difficulty2","TargetIDsIncludedInTheDifficulty":["0","1","2"]} 
                             ],
+          "offers":[],
           "records"	: recordsData
         },{
           "id":"0",
@@ -69,6 +70,7 @@ export const exampleData:IRecordDataBase = {
                               {"id":"1","JName":"難易度1","EName":"Difficulty1","TargetIDsIncludedInTheDifficulty":["0","1","2"]},
                               {"id":"2","JName":"難易度2","EName":"Difficulty2","TargetIDsIncludedInTheDifficulty":["0","1","2"]} 
                             ],
+          "offers":[],
           "records"	: recordsData
         }]
       },
@@ -96,6 +98,7 @@ export const exampleData:IRecordDataBase = {
                                 {"id":"1","JName":"難易度1","EName":"Difficulty1","TargetIDsIncludedInTheDifficulty":["0","1","2"]},
                                 {"id":"2","JName":"難易度2","EName":"Difficulty2","TargetIDsIncludedInTheDifficulty":["0","1","2"]} 
                               ],
+            "offers":[],
             "records"	: []
           }],
     

@@ -3,6 +3,7 @@ import { IRecord } from "../record/IRecord";
 import { IAbilityItem } from "./IAbilityItem";
 import { IGameDifficultyItem } from "./IGameDifficultyItem";
 import { IItemOfResolveTableToName } from "./IItemOfResolveTableToName";
+import { IStoredOfferedRecord } from "./IStoredOfferedRecord";
 import { ITargetItem } from "./ITargetItem";
 
 /**
@@ -22,4 +23,6 @@ export interface CollectionsInIGameModeItem{
     difficulties: IGameDifficultyItem[];
     abilities: IAbilityItem[];
     records:IRecord[];
+    offers:IStoredOfferedRecord[];
 }
+

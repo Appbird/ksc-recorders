@@ -74,7 +74,7 @@ export class ControllerOfTableForResolvingID{
         const copy = records.concat();
         return {
             groupName: info.groupName,
-            lastPost: copy.sort((a, b) => b.timestamp - a.timestamp)[0].timestamp,
+            lastPost: copy.sort((a, b) => b.timestamp_post - a.timestamp_post)[0].timestamp_post,
             numberOfRecords: info.numberOfRecords,
             numberOfRunners: info.numberOfRunners,
             records: await Promise.all(records.map((record) => this.convertIRecordIntoIRecordInShortWithName(record, info.lang)))
@@ -114,7 +114,8 @@ export class ControllerOfTableForResolvingID{
         return {
             id: record.id,
             score:record.score,
-            timestamp:record.timestamp,
+            timestamp_post:record.timestamp_post,
+            timestamp_approval:record.timestamp_approval,
             regulation:{
                 abilityIDs : rr.abilityIDs,
                 abilityNames : await Promise.all(rr.abilityIDs.map( (abilityID) => this.resolveAbilityID(rrg.gameSystemID,rrg.gameModeID,abilityID,lang))),

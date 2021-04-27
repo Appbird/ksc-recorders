@@ -18,12 +18,27 @@ export interface IRecord extends IRecordInShort{
     //[x] ここの命名をtimeInMiliSecondではなくscoreにしたい…。
     score: number;
     //[x] timestampを追加する
-    timestamp: number;
+    timestamp_post: number;
+    timestamp_approval: number;
     regulation: IRegulation;
     runnerID: string;
     tagID: string[];
     link: string[];
     note: string;
+    modifiedBy?:{modifierID:string,timestamp:number}[];
+}
+export interface IRecordWithoutID{
+    //[x] ここの命名をtimeInMiliSecondではなくscoreにしたい…。
+    score: number;
+    //[x] timestampを追加する
+    timestamp_post: number;
+    timestamp_approval: number;
+    regulation: IRegulation;
+    runnerID: string;
+    tagID: string[];
+    link: string[];
+    note: string;
+    modifiedBy?:{modifierID:string,timestamp:number}[];
 }
 export const expected_IRecord = {
     id: "string",

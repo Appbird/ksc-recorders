@@ -707,6 +707,10 @@ article h1::after {
   font-weight: 900;
 }
 
+.u-left-align {
+  text-align: right;
+}
+
 .u-unused {
   display: none;
 }

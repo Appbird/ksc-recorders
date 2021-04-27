@@ -4,7 +4,8 @@ import { IRecord } from "../../../../src/ts/type/record/IRecord";
 export const recordsData:IRecord[] = [
     {
             "id" :"0", "score" :128,
-            "timestamp": 724300400000,
+            "timestamp_post": 724300400000,
+            "timestamp_approval":724300400000,
             "regulation" :{
               "gameSystemEnvironment"	:{ "gameDifficultyID" :"0", "gameModeID" :"0", "gameSystemID" :"0"},
               "abilityIDs" :["0"], "targetID" :"0"
@@ -14,7 +15,8 @@ export const recordsData:IRecord[] = [
 
     {
         "id" :"1", "score" :129,
-        "timestamp": 734300400000,
+        "timestamp_post": 734300400000,
+        "timestamp_approval":724300400000,
         "regulation" :{
           "gameSystemEnvironment"	:{ "gameDifficultyID" :"0", "gameModeID" :"0", "gameSystemID" :"0"},
           "abilityIDs" :["2"], "targetID" :"1"
@@ -24,7 +26,8 @@ export const recordsData:IRecord[] = [
     
     {
         "id" :"2", "score" :133,
-        "timestamp": 744300400000,
+        "timestamp_post": 744300400000,
+        "timestamp_approval":724300400000,
         "regulation" :{
           "gameSystemEnvironment"	:{ "gameDifficultyID" :"0", "gameModeID" :"0", "gameSystemID" :"0"},
           "abilityIDs" :["1","2"], "targetID" :"1"
@@ -34,7 +37,8 @@ export const recordsData:IRecord[] = [
     
     {
         "id" :"3", "score" :131,
-        "timestamp": 704300400000,
+        "timestamp_post": 704300400000,
+        "timestamp_approval":724300400000,
         "regulation" :{
           "gameSystemEnvironment"	:{ "gameDifficultyID" :"0", "gameModeID" :"0", "gameSystemID" :"0"},
           "abilityIDs" :["0","1","1","2"], "targetID" :"0"

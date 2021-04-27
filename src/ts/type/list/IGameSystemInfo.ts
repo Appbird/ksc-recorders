@@ -15,7 +15,7 @@ export interface IGameSystemInfoWithoutCollections extends IItemOfResolveTableTo
     EDescription?: string;
 }
 export interface CollectionInIGameSystemInfo {
-    tags:IHashTagItem[];
+    tags :IHashTagItem[];
     modes : IGameModeItem[];
 }
 

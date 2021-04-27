@@ -6,6 +6,7 @@ import { ITargetItem } from "../../../../src/ts/type/list/ITargetItem";
 import { IAbilityItem } from "../../../../src/ts/type/list/IAbilityItem";
 import { IHashTagItem, IGameSystemInfoWithoutCollections } from "../../../../src/ts/type/list/IGameSystemInfo";
 import { IRunner } from "../../../../src/ts/type/record/IRunner";
+import { IStoredOfferedRecord } from "../../../../src/ts/type/list/IStoredOfferedRecord";
 
 //[x] getRecordsWithConditionメソッドの実装
 export interface InterfaceOfRecordDatabase {
@@ -38,4 +39,10 @@ export interface InterfaceOfRecordDatabase {
         targetIDs?: string[],
         runnerIDs?: string[]
     ) => Promise<IRecord[]>;
+    
+    writeNewOffer(record:IStoredOfferedRecord):Promise<IStoredOfferedRecord>;
+    getOffer(gameSystemID:string,gameModeID:string,offerID:string):Promise<IStoredOfferedRecord>;
+    acceptOffer(gameSystemID:string,gameModeID:string,offerID:string):Promise<void>;
+    removeOffer(gameSystemID:string,gameModeID:string,offerID:string):Promise<void>;
+    modifyOffer(gameSystemID:string,gameModeID:string,offerID:string,modifierID:string,record:IStoredOfferedRecord):Promise<void>;
 }

@@ -1,3 +1,4 @@
+/*
 import { IRecord } from "../../../../src/ts/type/record/IRecord";
 import { checkEqualityBetweenArrays } from "../../../../src/ts/utility/arrayUtility";
 import { OrderOfRecordArray } from "../../../../src/ts/type/record/OrderOfRecordArray";
@@ -14,10 +15,10 @@ export class RecordDataBase implements InterfaceOfRecordDatabase{
     
 
     async getGameSystemCollection(){
-        return this.dataBase.gameSystemInfo
+        return this.dataBase.titles
     }
     async getGameSystemInfo(gameSystemID:string){
-        return checkIsUndefined(this.dataBase.gameSystemInfo.find(item => item.id === gameSystemID),`指定されたID${gameSystemID}に対応するシリーズのゲームが存在しません。`)
+        return checkIsUndefined(this.dataBase.titles.find(item => item.id === gameSystemID),`指定されたID${gameSystemID}に対応するシリーズのゲームが存在しません。`)
     }
 
 
@@ -30,10 +31,10 @@ export class RecordDataBase implements InterfaceOfRecordDatabase{
 
 
     async getRunnerCollection(){
-        return this.dataBase.runnersTable
+        return this.dataBase.runners
     }
     async getRunnerInfo(id:string){
-        return checkIsUndefined(this.dataBase.runnersTable.find(item => item.id === id),`指定されたID${id}に対応する走者は存在しません。`)
+        return checkIsUndefined(this.dataBase.runners.find(item => item.id === id),`指定されたID${id}に対応する走者は存在しません。`)
     }
 
 
@@ -97,8 +98,8 @@ export class RecordDataBase implements InterfaceOfRecordDatabase{
                     case "HigherFirst": return b.score - a.score;
                     case "LowerFirst" : return a.score - b.score;
                     //[x] ここの実装を、timestampをもとにしたものにする。
-                    case "LaterFirst": return b.timestamp - a.timestamp;
-                    case "EarlierFirst": return a.timestamp - b.timestamp;
+                    case "LaterFirst": return b.timestamp_post - a.timestamp_post;
+                    case "EarlierFirst": return a.timestamp_post - b.timestamp_post;
                     default : return 0;
                 }
             }
@@ -121,3 +122,4 @@ export class RecordDataBase implements InterfaceOfRecordDatabase{
 
 //#NOTE シングルトン
 export const recordDataBase = new RecordDataBase();
+*/

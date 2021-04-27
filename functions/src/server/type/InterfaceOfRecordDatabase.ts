@@ -31,6 +31,10 @@ export interface InterfaceOfRecordDatabase {
     getHashTagCollection: (gameSystemID: string) => Promise<IHashTagItem[]>;
     getHashTagInfo: (gameSystemID: string,id:string) => Promise<IHashTagItem>;
 
+    getOfferCollection(gameSystemID:string,gameModeID:string):Promise<IStoredOfferedRecord[]>;
+    getOfferInfo(gameSystemID:string,gameModeID:string,offerID:string):Promise<IStoredOfferedRecord>;
+    
+
     getRecord: (gameSystemID: string, gameModeID: string,recordID:string) => Promise<IRecord>;
     getRecordsWithCondition: (gameSystemID: string, gameModeID: string,
         order: OrderOfRecordArray,
@@ -39,9 +43,9 @@ export interface InterfaceOfRecordDatabase {
         targetIDs?: string[],
         runnerIDs?: string[]
     ) => Promise<IRecord[]>;
-    
+    modifyRecord(gameSystemID:string,gameModeID:string,offerID:string,modifierID:string,record:IStoredOfferedRecord):Promise<void>;
+
     writeNewOffer(record:IStoredOfferedRecord):Promise<IStoredOfferedRecord>;
-    getOffer(gameSystemID:string,gameModeID:string,offerID:string):Promise<IStoredOfferedRecord>;
     acceptOffer(gameSystemID:string,gameModeID:string,offerID:string):Promise<void>;
     removeOffer(gameSystemID:string,gameModeID:string,offerID:string):Promise<void>;
     modifyOffer(gameSystemID:string,gameModeID:string,offerID:string,modifierID:string,record:IStoredOfferedRecord):Promise<void>;

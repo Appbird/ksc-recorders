@@ -53,7 +53,9 @@ class RecordDataBase implements InterfaceOfRecordDatabase{
     getTargetCollection     = (gameSystemID:string,gameModeID:string) => this.getCollection<ITargetItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("targets"))
     getTargetInfo           = (gameSystemID:string,gameModeID:string,id:string) => this.getDoc<ITargetItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("targets").doc(id))
 
-
+    getOfferCollection      = (gameSystemID:string,gameModeID:string) => this.getCollection<IStoredOfferedRecord>(this.getGameModeRef(gameSystemID,gameModeID).collection("offers"))
+    getOfferInfo            = (gameSystemID:string,gameModeID:string,offerID:string) => this.getDoc<IStoredOfferedRecord>(this.getGameModeRef(gameSystemID,gameModeID).collection("offers").doc(offerID));
+        
     getRunnerCollection     = () => this.getCollection<IRunner>(this.getRunnersRef())
     getRunnerInfo           = (id:string) => this.getDoc<IRunner>(this.getRunnersRef().doc(id))
 
@@ -61,10 +63,11 @@ class RecordDataBase implements InterfaceOfRecordDatabase{
     getHashTagCollection    = (gameSystemID:string) => this.getCollection<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("tags"))
     getHashTagInfo          = (gameSystemID:string,id:string) => this.getDoc<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("tags").doc(id))
 
-    async getRecord(gameSystemID:string,gameModeID:string,recordID:string){
+    async getRecord(gameSystemID:string,gameModeID:string,recordID:string):Promise<IRecord>{
         const result = await this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(recordID).get();
-        if (!result.exists) throw new Error(`指定されたゲームID${gameSystemID},モードID${gameModeID}内の記録ID${recordID}に対応するモードが存在しません。`);
-        return result.data() as IRecord;
+        const record = result.data() as IRecordWithoutID | undefined;
+        if (!result.exists || record === undefined) throw new Error(`指定されたゲームID${gameSystemID},モードID${gameModeID}内の記録ID${recordID}に対応するモードが存在しません。`);
+        return {...record, id:result.id};
     }
 
     async getRecordsWithCondition(gameSystemID:string, gameModeID:string,
@@ -118,44 +121,54 @@ class RecordDataBase implements InterfaceOfRecordDatabase{
                 default : return 0;
             }
     }
+
+
     async writeNewOffer(record:IStoredOfferedRecord){
         const rrg = record.regulation.gameSystemEnvironment;
         return await this.getGameModeRef(rrg.gameSystemID,rrg.gameModeID)
                         .collection("offers").add(record) as unknown as IStoredOfferedRecord;
     }
-    async getOffer(gameSystemID:string,gameModeID:string,offerID:string){
-        const ref = this.getGameModeRef(gameSystemID,gameModeID).collection("offers").doc(offerID);
-        const response = await ref.get();
-        const result = response.data();
-        if (!response.exists || result === undefined) throw new Error(`ドキュメント ${ref.path} が存在しません。`)
-        return result as IStoredOfferedRecord;
-    }
     async acceptOffer(gameSystemID:string,gameModeID:string,offerID:string){
         const ref = this.getGameModeRef(gameSystemID,gameModeID).collection("offers").doc(offerID);
-        const response = await ref.get();
-        const record = response.data();
-        if (!response.exists || record === undefined) throw new Error(`ドキュメント ${ref.path} が存在しません。`)
+        const record = await this.getOfferInfo(gameSystemID,gameModeID,offerID);
         await ref.delete();
 
         const post:IRecordWithoutID = {...record as IStoredOfferedRecord,timestamp_approval:Date.now()}
         await this.getGameModeRef(gameSystemID,gameModeID).collection("records").add(post);
         return;
     }
+
+
     async removeOffer(gameSystemID:string,gameModeID:string,offerID:string){
         await this.getGameModeRef(gameSystemID,gameModeID).collection("offers").doc(offerID).delete();
         return;
     }
-    async modifyOffer(gameSystemID:string,gameModeID:string,offerID:string,modifierID:string,record:IStoredOfferedRecord){
-        const gottenRecord = await this.getGameModeRef(gameSystemID,gameModeID).collection("offers").doc(offerID).get();
-        if(!gottenRecord.exists) throw new Error(`ドキュメント ${gottenRecord.ref.path} が存在しません。`);
-        const recordWrited = gottenRecord.data() as unknown as IStoredOfferedRecord;
 
+
+    async modifyOffer(gameSystemID:string,gameModeID:string,offerID:string,modifierID:string,record:IStoredOfferedRecord){
+        const ref =  this.getGameModeRef(gameSystemID,gameModeID).collection("offers").doc(offerID);
+        const recordWrited = await this.getOfferInfo(gameSystemID,gameModeID,offerID);
+        
         const modifierList = ( (recordWrited.modifiedBy === undefined) ? [] : recordWrited.modifiedBy )
-        modifierList.push({ modifierID:modifierID,timestamp:Date.now(),before:{...(gottenRecord.data() as IStoredOfferedRecord) ,modifiedBy:undefined} });
+        modifierList.push({ modifierID:modifierID,timestamp:Date.now(),before:{...recordWrited ,modifiedBy:undefined} });
         const modifiedOffer:IStoredOfferedRecord = {
             ...record,modifiedBy:modifierList
         }
-        await gottenRecord.ref.set(modifiedOffer)
+        await ref.set(modifiedOffer)
+        return;
+    }
+
+    
+    async modifyRecord(gameSystemID:string,gameModeID:string,recordID:string,modifierID:string,record:IRecord){
+        const ref =  this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(recordID);
+        const recordWrited = await this.getRecord(gameSystemID,gameModeID,recordID);
+        
+        const modifierList = ( (recordWrited.modifiedBy === undefined) ? [] : recordWrited.modifiedBy )
+        modifierList.push({ modifierID:modifierID,timestamp:Date.now(),before:{...recordWrited ,modifiedBy:undefined} });
+        const modifiedOffer:IStoredOfferedRecord = {
+            ...record,modifiedBy:modifierList
+        }
+        await ref.set(modifiedOffer)
         return;
     }
 }

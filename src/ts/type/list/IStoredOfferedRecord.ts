@@ -9,8 +9,18 @@ export interface IStoredOfferedRecord {
     tagID: string[];
     link: string[];
     note: string;
-    modifiedBy?:{modifierID:string,timestamp:number,before:{
-        score:number;timestamp_post:number;regulation:IRegulation;
-        runnerID:string;tagID:string[];link:string[];note:string;modifiedBy:undefined;
-    }}[];
+    modifiedBy?:ModifiedHistoryStack[];
 }
+export interface ModifiedHistoryStack{
+    modifierID:string,timestamp:number,
+    before:{
+        score:number;
+        timestamp_post:number;
+        timestamp_approval?:number;
+        regulation:IRegulation;
+        runnerID:string;
+        tagID:string[];
+        link:string[];
+        note:string;
+        modifiedBy:undefined;
+}}

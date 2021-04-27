@@ -31,6 +31,8 @@ export class S_MainMenu
                 <div class="u-width90per">
             </div>
             `)
+
+
             const mainMenu = main.appendChild(this.htmlConverter.elementWithoutEscaping`
                 <div class="c-list u-width90per">
                     <div class="c-title">
@@ -41,10 +43,12 @@ export class S_MainMenu
                     
                 </div>
             `)
-            this.generateMainMenuInfo().map(info => mainMenu.appendChild(
-                this.generateMainMenuItem(info)
+            this.generateMainMenuInfo().map((info,index) => mainMenu.appendChild(
+                this.generateMenuItem(info)
             ));
             main.appendChild(element`<div class="u-space3em"></div>`)
+
+
             const detailMenu = main.appendChild(this.htmlConverter.elementWithoutEscaping`
                 <div class="c-list u-width90per">
                     <div class="c-title">
@@ -55,37 +59,23 @@ export class S_MainMenu
                 </div>
             `)
             this.generateDetailMenuInfo().map(info => detailMenu.appendChild(
-                this.generateDetailMenuItem(info)
+                this.generateMenuItem(info)
             ));
             main.appendChild(element`<div class="u-space3em"></div>`)
 
         }
-        generateMainMenuItem({title,remarks,description,to}:RequiredObjectToGenerateItem){
+        generateMenuItem({title,remarks,description,to,isDisabled,biggerTitle}:RequiredObjectToGenerateItem){
             
             const item = this.htmlConverter.elementWithoutEscaping`
-            <div class="c-recordCard ${(to !== undefined) ? "":"is-disable"}">
+            <div class="c-recordCard ${(isDisabled) ? "is-disable":""}">
                     <div class = "c-title">
-                        <div class = "c-title__main"><i class="c-icooon u-background--${title.icon}"></i>${title}</div>
+                        <div class = "c-title__main ${biggerTitle ? "":"u-smallerChara"}"><i class="c-icooon u-background--${title.icon}"></i>${title}</div>
                         ${ (remarks === undefined) ? ``:`<div class = "c-title__sub"><i class="c-icooon u-background--${remarks.icon}"></i> ${choiceString(remarks,this.app.state.language)}</div>`}
                     </div>
                     <hr noshade class="u-thin">
                     <div class = "u-width95per">${description}</div>
             </div>` as HTMLElement
-            if (to === undefined) return item;
-            item.addEventListener("click",()=>to());
-            return item;
-        }
-        generateDetailMenuItem({title,description,to}:RequiredObjectToGenerateItem){
-            
-            const item = this.htmlConverter.elementWithoutEscaping`
-            <div class="c-recordCard ${(to !== undefined) ? "":"is-disable"}"">
-                    <div class = "c-title">
-                        <div class = "c-title__main u-smallerChara"><i class="c-icooon u-background--${title.icon}"></i>${title}</div>
-                    </div>
-                    <hr noshade class="u-thin">
-                    <div class = "u-width95per">${description}</div>
-            </div>` as HTMLElement
-            if (to === undefined) return item;
+            if (isDisabled || to === undefined) return item;
             item.addEventListener("click",()=>to());
             return item;
         }
@@ -106,7 +96,7 @@ export class S_MainMenu
                 title:{
                     Japanese:(isLogIn) ?  "ログアウト":"サインイン / ログイン",
                     English:(isLogIn) ? "Log out":"Sign In / Log In",
-                    icon:"star"
+                    icon:(isLogIn) ? "logout":"login"
                 },
                 remarks:(isLogIn) ? {
                     Japanese:String(userName),
@@ -114,9 +104,13 @@ export class S_MainMenu
                     icon:"person"
                 } : undefined,
                 description:{
-                    Japanese:"ログインをすることで記録の申請ができるようになります。ログインにはGoogleアカウントが必要です。"
+                    Japanese: (isLogIn) ? "サービスからログアウトします。" : "ログインをすると記録の申請ができるようになります。ログインにはGoogleアカウントが必要です。"
                 },
-                to:(isLogIn) ? ()=>this.app.logout():()=>this.app.login()
+                isDisabled:false,
+                biggerTitle:true,
+                to:() => {
+                    (isLogIn) ? this.app.logout():this.app.login()
+                }
             },{
                 title:{
                     Japanese:"ゲームタイトル/モードの設定",
@@ -126,32 +120,42 @@ export class S_MainMenu
                 remarks:{
                     Japanese:targetGameMode.ja,
                     English:targetGameMode.en,
-                    icon:"person"
+                    icon:"ds"
                 },
                 description:{
                     Japanese:"ここであなたが閲覧/投稿しようとしている記録が取得されたゲームタイトルとゲームモードを予め設定します。"
                 },
+                isDisabled:false,
+                biggerTitle:true,
                 to:() => this.app.transition("gameSystemSelector",null)
             },{
                 title:{
                     Japanese:"記録の閲覧",
                     English:"Search Record",
-                    icon:"star"
+                    icon:"menu"
                 },
                 description:{
                     Japanese:
-                        (isSetTargetGameMode) ? `<strong>まず閲覧するゲームタイトル/モードを設定してください。</strong>` :`今までの${targetGameMode.ja}を検索して閲覧することが出来ます。`
+                        (isSetTargetGameMode) ?  `今までの${targetGameMode.ja}を検索して閲覧することが出来ます。`:`<strong>閲覧するゲームタイトル/モードを設定してください。</strong>`
                 },
+                isDisabled:!isSetTargetGameMode,
+                biggerTitle:true,
                 to:(isSetTargetGameMode) ? () => this.app.transition("searchConditionSelectorView",null) : undefined
             },{
                 title:{
                     Japanese:"記録の申請",
                     English:"Offer Record",
-                    icon:"star"
+                    icon:"cloud"
                 },
                 description:{
-                    Japanese:"自分の取った記録を、このページに掲示するために申請することができます。<strong>申請にはログインが必要です。</strong>"
+                    Japanese:(() => {
+                        if (!isLogIn) return "<strong>申請にはログインが必要です。</strong>"
+                        if (!isSetTargetGameMode) return "<strong>閲覧するゲームタイトル/モードを設定してください。</strong>"
+                        return "自分の取った記録を、このページに掲示するために申請することができます。"
+                    })()
                 },
+                isDisabled:!isSetTargetGameMode || !isLogIn,
+                biggerTitle:true,
                 to:(this.app.loginAdministratorReadOnly.isUserLogin) ? () => this.app.transition("offerForm",null):undefined
             }];
         }
@@ -161,21 +165,24 @@ export class S_MainMenu
                  title:{
                      Japanese:"新ゲームタイトル/ゲームモードの制定申請",
                      English:"「新ゲームタイトル/ゲームモードの制定申請」の訳が入る",
-                     icon:"star"
+                     icon:"feather"
                  },
                  description:{
                      Japanese:"取り扱うゲームタイトルとゲームモードを増やすことができます。"
                  },
-                 to:undefined
+                 isDisabled:true,
+                 biggerTitle:true,
              },{
                  title:{
                      Japanese:"クレジット",
                      English:"Credits",
-                     icon:"star"
+                     icon:"writing"
                  },
                  description:{
                      Japanese:"KSSRsを開発するにあたって、使用したツール、ライブラリなどを記しています。"
                  },
+                 isDisabled:false,
+                 biggerTitle:true,
                  //#TODO ここをクレジット用に設定する。GitHubのリンクにするのもアリか？
                  to:() => {this.app.transition("gameSystemSelector",null)}
              }]
@@ -183,6 +190,10 @@ export class S_MainMenu
     }
 }
 type RequiredObjectToGenerateItem = {
-    title:MultiLanguageStringWithICon,remarks?:MultiLanguageStringWithICon,description:MultiLanguageString,
+    title:MultiLanguageStringWithICon,
+    remarks?:MultiLanguageStringWithICon,
+    description:MultiLanguageString,
+    isDisabled:boolean,
+    biggerTitle:boolean,
     to?:()=>void
 }

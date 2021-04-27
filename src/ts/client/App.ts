@@ -23,17 +23,24 @@ export default class App implements IAppUsedToChangeState{
         this._state = new StateAdministrator(language);
         this.historyAd = new HistoryAdministrator(this)
         this.transitionAd = new TransitionAdministrator(articleDOM,this,this._state);
-        const header = document.getElementById("header");
-        if (header === null) return;
-        header.addEventListener("click",() => {
+        this.header.deleteUserIcon();
+        document.getElementById("header")?.addEventListener("click",() => {
             this.transition("mainMenu",null)
         })
     }
     async init(){
-        const response = await fetch('/__/firebase/init.json')
-        if (response.status !== 200) console.log("Failed");
+
+        const response = await fetch('/__/firebase/init.json');
+        if (response.status !== 200) {console.log("Failed"); return;}
         firebase.initializeApp(await response.json());
+
         this.loginAd = new LoginAdministrator();
+        this.loginAd.onStateChange( () => {
+            if (this.loginAd?.isUserLogin) this.header.changeUserIcon(String(this.loginAd.loginUserName),this.loginAd.loginUserIconPicture)
+            else this.header.deleteUserIcon();
+            this.transitionAd.transition("mainMenu",null);
+        })
+        
     }
     async login(){
         if (this.loginAd === null) throw new Error("firebaseが初期化されていません。")
@@ -46,10 +53,12 @@ export default class App implements IAppUsedToChangeState{
     async logout(){
         if (this.loginAd === null) throw new Error("firebaseが初期化されていません。")
         try{
-            return this.loginAd.logout();
+            await this.loginAd.logout();
         }catch(error){
             this.errorCatcher(error);
         }
+        this.header.deleteUserIcon();
+        this.transition("mainMenu",null);
     }
     get loginAdministratorReadOnly():LoginAdministratorReadOnly{
         if (this.loginAd === null) throw new Error("firebaseが初期化されていません。")

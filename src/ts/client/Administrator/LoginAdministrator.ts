@@ -7,17 +7,13 @@ export interface LoginAdministratorReadOnly{
     getIDToken():Promise<string>
 }
 export class LoginAdministrator implements LoginAdministratorReadOnly{
-    private provider:firebase.auth.GoogleAuthProvider;
     constructor(){
-        const result = document.querySelector("header>img.c-userIcon")
-        if (result === null) throw new Error("予期せぬエラーです。")
-        this.provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().useDeviceLanguage();
-
     }
     /**@throw */
     async login(){
-        await firebase.auth().signInWithPopup(this.provider);
+        const provider = new firebase.auth.GoogleAuthProvider();
+        await firebase.auth().signInWithPopup(provider);
     }
     /**@throw */
     async logout(){
@@ -43,5 +39,8 @@ export class LoginAdministrator implements LoginAdministratorReadOnly{
         const user = firebase.auth().currentUser;
         if ( user === null ) throw new Error("ログインしていません。")
         return user.getIdToken(true);
+    }
+    onStateChange(callback:()=>void){
+        firebase.auth().onAuthStateChanged(callback);
     }
 }

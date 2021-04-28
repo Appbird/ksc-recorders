@@ -1,4 +1,4 @@
-import { IRecord } from "../../../../src/ts/type/record/IRecord";
+import { IRecord, IRecordWithoutID } from "../../../../src/ts/type/record/IRecord";
 import { OrderOfRecordArray } from "../../../../src/ts/type/record/OrderOfRecordArray";
 import { IGameModeItemWithoutCollections } from "../../../../src/ts/type/list/IGameModeItem";
 import { IGameDifficultyItem } from "../../../../src/ts/type/list/IGameDifficultyItem";
@@ -6,10 +6,9 @@ import { ITargetItem } from "../../../../src/ts/type/list/ITargetItem";
 import { IAbilityItem } from "../../../../src/ts/type/list/IAbilityItem";
 import { IHashTagItem, IGameSystemInfoWithoutCollections } from "../../../../src/ts/type/list/IGameSystemInfo";
 import { IRunner } from "../../../../src/ts/type/record/IRunner";
-import { IStoredOfferedRecord } from "../../../../src/ts/type/list/IStoredOfferedRecord";
 
 //[x] getRecordsWithConditionメソッドの実装
-export interface InterfaceOfRecordDatabase {
+export interface RecordDataBase {
     getGameSystemCollection: () => Promise<IGameSystemInfoWithoutCollections[]>;
     getGameSystemInfo: (gameSystemID: string) => Promise<IGameSystemInfoWithoutCollections>;
     
@@ -30,11 +29,7 @@ export interface InterfaceOfRecordDatabase {
 
     getHashTagCollection: (gameSystemID: string) => Promise<IHashTagItem[]>;
     getHashTagInfo: (gameSystemID: string,id:string) => Promise<IHashTagItem>;
-
-    getOfferCollection(gameSystemID:string,gameModeID:string):Promise<IStoredOfferedRecord[]>;
-    getOfferInfo(gameSystemID:string,gameModeID:string,offerID:string):Promise<IStoredOfferedRecord>;
     
-
     getRecord: (gameSystemID: string, gameModeID: string,recordID:string) => Promise<IRecord>;
     getRecordsWithCondition: (gameSystemID: string, gameModeID: string,
         order: OrderOfRecordArray,
@@ -43,10 +38,9 @@ export interface InterfaceOfRecordDatabase {
         targetIDs?: string[],
         runnerIDs?: string[]
     ) => Promise<IRecord[]>;
-    modifyRecord(gameSystemID:string,gameModeID:string,offerID:string,modifierID:string,record:IStoredOfferedRecord):Promise<void>;
+    modifyRecord(gameSystemID:string,gameModeID:string,offerID:string,modifierID:string,record:IRecord):Promise<void>;
 
-    writeNewOffer(record:IStoredOfferedRecord):Promise<IStoredOfferedRecord>;
-    acceptOffer(gameSystemID:string,gameModeID:string,offerID:string):Promise<void>;
-    removeOffer(gameSystemID:string,gameModeID:string,offerID:string):Promise<void>;
-    modifyOffer(gameSystemID:string,gameModeID:string,offerID:string,modifierID:string,record:IStoredOfferedRecord):Promise<void>;
+    writeRecord(record:IRecordWithoutID):Promise<IRecord>;
+    removeRecord(gameSystemID:string,gameModeID:string,recordID:string):Promise<void>;
+    modifyRecord(gameSystemID:string,gameModeID:string,recordID:string,modifierID:string,record:IRecordWithoutID):Promise<void>;
 }

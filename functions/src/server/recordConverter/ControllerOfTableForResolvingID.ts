@@ -2,7 +2,7 @@ import { IRecord, IRecordInShortResolved, IRecordResolved } from "../../../../sr
 import { IRecordGroupResolved } from "../../../../src/ts/type/record/IRecordGroupResolved";
 import { IItemOfResolveTableToName } from "../../../../src/ts/type/list/IItemOfResolveTableToName";
 import { LanguageInApplication } from "../../../../src/ts/type/LanguageInApplication";
-import { InterfaceOfRecordDatabase } from "../type/InterfaceOfRecordDatabase";
+import { RecordDataBase } from "../firestore/RecordDataBase";
 import { selectAppropriateName } from "../../../../src/ts/utility/aboutLang";
 /**
  * データベースのデータを参照してIDを解決してくれるテーブルマネージャー
@@ -19,10 +19,10 @@ export class ControllerOfTableForResolvingID{
     private ability:ResolveTable        = new Map<string,IItemOfResolveTableToName>();
     private target:ResolveTable         = new Map<string,IItemOfResolveTableToName>();
 
-    private database:InterfaceOfRecordDatabase;
+    private database:RecordDataBase;
 
     //#NOTE コンストラクター・インジェクションの形を取ったので、モック化に対応できる。
-    constructor(database:InterfaceOfRecordDatabase){
+    constructor(database:RecordDataBase){
         this.database = database
 
     }
@@ -86,23 +86,17 @@ export class ControllerOfTableForResolvingID{
         const gr = record.regulation; //#README
         const gse = gr.gameSystemEnvironment; //#README
         return {
+            ...record,
             regulation: {
-                gameSystemEnvironment: {
-                    gameSystemID: gse.gameSystemID,
-                    gameModeID: gse.gameModeID,
-                    gameDifficultyID: gse.gameDifficultyID,
+                ...gr,
+                gameSystemEnvironment: { ...gse,
                     gameSystemName: await this.resolveGameSystemID(gse.gameSystemID, lang),
                     gameModeName: await this.resolveGameModeID(gse.gameSystemID, gse.gameModeID, lang),
                     gameDifficultyName: await this.resolveGameDifficultyID(gse.gameSystemID, gse.gameModeID, gse.gameDifficultyID, lang),
                 },
-                targetID: gr.targetID,
                 targetName: await this.resolveTargetID(gse.gameSystemID, gse.gameModeID, gr.targetID, lang),
-                abilityIDs: gr.abilityIDs,
                 abilityNames: await Promise.all(gr.abilityIDs.map((id) => this.resolveAbilityID(gse.gameSystemID, gse.gameModeID, id, lang))),
             },
-            score: record.score,
-            runnerID: record.runnerID,
-            id: record.id,
             runnerName: await this.resolveRunnerID(record.runnerID, lang)
         };
     }
@@ -112,30 +106,20 @@ export class ControllerOfTableForResolvingID{
         const rr = record.regulation;
         const rrg = record.regulation.gameSystemEnvironment;
         return {
-            id: record.id,
-            score:record.score,
-            timestamp_post:record.timestamp_post,
-            timestamp_approval:record.timestamp_approval,
+            ...record,
             regulation:{
-                abilityIDs : rr.abilityIDs,
+                ...rr,
                 abilityNames : await Promise.all(rr.abilityIDs.map( (abilityID) => this.resolveAbilityID(rrg.gameSystemID,rrg.gameModeID,abilityID,lang))),
-                targetID: rr.targetID,
                 targetName: await this.resolveTargetID(rrg.gameSystemID,rrg.gameModeID,rr.targetID,lang),
                 gameSystemEnvironment:{
-                    gameSystemID:rrg.gameSystemID,
+                    ...rrg,
                     gameSystemName:await this.resolveGameSystemID(rrg.gameSystemID,lang),
-                    gameDifficultyID:rrg.gameDifficultyID,
                     gameDifficultyName: await this.resolveGameDifficultyID(rrg.gameSystemID,rrg.gameModeID,rrg.gameDifficultyID,lang),
-                    gameModeID:rrg.gameModeID,
                     gameModeName:await this.resolveGameModeID(rrg.gameSystemID,rrg.gameModeID,lang)
                 }
             },
-            runnerID: record.runnerID,
             runnerName: await this.resolveRunnerID(record.runnerID,lang),
-            tagID: record.tagID,
-            tagName: await Promise.all(record.tagID.map((element) => this.resolveTagID(rrg.gameSystemID,element,lang))),
-            note: record.note,
-            link: record.link
+            tagName: await Promise.all(record.tagID.map((element) => this.resolveTagID(rrg.gameSystemID,element,lang)))
         }
     }
 }

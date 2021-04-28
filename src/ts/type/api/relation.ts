@@ -1,6 +1,5 @@
-import { IReceivedData_recordWrite } from "./record/IReceivedData_recordWrite";
 import { IReceivedData_listAbilities, IReceivedData_listAbility, IReceivedData_listDifficulties, IReceivedData_listDifficulty, IReceivedData_listGameMode, IReceivedData_listGameModes, IReceivedData_listGameSystem, IReceivedData_listGameSystems, IReceivedData_listHashTag, IReceivedData_listHashTags, IReceivedData_listRunner, IReceivedData_listRunners, IReceivedData_listTarget, IReceivedData_listTargets } from "./list/relation";
-import { IReceivedData_recordDetail, IReceivedData_recordSearch } from "./record/relation";
+import { IReceivedData_recordDelete, IReceivedData_recordDetail, IReceivedData_recordModify, IReceivedData_recordSearch, IReceivedData_recordWrite } from "./record/relation";
 
 export type APIFunctions = APIFunctions_noChanging & APIFunctions_changing;
 
@@ -26,5 +25,7 @@ export interface APIFunctions_noChanging{
 }
 
 export interface APIFunctions_changing{
-    record_write:IReceivedData_recordWrite
+    record_write:IReceivedData_recordWrite,
+    record_delete:IReceivedData_recordDelete,
+    record_modify:IReceivedData_recordModify
 }

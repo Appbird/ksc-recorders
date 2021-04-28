@@ -1,4 +1,4 @@
-import { IOfferedRecord } from "../../../type/api/record/IReceivedData_recordWrite";
+import { IOfferedRecord } from "../../../type/record/IOfferedRecord";
 import { element } from "../../../utility/ViewUtility";
 import { IAppUsedToChangeState } from "../../interface/AppInterfaces";
 import { PageStateBaseClass } from "./PageStateClass";

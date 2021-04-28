@@ -4,11 +4,11 @@
 import { SearchCondition } from "../../../../../src/ts/type/record/SearchCondition";
 import { IRecord } from "../../../../../src/ts/type/record/IRecord";
 import { ControllerOfTableForResolvingID } from "../../recordConverter/ControllerOfTableForResolvingID";
-import { InterfaceOfRecordDatabase } from "../../type/InterfaceOfRecordDatabase";
+import { RecordDataBase } from "../../firestore/RecordDataBase";
 import { IReceivedData_recordSearch } from "../../../../../src/ts/type/api/record/relation";
 import clone from "clone-deep";
 
-export async function search(recordDataBase:InterfaceOfRecordDatabase,input:IReceivedData_recordSearch["atServer"]):Promise<IReceivedData_recordSearch["atClient"]>{
+export async function search(recordDataBase:RecordDataBase,input:IReceivedData_recordSearch["atServer"]):Promise<IReceivedData_recordSearch["atClient"]>{
     
     const cotfr = new ControllerOfTableForResolvingID(recordDataBase)
     if (input.condition[0].gameSystemEnv.gameDifficultyID !== undefined) input.condition = await prepareForDifficultySearch(cotfr,recordDataBase,input.condition[0])
@@ -40,7 +40,7 @@ function countRunners(record:IRecord[]):number{
     return new Set(record.map((element) => element.runnerID)).size
 }
 
-async function prepareForDifficultySearch(converter:ControllerOfTableForResolvingID,recordDataBase:InterfaceOfRecordDatabase,input:SearchCondition):Promise<SearchCondition[]>{
+async function prepareForDifficultySearch(converter:ControllerOfTableForResolvingID,recordDataBase:RecordDataBase,input:SearchCondition):Promise<SearchCondition[]>{
   
     if (input.gameSystemEnv.gameDifficultyID === undefined) throw new Error("予期せぬエラーが発生しました。")
     const gameEnv = input.gameSystemEnv;

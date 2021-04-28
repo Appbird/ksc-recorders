@@ -10,7 +10,7 @@ import { isIReceivedDataAtServer_recordSearch } from "../../../../src/ts/type/ap
 import { APIFunctions } from "../../../../src/ts/type/api/relation";
 import { IReceivedData, IReceivedDataAtClient, IReceivedDataAtServer } from "../../../../src/ts/type/api/transmissionBase";
 import { ValidateFunction } from '../../../../src/ts/type/api/ValidateFunction';
-import { InterfaceOfRecordDatabase } from "../type/InterfaceOfRecordDatabase";
+import { RecordDataBase } from "../firestore/RecordDataBase";
 import { abilities, difficulties, gameModes, gameSystems, hashTags, runners, targets } from "./list/getList";
 import { ability, difficulty, gameMode, gameSystem, hashTag, runner, target } from "./list/pickUp";
 import { detail } from "./record/detail";
@@ -27,7 +27,7 @@ class APIList{
     }
 }
 
-type ProcessFunction<AtServer extends IReceivedDataAtServer,AtClient extends IReceivedDataAtClient > = (recordDatabase:InterfaceOfRecordDatabase,input:AtServer) => Promise<AtClient>;
+type ProcessFunction<AtServer extends IReceivedDataAtServer,AtClient extends IReceivedDataAtClient > = (recordDatabase:RecordDataBase,input:AtServer) => Promise<AtClient>;
 
 interface apiInterface<Received extends IReceivedData>{    
     validator:ValidateFunction<Received["atServer"]>

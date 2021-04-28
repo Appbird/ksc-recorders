@@ -2,7 +2,7 @@ import { IReceivedDataAtServer_getlist_UseSIdMIdId } from "../../../../../src/ts
 import { IReceivedDataAtServer_getlist_UseSIdId } from "../../../../../src/ts/type/api/list/atServer_getlist/IReceivedDataAtServer_getlist_UseSIdId";
 import { IReceivedDataAtServer_getlist_UseId } from "../../../../../src/ts/type/api/list/atServer_getlist/IReceivedDataAtServer_getlist_UseId";
 import { IItemOfResolveTableToName } from "../../../../../src/ts/type/list/IItemOfResolveTableToName";
-import { InterfaceOfRecordDatabase } from "../../type/InterfaceOfRecordDatabase";
+import { RecordDataBase } from "../../firestore/RecordDataBase";
 import { IReceivedDataAtClient_getlist } from "../../../../../src/ts/type/api/list/IReceivedDataAtClient_getlist";
  
 function searchBasedOnIDList<T extends IItemOfResolveTableToName>(inputIdList:string[],data:T[]):T[]{
@@ -41,12 +41,12 @@ async function getList_UseSIdMIdId<T extends IItemOfResolveTableToName>(
     return {isSucceeded:true,result:searchBasedOnIDList(input.id,result)}
 }
 
-export const gameSystems    = async (database:InterfaceOfRecordDatabase,input:IReceivedDataAtServer_getlist_UseId) =>  getList_UseId(input,() => database.getGameSystemCollection())
-export const runners        = async (database:InterfaceOfRecordDatabase,input:IReceivedDataAtServer_getlist_UseId) =>  getList_UseId(input,() => database.getRunnerCollection())
+export const gameSystems    = async (database:RecordDataBase,input:IReceivedDataAtServer_getlist_UseId) =>  getList_UseId(input,() => database.getGameSystemCollection())
+export const runners        = async (database:RecordDataBase,input:IReceivedDataAtServer_getlist_UseId) =>  getList_UseId(input,() => database.getRunnerCollection())
 
-export const gameModes    = async (database:InterfaceOfRecordDatabase,input:IReceivedDataAtServer_getlist_UseSIdId) =>  getList_UseSIdId(input,(s) => database.getGameModeCollection(s))
-export const hashTags       = async (database:InterfaceOfRecordDatabase,input:IReceivedDataAtServer_getlist_UseSIdId) =>  getList_UseSIdId(input,(s) => database.getHashTagCollection(s))
+export const gameModes    = async (database:RecordDataBase,input:IReceivedDataAtServer_getlist_UseSIdId) =>  getList_UseSIdId(input,(s) => database.getGameModeCollection(s))
+export const hashTags       = async (database:RecordDataBase,input:IReceivedDataAtServer_getlist_UseSIdId) =>  getList_UseSIdId(input,(s) => database.getHashTagCollection(s))
 
-export const targets        = async (database:InterfaceOfRecordDatabase,input:IReceivedDataAtServer_getlist_UseSIdMIdId) =>  getList_UseSIdMIdId(input,(s,m) => database.getTargetCollection(s,m))
-export const abilities      = async (database:InterfaceOfRecordDatabase,input:IReceivedDataAtServer_getlist_UseSIdMIdId) =>  getList_UseSIdMIdId(input,(s,m) => database.getAbilityCollection(s,m))
-export const difficulties   = async (database:InterfaceOfRecordDatabase,input:IReceivedDataAtServer_getlist_UseSIdMIdId) =>  getList_UseSIdMIdId(input,(s,m) => database.getGameDifficultyCollection(s,m))
+export const targets        = async (database:RecordDataBase,input:IReceivedDataAtServer_getlist_UseSIdMIdId) =>  getList_UseSIdMIdId(input,(s,m) => database.getTargetCollection(s,m))
+export const abilities      = async (database:RecordDataBase,input:IReceivedDataAtServer_getlist_UseSIdMIdId) =>  getList_UseSIdMIdId(input,(s,m) => database.getAbilityCollection(s,m))
+export const difficulties   = async (database:RecordDataBase,input:IReceivedDataAtServer_getlist_UseSIdMIdId) =>  getList_UseSIdMIdId(input,(s,m) => database.getGameDifficultyCollection(s,m))

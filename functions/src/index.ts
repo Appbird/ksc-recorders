@@ -1,7 +1,10 @@
 import * as functions from "firebase-functions"
 import express from "express"
 import { apiList } from "./server/function/apiDefinition";
-import { recordDataBase } from "./server/mockDataBase/RecordDataBase";
+import { recordDataBase } from "./server/firestore/RecordDataBase";
+import firebase from "firebase-admin"
+
+firebase.initializeApp();
 
 const app = express();
 app.use(express.json())

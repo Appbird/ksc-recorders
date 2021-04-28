@@ -1,4 +1,5 @@
 import { expected_IRegulation, IRegulation, IRegulationResolved } from "../foundation/IRegulation";
+import { LanguageInApplication } from "../LanguageInApplication";
 import { ModifiedHistoryStack } from "../list/IStoredOfferedRecord";
 
 //#NOTE ここでの"Resolved"は、「IDを対応する文字列に置き換えた(ID解決済)状態である」ことを表す。Resolvedのオブジェクトでは、対応するResolvedでないオブジェクトのうち「Dを表さないパラメタ」を削除している。
@@ -20,9 +21,10 @@ export interface IRecord extends IRecordInShort{
     score: number;
     //[x] timestampを追加する
     timestamp_post: number;
-    timestamp_approval: number;
     regulation: IRegulation;
     runnerID: string;
+    tagName: string[];
+    languageOfTagName:LanguageInApplication;
     tagID: string[];
     link: string[];
     note: string;
@@ -33,9 +35,10 @@ export interface IRecordWithoutID{
     score: number;
     //[x] timestampを追加する
     timestamp_post: number;
-    timestamp_approval: number;
     regulation: IRegulation;
     runnerID: string;
+    tagName: string[];
+    languageOfTagName:LanguageInApplication;
     tagID: string[];
     link: string[];
     note: string;

@@ -14,3 +14,7 @@ export interface IRunner extends IItemOfResolveTableToName{
     isCommitteeMember:boolean;
     isMuted:boolean;
 }
+
+export interface RelationTableBetweenUIDandID{
+    id:string;
+}

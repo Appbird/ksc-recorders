@@ -1,20 +1,21 @@
 import { IRecord, IRecordWithoutID } from "../../../../src/ts/type/record/IRecord";
 import { IRunner } from "../../../../src/ts/type/record/IRunner";
-import { firebase } from "../firebaseAdmin";
+import { firestore } from "firebase-admin"
 import { IHashTagItem, IGameSystemInfoWithoutCollections } from "../../../../src/ts/type/list/IGameSystemInfo";
-import { InterfaceOfRecordDatabase } from "../type/InterfaceOfRecordDatabase";
 import { OrderOfRecordArray } from "../../../../src/ts/type/record/OrderOfRecordArray";
 import { IGameModeItemWithoutCollections } from "../../../../src/ts/type/list/IGameModeItem";
 import { IGameDifficultyItem } from "../../../../src/ts/type/list/IGameDifficultyItem";
 import { ITargetItem } from "../../../../src/ts/type/list/ITargetItem";
 import { IAbilityItem } from "../../../../src/ts/type/list/IAbilityItem";
-import { IStoredOfferedRecord } from "../../../../src/ts/type/list/IStoredOfferedRecord";
+import { LanguageInApplication } from "../../../../src/ts/type/LanguageInApplication";
+import { selectAppropriateProperty } from "../../../../src/ts/utility/aboutLang";
+import { IItemOfResolveTableToName } from "../../../../src/ts/type/list/IItemOfResolveTableToName";
 
 //[x] getRecordsWithConditionメソッドの実装
-class RecordDataBase implements InterfaceOfRecordDatabase{
+export class RecordDataBase{
     private dataBase:FirebaseFirestore.Firestore;
     constructor(){
-        this.dataBase = firebase.firestore;
+        this.dataBase = firestore();
     }
     
     private getRunnersRef = () => this.dataBase.collection("runners");
@@ -27,41 +28,72 @@ class RecordDataBase implements InterfaceOfRecordDatabase{
     
     
 
-    private async getCollection<T>(ref:FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>):Promise<T[]>{
+    private async getCollection<T extends IItemOfResolveTableToName>(ref:FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>):Promise<T[]>{
         const result = await ref.get()
-        if (result.empty) throw new Error(`コレクション ${ref.path} が存在しません。`);
+        if (result.empty) throw new Error(`[Not Found] コレクション ${ref.path} が存在しません。`);
         return result.docs as unknown as T[];
     }
-    private async getDoc<T>(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>):Promise<T>{
+    private async getDoc<T extends IItemOfResolveTableToName>(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>):Promise<T>{
         const result = await ref.get()
-        if (result.exists) throw new Error(`ドキュメント ${ref.path} が存在しません。`);
+        if (result.exists) throw new Error(`[Not Found] ドキュメント ${ref.path} が存在しません。`);
         return result.data() as T;
+    }
+    private async writeDoc<T extends IItemOfResolveTableToName>(ref:FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>,object:T):Promise<string>{
+        const result = await ref.add(object);
+        await ref.doc(result.id).set({...object,id:result.id});
+        return result.id;
+    }
+    private async modifyDoc<T extends IItemOfResolveTableToName>(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>,object:T):Promise<void>{
+        object.id = ref.id;
+        await ref.set(object);
     }
 
     getGameSystemCollection = () => this.getCollection<IGameSystemInfoWithoutCollections>(this.getGameSystemCollectionRef())
     getGameSystemInfo       = (gameSystemID:string) => this.getDoc<IGameSystemInfoWithoutCollections>(this.getGameSystemCollectionRef().doc(gameSystemID))
+    writeGameSystemInfo     = (obj:IGameSystemInfoWithoutCollections) => this.writeDoc<IGameSystemInfoWithoutCollections>(this.getGameSystemCollectionRef(),obj)
+    modifyGameSystemInfo    = (gameSystemID:string,obj:IGameSystemInfoWithoutCollections) => this.modifyDoc<IGameSystemInfoWithoutCollections>(this.getGameSystemCollectionRef().doc(gameSystemID),obj)
+
 
     getGameModeCollection   = (gameSystemID:string) => this.getCollection<IGameModeItemWithoutCollections>(this.getGameSystemRef(gameSystemID).collection("modes"))
     getGameModeInfo         = (gameSystemID:string,gameModeID:string) => this.getDoc<IGameModeItemWithoutCollections>(this.getGameModeRef(gameSystemID,gameModeID))
+    writeGameModeInfo       = (gameSystemID:string,obj:IGameModeItemWithoutCollections) => this.writeDoc<IGameModeItemWithoutCollections>(this.getGameSystemRef(gameSystemID).collection("modes"),obj)
+    modifyGameModeInfo      = (gameSystemID:string,gameModeID:string,obj:IGameModeItemWithoutCollections) => this.modifyDoc<IGameModeItemWithoutCollections>(this.getGameModeRef(gameSystemID,gameModeID),obj)
 
     getGameDifficultyCollection     = (gameSystemID:string,gameModeID:string) => this.getCollection<IGameDifficultyItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("difficulties"))
     getGameDifficultyInfo           = (gameSystemID:string,gameModeID:string,id:string) => this.getDoc<IGameDifficultyItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("difficulties").doc(id))
+    writeGameDifficultyInfo         = (gameSystemID:string,gameModeID:string,obj:IGameDifficultyItem) => this.writeDoc<IGameDifficultyItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("difficulties"),obj)
+    modifyGameDifficultyInfo        = (gameSystemID:string,gameModeID:string,id:string,obj:IGameDifficultyItem) => this.modifyDoc<IGameDifficultyItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("difficulties").doc(id),obj)
 
     getAbilityCollection    = (gameSystemID:string,gameModeID:string) => this.getCollection<IAbilityItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("abilities"))
     getAbilityInfo          = (gameSystemID:string,gameModeID:string,id:string) => this.getDoc<IAbilityItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("abilities").doc(id))
+    writeAbilityInfo        = (gameSystemID:string,gameModeID:string,obj:IAbilityItem) => this.writeDoc<IAbilityItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("abilities"),obj)
+    modifyAbilityInfo       = (gameSystemID:string,gameModeID:string,id:string,obj:IAbilityItem) => this.modifyDoc<IAbilityItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("abilities").doc(id),obj)
 
     getTargetCollection     = (gameSystemID:string,gameModeID:string) => this.getCollection<ITargetItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("targets"))
     getTargetInfo           = (gameSystemID:string,gameModeID:string,id:string) => this.getDoc<ITargetItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("targets").doc(id))
+    writeTargetInfo         = (gameSystemID:string,gameModeID:string,obj:ITargetItem) => this.writeDoc<ITargetItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("targets"),obj)
+    modifyTargetInfo        = (gameSystemID:string,gameModeID:string,id:string,obj:ITargetItem) => this.modifyDoc<ITargetItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("targets").doc(id),obj)
 
-    getOfferCollection      = (gameSystemID:string,gameModeID:string) => this.getCollection<IStoredOfferedRecord>(this.getGameModeRef(gameSystemID,gameModeID).collection("offers"))
-    getOfferInfo            = (gameSystemID:string,gameModeID:string,offerID:string) => this.getDoc<IStoredOfferedRecord>(this.getGameModeRef(gameSystemID,gameModeID).collection("offers").doc(offerID));
-        
     getRunnerCollection     = () => this.getCollection<IRunner>(this.getRunnersRef())
-    getRunnerInfo           = (id:string) => this.getDoc<IRunner>(this.getRunnersRef().doc(id))
+    getRunnerInfo           = (uid:string) => this.getDoc<IRunner>(this.getRunnersRef().doc(uid))
+    writeRunnerInfo         = (uid:string,obj:IRunner) => this.modifyDoc<IRunner>(this.getRunnersRef().doc(uid),obj)
+    modifyRunnerInfo        = this.writeRunnerInfo
 
     //#TODO テストをするときにはデータベースが保存するハッシュタグの場所を修正する。
     getHashTagCollection    = (gameSystemID:string) => this.getCollection<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("tags"))
     getHashTagInfo          = (gameSystemID:string,id:string) => this.getDoc<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("tags").doc(id))
+    writeHashTagInfo        = (gameSystemID:string,obj:IHashTagItem) => this.writeDoc<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("tags"),obj)
+    modifyHashTagInfo       = (gameSystemID:string,id:string,obj:IHashTagItem) => this.modifyDoc<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("tags").doc(id),obj)
+    
+    async searchHashTag(gameSystemID:string,names:string[],language:LanguageInApplication):Promise<(IHashTagItem|undefined)[]>{
+        if (names.length > 10) throw new Error("指定するIDが多すぎます。")
+        const result = await this.getGameSystemRef(gameSystemID).collection("tags")
+                                .where(selectAppropriateProperty(language),"in",names)    
+                                .get();
+        const tags = result.docs as unknown as IHashTagItem[]
+        return names.map( (name) => tags.find((tag) => tag[selectAppropriateProperty(language)] === name))
+    }
+    
 
     async getRecord(gameSystemID:string,gameModeID:string,recordID:string):Promise<IRecord>{
         const result = await this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(recordID).get();
@@ -122,56 +154,34 @@ class RecordDataBase implements InterfaceOfRecordDatabase{
             }
     }
 
-
-    async writeNewOffer(record:IStoredOfferedRecord){
+    //#NOTE Recordについてはデータ内部にidを含めない状態でデータベースに保存している。一方で、その他のデータ(TargetやAbilityなど)は内部にidを含めて保存している。
+    async writeRecord(record:IRecordWithoutID):Promise<IRecord>{
         const rrg = record.regulation.gameSystemEnvironment;
-        return await this.getGameModeRef(rrg.gameSystemID,rrg.gameModeID)
-                        .collection("offers").add(record) as unknown as IStoredOfferedRecord;
+        const result = await this.getGameModeRef(rrg.gameSystemID,rrg.gameModeID).collection("records").add(record)
+        return {...record,id:result.id};
     }
-    async acceptOffer(gameSystemID:string,gameModeID:string,offerID:string){
-        const ref = this.getGameModeRef(gameSystemID,gameModeID).collection("offers").doc(offerID);
-        const record = await this.getOfferInfo(gameSystemID,gameModeID,offerID);
-        await ref.delete();
 
-        const post:IRecordWithoutID = {...record as IStoredOfferedRecord,timestamp_approval:Date.now()}
-        await this.getGameModeRef(gameSystemID,gameModeID).collection("records").add(post);
+    async removeRecord(gameSystemID:string,gameModeID:string,recordID:string){
+        await this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(recordID).delete();
         return;
     }
-
-
-    async removeOffer(gameSystemID:string,gameModeID:string,offerID:string){
-        await this.getGameModeRef(gameSystemID,gameModeID).collection("offers").doc(offerID).delete();
-        return;
-    }
-
-
-    async modifyOffer(gameSystemID:string,gameModeID:string,offerID:string,modifierID:string,record:IStoredOfferedRecord){
-        const ref =  this.getGameModeRef(gameSystemID,gameModeID).collection("offers").doc(offerID);
-        const recordWrited = await this.getOfferInfo(gameSystemID,gameModeID,offerID);
-        
-        const modifierList = ( (recordWrited.modifiedBy === undefined) ? [] : recordWrited.modifiedBy )
-        modifierList.push({ modifierID:modifierID,timestamp:Date.now(),before:{...recordWrited ,modifiedBy:undefined} });
-        const modifiedOffer:IStoredOfferedRecord = {
-            ...record,modifiedBy:modifierList
-        }
-        await ref.set(modifiedOffer)
-        return;
-    }
-
     
-    async modifyRecord(gameSystemID:string,gameModeID:string,recordID:string,modifierID:string,record:IRecord){
-        const ref =  this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(recordID);
-        const recordWrited = await this.getRecord(gameSystemID,gameModeID,recordID);
+    async modifyRecord(recordID:string,modifierID:string,record:IRecordWithoutID){
+        const rrg = record.regulation.gameSystemEnvironment
+        const ref =  this.getGameModeRef(rrg.gameSystemID,rrg.gameModeID).collection("records").doc(recordID);
+        const recordWrited = await this.getRecord(rrg.gameSystemID,rrg.gameModeID,recordID);
         
         const modifierList = ( (recordWrited.modifiedBy === undefined) ? [] : recordWrited.modifiedBy )
         modifierList.push({ modifierID:modifierID,timestamp:Date.now(),before:{...recordWrited ,modifiedBy:undefined} });
-        const modifiedOffer:IStoredOfferedRecord = {
+        const modifiedOffer:IRecordWithoutID = {
             ...record,modifiedBy:modifierList
         }
         await ref.set(modifiedOffer)
-        return;
+        return {...modifiedOffer,id:recordID};
     }
 }
 
 
 export const recordDataBase = new RecordDataBase();
+
+//#TODO ここに関数を実装。

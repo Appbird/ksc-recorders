@@ -2,9 +2,12 @@ import { MultiLanguageString } from "../type/foundation/MultiLanguageString";
 import { LanguageInApplication } from "../type/LanguageInApplication"
 
 export function selectAppropriateName(item:{JName:string,EName:string},lang:LanguageInApplication){
+    return item[selectAppropriateProperty(lang)]
+}
+export function selectAppropriateProperty(lang:LanguageInApplication){
     switch (lang){
-        case "Japanese": return item.JName
-        case "English": return item.EName
+        case "Japanese": return "JName"
+        case "English": return "EName"
     }
 }
 export type MultiLanguageDescription = {JDescription?:string,EDescription?:string};

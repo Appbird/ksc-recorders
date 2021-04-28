@@ -1,3 +1,4 @@
+/*
 import { IRecord } from "../../../../src/ts/type/record/IRecord";
 
 //#CTODO id群をしっかりnumberからstringに変えておく
@@ -5,7 +6,6 @@ export const recordsData:IRecord[] = [
     {
             "id" :"0", "score" :128,
             "timestamp_post": 724300400000,
-            "timestamp_approval":724300400000,
             "regulation" :{
               "gameSystemEnvironment"	:{ "gameDifficultyID" :"0", "gameModeID" :"0", "gameSystemID" :"0"},
               "abilityIDs" :["0"], "targetID" :"0"
@@ -16,7 +16,6 @@ export const recordsData:IRecord[] = [
     {
         "id" :"1", "score" :129,
         "timestamp_post": 734300400000,
-        "timestamp_approval":724300400000,
         "regulation" :{
           "gameSystemEnvironment"	:{ "gameDifficultyID" :"0", "gameModeID" :"0", "gameSystemID" :"0"},
           "abilityIDs" :["2"], "targetID" :"1"
@@ -46,3 +45,4 @@ export const recordsData:IRecord[] = [
       "runnerID":"1", "tagID": [], "link" : ["https://twitter.com/projectappbird/status/1381617843133771776?s=20"], "note" : "---"
     }
 ]
+*/

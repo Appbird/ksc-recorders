@@ -1,3 +1,4 @@
+/*
 import { IRecordDataBase } from "../type/IRecordDataBase";
 import { recordsData } from "./exampleRecords";
 
@@ -105,3 +106,5 @@ export const exampleData:IRecordDataBase = {
         }
   ]
 }
+
+*/

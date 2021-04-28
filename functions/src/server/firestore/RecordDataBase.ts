@@ -47,43 +47,52 @@ export class RecordDataBase{
         object.id = ref.id;
         await ref.set(object);
     }
+    private async deleteDoc(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>):Promise<void>{
+        ref.delete();
+    }
 
     getGameSystemCollection = () => this.getCollection<IGameSystemInfoWithoutCollections>(this.getGameSystemCollectionRef())
     getGameSystemInfo       = (gameSystemID:string) => this.getDoc<IGameSystemInfoWithoutCollections>(this.getGameSystemCollectionRef().doc(gameSystemID))
     writeGameSystemInfo     = (obj:IGameSystemInfoWithoutCollections) => this.writeDoc<IGameSystemInfoWithoutCollections>(this.getGameSystemCollectionRef(),obj)
     modifyGameSystemInfo    = (gameSystemID:string,obj:IGameSystemInfoWithoutCollections) => this.modifyDoc<IGameSystemInfoWithoutCollections>(this.getGameSystemCollectionRef().doc(gameSystemID),obj)
-
+    deleteGameSystemInfo    = (gameSystemID:string) => this.deleteDoc(this.getGameSystemCollectionRef().doc(gameSystemID))
 
     getGameModeCollection   = (gameSystemID:string) => this.getCollection<IGameModeItemWithoutCollections>(this.getGameSystemRef(gameSystemID).collection("modes"))
     getGameModeInfo         = (gameSystemID:string,gameModeID:string) => this.getDoc<IGameModeItemWithoutCollections>(this.getGameModeRef(gameSystemID,gameModeID))
     writeGameModeInfo       = (gameSystemID:string,obj:IGameModeItemWithoutCollections) => this.writeDoc<IGameModeItemWithoutCollections>(this.getGameSystemRef(gameSystemID).collection("modes"),obj)
     modifyGameModeInfo      = (gameSystemID:string,gameModeID:string,obj:IGameModeItemWithoutCollections) => this.modifyDoc<IGameModeItemWithoutCollections>(this.getGameModeRef(gameSystemID,gameModeID),obj)
+    deleteGameModeInfo      = (gameSystemID:string,gameModeID:string) => this.deleteDoc(this.getGameModeRef(gameSystemID,gameModeID))
 
     getGameDifficultyCollection     = (gameSystemID:string,gameModeID:string) => this.getCollection<IGameDifficultyItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("difficulties"))
     getGameDifficultyInfo           = (gameSystemID:string,gameModeID:string,id:string) => this.getDoc<IGameDifficultyItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("difficulties").doc(id))
     writeGameDifficultyInfo         = (gameSystemID:string,gameModeID:string,obj:IGameDifficultyItem) => this.writeDoc<IGameDifficultyItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("difficulties"),obj)
     modifyGameDifficultyInfo        = (gameSystemID:string,gameModeID:string,id:string,obj:IGameDifficultyItem) => this.modifyDoc<IGameDifficultyItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("difficulties").doc(id),obj)
-
+    deleteGameDifficultyInfo        = (gameSystemID:string,gameModeID:string,id:string) => this.deleteDoc(this.getGameModeRef(gameSystemID,gameModeID).collection("difficulties").doc(id))
+    
     getAbilityCollection    = (gameSystemID:string,gameModeID:string) => this.getCollection<IAbilityItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("abilities"))
     getAbilityInfo          = (gameSystemID:string,gameModeID:string,id:string) => this.getDoc<IAbilityItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("abilities").doc(id))
     writeAbilityInfo        = (gameSystemID:string,gameModeID:string,obj:IAbilityItem) => this.writeDoc<IAbilityItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("abilities"),obj)
     modifyAbilityInfo       = (gameSystemID:string,gameModeID:string,id:string,obj:IAbilityItem) => this.modifyDoc<IAbilityItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("abilities").doc(id),obj)
-
+    deleteAbility           = (gameSystemID:string,gameModeID:string,id:string) => this.deleteDoc(this.getGameModeRef(gameSystemID,gameModeID).collection("abilities").doc(id))
+    
     getTargetCollection     = (gameSystemID:string,gameModeID:string) => this.getCollection<ITargetItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("targets"))
     getTargetInfo           = (gameSystemID:string,gameModeID:string,id:string) => this.getDoc<ITargetItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("targets").doc(id))
     writeTargetInfo         = (gameSystemID:string,gameModeID:string,obj:ITargetItem) => this.writeDoc<ITargetItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("targets"),obj)
     modifyTargetInfo        = (gameSystemID:string,gameModeID:string,id:string,obj:ITargetItem) => this.modifyDoc<ITargetItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("targets").doc(id),obj)
-
+    deleteTargetInfo           = (gameSystemID:string,gameModeID:string,id:string) => this.deleteDoc(this.getGameModeRef(gameSystemID,gameModeID).collection("targets").doc(id))
+    
     getRunnerCollection     = () => this.getCollection<IRunner>(this.getRunnersRef())
     getRunnerInfo           = (uid:string) => this.getDoc<IRunner>(this.getRunnersRef().doc(uid))
     writeRunnerInfo         = (uid:string,obj:IRunner) => this.modifyDoc<IRunner>(this.getRunnersRef().doc(uid),obj)
     modifyRunnerInfo        = this.writeRunnerInfo
-
+    deleteRunnerInfo        = (uid:string) => this.deleteDoc(this.getRunnersRef().doc(uid))
+    
     //#TODO テストをするときにはデータベースが保存するハッシュタグの場所を修正する。
     getHashTagCollection    = (gameSystemID:string) => this.getCollection<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("tags"))
     getHashTagInfo          = (gameSystemID:string,id:string) => this.getDoc<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("tags").doc(id))
     writeHashTagInfo        = (gameSystemID:string,obj:IHashTagItem) => this.writeDoc<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("tags"),obj)
     modifyHashTagInfo       = (gameSystemID:string,id:string,obj:IHashTagItem) => this.modifyDoc<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("tags").doc(id),obj)
+    deleteHashTagInfo       = (gameSystemID:string,id:string) => this.deleteDoc(this.getGameSystemRef(gameSystemID).collection("tags").doc(id))
     
     async searchHashTag(gameSystemID:string,names:string[],language:LanguageInApplication):Promise<(IHashTagItem|undefined)[]>{
         if (names.length > 10) throw new Error("指定するIDが多すぎます。")

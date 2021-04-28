@@ -3,11 +3,16 @@ import express from "express"
 import { apiList } from "./server/function/apiDefinition";
 import { recordDataBase } from "./server/firestore/RecordDataBase";
 import firebase from "firebase-admin"
+import { setUserEventListener } from "./server/function/listener/user";
 
 firebase.initializeApp();
 
 const app = express();
 app.use(express.json())
+
+
+setUserEventListener(recordDataBase);
+
 apiList.forEach( (value,key) => {
     app.post(`/api${key}`,async (req,res) => {
         try {

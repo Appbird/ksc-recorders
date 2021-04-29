@@ -15,7 +15,7 @@ function searchBasedOnIDList<T extends IItemOfResolveTableToName>(inputIdList:st
         return true;
     })
 }
-async function getList_UseId<T extends IItemOfResolveTableToName>(
+async function modifyList_UseId<T extends IItemOfResolveTableToName>(
     input:IReceivedDataAtServer_getlist_UseId, searchFunc:()=>Promise<T[]>):Promise<IReceivedDataAtClient_getlist<T>>{
 
     if (input.start === undefined) input.start = 0;
@@ -24,7 +24,7 @@ async function getList_UseId<T extends IItemOfResolveTableToName>(
     if ( input.id === undefined ) return {isSucceeded:true, result:result}
     return {isSucceeded:true,result:searchBasedOnIDList(input.id,result)}
 }
-async function getList_UseSIdId<T extends IItemOfResolveTableToName>(
+async function modifyList_UseSIdId<T extends IItemOfResolveTableToName>(
     input:IReceivedDataAtServer_getlist_UseSIdId, searchFunc:(gameSystemID:string)=>Promise<T[]>):Promise<IReceivedDataAtClient_getlist<T>>{
 
     if (input.start === undefined) input.start = 0;
@@ -33,7 +33,7 @@ async function getList_UseSIdId<T extends IItemOfResolveTableToName>(
     if ( input.id === undefined ) return {isSucceeded:true, result:result}
     return {isSucceeded:true,result:searchBasedOnIDList(input.id,result)}
 }
-async function getList_UseSIdMIdId<T extends IItemOfResolveTableToName>(
+async function modifyList_UseSIdMIdId<T extends IItemOfResolveTableToName>(
     input:IReceivedDataAtServer_getlist_UseSIdMIdId, searchFunc:(gameSystemID:string,gameModeID:string)=>Promise<T[]>):Promise<IReceivedDataAtClient_getlist<T>>{
     if (input.start === undefined) input.start = 0;
     const end = (input.limit === undefined) ? undefined : input.start + input.limit
@@ -42,12 +42,12 @@ async function getList_UseSIdMIdId<T extends IItemOfResolveTableToName>(
     return {isSucceeded:true,result:searchBasedOnIDList(input.id,result)}
 }
 
-export const gameSystems    = async (database:RecordDataBase,input:APIFunctions["list_gameSystems"]["atServer"],) =>  getList_UseId(input,() => database.getGameSystemCollection())
-export const runners        = async (database:RecordDataBase,input:APIFunctions["list_runners"]["atServer"]) =>  getList_UseId(input,() => database.getRunnerCollection())
+export const gameSystems    = async (database:RecordDataBase,input:APIFunctions["list_gameSystems"]["atServer"],) =>  modifyList_UseId(input,() => database.getGameSystemCollection())
+export const runners        = async (database:RecordDataBase,input:APIFunctions["list_runners"]["atServer"]) =>  modifyList_UseId(input,() => database.getRunnerCollection())
 
-export const gameModes    = async (database:RecordDataBase,input:APIFunctions["list_gameModes"]["atServer"]) =>  getList_UseSIdId(input,(s) => database.getGameModeCollection(s))
-export const hashTags       = async (database:RecordDataBase,input:APIFunctions["list_hashTags"]["atServer"]) =>  getList_UseSIdId(input,(s) => database.getHashTagCollection(s))
+export const gameModes    = async (database:RecordDataBase,input:APIFunctions["list_gameModes"]["atServer"]) =>  modifyList_UseSIdId(input,(s) => database.getGameModeCollection(s))
+export const hashTags       = async (database:RecordDataBase,input:APIFunctions["list_hashTags"]["atServer"]) =>  modifyList_UseSIdId(input,(s) => database.getHashTagCollection(s))
 
-export const targets        = async (database:RecordDataBase,input:APIFunctions["list_targets"]["atServer"]) =>  getList_UseSIdMIdId(input,(s,m) => database.getTargetCollection(s,m))
-export const abilities      = async (database:RecordDataBase,input:APIFunctions["list_abilities"]["atServer"]) =>  getList_UseSIdMIdId(input,(s,m) => database.getAbilityCollection(s,m))
-export const difficulties   = async (database:RecordDataBase,input:APIFunctions["list_difficulties"]["atServer"]) =>  getList_UseSIdMIdId(input,(s,m) => database.getGameDifficultyCollection(s,m))
+export const targets        = async (database:RecordDataBase,input:APIFunctions["list_targets"]["atServer"]) =>  modifyList_UseSIdMIdId(input,(s,m) => database.getTargetCollection(s,m))
+export const abilities      = async (database:RecordDataBase,input:APIFunctions["list_abilities"]["atServer"]) =>  modifyList_UseSIdMIdId(input,(s,m) => database.getAbilityCollection(s,m))
+export const difficulties   = async (database:RecordDataBase,input:APIFunctions["list_difficulties"]["atServer"]) =>  modifyList_UseSIdMIdId(input,(s,m) => database.getGameDifficultyCollection(s,m))

@@ -1,15 +1,37 @@
+import { TitleCupsuled } from "./TitleCupsuled";
+
+//#TODO 破壊的変更によって影響を受けるOfferFormViewの対応する
 export class TextInputCapsuled {
     private element: HTMLInputElement;
-    private errorElement:Element;
-    constructor(insertedElement: Element, placeHolder: string,errorViewer:Element, chara?: "u-biggerChara" | "u-smallerChara") {
+    private errorElement:Element|null;
+    private titleElement:TitleCupsuled|null = null;
+    constructor(insertedElement: Element, {
+        placeHolder = "", errorViewer= null, chara = "", defaultValue = "", title
+    }:{ 
+        placeHolder?:string,
+        errorViewer?:Element|null,
+        chara?:"u-biggerChara"|"u-smallerChara"|"",
+        defaultValue?:string,
+        title?:{
+            titleViewer:Element
+            main:string, sub:string
+        }
+    } = {}) {
         this.errorElement = errorViewer;
-        this.errorElement.classList.add("u-unused")
+        this.value = defaultValue;
+        if (this.errorElement !== null) this.errorElement.classList.add("u-unused")
+        if (title !== undefined) {
+            this.titleElement = new TitleCupsuled(title.titleViewer)
+            this.titleElement.refresh(title.main,title.sub,{underline:false,chara:"u-smallerChara"})
+        }
         
         this.element = document.createElement("input");
         this.element.setAttribute("type", "text");
         this.element.classList.add("c-textInput", "u-underline");
         this.element.placeholder = placeHolder;
+        
         if (chara !== undefined) this.element.classList.add(chara);
+        
         insertedElement.appendChild(this.element);
 
     }
@@ -17,9 +39,13 @@ export class TextInputCapsuled {
         this.element.addEventListener(eventType, callback);
     }
     setError(error:string){
+        if (this.errorElement === null) throw new Error("エラーを表示する要素が設定されていません。")
         if (error==="") this.errorElement.classList.add("u-unused")
         else this.errorElement.classList.remove("u-unused")
         this.errorElement.innerHTML = error;
+    }
+    destroy(){
+        this.element.innerHTML = "";
     }
     get value() {
         return this.element.value;

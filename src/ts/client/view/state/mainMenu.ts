@@ -88,8 +88,8 @@ export class S_MainMenu
            const isLogIn = this.app.loginAdministratorReadOnly.isUserLogin;
            const userName = (isLogIn) ? this.app.loginAdministratorReadOnly.loginUserName:"";
            const targetGameMode = {
-               ja:(isSetTargetGameMode) ? `${asg.gameSystem?.JName} / ${asg.gameMode?.JName}`:`未設定`,
-               en:(isSetTargetGameMode) ? `${asg.gameSystem?.EName} / ${asg.gameMode?.EName}`:`未設定`
+               ja:(isSetTargetGameMode) ? `${asg.gameSystem?.Japanese} / ${asg.gameMode?.Japanese}`:`未設定`,
+               en:(isSetTargetGameMode) ? `${asg.gameSystem?.English} / ${asg.gameMode?.English}`:`未設定`
            }
            //#TODO まともに日本語訳をする
             return [{
@@ -170,7 +170,8 @@ export class S_MainMenu
                  description:{
                      Japanese:"取り扱うゲームタイトルとゲームモードを増やすことができます。"
                  },
-                 isDisabled:true,
+                 isDisabled:!this.app.loginAdministratorReadOnly.isUserLogin,
+                 to:() => {this.app.transition("settingNewRegulation",null)},
                  biggerTitle:true,
              },{
                  title:{

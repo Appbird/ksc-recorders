@@ -2,16 +2,13 @@ import * as functions from "firebase-functions"
 import express from "express"
 import { apiList } from "./server/function/apiDefinition";
 import { recordDataBase } from "./server/firestore/RecordDataBase";
-import firebase from "firebase-admin"
-import { setUserEventListener } from "./server/function/listener/user";
-
-firebase.initializeApp();
+import { deleteUserEventListener, setUserEventListener } from "./server/function/listener/user";
 
 const app = express();
 app.use(express.json())
 
-
-setUserEventListener(recordDataBase);
+functions.auth.user().onCreate((user) => setUserEventListener(user,recordDataBase));
+functions.auth.user().onDelete((user) => deleteUserEventListener(user,recordDataBase));
 
 apiList.forEach( (value,key) => {
     app.post(`/api${key}`,async (req,res) => {

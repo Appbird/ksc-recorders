@@ -5,8 +5,8 @@ import { icooonResolvable } from "../foundation/icooonResolvable";
 export type IGameSystemInfo = IGameSystemInfoWithoutCollections & CollectionInIGameSystemInfo
 export interface IGameSystemInfoWithoutCollections extends IItemOfResolveTableToName,icooonResolvable {
     id: string;
-    JName: string;
-    EName: string;
+    Japanese: string;
+    English: string;
     recordsNumber:number;
     runnersNumber:number;
     dateOfLatestPost:number;

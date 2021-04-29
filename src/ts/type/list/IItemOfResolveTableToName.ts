@@ -1,12 +1,12 @@
 export interface IItemOfResolveTableToName {
     id: string;
-    JName: string;
+    Japanese: string;
     JDescription?:string;
-    EName: string;
+    English: string;
     EDescription?:string;
 }
 export const expectedObj_IItemOfResolveTableToName = {
     id : "string",
-    JName: "string",
-    EName: "string"
+    Japanese: "string",
+    English: "string"
 }

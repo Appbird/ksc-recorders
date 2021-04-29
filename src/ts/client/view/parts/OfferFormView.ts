@@ -90,7 +90,7 @@ export class OfferFormView implements IView {
             
         this.element.appendChild(createElementWithIdAndClass({className:"u-space3em"}))
     }
-    private whenDecide(){
+    private async whenDecide(){
         const abilityIDs = this.abilityChoices.getValueAsArray();
         const targetID = this.targetChoices.getValueAsValue()
         const difficultyID = this.difficultyChoices.getValueAsValue();
@@ -106,7 +106,7 @@ export class OfferFormView implements IView {
                     case "time": return convertTimeIntoNumber(score);
                 }
             })(),
-            runnerID:this.runnerID,
+            IDToken:await this.app.loginAdministratorReadOnly.getIDToken(),
             tagName:this.tagInput.valueAsArray,
             languageOfTagName:this.app.state.language,
             link:[this.URLInput.value],

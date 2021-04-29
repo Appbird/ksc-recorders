@@ -1,8 +1,8 @@
 import { IItemOfResolveTableToName } from "../list/IItemOfResolveTableToName";
 
 export interface IRunner extends IItemOfResolveTableToName{
-    JName : string;
-    EName : string;
+    Japanese : string;
+    English : string;
     id : string;
     theDateOfRegistered: number;
     theNumberOfPost :number;

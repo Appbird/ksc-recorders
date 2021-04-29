@@ -79,10 +79,11 @@ export default class App implements IAppUsedToChangeState{
     setLanguage(lang:LanguageInApplication){
         this._state.setLanguage(lang);
     }
-    changeTargetGameMode(gameSystemEnv:{gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections}){
+    changeTargetGameMode(gameSystemEnv:{gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections}|null){
+        if (gameSystemEnv === null) return this.header.changeHeaderRightLeft("Kirby-Speed/Score-Recorders","KSSRs");
         if (this.state.gameSystemEnvDisplayed.gameSystem?.id === gameSystemEnv.gameSystem.id && this.state.gameSystemEnvDisplayed.gameMode?.id === gameSystemEnv.gameMode.id) return;
         this._state.setGameSystemEnv(gameSystemEnv)
-        return this.header.changeHeaderRightLeft(gameSystemEnv.gameSystem.EName,gameSystemEnv.gameMode.EName);    
+        return this.header.changeHeaderRightLeft(gameSystemEnv.gameSystem.English,gameSystemEnv.gameMode.English);    
     }
     accessToAPI<T extends keyof APIFunctions>(functionName: T, requiredObj: APIFunctions[T]["atServer"]): Promise<APIFunctions[T]["atClient"]>{
         return this.apiCaller.access<T>(functionName,requiredObj)
@@ -91,7 +92,7 @@ export default class App implements IAppUsedToChangeState{
         if (!(error instanceof Error)){ console.error(`予期せぬエラーです。 : ${error}`); return; }
         const errorInString = error.message;
         console.error(`${errorInString}\n${error.stack}`);
-        this.transitionAd.transition("errorView",{title:title,message:errorInString});
+        this.transition("errorView",{title:title,message:errorInString});
     }
     
 }

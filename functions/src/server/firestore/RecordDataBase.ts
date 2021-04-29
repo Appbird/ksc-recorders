@@ -1,6 +1,5 @@
 import { IRecord, IRecordWithoutID } from "../../../../src/ts/type/record/IRecord";
 import { IRunner } from "../../../../src/ts/type/record/IRunner";
-import { firestore } from "firebase-admin"
 import { IHashTagItem, IGameSystemInfoWithoutCollections } from "../../../../src/ts/type/list/IGameSystemInfo";
 import { OrderOfRecordArray } from "../../../../src/ts/type/record/OrderOfRecordArray";
 import { IGameModeItemWithoutCollections } from "../../../../src/ts/type/list/IGameModeItem";
@@ -10,12 +9,13 @@ import { IAbilityItem } from "../../../../src/ts/type/list/IAbilityItem";
 import { LanguageInApplication } from "../../../../src/ts/type/LanguageInApplication";
 import { selectAppropriateProperty } from "../../../../src/ts/utility/aboutLang";
 import { IItemOfResolveTableToName } from "../../../../src/ts/type/list/IItemOfResolveTableToName";
+import { firebaseAdmin } from "../function/firebaseAdmin";
 
 //[x] getRecordsWithConditionメソッドの実装
 export class RecordDataBase{
     private dataBase:FirebaseFirestore.Firestore;
     constructor(){
-        this.dataBase = firestore();
+        this.dataBase = firebaseAdmin.firestore;
     }
     
     private getRunnersRef = () => this.dataBase.collection("runners");

@@ -1,8 +1,9 @@
 import { LanguageInApplication } from "../../../type/LanguageInApplication";
 import { IItemOfResolveTableToName } from "../../../type/list/IItemOfResolveTableToName";
+import { IView } from "../IView";
 import { Input_IItemOfResolveTableToName } from "./Input_IItemOfResolveTableToName";
 
-export class EditorSegment {
+export class EditorSegment implements IView{
     private editorSegment: HTMLElement;
     private language:LanguageInApplication
     private addtionalEditor:Input_IItemOfResolveTableToName;

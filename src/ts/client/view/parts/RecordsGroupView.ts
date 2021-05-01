@@ -2,37 +2,42 @@ import { element, elementWithoutEscaping } from "../../../utility/ViewUtility";
 import { convertNumberIntoDateString } from "../../../utility/timeUtility";
 import { IRecordGroupResolved } from "../../../type/record/IRecordGroupResolved";
 import { IRecordInShortResolved } from "../../../type/record/IRecord";
-import { createElementWithIdAndClass } from "../../utility/aboutElement";
+import { createElementWithIdAndClass, findElementByClassNameWithErrorPossibility } from "../../utility/aboutElement";
 import { IView } from "../IView";
 import { StateInfoView } from "./StateInfoView";
-import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
-import { OptionObjectSet, OptionObject, RecordCardView } from "./RecordCardView";
+import { OptionObjectSet, RecordCardView } from "./RecordCardView";
+import { ScoreType } from "../../../type/list/IGameModeItem";
 
 export class RecordGroupView implements IView{
-    private _htmlElement = createElementWithIdAndClass({className:"c-recordCardsGroup"})
+    private container:HTMLElement;
     private summaryElement = createElementWithIdAndClass({className:"__summary"})
     private recordCardsElement = createElementWithIdAndClass({className:"__recordCards"})
-    private app:IAppUsedToReadAndChangeOnlyPageState;
+
+    private recordCards:RecordCardView[] = [];
+    private stateInfoView:StateInfoView;
     private option:OptionObjectSet;
-    constructor(recordGroup:IRecordGroupResolved,app:IAppUsedToReadAndChangeOnlyPageState,
+    private scoreType:ScoreType;
+    constructor(container:HTMLElement,recordGroup:IRecordGroupResolved,scoreType:ScoreType,
         {
-            displayTags={gameSystemTags:false,targetTags:false,abilityTags:true},
-            setClickListener=true
-        }:OptionObject = {}){
-        this.app = app;
-        this.option = {displayTags:displayTags,setClickListener:setClickListener};
-        this._htmlElement.appendChild(this.summaryElement)
-        this._htmlElement.appendChild(this.recordCardsElement)
-        this.setRecordGroupSummary(recordGroup);
-        if (recordGroup.records.length === 0)this.recordCardsElement.appendChild(element`<div class="u-width95per"><h2>記録が存在しませんでした</h2></div>`)
-        for(const record of recordGroup.records) this.appendRecordCard(record);
-    }
-    get htmlElement(){
-        return this._htmlElement;
-    }
-    setRecordGroupSummary(recordGroup:IRecordGroupResolved){
-        this.summaryElement.innerHTML = "";
-        const stateInfoDiv = this.summaryElement.appendChild(elementWithoutEscaping`
+            clickOnCardEventListener,
+            displayTags={gameSystemTags:false,targetTags:false,abilityTags:true}
+        }:{
+            displayTags?:{gameSystemTags?:boolean,targetTags?:boolean,abilityTags?:boolean}
+            clickOnCardEventListener?:(record:IRecordInShortResolved) => void
+        } = {})
+    {
+
+        this.container = container;
+        this.container.classList.add("c-recordCardsGroup");
+
+        this.scoreType = scoreType;
+        this.option = {
+            displayTags:displayTags,
+        };
+        this.container.appendChild(this.summaryElement)
+        this.container.appendChild(this.recordCardsElement)
+
+        const recordGroupHeader = this.summaryElement.appendChild(elementWithoutEscaping`
         <div>
             <div class = "c-recordGroupHeader">
                 <div class="c-title">
@@ -42,23 +47,29 @@ export class RecordGroupView implements IView{
             <div class="stateInfo"></div>
             <hr noshade class="u-bold">
         </div>
-        `).getElementsByClassName("stateInfo")[0]
-        if(stateInfoDiv === undefined) throw new Error("予期しないエラーです。")
-        stateInfoDiv.appendChild(
-            new StateInfoView()
+        `)
+        const stateInfoDiv = findElementByClassNameWithErrorPossibility(recordGroupHeader,"stateInfo")
+        this.stateInfoView = new StateInfoView(stateInfoDiv.appendChild(document.createElement("div")))
                 .appendInfo(`${recordGroup.numberOfRecords} records`,"list")
                 .appendInfo(`${recordGroup.numberOfRunners} runners`,"running")
                 .appendInfo(convertNumberIntoDateString(recordGroup.lastPost), "history")
-                .htmlElement
-            )
+
+        if (recordGroup.records.length === 0) this.recordCardsElement.appendChild(element`<div class="u-width95per"><h2>記録が存在しませんでした</h2></div>`)
         
+        for(const record of recordGroup.records) this.appendRecordCard(record,clickOnCardEventListener);
+    }
+    destroy(){
+        for(const recordCard of this.recordCards) recordCard.destroy();
+        this.stateInfoView.destroy();
+        this.container.innerHTML = "";
     }
     clearRecordCards(){
         this.recordCardsElement.innerHTML = "";
     }
-    appendRecordCard(record:IRecordInShortResolved){
-        this._htmlElement.appendChild(new RecordCardView(this.app,record,this.option).htmlElement)
-        
+    appendRecordCard(record:IRecordInShortResolved,clickEventListener?:(clickedRecord:IRecordInShortResolved) => void){
+        const card = new RecordCardView(this.recordCardsElement.appendChild(document.createElement("div")),this.scoreType,record,this.option)
+        this.recordCards.push(card);
+        if (clickEventListener) card.addClickEventListener(clickEventListener);
     }
 }
 

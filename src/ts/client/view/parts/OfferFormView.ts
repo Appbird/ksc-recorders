@@ -14,7 +14,7 @@ import SimpleMDE from "simplemde";
 import { TextChoicesCapsuled } from "./TextChoicesCapsuled";
 
 export class OfferFormView implements IView {
-    private element: HTMLDivElement = createElementWithIdAndClass({ className: "offerForm u-width95per u-marginUpDown2emToChildren" });
+    private container: HTMLElement;
     private app: IAppUsedToReadAndChangeOnlyPageState;
 
     private evidenceMovieElement: HTMLDivElement;
@@ -36,14 +36,23 @@ export class OfferFormView implements IView {
 
     private simpleMDE:SimpleMDE;
     private errorDisplay:HTMLElement;
-    constructor(app: IAppUsedToReadAndChangeOnlyPageState, difficulties: IGameDifficultyItem[], abilities: IAbilityItem[],runnerID:string) {
+    destroy(){
+        this.tagInput.destroy();
+        this.difficultyChoices.destroy();
+        this.abilityChoices.destroy();
+        this.targetChoices.destroy();
+        this.container.innerHTML = "";
+    }
+    //#CH  appへの依存を解消する。具体的にappを利用する処理を全てPage側で定義させ、それをコールバックでこちらに渡す。
+    constructor(container:HTMLElement,app: IAppUsedToReadAndChangeOnlyPageState, difficulties: IGameDifficultyItem[], abilities: IAbilityItem[],runnerID:string) {
+        this.container = container;
+        this.container.classList.add("offerForm","u-width95per","u-marginUpDown2emToChildren")
         this.app = app;
-
         this.htmlConverter = new HTMLConverter(this.app.state.language);
 
-        this.element.appendChild(this.htmlConverter.elementWithoutEscaping`<h1>${generateIcooonHTML({icooonName:"link"})}${{Japanese:"リンク"}}</h1>`)
-        this.evidenceMovieElement = this.element.appendChild(createElementWithIdAndClass({ className: "c-evidenceMovie" }));
-        this.evidenceMovie = new MovieWidgetCreator();
+        this.container.appendChild(this.htmlConverter.elementWithoutEscaping`<h1>${generateIcooonHTML({icooonName:"link"})}${{Japanese:"リンク"}}</h1>`)
+        this.evidenceMovieElement = this.container.appendChild(createElementWithIdAndClass({ className: "c-evidenceMovie" }));
+        this.evidenceMovie = new MovieWidgetCreator(this.evidenceMovieElement);
 
         const textInputs = this.createTextInput();
         this.URLInput = textInputs.link;
@@ -57,7 +66,7 @@ export class OfferFormView implements IView {
 
         this.runnerID = runnerID;
 
-        //#TODO 追加されるタグの色を対応させる。
+        //#CH 追加されるタグの色を対応させる。
         
         this.setTargetDropdownEventListener();
         this.setURLInputChangeEventListener();
@@ -65,7 +74,7 @@ export class OfferFormView implements IView {
         
 
         this.simpleMDE = new SimpleMDE({
-            element:this.element.appendChild(
+            element:this.container.appendChild(
                         this.htmlConverter.elementWithoutEscaping`
                                 <div class="offerForm__noteInput">
                                     <h1>${generateIcooonHTML({icooonName:"notebook"})}${{Japanese:"走者ノート"}}</h1>
@@ -83,12 +92,12 @@ export class OfferFormView implements IView {
         });
         
         
-        this.errorDisplay = this.element.appendChild(element`<div class="u-width90per u-margin2em u-redChara"></div>`).appendChild(document.createElement("h3"))
-        this.element.appendChild(this.htmlConverter.elementWithoutEscaping`<div class="u-width50per u-margin2em"><div class="c-button">決定</div></div>`)
+        this.errorDisplay = this.container.appendChild(element`<div class="u-width90per u-margin2em u-redChara"></div>`).appendChild(document.createElement("h3"))
+        this.container.appendChild(this.htmlConverter.elementWithoutEscaping`<div class="u-width50per u-margin2em"><div class="c-button">決定</div></div>`)
             .addEventListener("click",() => this.whenDecide())
 
             
-        this.element.appendChild(createElementWithIdAndClass({className:"u-space3em"}))
+        this.container.appendChild(createElementWithIdAndClass({className:"u-space3em"}))
     }
     private async whenDecide(){
         const abilityIDs = this.abilityChoices.getValueAsArray();
@@ -147,7 +156,7 @@ export class OfferFormView implements IView {
             try {
                 this.evidenceMovie.set(this.URLInput.value);
                 this.evidenceMovieElement.innerHTML = "";
-                this.evidenceMovie.setWidget(this.evidenceMovieElement);
+                this.evidenceMovie.setWidget();
                 this.URLInput.setError("");
             } catch (error) {
                 const errorBaseMsg = choiceDescription({ JDescription: "入力されたURLが不正です。", EDescription: "invalid link." }, this.app.state.language);
@@ -187,7 +196,7 @@ export class OfferFormView implements IView {
         }
         //#CH ここあたりのコードを分離したいけどするべきか迷う
     private createTextInput(): { link: TextInputCapsuled; score: TextInputCapsuled; } {
-        const offerForm__textInputElement = this.element.appendChild(
+        const offerForm__textInputElement = this.container.appendChild(
             //#TODO 英語訳の追加
             createElementWithIdAndClass({ className: "offerForm__textInput" })).appendChild(this.htmlConverter.elementWithoutEscaping`
             <div class="offerForm__textInput">
@@ -216,18 +225,20 @@ export class OfferFormView implements IView {
         const link_errorInput = element_linkDescription.appendChild(createElementWithIdTagClass({ className: "u-redChara u-bolderChara" }, "li"));
         const score_errorInput = element_scoreDescription.appendChild(createElementWithIdTagClass({ className: "u-redChara u-bolderChara" }, "li"));
         return {
-            link: new TextInputCapsuled(element_textInput_link, "link to the movie", link_errorInput, "u-smallerChara"),
-            score: new TextInputCapsuled(element_textInput_score, (() => {
+            link: new TextInputCapsuled(element_textInput_link,{placeHolder:"link to the movie", errorViewer:link_errorInput, chara:"u-smallerChara"}),
+            score: new TextInputCapsuled(element_textInput_score, {
+                placeHolder:(() => {
                     switch (this.app.state.scoreType) {
                         case "score": return "0";
                         case "time": return "00:00.00";
                     }
-                })(), score_errorInput, "u-biggerChara")
+                })()
+                , errorViewer:score_errorInput, chara:"u-biggerChara"})
         };
     }
     
     private createDifficultyChoices(difficulties: IGameDifficultyItem[]) {
-        const difficultySelector = this.element.appendChild(this.htmlConverter.elementWithoutEscaping`
+        const difficultySelector = this.container.appendChild(this.htmlConverter.elementWithoutEscaping`
         <div class="offerForm__difficultySelector">
             <h1>${generateIcooonHTML({icooonName:"difficulty"})}${{Japanese:"難易度"}}</h1>
             <div class="offerForm__difficultySelector__Choices">
@@ -242,7 +253,7 @@ export class OfferFormView implements IView {
     }
 
     private createTargetChoices(targets: ITargetItem[]) {
-        const targetSelector = this.element.appendChild(this.htmlConverter.elementWithoutEscaping`
+        const targetSelector = this.container.appendChild(this.htmlConverter.elementWithoutEscaping`
         <div class="offerForm__targetSelector">
             <h1>${generateIcooonHTML({icooonName:"flag"})}${{Japanese:"計測対象"}}</h1>
             <div class="offerForm__targetSelector__Choices">
@@ -258,7 +269,7 @@ export class OfferFormView implements IView {
 
     private createAbilityChoices(abilities: IAbilityItem[]) {
         const maxNumberOfPlayer = this.app.state.gameSystemEnvDisplayed.gameMode?.maxNumberOfPlayer
-        const abilitySelector = this.element.appendChild(this.htmlConverter.elementWithoutEscaping`
+        const abilitySelector = this.container.appendChild(this.htmlConverter.elementWithoutEscaping`
         <div class="offerForm__abilitySelector">
             <h1>${generateIcooonHTML({icooonName:"star"})}${{Japanese:"自機の能力"}}</h1>
             <div class="offerForm__abilitySelector__Choices">
@@ -281,7 +292,7 @@ export class OfferFormView implements IView {
     }
 
     private createTagInputChoices() {
-        const tagSegment = this.element.appendChild(this.htmlConverter.elementWithoutEscaping`
+        const tagSegment = this.container.appendChild(this.htmlConverter.elementWithoutEscaping`
         <div class="offerForm__tagInput">
         <h1>${generateIcooonHTML({icooonName:"tag"})}${{Japanese:"タグ"}}</h1>
             <div class="offerForm__tagInput__Choices">
@@ -297,7 +308,7 @@ export class OfferFormView implements IView {
     }
 
     get htmlElement() {
-        return this.element;
+        return this.container;
     }
 
 }

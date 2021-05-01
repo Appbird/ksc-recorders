@@ -1,15 +1,16 @@
 import Choices from "choices.js";
-import { choiceDescription, MultiLanguageDescription, selectAppropriateName } from "../../../utility/aboutLang";
+import { choiceDescription, choiceString, MultiLanguageDescription, selectAppropriateName } from "../../../utility/aboutLang";
 import { IItemOfResolveTableToName } from "../../../type/list/IItemOfResolveTableToName";
 import { LanguageInApplication } from "../../../type/LanguageInApplication";
+import { IView } from "../IView";
 
-export class SelectChoicesCapsuled<T extends IItemOfResolveTableToName> {
+export class SelectChoicesCapsuled<T extends IItemOfResolveTableToName> implements IView {
     private _data: T[];
     private readonly _language: LanguageInApplication;
     private _choices: Choices;
-    private _insertedElement: HTMLSelectElement;
+    private container: HTMLSelectElement;
     constructor(
-        insertedElement: HTMLSelectElement, data: T[],
+        container: HTMLSelectElement, data: T[],
         {
             needMultipleSelect = false, maxItemCount = 1, needDuplicatedSelect = false, language,
             removeItemButton = true, disable = false,
@@ -22,12 +23,12 @@ export class SelectChoicesCapsuled<T extends IItemOfResolveTableToName> {
             noChoiceText?: MultiLanguageDescription; noResultText?: MultiLanguageDescription;
         }
     ) {
-        insertedElement.multiple = needMultipleSelect;
-        insertedElement.disabled = disable;
+        container.multiple = needMultipleSelect;
+        container.disabled = disable;
         const result = new Choices(
-            insertedElement,
+            container,
             {
-                choices: data.map((ele) => { return { value: ele.id, label: selectAppropriateName(ele, language) }; }),
+                choices: data.map((ele) => { return { value: ele.id, label: choiceString(ele, language) }; }),
                 placeholderValue: placeholderValue,
                 maxItemCount: maxItemCount,
                 maxItemText: choiceDescription(maxItemText, language),
@@ -39,21 +40,21 @@ export class SelectChoicesCapsuled<T extends IItemOfResolveTableToName> {
         this._language = language;
         this._data = data;
         this._choices = result;
-        this._insertedElement = insertedElement;
+        this.container = container;
 
         if (!needDuplicatedSelect)
             return;
 
-        this._insertedElement.addEventListener("addItem", (event: any) => {
+        this.container.addEventListener("addItem", (event: any) => {
             result.setChoices([{ label: event.detail.label, value: event.detail.value }]);
         });
-        this._insertedElement.addEventListener("removeItem", () => {
+        this.container.addEventListener("removeItem", () => {
             result.clearStore();
-            result.setChoices(data.map((ele) => { return { value: ele.id, label: selectAppropriateName(ele, language) }; }));
+            result.setChoices(data.map((ele) => { return { value: ele.id, label: choiceString(ele, language) }; }));
         });
     }
     addEventListener(eventType: "addItem" | "click" | "hideDropdown" | "change", callback: (event: any) => void) {
-        this._insertedElement.addEventListener(eventType, callback);
+        this.container.addEventListener(eventType, callback);
     }
     getValue(valueOnly: boolean = true) {
         return this._choices.getValue(valueOnly);
@@ -71,7 +72,7 @@ export class SelectChoicesCapsuled<T extends IItemOfResolveTableToName> {
     }
     setChoices(item: T[]) {
         this._choices.setChoices(item.map(ele => {
-            return { value: ele.id, label: selectAppropriateName(ele, this._language) };
+            return { value: ele.id, label: choiceString(ele, this._language) };
         }));
         this._data = item;
     }
@@ -97,6 +98,10 @@ export class SelectChoicesCapsuled<T extends IItemOfResolveTableToName> {
         return this._choices;
     }
     get insertedElement() {
-        return this._insertedElement;
+        return this.container;
+    }
+    destroy(){
+        this._choices.destroy();
+        this.container.innerHTML = "";
     }
 }

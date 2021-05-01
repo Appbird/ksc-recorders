@@ -1,23 +1,26 @@
 import { elementWithoutEscaping } from "../../../utility/ViewUtility";
-import { createElementWithIdAndClass, generateIcooonHTML, writeElement } from "../../utility/aboutElement";
+import { generateIcooonHTML, writeElement } from "../../utility/aboutElement";
 import { IView } from "../IView";
 import {IGameSystemInfoWithoutCollections} from "../../../type/list/IGameSystemInfo"
 import {convertNumberIntoDateString}from "../../../utility/timeUtility"
-import { selectAppropriateName, selectAppropriateDescription } from "../../../utility/aboutLang"
+import { selectAppropriateDescription, choiceString } from "../../../utility/aboutLang"
 import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
 import { IGameModeItemWithoutCollections } from "../../../type/list/IGameModeItem";
 export class GameModeCardsGroup implements IView{
     //#CTODO 実装する。
         private app:IAppUsedToReadAndChangeOnlyPageState;
         private gameSystemInfo:IGameSystemInfoWithoutCollections;
-        private element = createElementWithIdAndClass({className:"c-list u-width90per"})
-        constructor(gameSystemInfo:IGameSystemInfoWithoutCollections,info:IGameModeItemWithoutCollections[],app:IAppUsedToReadAndChangeOnlyPageState){
+        private container:HTMLElement;
+       //#CH  appへの依存を解消する。具体的にappを利用する処理を全てPage側で定義させ、それをコールバックでこちらに渡す。
+        constructor(container:HTMLElement,gameSystemInfo:IGameSystemInfoWithoutCollections,info:IGameModeItemWithoutCollections[],app:IAppUsedToReadAndChangeOnlyPageState){
+            this.container = container;
+            this.container.classList.add("c-list","u-width90per");
             this.gameSystemInfo = gameSystemInfo;
             this.app = app;
-            this.element.appendChild(elementWithoutEscaping`
+            this.container.appendChild(elementWithoutEscaping`
                 <div id="articleTitle">
                     <div class="c-title">
-                            <div class="c-title__main"> ${generateIcooonHTML(gameSystemInfo)} ${selectAppropriateName(gameSystemInfo,this.app.state.language)}</div>
+                            <div class="c-title__main"> ${generateIcooonHTML(gameSystemInfo)} ${choiceString(gameSystemInfo,this.app.state.language)}</div>
                             <div class="c-title__sub">select the item of game mode where records you're looking for was set.</div>
                     </div>
                     <hr noshade class="u-bold">
@@ -25,11 +28,14 @@ export class GameModeCardsGroup implements IView{
         `);
             for (const ele of info) this.appendCard(ele);
         }
+        destroy(){
+            this.container.innerHTML = "";
+        }
         appendCard(info:IGameModeItemWithoutCollections){
-            const card = this.element.appendChild(elementWithoutEscaping`
+            const card = this.container.appendChild(elementWithoutEscaping`
             <div class="c-list__item">
                 <div class = "c-title">
-                    <div class = "c-title__main u-smallerChara">${generateIcooonHTML(info)} ${selectAppropriateName(info,this.app.state.language)}</div>
+                    <div class = "c-title__main u-smallerChara">${generateIcooonHTML(info)} ${choiceString(info,this.app.state.language)}</div>
                 </div>
                 ${writeElement(selectAppropriateDescription(info,this.app.state.language),"p")}
                 
@@ -49,6 +55,6 @@ export class GameModeCardsGroup implements IView{
             
         }
         get htmlElement(){
-            return this.element;
+            return this.container;
         }
 }

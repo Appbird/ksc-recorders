@@ -4,13 +4,13 @@ import { element, HTMLConverter } from "../../../utility/ViewUtility";
 import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
 import { createElementWithIdAndClass, generateIcooonHTML } from "../../utility/aboutElement";
 import { IView } from "../IView";
-import { selectAppropriateName } from "../../../utility/aboutLang";
+import { choiceString } from "../../../utility/aboutLang";
 import { ITargetItem } from "../../../type/list/ITargetItem";
 import { StateAdministrator } from "../../Administrator/StateAdminister";
 import { SelectChoicesCapsuled } from "./SelectChoicesCapsuled";
 
 export class SearchConditionSelectorView implements IView{
-    private element = createElementWithIdAndClass({id:"searchConditionSelector"})
+    private container:HTMLElement;
 
     private difficultyColumn = createElementWithIdAndClass({id:"selector_difficulty",className:"u-width90per"});
     private targetColumn = createElementWithIdAndClass({id:"selector_target",className:"u-width90per"});
@@ -22,18 +22,20 @@ export class SearchConditionSelectorView implements IView{
     private htmlConverter:HTMLConverter;
 
     private app:IAppUsedToReadAndChangeOnlyPageState
-    constructor(app:IAppUsedToReadAndChangeOnlyPageState, difficulties:IGameDifficultyItem[], abilities:IAbilityItem[]){
+    //#CH  appへの依存を解消する。具体的にappを利用する処理を全てPage側で定義させ、それをコールバックでこちらに渡す。
+    constructor(container:HTMLElement,app:IAppUsedToReadAndChangeOnlyPageState, difficulties:IGameDifficultyItem[], abilities:IAbilityItem[]){
         this.app = app;
         if (!StateAdministrator.checkGameSystemEnvIsSet(this.app.state.gameSystemEnvDisplayed)) throw new Error("閲覧する記録のゲームタイトルとゲームモードが設定されていません。")
-
-        this.element.appendChild(element`
+        this.container = container;
+        this.container.classList.add("searchConditionSelector");
+        this.container.appendChild(element`
         <div class="articleTitle">
             <div class="c-title">
                 <div class = "c-title__main"><i class="fas fa-star"></i>記録検索</div> <div class = "c-title__sub">Set conditions to search records!</div>
             </div>
             <hr noshade class="u-bold">
         </div>`)
-        const context = this.element.appendChild(createElementWithIdAndClass({className:"u-width90per"}))
+        const context = this.container.appendChild(createElementWithIdAndClass({className:"u-width90per"}))
         this.htmlConverter = new HTMLConverter(this.app.state.language)
         context.appendChild(this.difficultyColumn)
         context.appendChild(this.targetColumn)
@@ -89,8 +91,10 @@ export class SearchConditionSelectorView implements IView{
         this.abilityChoices = new SelectChoicesCapsuled(this.abilityColumn.appendChild( document.createElement("select") ),abilities,
             {   maxItemCount:maxNumberOfPlayer,needDuplicatedSelect:true,needMultipleSelect:true,language:this.app.state.language,
                 maxItemText:
-                    {JDescription:`このゲームモードは最大${maxNumberOfPlayer}人プレイまで対応しています。`,
-                    EDescription:`This mode can be played with at most ${maxNumberOfPlayer} kirbys (friends)!`}
+                    {
+                        JDescription:`このゲームモードは最大${maxNumberOfPlayer}人プレイまで対応しています。`,
+                        EDescription:`This mode can be played with at most ${maxNumberOfPlayer} kirbys (friends)!`
+                    }
             })
         
         this.difficultyChoices.addEventListener("change",() => {
@@ -100,19 +104,23 @@ export class SearchConditionSelectorView implements IView{
         })
 
         //#CTODO いいボタンのデザインを探してくる。
-        this.element.appendChild(element`<div class="u-width50per u-margin2em"><div class="c-button">決定</div></div>`)
+        this.container.appendChild(element`<div class="u-width50per u-margin2em"><div class="c-button">決定</div></div>`)
         .addEventListener("click",() => this.whenDecideCondition())
     }
+
+    destroy(){
+        this.targetChoices.destroy();
+        this.difficultyChoices.destroy();
+        this.abilityChoices.destroy();
+        this.container.innerHTML = "";
+    }
+    
     private whenDecideCondition(){
         const abilitySelected = this.abilityChoices.getValueAsArray(true);
         const targetSelected = this.targetChoices.getValueAsArray(true);
         
-        if (!StateAdministrator.checkGameSystemEnvIsSet(this.app.state.gameSystemEnvDisplayed)) throw new Error("閲覧する記録のゲームタイトルとゲームモードが設定されていません。")
-        const gameSystemID = this.app.state.gameSystemEnvDisplayed.gameSystem.id
-        const gameModeID = this.app.state.gameSystemEnvDisplayed.gameMode.id
-        
         this.app.transition("searchResultView",{
-            condition: this.generateCondition(targetSelected,abilitySelected,gameSystemID,gameModeID)
+            condition: this.generateCondition(targetSelected,abilitySelected,this.app.state.gameSystemIDDisplayed,this.app.state.gameModeIDDisplayed)
         },{title:"検索画面"});
     }
     private generateCondition(targetSelected:string[],abilitySelected:string[],gameSystemID:string,gameModeID:string){
@@ -131,7 +139,7 @@ export class SearchConditionSelectorView implements IView{
         return targetSelected.map( (id,index) => {
             const result = this.targetChoices.data.find((target) => target.id === id);
             return {
-                groupName: (result === undefined) ? "":selectAppropriateName(result,this.app.state.language),
+                groupName: (result === undefined) ? "":choiceString(result,this.app.state.language),
                 groupSubName:`${index+1}戦目`,
                 gameSystemEnv:{gameSystemID:gameSystemID, gameModeID:gameModeID},
                 language:this.app.state.language, startOfRecordArray:0,limitOfRecordArray:3, orderOfRecordArray:this.app.state.superiorScore,
@@ -161,9 +169,6 @@ export class SearchConditionSelectorView implements IView{
         return;
     }
    
-    get htmlElement(){
-        return this.element;
-    }
     
 }
 

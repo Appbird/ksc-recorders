@@ -1,11 +1,12 @@
+import { IView } from "../IView";
 import { TitleCupsuled } from "./TitleCupsuled";
 
-//#TODO 破壊的変更によって影響を受けるOfferFormViewの対応する
-export class TextInputCapsuled {
+//#CTODO 破壊的変更によって影響を受けるOfferFormViewの対応する
+export class TextInputCapsuled implements IView{
     private element: HTMLInputElement;
     private errorElement:Element|null;
     private titleElement:TitleCupsuled|null = null;
-    constructor(insertedElement: Element, {
+    constructor(container: Element, {
         placeHolder = "", errorViewer= null, chara = "", defaultValue = "", title
     }:{ 
         placeHolder?:string,
@@ -32,7 +33,7 @@ export class TextInputCapsuled {
         
         if (chara !== undefined) this.element.classList.add(chara);
         
-        insertedElement.appendChild(this.element);
+        container.appendChild(this.element);
 
     }
     addEventListener(eventType: "change", callback: () => void) {

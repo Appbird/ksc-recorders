@@ -3,15 +3,18 @@ import { createElementWithIdAndClass, generateIcooonHTML, writeElement } from ".
 import { IView } from "../IView";
 import {IGameSystemInfoWithoutCollections} from "../../../type/list/IGameSystemInfo"
 import {convertNumberIntoDateString}from "../../../utility/timeUtility"
-import { selectAppropriateName, selectAppropriateDescription } from "../../../utility/aboutLang"
+import { selectAppropriateName, selectAppropriateDescription, choiceString } from "../../../utility/aboutLang"
 import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
 export class GameSystemCardGroup implements IView{
     //#CTODO 実装する。
         private app:IAppUsedToReadAndChangeOnlyPageState;
-        private element = createElementWithIdAndClass({className:"c-recordCardGroup u-width90per"})
-        constructor(info:IGameSystemInfoWithoutCollections[],app:IAppUsedToReadAndChangeOnlyPageState){
+        private container:HTMLElement;
+        //#CH  appへの依存を解消する。具体的にappを利用する処理を全てPage側で定義させ、それをコールバックでこちらに渡す。
+        constructor(container:HTMLElement,info:IGameSystemInfoWithoutCollections[],app:IAppUsedToReadAndChangeOnlyPageState){
+            this.container = container;
+            this.container.classList.add("c-recordCardGroup","u-width90per")
             this.app = app;
-            this.element.appendChild(element`
+            this.container.appendChild(element`
                 <div id="articleTitle">
                     <div class="c-title">
                             <div class="c-title__main">検索対象とするゲームシステム</div>
@@ -22,11 +25,14 @@ export class GameSystemCardGroup implements IView{
         `);
             for (const ele of info) this.appendCard(ele);
         }
+        destroy(){
+            this.container.innerHTML = "";
+        }
         appendCard(info:IGameSystemInfoWithoutCollections){
-            const card = this.element.appendChild(elementWithoutEscaping`
+            const card = this.container.appendChild(elementWithoutEscaping`
             <div class="c-recordCard">
                 <div class = "c-title">
-                    <div class = "c-title__main u-smallerChara">${generateIcooonHTML(info)} ${selectAppropriateName(info,this.app.state.language)}</div>
+                    <div class = "c-title__main u-smallerChara">${generateIcooonHTML(info)} ${choiceString(info,this.app.state.language)}</div>
                 </div>
                 ${writeElement(selectAppropriateDescription(info,this.app.state.language),"p")}
                 <hr noshade class="u-thin">
@@ -45,6 +51,6 @@ export class GameSystemCardGroup implements IView{
             card.addEventListener("click",() => this.app.transition("gameModeSeletor",info));
         }
         get htmlElement(){
-            return this.element;
+            return this.container;
         }
 }

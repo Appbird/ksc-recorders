@@ -6,7 +6,7 @@ import { isIReceivedDataAtServer_pickUp_UseSIdId } from "../../../../src/ts/type
 import { isIReceivedDataAtServer_pickUp_UseSIdMIdId } from "../../../../src/ts/type/api/list/atServer_pickup/IReceivedDataAtServer_pickUp_UseSIdMIdId.validator";
 import { isIReceivedDataAtServer_recordDetail } from "../../../../src/ts/type/api/record/notChanging/IReceivedDataAtServer_recordDetail.validator";
 import { isIReceivedDataAtServer_recordSearch } from "../../../../src/ts/type/api/record/notChanging/IReceivedDataAtServer_recordSearch.validator";
-//#TODO 出来ることならTypeScript_json_validatorの出力結果を一つにまとめたい。--collection trueオプションをどう使えばいいのだろうか…。
+//#CH 出来ることならTypeScript_json_validatorの出力結果を一つにまとめたい。--collection trueオプションをどう使えばいいのだろうか…。
 import { APIFunctions } from "../../../../src/ts/type/api/relation";
 import { IReceivedData, IReceivedDataAtClient, IReceivedDataAtServer } from "../../../../src/ts/type/api/transmissionBase";
 import { ValidateFunction } from '../../../../src/ts/type/api/ValidateFunction';

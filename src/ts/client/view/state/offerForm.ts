@@ -18,8 +18,11 @@ export class S_OfferForm
             const abilities = (await this.app.accessToAPI("list_abilities",{
                 gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed}
             })).result
-            const view = new OfferFormView(this.app,difficulties,abilities,await this.app.loginAdministratorReadOnly.getIDToken())
-            this.articleDOM.appendChild(view.htmlElement);
+            const view = new OfferFormView(
+                this.articleDOM.appendChild(document.createElement("div")),
+                this.app,difficulties,abilities,
+                await this.app.loginAdministratorReadOnly.getIDToken()
+            )
         }
 }
 

@@ -15,6 +15,7 @@ export class SettingNewRegulationView implements IView{
     private editorSegment:EditorSegment;
     private app:IAppUsedToReadAndChangePage;
     private selectedId:string|null = null;
+    //#CH  appへの依存を解消する。具体的にappを利用する処理を全てPage側で定義させ、それをコールバックでこちらに渡す。
     constructor(container:HTMLElement,app:IAppUsedToReadAndChangePage){
         this.app = app;
         this.container = container;
@@ -93,7 +94,7 @@ export class SettingNewRegulationView implements IView{
         ele.onclick = onClick;
         return ele;
     }
-    destory(){
+    destroy(){
         this.editorSegment.destroy();
         if (this.unsubscribeListener !== null) this.unsubscribeListener();
     }

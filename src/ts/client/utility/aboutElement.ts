@@ -19,10 +19,10 @@ export function writeElement(value:string|undefined,tag:string){
     return (value === undefined) ? "" : `<${tag}>${value}</${tag}>`
 }
 
-export function findElementByClassNameWithErrorPossibility(findPlace:Element,className:string){
+export function findElementByClassNameWithErrorPossibility(findPlace:Element,className:string):HTMLElement{
     const place = findPlace.getElementsByClassName(className)
     if (place[0] === undefined)throw new Error(`要素${className}が見つかりませんでした。`)
-    return place[0]
+    return place[0] as HTMLElement
 }
 
 export function generateIcooonHTML(info:icooonResolvable){

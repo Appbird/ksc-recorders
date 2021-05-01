@@ -6,7 +6,7 @@ export class S_GameSystemSelector
     extends PageStateBaseClass<null,IAppUsedToReadAndChangePage>{
         async init(){
             const result = (await this.app.accessToAPI("list_gameSystems", {})).result;
-            this.articleDOM.appendChild(new GameSystemCardGroup(result,this.app).htmlElement);
+            new GameSystemCardGroup(this.articleDOM.appendChild(document.createElement("div")),result,this.app)
         
         }
 }

@@ -4,9 +4,10 @@ import { IItemOfResolveTableToName } from "../../../type/list/IItemOfResolveTabl
 import { TextInputCapsuled } from "./TextInputCapsuled";
 import { LanguageInApplication } from "../../../type/LanguageInApplication";
 import { MultiLanguageString } from "../../../type/foundation/MultiLanguageString";
+import { IView } from "../IView";
 
 //#TODO アイテムごとの設定項目を表すクラスの実装
-export class Input_IItemOfResolveTableToName {
+export class Input_IItemOfResolveTableToName implements IView {
     private container: Element;
     private switch: HTMLElement;
     private opened: boolean = false;
@@ -29,7 +30,7 @@ export class Input_IItemOfResolveTableToName {
         this.item = defaultItem;
         this.container = container;
         this.container.classList.add("c-list");
-        //#TODO クリックすることで設定項目の表示の有無を切り替えられる。
+        //#CTODO クリックすることで設定項目の表示の有無を切り替えられる。
         this.switch = this.container.appendChild(this.htmlConverter.elementWithoutEscaping`
             <div class="c-list__item">${title}</div>`) as HTMLElement;
         this.switch.addEventListener("click", () => this.switchOpened(!this.opened));
@@ -63,8 +64,8 @@ export class Input_IItemOfResolveTableToName {
         (this.opened) ? this.main.classList.remove("u-unused") : this.main.classList.add("u-unused");
     }
     refreshView(item: IItemOfResolveTableToName) {
-        //#TODO Itemをセットし直して、それをもとにテキスト入力欄をセットし直す。
-        //#TODO 入力時のリスナーをセットしたい。
+        //#CTODO Itemをセットし直して、それをもとにテキスト入力欄をセットし直す。
+        //#CTODO 入力時のリスナーをセットしたい。
         this.item = item;
         this.JNameInput.value = this.item.Japanese;
         this.ENameInput.value = this.item.English;

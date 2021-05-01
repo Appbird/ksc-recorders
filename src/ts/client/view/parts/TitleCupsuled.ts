@@ -1,6 +1,7 @@
 import { element } from "../../../utility/ViewUtility";
+import { IView } from "../IView";
 
-export class TitleCupsuled{
+export class TitleCupsuled implements IView{
     private container:Element;
     constructor(container:Element) {
         this.container = container;
@@ -19,5 +20,8 @@ export class TitleCupsuled{
         `);
         if (sub !== undefined) title.appendChild(element`<div class="c-title__sub">${sub}</div>`)
         if (underline) this.container.appendChild(element`<hr noshade class="u-thin">`)
+    }
+    destroy(){
+        this.container.innerHTML = "";
     }
 }

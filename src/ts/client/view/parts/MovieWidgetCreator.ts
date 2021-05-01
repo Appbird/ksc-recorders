@@ -10,7 +10,9 @@ export class MovieWidgetCreator{
     private id:string|null = null;
     private param:URLSearchParams|null = null;
     private kind:"youtube"|"twitter"|null = null;
-    constructor(href?:string){
+    private container:HTMLElement;
+    constructor(container:HTMLElement,href?:string){
+        this.container = container;
         if (href === undefined) return;
         this.set(href);
     }
@@ -34,15 +36,16 @@ export class MovieWidgetCreator{
             case "twitter": return pathname.split("/")[3];
         }
     }
-    setWidget(insertedHTMLElement:Element){
+    setWidget(){
+        this.container.innerHTML = ""
         if (this.param === null || this.id === null || this.kind === null)throw new Error("[MovieWidgetCreator] setWidgetメソッドを実行する前にsetメソッドを実行してURLをセットしてください。") 
         switch (this.kind){
             case "twitter":
-                twttr.widgets.createTweet(this.id,insertedHTMLElement);
+                twttr.widgets.createTweet(this.id,this.container);
             break;
             case "youtube":
                 //#NOTE ここをレスポンシブにできないか…？
-                insertedHTMLElement.appendChild(element`
+                this.container.appendChild(element`
                 <iframe id="ytplayer" type="text/html" width="800px" height="600px"
                 src="https://www.youtube.com/embed/${this.id}?start=${this.param.get("t")}"
                 frameborder="0"></iframe>

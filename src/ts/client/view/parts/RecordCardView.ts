@@ -1,52 +1,58 @@
+import { ScoreType } from "../../../type/list/IGameModeItem";
 import { IRecordInShortResolved } from "../../../type/record/IRecord";
 import { converseMiliSecondsIntoTime } from "../../../utility/timeUtility";
 import { element } from "../../../utility/ViewUtility";
-import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
 import { IView } from "../IView";
 import { TagsView } from "./TagsView";
 
 export class RecordCardView implements IView{
-    private app:IAppUsedToReadAndChangeOnlyPageState
-    private ele:HTMLElement;
-    constructor(app:IAppUsedToReadAndChangeOnlyPageState,record:IRecordInShortResolved,option:OptionObjectSet) {
-        this.app = app;
-            //[x] これをElementとして出力して、TagをDOM操作で後付けしたい
-            this.ele = element`
-                <div class = "c-recordCard u-width95per">
-                    <div class = "c-title --withUnderline">
-                        <div class = "c-title__main">${(() => {switch(this.app.state.scoreType){
-                            case "time" :return converseMiliSecondsIntoTime(record.score)
-                            case "score" :return record.score;
-                        }})()}</div>
-                        <div class="c-iconWithDescription">
-                            <i class="fas fa-user"></i>${record.runnerName}
-                        </div>
+    private container:HTMLElement;
+    private record:IRecordInShortResolved;
+    private tagsViews:TagsView[] = [];
+    constructor(container:HTMLElement,scoreType:ScoreType,record:IRecordInShortResolved,option:OptionObjectSet) {
+        this.record = record;
+        this.container = container;
+        this.container.classList.add("c-recordCard","u-width95per")
+        //[x] これをElementとして出力して、TagをDOM操作で後付けしたい
+        this.container.appendChild(element`
+                <div class = "c-title --withUnderline">
+                    <div class = "c-title__main">
+                    ${(() => {switch(scoreType){
+                        case "time" :return converseMiliSecondsIntoTime(record.score)
+                        case "score" :return record.score;
+                    }})()}</div>
+                    <div class="c-iconWithDescription">
+                        <i class="fas fa-user"></i>${record.runnerName}
                     </div>
-                ${(!option.displayTags.gameSystemTags && !option.displayTags.targetTags && option.displayTags.abilityTags) ? ``: `<hr noshade class="u-thin">`}
-                </div>`
-            //#CTODO カード要素をクリックすると記録詳細画面へ移る。
-            if (!option.setClickListener) return;
-            this.ele.addEventListener("click",() => {
-                const rrg = record.regulation.gameSystemEnvironment
-                this.app.transition("detailView",{ gameSystemEnv:{ gameSystemID:rrg.gameSystemID, gameModeID:rrg.gameModeID}, id:record.id, lang:this.app.state.language})
-            })
-            TagsView.generateTagViewsForRecord( this.app, this.ele, record, {
-                abilityTags:option.displayTags.abilityTags,
-                gameSystemTags:option.displayTags.gameSystemTags,
-                targetTags:option.displayTags.targetTags,
-                setClickListener:false
-            })
-            
+                </div>
+        `)
+        this.container.appendChild(element`<hr noshade class="u-thin">`)
+        //#CTODO カード要素をクリックすると記録詳細画面へ移る。
+        this.tagsViews = [
+            new TagsView(this.container.appendChild(document.createElement("div"))),
+            new TagsView(this.container.appendChild(document.createElement("div")))
+        ]
+        const tagOption = option.displayTags;
+        
+        const rr = record.regulation;
+        const rrg = rr.gameSystemEnvironment;
+
+        if (tagOption.gameSystemTags) this.tagsViews[0].appendTag(`${rrg.gameSystemName}/${rrg.gameModeName}/${rrg.gameDifficultyName}`,"gameSystem")
+        if (tagOption.targetTags) this.tagsViews[0].appendTag(rr.targetName,"target")
+        if (tagOption.abilityTags) for(const abilityName of rr.abilityNames) this.tagsViews[1].appendTag(abilityName,"ability")
+        
     }
-    get htmlElement(){
-        return this.ele;
+    addClickEventListener(callback:(clickedRecord:IRecordInShortResolved) => void){
+        this.container.addEventListener("click", () => callback(this.record))
+    }
+    destroy(){
+        for (const tagsView of this.tagsViews) tagsView.destroy();
+        return;
     }
 }
 export interface OptionObject{
     displayTags?:{gameSystemTags?:boolean,targetTags?:boolean,abilityTags?:boolean}
-    setClickListener?:boolean
 }
 export interface OptionObjectSet{
     displayTags:{gameSystemTags?:boolean,targetTags?:boolean,abilityTags?:boolean}
-    setClickListener:boolean
 }

@@ -8,6 +8,16 @@ export class S_SearchResult
     async init(){
         const requestConditions = this.requiredObj;
         const result = (await this.app.accessToAPI("record_search", requestConditions )).result;
-        result.map(receivedData => this.articleDOM.appendChild(new RecordGroupView(receivedData, this.app).htmlElement));
+        result.map(receivedData => new RecordGroupView(this.articleDOM.appendChild(document.createElement("div")),receivedData,this.app.state.scoreType,{
+            clickOnCardEventListener: (recordClicked) => 
+                this.app.transition("detailView",{
+                    gameSystemEnv:{
+                        gameModeID: recordClicked.regulation.gameSystemEnvironment.gameModeID,
+                        gameSystemID: recordClicked.regulation.gameSystemEnvironment.gameSystemID
+                    },
+                    lang:this.app.state.language,
+                    id:recordClicked.id
+                })
+        }));
     }
 }

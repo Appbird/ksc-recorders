@@ -7,7 +7,6 @@ import { IGameDifficultyItem } from "../../../../src/ts/type/list/IGameDifficult
 import { ITargetItem } from "../../../../src/ts/type/list/ITargetItem";
 import { IAbilityItem } from "../../../../src/ts/type/list/IAbilityItem";
 import { LanguageInApplication } from "../../../../src/ts/type/LanguageInApplication";
-import { selectAppropriateProperty } from "../../../../src/ts/utility/aboutLang";
 import { IItemOfResolveTableToName } from "../../../../src/ts/type/list/IItemOfResolveTableToName";
 import { firebaseAdmin } from "../function/firebaseAdmin";
 
@@ -87,7 +86,6 @@ export class RecordDataBase{
     modifyRunnerInfo        = this.writeRunnerInfo
     deleteRunnerInfo        = (uid:string) => this.deleteDoc(this.getRunnersRef().doc(uid))
     
-    //#TODO テストをするときにはデータベースが保存するハッシュタグの場所を修正する。
     getHashTagCollection    = (gameSystemID:string) => this.getCollection<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("tags"))
     getHashTagInfo          = (gameSystemID:string,id:string) => this.getDoc<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("tags").doc(id))
     writeHashTagInfo        = (gameSystemID:string,obj:IHashTagItem) => this.writeDoc<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("tags"),obj)
@@ -97,10 +95,10 @@ export class RecordDataBase{
     async searchHashTag(gameSystemID:string,names:string[],language:LanguageInApplication):Promise<(IHashTagItem|undefined)[]>{
         if (names.length > 10) throw new Error("指定するIDが多すぎます。")
         const result = await this.getGameSystemRef(gameSystemID).collection("tags")
-                                .where(selectAppropriateProperty(language),"in",names)    
+                                .where(language,"in",names)    
                                 .get();
         const tags = result.docs as unknown as IHashTagItem[]
-        return names.map( (name) => tags.find((tag) => tag[selectAppropriateProperty(language)] === name))
+        return names.map( (name) => tags.find((tag) => tag[language] === name))
     }
     
 

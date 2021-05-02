@@ -4,16 +4,20 @@ import { IView } from "../IView";
 import {IGameSystemInfoWithoutCollections} from "../../../type/list/IGameSystemInfo"
 import {convertNumberIntoDateString}from "../../../utility/timeUtility"
 import { selectAppropriateDescription, choiceString } from "../../../utility/aboutLang"
-import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
+import { LanguageInApplication } from "../../../type/LanguageInApplication";
 export class GameSystemCardGroup implements IView{
     //#CTODO 実装する。
-        private app:IAppUsedToReadAndChangeOnlyPageState;
+        private language:LanguageInApplication;
         private container:HTMLElement;
-        //#CH  appへの依存を解消する。具体的にappを利用する処理を全てPage側で定義させ、それをコールバックでこちらに渡す。
-        constructor(container:HTMLElement,info:IGameSystemInfoWithoutCollections[],app:IAppUsedToReadAndChangeOnlyPageState){
+        private clickEventListener?:(selected:IGameSystemInfoWithoutCollections)=>void
+        constructor(container:HTMLElement,info:IGameSystemInfoWithoutCollections[],{
+            language,
+            clickEventListener
+        }:{language:LanguageInApplication,clickEventListener?:(selected:IGameSystemInfoWithoutCollections)=>void}){
             this.container = container;
             this.container.classList.add("c-recordCardGroup","u-width90per")
-            this.app = app;
+            this.language = language,
+            this.clickEventListener = clickEventListener;
             this.container.appendChild(element`
                 <div id="articleTitle">
                     <div class="c-title">
@@ -32,9 +36,9 @@ export class GameSystemCardGroup implements IView{
             const card = this.container.appendChild(elementWithoutEscaping`
             <div class="c-recordCard">
                 <div class = "c-title">
-                    <div class = "c-title__main u-smallerChara">${generateIcooonHTML(info)} ${choiceString(info,this.app.state.language)}</div>
+                    <div class = "c-title__main u-smallerChara">${generateIcooonHTML(info)} ${choiceString(info,this.language)}</div>
                 </div>
-                ${writeElement(selectAppropriateDescription(info,this.app.state.language),"p")}
+                ${writeElement(selectAppropriateDescription(info,this.language),"p")}
                 <hr noshade class="u-thin">
                 <div class="c-stateInfo u-left-aligined-forFlex">
                     <div class = "c-stateInfo__unit">
@@ -48,7 +52,9 @@ export class GameSystemCardGroup implements IView{
                     </div>
                 </div>
             </div>`) as HTMLElement;
-            card.addEventListener("click",() => this.app.transition("gameModeSeletor",info));
+            card.addEventListener("click",() => {
+                if (this.clickEventListener !== undefined) this.clickEventListener(info)
+            });
         }
         get htmlElement(){
             return this.container;

@@ -6,7 +6,10 @@ export class S_GameSystemSelector
     extends PageStateBaseClass<null,IAppUsedToReadAndChangePage>{
         async init(){
             const result = (await this.app.accessToAPI("list_gameSystems", {})).result;
-            new GameSystemCardGroup(this.articleDOM.appendChild(document.createElement("div")),result,this.app)
+            new GameSystemCardGroup(this.articleDOM.appendChild(document.createElement("div")),result,{
+                language:this.app.state.language,
+                clickEventListener: (selected) => this.app.transition("gameModeSeletor",selected)
+            })
         
         }
 }

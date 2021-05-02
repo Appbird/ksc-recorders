@@ -12,7 +12,7 @@ import { PageStateBaseClass } from "./PageStateClass";
 import { S_OfferForm } from "./offerForm";
 import { S_SendRecordOffer } from "./sendRecordOffer";
 import { S_SpinnerExhibition } from "./SpinnerExhibition";
-import { S_SettingNewRegulationState } from "./SettingNewRegulationState";
+import { S_SettingNewRegulationState_DocViewer, S_SettingNewRegulationState_CollectionViewer } from "./SettingNewRegulationState";
 
 export type RequiredObjectType<StateClass> = StateClass extends PageStateBaseClass<infer U,IAppUsedToRead>? U : never;
 export type UsedIAppLimited<IAppLimited> = IAppLimited extends PageStateBaseClass<any,infer U>? U:never;
@@ -23,7 +23,8 @@ export interface PageStatesWithRequiredObject{
     detailView:S_SearchDetail,
     searchResultView:S_SearchResult,
     gameModeSeletor:S_GameModeSelector,
-    sendRecordOffer:S_SendRecordOffer
+    sendRecordOffer:S_SendRecordOffer,
+    settingNewRegulation_DocViewer:S_SettingNewRegulationState_DocViewer
 }
 export interface PageStateWithoutRequiredObject{
     none:S_None,
@@ -32,7 +33,7 @@ export interface PageStateWithoutRequiredObject{
     mainMenu:S_MainMenu,
     offerForm:S_OfferForm,
     spinnerExhibition:S_SpinnerExhibition,
-    settingNewRegulation:S_SettingNewRegulationState
+    settingNewRegulation_CollectionViewer:S_SettingNewRegulationState_CollectionViewer
 }
 export const pageStates:PageStatesConstructorObj= {
     none:S_None,
@@ -46,5 +47,6 @@ export const pageStates:PageStatesConstructorObj= {
     offerForm:S_OfferForm,
     sendRecordOffer:S_SendRecordOffer,
     spinnerExhibition:S_SpinnerExhibition,
-    settingNewRegulation:S_SettingNewRegulationState
+    settingNewRegulation_CollectionViewer:S_SettingNewRegulationState_CollectionViewer,
+    settingNewRegulation_DocViewer:S_SettingNewRegulationState_DocViewer
 }

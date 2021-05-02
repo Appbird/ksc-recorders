@@ -1,9 +1,9 @@
 import { LanguageInApplication } from "../../../LanguageInApplication";
 import { IReceivedDataAtServer } from "../../transmissionBase";
-import { IOfferedRecord } from "../../../record/IOfferedRecord";
+import { IRecord } from "../../../record/IRecord";
 
 export interface IReceivedDataAtServer_recordModify extends IReceivedDataAtServer {
-    record: IOfferedRecord;
+    record: IRecord;
     recordID: string;
     language: LanguageInApplication;
     IDToken: LanguageInApplication;

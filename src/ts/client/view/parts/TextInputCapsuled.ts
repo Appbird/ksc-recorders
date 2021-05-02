@@ -19,7 +19,6 @@ export class TextInputCapsuled implements IView{
         }
     } = {}) {
         this.errorElement = errorViewer;
-        this.value = defaultValue;
         if (this.errorElement !== null) this.errorElement.classList.add("u-unused")
         if (title !== undefined) {
             this.titleElement = new TitleCupsuled(title.titleViewer)
@@ -31,10 +30,10 @@ export class TextInputCapsuled implements IView{
         this.element.classList.add("c-textInput", "u-underline");
         this.element.placeholder = placeHolder;
         
-        if (chara !== undefined) this.element.classList.add(chara);
+        if (chara !== undefined && chara !== "") this.element.classList.add(chara);
         
         container.appendChild(this.element);
-
+        this.value = defaultValue;
     }
     addEventListener(eventType: "change", callback: () => void) {
         this.element.addEventListener(eventType, callback);

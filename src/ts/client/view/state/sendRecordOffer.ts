@@ -1,37 +1,21 @@
-import { IOfferedRecord } from "../../../type/record/IOfferedRecord";
-import { element } from "../../../utility/ViewUtility";
+import { ISentRecordOffer } from "../../../type/api/record/changing/IReceivedDataAtServer_recordWrite";
 import { IAppUsedToChangeState } from "../../interface/AppInterfaces";
 import { PageStateBaseClass } from "./PageStateClass";
 
 export class S_SendRecordOffer
-    extends PageStateBaseClass<IOfferedRecord,IAppUsedToChangeState>{
+    extends PageStateBaseClass<ISentRecordOffer,IAppUsedToChangeState>{
         async init(){
+            this.generateLoadingSpinner("cloud");
             try {
-                this.generateLoadingSpinner("cloud");
-                this.articleDOM.appendChild(element`<div class="u-width90per">
-                    <h1>内容</h1><p>${JSON.stringify(this.requiredObj)}</p>
-                </div>`)
-                /*
-                const result = await this.app.accessToAPI("record_write",{record:this.requiredObj});
-                const record = result.result
-                this.deleteLoadingSpinner();
-
-                const articleElement = this.articleDOM.appendChild(createElementWithIdAndClass({className:"u-width95per"}))
-                articleElement.appendChild(htmlConverter.element`
-                <div>
-                    <h1>${ {Japanese:"記録が投稿されました！"} }</h1>
-                    <p>${ {Japanese:"記録が承認されるとユーザーページに通知が行きます。"} }</p>
-                    <p>${result.message}</p>
-                </div>
-                `)
-                
-                articleElement.appendChild(new RecordCardView(this.app,record,{
-                    displayTags: {abilityTags:true,targetTags:true,gameSystemTags:true},
-                    setClickListener:false
-                }).htmlElement)
-                */
+                await this.app.accessToAPI("record_write",{
+                    record:this.requiredObj,
+                    language:this.app.state.language,
+                    IDToken:await this.app.loginAdministratorReadOnly.getIDToken()
+                })
             } catch(error){
                 if (error instanceof Error) return;
+                this.app.errorCatcher(error,"記録の送信に失敗しました。")
+
             }
 
         }

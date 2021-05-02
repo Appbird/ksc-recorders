@@ -70,6 +70,9 @@ export class SelectChoicesCapsuled<T extends IItemOfResolveTableToName> implemen
             return choiced;
         return [choiced];
     }
+    setSelected(IDs:string[]){
+        this._choices.setChoiceByValue(IDs)
+    }
     setChoices(item: T[]) {
         this._choices.setChoices(item.map(ele => {
             return { value: ele.id, label: choiceString(ele, this._language) };

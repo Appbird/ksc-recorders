@@ -3,17 +3,16 @@ import { IReceivedDataAtServer } from "../../transmissionBase";
 import { IRegulation } from "../../../foundation/IRegulation";
 
 export interface IReceivedDataAtServer_recordWrite extends IReceivedDataAtServer {
-    record: {
-        id: string;
-        score: number;
-        timestamp_post: number;
-        regulation: IRegulation;
-        runnerID: string;
-        tagName: string[];
-        languageOfTagName:LanguageInApplication;
-        link: string[];
-        note: string;
-    };
+    record: ISentRecordOffer;
     language: LanguageInApplication;
-    IDToken: LanguageInApplication;
+    IDToken: string;
+}
+
+export interface ISentRecordOffer{
+    score: number;
+    regulation: IRegulation;
+    tagName: string[];
+    languageOfTagName:LanguageInApplication;
+    link: string[];
+    note: string;
 }

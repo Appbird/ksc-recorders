@@ -1,3 +1,4 @@
+import { ISentRecordOffer } from "../../../type/api/record/changing/IReceivedDataAtServer_recordWrite";
 import { TargetGameMode } from "../../Administrator/StateAdminister";
 import { IAppUsedToReadAndChangePage } from "../../interface/AppInterfaces";
 import { OfferFormView } from "../parts/OfferFormView";
@@ -20,9 +21,13 @@ export class S_OfferForm
             })).result
             const view = new OfferFormView(
                 this.articleDOM.appendChild(document.createElement("div")),
-                this.app,difficulties,abilities,
-                await this.app.loginAdministratorReadOnly.getIDToken()
+                this.app,difficulties,abilities,{
+                    onDecideEventListener:(input) => this.sendInputInfo(input)
+                }
             )
+        }
+        private sendInputInfo(input:ISentRecordOffer){
+            this.app.transition("sendRecordOffer",input);
         }
 }
 

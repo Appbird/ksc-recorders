@@ -18,7 +18,7 @@ apiList.forEach( (value,key) => {
 
         try { 
             res.status(200).json(await value.process(recordDataBase,req.body))
-        }catch(error){ res.status(500).json(errorCatcher(key,error))}
+        }catch(error){ res.status(500).json(errorCatcher(key,error)); return;}
         console.log(`\u001b[32m[${new Date().toLocaleString()}] Process /api${key} was completed Successfully! \u001b[0m\n`)
         
         return;

@@ -12,6 +12,7 @@ import { SelectChoicesCapsuled } from "./SelectChoicesCapsuled";
 import { TextInputCapsuled } from "./TextInputCapsuled";
 import SimpleMDE from "simplemde";
 import { TextChoicesCapsuled } from "./TextChoicesCapsuled";
+import { ISentRecordOffer } from "../../../type/api/record/changing/IReceivedDataAtServer_recordWrite";
 
 export class OfferFormView implements IView {
     private container: HTMLElement;
@@ -32,10 +33,9 @@ export class OfferFormView implements IView {
     
     private tagInput:TextChoicesCapsuled;
 
-    private runnerID:string;
-
     private simpleMDE:SimpleMDE;
     private errorDisplay:HTMLElement;
+    private onDecideEventListener:(input:ISentRecordOffer)=>void;
     destroy(){
         this.tagInput.destroy();
         this.difficultyChoices.destroy();
@@ -44,10 +44,15 @@ export class OfferFormView implements IView {
         this.container.innerHTML = "";
     }
     //#CH  appへの依存を解消する。具体的にappを利用する処理を全てPage側で定義させ、それをコールバックでこちらに渡す。
-    constructor(container:HTMLElement,app: IAppUsedToReadAndChangeOnlyPageState, difficulties: IGameDifficultyItem[], abilities: IAbilityItem[],runnerID:string) {
+    constructor(container:HTMLElement,app: IAppUsedToReadAndChangeOnlyPageState, difficulties: IGameDifficultyItem[], abilities: IAbilityItem[],{
+        onDecideEventListener
+    }:{
+        onDecideEventListener:(input:ISentRecordOffer)=>void;
+    }) {
         this.container = container;
         this.container.classList.add("offerForm","u-width95per","u-marginUpDown2emToChildren")
         this.app = app;
+        this.onDecideEventListener = onDecideEventListener;
         this.htmlConverter = new HTMLConverter(this.app.state.language);
 
         this.container.appendChild(this.htmlConverter.elementWithoutEscaping`<h1>${generateIcooonHTML({icooonName:"link"})}${{Japanese:"リンク"}}</h1>`)
@@ -62,10 +67,6 @@ export class OfferFormView implements IView {
         this.targetChoices = this.createTargetChoices([]);
         this.abilityChoices = this.createAbilityChoices(abilities);
         this.tagInput = this.createTagInputChoices();
-
-
-        this.runnerID = runnerID;
-
         //#CH 追加されるタグの色を対応させる。
         
         this.setTargetDropdownEventListener();
@@ -107,7 +108,7 @@ export class OfferFormView implements IView {
                 this.errorDisplay.textContent = "[Error] 入力されていない必須項目が存在します。"
                 return;
             }
-        this.app.transition("sendRecordOffer",{
+        this.onDecideEventListener({
             score:(() => {
                 const score = this.scoreInput.value;
                 switch (this.app.state.scoreType) {
@@ -115,7 +116,6 @@ export class OfferFormView implements IView {
                     case "time": return convertTimeIntoNumber(score);
                 }
             })(),
-            IDToken:await this.app.loginAdministratorReadOnly.getIDToken(),
             tagName:this.tagInput.valueAsArray,
             languageOfTagName:this.app.state.language,
             link:[this.URLInput.value],
@@ -128,8 +128,8 @@ export class OfferFormView implements IView {
                     gameDifficultyID: difficultyID,
                 }
             }
-        }
-        )
+        
+        })
     }
     private modifyScoreInput() {
         const score = this.scoreInput.value;

@@ -1,5 +1,5 @@
 import firebase from "firebase/app";
-
+import "firebase/database"
 export class DestinationOfRefStackToCollection {
     private path: RefStackToDoc[];
     private destination: RefStackToCollection;
@@ -10,7 +10,7 @@ export class DestinationOfRefStackToCollection {
     returnToHigher() {
         const pop = this.path.pop();
         if (pop === undefined)
-            throw new Error("これ以上上位の改装へ上がれません。");
+            throw new Error("これ以上上位の階層へ上がれません。");
         this.destination = pop;
         return this;
     }
@@ -31,6 +31,9 @@ export class DestinationOfRefStackToCollection {
     }
     get depth() {
         return this.path.length;
+    }
+    clone(){
+        return new DestinationOfRefStackToCollection(this.path,this.destination);
     }
 }
 interface RefStackToDoc {

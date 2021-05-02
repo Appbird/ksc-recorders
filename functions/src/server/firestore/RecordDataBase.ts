@@ -190,5 +190,3 @@ export class RecordDataBase{
 
 
 export const recordDataBase = new RecordDataBase();
-
-//#TODO ここに関数を実装。

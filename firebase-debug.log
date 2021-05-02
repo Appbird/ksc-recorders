@@ -1,0 +1,21 @@
+[debug] [2021-05-02T09:36:35.148Z] ----------------------------------------------------------------------
+[debug] [2021-05-02T09:36:35.150Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Appbird\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js serve
+[debug] [2021-05-02T09:36:35.151Z] CLI Version:   9.10.0
+[debug] [2021-05-02T09:36:35.151Z] Platform:      win32
+[debug] [2021-05-02T09:36:35.151Z] Node Version:  v14.16.0
+[debug] [2021-05-02T09:36:35.152Z] Time:          Sun May 02 2021 18:36:35 GMT+0900 (日本標準時)
+[debug] [2021-05-02T09:36:35.152Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2021-05-02T09:36:35.161Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-05-02T09:36:35.161Z] > authorizing via signed-in user (project.appbird@gmail.com)
+[debug] [2021-05-02T09:36:35.161Z] [iam] checking project kss-recorders for permissions ["firebase.projects.get"]
+[debug] [2021-05-02T09:36:35.164Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2021-05-02T09:36:35.164Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-05-02T09:36:35.352Z] <<< HTTP RESPONSE 200 {"date":"Sun, 02 May 2021 09:36:35 GMT","cache-control":"no-cache, no-store, max-age=0, must-revalidate","pragma":"no-cache","expires":"Mon, 01 Jan 1990 00:00:00 GMT","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-05-02T09:36:35.375Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/kss-recorders:testIamPermissions  
+ {"permissions":["firebase.projects.get"]}
+[debug] [2021-05-02T09:36:36.124Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 02 May 2021 09:36:36 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=600","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-05-02T09:36:36.126Z] > refreshing access token with scopes: []
+[debug] [2021-05-02T09:36:36.126Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>

@@ -9,7 +9,6 @@
   },
   "hosting": {
     "public": "public",
-    "site": "kss-recorders",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -17,12 +16,9 @@
     ],
     "rewrites": [
       {
-      "source": "/api/**",
-      "function": "app"
-    },
-    {
-      "source":"/app*",
-      "destination":"/index.html"
-    }]
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
   }
 }

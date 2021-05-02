@@ -3,7 +3,7 @@ import { IRecordGroupResolved } from "../../../../src/ts/type/record/IRecordGrou
 import { IItemOfResolveTableToName } from "../../../../src/ts/type/list/IItemOfResolveTableToName";
 import { LanguageInApplication } from "../../../../src/ts/type/LanguageInApplication";
 import { RecordDataBase } from "../firestore/RecordDataBase";
-import { selectAppropriateName } from "../../../../src/ts/utility/aboutLang";
+import { choiceString } from "../../../../src/ts/utility/aboutLang";
 /**
  * データベースのデータを参照してIDを解決してくれるテーブルマネージャー
  */
@@ -33,7 +33,7 @@ export class ControllerOfTableForResolvingID{
     ){
         const result = (this.hashTag.has(id)) ? await cacheList.get(id) : cacheList.set(id,await getDoc(id) ).get(id)
         if (result === undefined) throw new Error("予期しないエラーです。")
-        return selectAppropriateName(result,lang)
+        return choiceString(result,lang)
     }
     private async getNameBySID(gameSystemID:string,id:string,lang:LanguageInApplication,
         cacheList:ResolveTable,
@@ -42,7 +42,7 @@ export class ControllerOfTableForResolvingID{
         const accessKey = `${gameSystemID}/${id}`
         const result = (this.hashTag.has(accessKey)) ? await cacheList.get(accessKey) : cacheList.set(accessKey,await getDoc(gameSystemID,id) ).get(accessKey)
         if (result === undefined) throw new Error("予期しないエラーです。")
-        return selectAppropriateName(result,lang)
+        return choiceString(result,lang)
     }
     private async getNameBySIDMID(gameSystemID:string,gameModeID:string,id:string,lang:LanguageInApplication,
         cacheList:ResolveTable,
@@ -51,7 +51,7 @@ export class ControllerOfTableForResolvingID{
         const accessKey = `${gameSystemID}/${gameModeID}/${id}`
         const result = (this.hashTag.has(accessKey)) ? await cacheList.get(accessKey) : cacheList.set(accessKey,await getDoc(gameSystemID,gameModeID,id) ).get(accessKey)
         if (result === undefined) throw new Error("予期しないエラーです。")
-        return selectAppropriateName(result,lang)
+        return choiceString(result,lang)
     }
 
     //#NOTE 応用メソッド

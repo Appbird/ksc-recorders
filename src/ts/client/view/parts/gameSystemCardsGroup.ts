@@ -1,9 +1,9 @@
 import { element, elementWithoutEscaping } from "../../../utility/ViewUtility";
-import { createElementWithIdAndClass, generateIcooonHTML, writeElement } from "../../utility/aboutElement";
+import { generateIcooonHTML, writeElement } from "../../utility/aboutElement";
 import { IView } from "../IView";
 import {IGameSystemInfoWithoutCollections} from "../../../type/list/IGameSystemInfo"
 import {convertNumberIntoDateString}from "../../../utility/timeUtility"
-import { selectAppropriateName, selectAppropriateDescription, choiceString } from "../../../utility/aboutLang"
+import { selectAppropriateDescription, choiceString } from "../../../utility/aboutLang"
 import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
 export class GameSystemCardGroup implements IView{
     //#CTODO 実装する。
@@ -18,7 +18,7 @@ export class GameSystemCardGroup implements IView{
                 <div id="articleTitle">
                     <div class="c-title">
                             <div class="c-title__main">検索対象とするゲームシステム</div>
-                            <div class="c-title__sub">select the item of title where records you're looking for was set.</div>
+                            <div class="c-title__sub">Select the item of title where records you're looking for was set.</div>
                     </div>
                     <hr noshade class="u-bold">
                 </div>

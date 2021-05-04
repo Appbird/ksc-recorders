@@ -2,10 +2,9 @@ import { IGameModeItemWithoutCollections } from "../../../type/list/IGameModeIte
 import { IGameSystemInfoWithoutCollections } from "../../../type/list/IGameSystemInfo";
 import { element, HTMLConverter } from "../../../utility/ViewUtility";
 import { IAppUsedToReadAndChangePage } from "../../interface/AppInterfaces";
-import { MultiLanguageString } from "../../../type/foundation/MultiLanguageString";
-import { MultiLanguageStringWithICon } from "../../../type/foundation/MultiLanguageStringWithICon";
 import { PageStateBaseClass } from "./PageStateClass";
-import { choiceString } from "../../../utility/aboutLang";
+import { MenuView, RequiredObjectToGenerateItem } from "../parts/MenuView";
+import { appendElement } from "../../utility/aboutElement";
 
 export class S_MainMenu
     extends PageStateBaseClass<null|{gameSystem:IGameSystemInfoWithoutCollections, gameMode:IGameModeItemWithoutCollections},IAppUsedToReadAndChangePage>{
@@ -30,54 +29,23 @@ export class S_MainMenu
                 <div class="u-space2em"></div>
                 <div class="u-width90per">
             </div>
-            `)
+            `) as HTMLElement;
 
 
-            const mainMenu = main.appendChild(this.htmlConverter.elementWithoutEscaping`
-                <div class="c-list u-width90per">
-                    <div class="c-title">
-                        <div class="c-title__main">メインメニュー</div>
-                        <div class="c-title__sub">Main Menu</div>
-                    </div>
-                    <hr noshade class="u-thin">
-                    
-                </div>
-            `)
-            this.generateMainMenuInfo().map((info,index) => mainMenu.appendChild(
-                this.generateMenuItem(info)
-            ));
+            const mainMenu = new MenuView(appendElement(main,"div"),this.app.state.language,{
+                Japanese:"メインメニュー",
+                English:"Main menu"
+            })
+            this.generateMainMenuInfo().map((info) => mainMenu.generateMenuItem(info));
             main.appendChild(element`<div class="u-space3em"></div>`)
 
-
-            const detailMenu = main.appendChild(this.htmlConverter.elementWithoutEscaping`
-                <div class="c-list u-width90per">
-                    <div class="c-title">
-                        <div class="c-title__main">詳細設定 / その他</div>
-                        <div class="c-title__sub">Detail Settings / etc.</div>
-                    </div>
-                    <hr noshade class="u-thin">
-                </div>
-            `)
-            this.generateDetailMenuInfo().map(info => detailMenu.appendChild(
-                this.generateMenuItem(info)
-            ));
+            const detailMenu = new MenuView(appendElement(main,"div"),this.app.state.language,{
+                Japanese:"詳細設定 / その他",
+                English:"Detail Settings / etc."
+            })
+            this.generateDetailMenuInfo().map(info => detailMenu.generateMenuItem(info));
             main.appendChild(element`<div class="u-space3em"></div>`)
 
-        }
-        generateMenuItem({title,remarks,description,to,isDisabled,biggerTitle}:RequiredObjectToGenerateItem){
-            
-            const item = this.htmlConverter.elementWithoutEscaping`
-            <div class="c-recordCard ${(isDisabled) ? "is-disable":""}">
-                    <div class = "c-title">
-                        <div class = "c-title__main ${biggerTitle ? "":"u-smallerChara"}"><i class="c-icooon u-background--${title.icon}"></i>${title}</div>
-                        ${ (remarks === undefined) ? ``:`<div class = "c-title__sub"><i class="c-icooon u-background--${remarks.icon}"></i> ${choiceString(remarks,this.app.state.language)}</div>`}
-                    </div>
-                    <hr noshade class="u-thin">
-                    <div class = "u-width95per">${description}</div>
-            </div>` as HTMLElement
-            if (isDisabled || to === undefined) return item;
-            item.addEventListener("click",()=>to());
-            return item;
         }
 
 
@@ -162,39 +130,31 @@ export class S_MainMenu
 
         generateDetailMenuInfo():RequiredObjectToGenerateItem[]{
              return [{
-                 title:{
-                     Japanese:"新ゲームタイトル/ゲームモードの制定申請",
-                     English:"「新ゲームタイトル/ゲームモードの制定申請」の訳が入る",
-                     icon:"feather"
-                 },
-                 description:{
-                     Japanese:"取り扱うゲームタイトルとゲームモードを増やすことができます。"
-                 },
-                 isDisabled:!this.app.loginAdministratorReadOnly.isUserLogin,
-                 to:() => {this.app.transition("settingNewRegulation",null)},
-                 biggerTitle:true,
-             },{
-                 title:{
-                     Japanese:"クレジット",
-                     English:"Credits",
-                     icon:"writing"
-                 },
-                 description:{
-                     Japanese:"KSSRsを開発するにあたって、使用したツール、ライブラリなどを記しています。"
-                 },
-                 isDisabled:false,
-                 biggerTitle:true,
-                 //#TODO ここをクレジット用に設定する。GitHubのリンクにするのもアリか？
-                 to:() => {this.app.transition("gameSystemSelector",null)}
-             }]
-        
+                title:{
+                    Japanese:"新ゲームタイトル/ゲームモードの制定申請",
+                    English:"「新ゲームタイトル/ゲームモードの制定申請」の訳が入る",
+                    icon:"feather"
+                },
+                description:{
+                    Japanese:"取り扱うゲームタイトルとゲームモードを増やすことができます。"
+                },
+                isDisabled:!this.app.loginAdministratorReadOnly.isUserLogin,
+                to:() => {this.app.transition("settingNewRegulation_CollectionViewer",null)},
+                biggerTitle:true,
+            },{
+                title:{
+                    Japanese:"クレジット",
+                    English:"Credits",
+                    icon:"writing"
+                },
+                description:{
+                    Japanese:"KSSRsを開発するにあたって、使用したツール、ライブラリなどを記しています。"
+                },
+                isDisabled:false,
+                biggerTitle:true,
+                //#TODO ここをクレジット用に設定する。GitHubのリンクにするのもアリか？
+                to:() => {this.app.transition("gameSystemSelector",null)}
+            }]
     }
 }
-type RequiredObjectToGenerateItem = {
-    title:MultiLanguageStringWithICon,
-    remarks?:MultiLanguageStringWithICon,
-    description:MultiLanguageString,
-    isDisabled:boolean,
-    biggerTitle:boolean,
-    to?:()=>void
-}
+

@@ -1,9 +1,21 @@
+.c-loadingSpinnerPlaceHolder{
+  transition:cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
+  transform: translateY(0);
+  opacity: 0;
+}
+.c-loadingSpinnerPlaceHolder.--enable{
+  transform: translateY(1.5em);
+  opacity: 1;
+}
 .c-loadingSpinner {
     margin: 25% auto 0;
     width: 100%;
     display:flex;
     justify-content:space-between;
-  }
+}
+.c-loadingSpinner:not(.--enable) {
+   margin: 0;
+}
   
   .c-loadingSpinner>.__spinner {
     width: 1.5em;

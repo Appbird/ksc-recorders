@@ -1,4 +1,4 @@
-import { element } from "../../../utility/ViewUtility";
+import { element, elementWithoutEscaping } from "../../../utility/ViewUtility";
 import { IView } from "../IView";
 
 export class TitleCupsuled implements IView{
@@ -8,18 +8,21 @@ export class TitleCupsuled implements IView{
     }
     refresh(main:string,sub?:string,{
         underline = true,
-        chara = ""
+        chara = "",
+        subChara = ""
     }:{
         chara?:"u-biggerChara"|"u-smallerChara"|"",
+        subChara?:"u-biggerChara"|"u-smallerChara"|""
         underline?:boolean
     } = {}){
-        const title = this.container.appendChild(element`
+        this.container.innerHTML = "";
+        const title = this.container.appendChild(elementWithoutEscaping`
         <div class="c-title">
             <div class="c-title__main ${chara}">${main}</div>
         </div>
         `);
-        if (sub !== undefined) title.appendChild(element`<div class="c-title__sub">${sub}</div>`)
-        if (underline) this.container.appendChild(element`<hr noshade class="u-thin">`)
+        if (sub !== undefined) title.appendChild(elementWithoutEscaping`<div class="c-title__sub ${subChara}">${sub}</div>`)
+        if (underline) this.container.appendChild(elementWithoutEscaping`<hr noshade class="u-thin">`)
     }
     destroy(){
         this.container.innerHTML = "";

@@ -1,0 +1,24 @@
+.c-radioSelectors{
+    width:100%;
+    display: flex;
+    overflow: hidden;
+    justify-content:center;
+}
+.c-radioSelectors input{
+    width:100%; height:3em; opacity: 0;
+}
+label{
+    position:absolute;
+    top:0;left:0;
+    color:#666;
+    width:100%; height:100%;
+    background: #fff;
+    align-items: center;
+    justify-content:center;
+    font-weight: normal;
+}
+.c-radioSelectors input:checked+label{
+    background:rgb(1, 180, 61);
+    font-weight: bold;
+    color:#fff;
+}

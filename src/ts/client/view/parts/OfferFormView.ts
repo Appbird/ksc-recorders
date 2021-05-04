@@ -1,7 +1,7 @@
 import { IAbilityItem } from "../../../type/list/IAbilityItem";
 import { IGameDifficultyItem } from "../../../type/list/IGameDifficultyItem";
 import { ITargetItem } from "../../../type/list/ITargetItem";
-import { choiceDescription } from "../../../utility/aboutLang";
+import { choiceDescription, choiceString } from "../../../utility/aboutLang";
 import { converseMiliSecondsIntoTime, convertScoreIntoNumber, convertTimeIntoNumber } from "../../../utility/timeUtility";
 import { element, HTMLConverter } from "../../../utility/ViewUtility";
 import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
@@ -85,7 +85,8 @@ export class OfferFormView implements IView {
                                         <li>${{ Japanese: "10秒に一度オートセーブを行います。" }}</li>
                                     </ul>
                                 </div>
-                                `).appendChild(createElementWithIdTagClass({className:"offerForm__runnerNote"},"textarea")),
+                                `
+                        ).appendChild(createElementWithIdTagClass({className:"offerForm__runnerNote"},"textarea")),
             autosave:{
                 enabled:true, uniqueId:"offerForm__runnerNote"
             },
@@ -105,7 +106,10 @@ export class OfferFormView implements IView {
         const targetID = this.targetChoices.getValueAsValue()
         const difficultyID = this.difficultyChoices.getValueAsValue();
         if (this.isTextInputRight || difficultyID === undefined || targetID === undefined || abilityIDs.length === 0 ){
-                this.errorDisplay.textContent = "[Error] 入力されていない必須項目が存在します。"
+                this.errorDisplay.textContent = choiceString({
+                    Japanese:"[Error] 入力されていない必須項目が存在します。",
+                    English:"[Error] There is a required field which is not entered correctly."
+                },this.app.state.language)
                 return;
             }
         this.onDecideEventListener({

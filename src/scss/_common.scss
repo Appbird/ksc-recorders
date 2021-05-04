@@ -2,7 +2,7 @@
 
 @use "choicesjs/choices.scss";
 
-
+@use "foundation/li.scss";
 @use "foundation/body.scss";
 @use "foundation/hr.scss";
 @use "foundation/p.scss";
@@ -13,6 +13,7 @@
 @use "layout/scrollBar.scss";
 @use "layout/pageSequenceAnimation.scss";
 
+@use "object/component/radioButton.scss";
 @use "object/component/icooon.scss";
 @use "object/component/userIcon.scss";
 @use "object/component/c-ballon.scss";

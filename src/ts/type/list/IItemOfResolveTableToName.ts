@@ -5,6 +5,13 @@ export interface IItemOfResolveTableToName {
     English: string;
     EDescription?:string;
 }
+export interface IItemOfResolveTableToNameLackingOfID {
+    id?: string;
+    Japanese: string;
+    JDescription?:string;
+    English: string;
+    EDescription?:string;
+}
 export const expectedObj_IItemOfResolveTableToName = {
     id : "string",
     Japanese: "string",

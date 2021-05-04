@@ -7,11 +7,12 @@ export class TextInputCapsuled implements IView{
     private errorElement:Element|null;
     private titleElement:TitleCupsuled|null = null;
     constructor(container: Element, {
-        placeHolder = "", errorViewer= null, chara = "", defaultValue = "", title
+        placeHolder = "", errorViewer= null, chara = "", defaultValue = "", title, className = ""
     }:{ 
         placeHolder?:string,
         errorViewer?:Element|null,
         chara?:"u-biggerChara"|"u-smallerChara"|"",
+        className?:string
         defaultValue?:string,
         title?:{
             titleViewer:Element
@@ -27,7 +28,7 @@ export class TextInputCapsuled implements IView{
         
         this.element = document.createElement("input");
         this.element.setAttribute("type", "text");
-        this.element.classList.add("c-textInput", "u-underline");
+        this.element.classList.add("c-textInput", "u-underline",...className.split(" "));
         this.element.placeholder = placeHolder;
         
         if (chara !== undefined && chara !== "") this.element.classList.add(chara);
@@ -43,6 +44,9 @@ export class TextInputCapsuled implements IView{
         if (error==="") this.errorElement.classList.add("u-unused")
         else this.errorElement.classList.remove("u-unused")
         this.errorElement.innerHTML = error;
+    }
+    disabled(state:boolean){
+        this.element.disabled = state;
     }
     destroy(){
         this.element.innerHTML = "";

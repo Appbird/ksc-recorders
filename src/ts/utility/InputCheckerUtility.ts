@@ -20,7 +20,7 @@ export function checkInputObjectWithErrorPossibility<CheckType>(actual:any,expec
     }
     return true;
 }
-function checkType(actualValue:any,expectedTypeName:string):boolean{
+export function checkType(actualValue:any,expectedTypeName:string):boolean{
     expectedTypeName = expectedTypeName.replace(/\s/g,"")
     if (expectedTypeName.endsWith("?")){
         if (actualValue === undefined) return true;

@@ -16,6 +16,10 @@
   font-size: 1.5em;
 }
 
+li::marker {
+  color: #363c4b;
+}
+
 body {
   font-family: "Quicksand", "M PLUS Rounded 1c", sans-serif;
   color: #0c1d46;
@@ -109,6 +113,7 @@ article {
   background-color: #fff;
   box-shadow: 0px 3px 5px rgba(23, 4, 75, 0.329);
   overflow-x: hidden;
+  margin-bottom: 10em;
 }
 
 @media screen and (max-width: 800px) {
@@ -175,6 +180,38 @@ article.is-seqEnd:before {
   transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.c-radioSelectors {
+  width: 100%;
+  display: flex;
+  overflow: hidden;
+  justify-content: center;
+}
+
+.c-radioSelectors input {
+  width: 100%;
+  height: 3em;
+  opacity: 0;
+}
+
+label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #666;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  align-items: center;
+  justify-content: center;
+  font-weight: normal;
+}
+
+.c-radioSelectors input:checked + label {
+  background: #01b43d;
+  font-weight: bold;
+  color: #fff;
+}
+
 .c-icooon {
   width: 1.5em;
   height: 1.5em;
@@ -232,11 +269,26 @@ article.is-seqEnd:before {
   padding: 0;
 }
 
+.c-loadingSpinnerPlaceHolder {
+  transition: cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
+  transform: translateY(0);
+  opacity: 0;
+}
+
+.c-loadingSpinnerPlaceHolder.--enable {
+  transform: translateY(1.5em);
+  opacity: 1;
+}
+
 .c-loadingSpinner {
   margin: 25% auto 0;
   width: 100%;
   display: flex;
   justify-content: space-between;
+}
+
+.c-loadingSpinner:not(.--enable) {
+  margin: 0;
 }
 
 .c-loadingSpinner > .__spinner {
@@ -318,6 +370,7 @@ article.is-seqEnd:before {
   font-family: "Quicksand", "M PLUS Rounded 1c", sans-serif;
   border: 0;
   text-overflow: clip;
+  font-size: 1.2em;
   transform: translateY(0.2em);
 }
 
@@ -346,6 +399,7 @@ article.is-seqEnd:before {
 }
 
 .c-recordCard {
+  transition: scale(1);
   box-shadow: 0px 3px 5px rgba(23, 4, 75, 0.329);
   background: #fff;
   margin: 1em 0;
@@ -479,6 +533,24 @@ article h1::after {
   color: #fff;
   border-radius: 0.5em;
   padding: 0.5em 0;
+  text-align: center;
+  font-size: 2em;
+  font-weight: 500;
+  transition: 0.1s;
+  cursor: pointer;
+}
+
+.c-button:hover {
+  background-color: #383838;
+  color: #fff;
+  transition: 0.1s;
+}
+
+.c-button .__smaller {
+  background-color: #5c5c5c;
+  color: #fff;
+  border-radius: 0.5em;
+  padding: 0.2em 0;
   text-align: center;
   font-size: 2em;
   font-weight: 500;

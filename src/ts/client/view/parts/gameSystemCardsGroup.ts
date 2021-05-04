@@ -12,8 +12,19 @@ export class GameSystemCardGroup implements IView{
         private clickEventListener?:(selected:IGameSystemInfoWithoutCollections)=>void
         constructor(container:HTMLElement,info:IGameSystemInfoWithoutCollections[],{
             language,
-            clickEventListener
-        }:{language:LanguageInApplication,clickEventListener?:(selected:IGameSystemInfoWithoutCollections)=>void}){
+            clickEventListener,
+            title={
+                main:"検索対象とするゲームシステム",
+                sub:"Select the item of title where records you're looking for was set."
+            }
+        }:{
+            language:LanguageInApplication,
+            clickEventListener?:(selected:IGameSystemInfoWithoutCollections)=>void,
+            title?:{
+                main:string,
+                sub:string
+            }
+        }){
             this.container = container;
             this.container.classList.add("c-recordCardGroup","u-width90per")
             this.language = language,
@@ -21,8 +32,8 @@ export class GameSystemCardGroup implements IView{
             this.container.appendChild(element`
                 <div id="articleTitle">
                     <div class="c-title">
-                            <div class="c-title__main">検索対象とするゲームシステム</div>
-                            <div class="c-title__sub">Select the item of title where records you're looking for was set.</div>
+                            <div class="c-title__main">${title.main}</div>
+                            <div class="c-title__sub">${title.sub}</div>
                     </div>
                     <hr noshade class="u-bold">
                 </div>

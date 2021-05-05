@@ -22,6 +22,7 @@ export function checkInputObjectWithErrorPossibility<CheckType>(actual:any,expec
 }
 export function checkType(actualValue:any,expectedTypeName:string):boolean{
     expectedTypeName = expectedTypeName.replace(/\s/g,"")
+    if (expectedTypeName === "any") return true;
     if (expectedTypeName.endsWith("?")){
         if (actualValue === undefined) return true;
         expectedTypeName = expectedTypeName.replace("?","")

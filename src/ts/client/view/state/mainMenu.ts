@@ -6,7 +6,6 @@ import { PageStateBaseClass } from "./PageStateClass";
 import { MenuView, RequiredObjectToGenerateItem } from "../parts/MenuView";
 import { appendElement } from "../../utility/aboutElement";
 import { StateAdministrator } from "../../Administrator/StateAdminister";
-import { IRunner } from "../../../type/record/IRunner";
 
 export class S_MainMenu
     extends PageStateBaseClass<null|{gameSystem:IGameSystemInfoWithoutCollections, gameMode:IGameModeItemWithoutCollections},IAppUsedToReadAndChangePage>{
@@ -38,14 +37,8 @@ export class S_MainMenu
                 Japanese:"メインメニュー",
                 English:"Main menu"
             })
-            let runnerInfo:IRunner|undefined
-            try {
-                runnerInfo =  (this.app.loginAdministratorReadOnly.isUserLogin) ? (await this.app.accessToAPI("list_runner",{id:this.app.loginAdministratorReadOnly.loginUserID})).result : undefined;
-            } catch (err) {
-                runnerInfo = undefined;
-            }
             
-            this.generateMainMenuInfo(runnerInfo).map((info) => mainMenu.generateMenuItem(info));
+            this.generateMainMenuInfo().map((info) => mainMenu.generateMenuItem(info));
             main.appendChild(element`<div class="u-space3em"></div>`)
 
             const detailMenu = new MenuView(appendElement(main,"div"),this.app.state.language,{
@@ -59,7 +52,8 @@ export class S_MainMenu
         }
 
 
-        generateMainMenuInfo(runnerInfo:IRunner|undefined):RequiredObjectToGenerateItem[]{
+        generateMainMenuInfo():RequiredObjectToGenerateItem[]{
+           const runnerInfo = (this.app.loginAdministratorReadOnly.isUserLogin) ? this.app.loginAdministratorReadOnly.userInformation: undefined;
            const asg = this.app.state.gameSystemEnvDisplayed;
            const isSetTargetGameMode = asg.gameSystem!==null && asg.gameMode!==null
 
@@ -78,8 +72,7 @@ export class S_MainMenu
                     icon:(isLogIn) ? "logout":"login"
                 },
                 remarks:(isLogIn) ? {
-                    Japanese:String(userName),
-                    English:String(userName),
+                    ...userName,
                     icon:"person"
                 } : undefined,
                 description:{

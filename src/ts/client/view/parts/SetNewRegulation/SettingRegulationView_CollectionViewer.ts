@@ -38,6 +38,7 @@ export class SettingRegulationView_CollectionViewer implements IView{
     }&Callbacks){
         this.container = container;
         this.path = path;
+        console.log(`[KSSRs] Now trying to connect ${path.path} ...`)
         this.language = language;
         const collectionViewer = this.container.appendChild(document.createElement("div"))
         const htmlC = new HTMLConverter(language);

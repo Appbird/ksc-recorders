@@ -22,6 +22,10 @@ export interface CollectionOfIRunner{
 
 export interface INotificationItem extends IItemOfResolveTableToName{
     postedDate:number;
-    unread:boolean;
+    from:{
+        id:string,
+        Japanese:string,
+        English:string  
+    };
 }
 

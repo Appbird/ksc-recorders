@@ -1,6 +1,5 @@
 import { IItemOfResolveTableToName } from "../../../../type/list/IItemOfResolveTableToName";
 import { LanguageInApplication } from "../../../../type/LanguageInApplication";
-import { DestinationOfRefStackToCollection } from "./DestinationOfRefStackToCollection";
 import { EditorPart } from "./Editor/EditorPart";
 import { checkType } from "../../../../utility/InputCheckerUtility";
 import { TitleCupsuled } from "../TitleCupsuled";
@@ -69,8 +68,8 @@ export class EditorFormManager<TypeOfObserved extends IItemOfResolveTableToName>
             this.startToCreateNewData();
         }else {
             this.fetchData().then(() => this.subscribe());
-            this.addChangeEventListener();
         }
+        this.addChangeEventListener();
         this.refreshTitle()
     }
     private startToCreateNewData(){
@@ -102,18 +101,24 @@ export class EditorFormManager<TypeOfObserved extends IItemOfResolveTableToName>
         for (const [key,editor] of this.inputFormsTuples){
             if (editor === undefined) continue;
             editor.addChangeEventListener((changed) => {
+                const beforeChange = this.data[key]
+                
+                console.info(`[KSSRs-InfoEditor] change detected : Property ${key} >>> from ${beforeChange} to ${changed}`)
+                    
                 this.data[key] = changed;
                 if (this.id !== undefined) {
-                    this.pathOfDocObserved.doc(this.id)
+                    this.writeData();
+                    console.info(`[KSSRs-InfoEditor] reflected : Property ${key} >>> from ${beforeChange} to ${changed}`)
                     return;
                 }
                 if (this.isFilled()){
                     this.disabledAllInputs(true);
                     this.addData().then( assignedID => {
                         this.id = assignedID
+                        console.info(`[KSSRs-InfoEditor] registered : the assigned id is ${assignedID}`)
                         this.refreshTitle()
                         this.disabledAllInputs(false);
-                    });
+                    }).catch(error => this.callbacks.ErrorCatcher(error));
                 }
             })
         }
@@ -126,7 +131,7 @@ export class EditorFormManager<TypeOfObserved extends IItemOfResolveTableToName>
         if (item !== undefined) this.data = item;
         for (const [key,editor] of this.inputFormsTuples){
             if (editor === undefined) continue;
-            if (this.data.hasOwnProperty(key) && checkType(this.data[key],editor.requiredTypeInString)) editor.refresh(this.data)
+            if (this.data.hasOwnProperty(key) && checkType(this.data[key],editor.requiredTypeInString)) editor.refresh(this.data[key])
             //#NOTE 型システム的には保証されていないが一応チェックも通してるので正当な型が入る…ハズ。
         }
     }

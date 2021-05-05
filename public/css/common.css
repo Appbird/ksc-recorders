@@ -113,7 +113,7 @@ article {
   background-color: #fff;
   box-shadow: 0px 3px 5px rgba(23, 4, 75, 0.329);
   overflow-x: hidden;
-  margin-bottom: 10em;
+  padding-bottom: 4em;
 }
 
 @media screen and (max-width: 800px) {
@@ -706,6 +706,16 @@ article h1::after {
   background-size: cover;
 }
 
+.u-background--list {
+  background: url("../icon/IcooonMono/list.svg");
+  background-size: cover;
+}
+
+.u-background--name {
+  background: url("../icon/IcooonMono/name.svg");
+  background-size: cover;
+}
+
 .u-margin05em {
   margin: 0.5em;
 }
@@ -727,11 +737,23 @@ article h1::after {
 }
 
 .u-marginUpDown05emToChildren > * {
-  margin: 0.5em 0;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 .u-marginUpDown2emToChildren > * {
-  margin: 2em 0;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+.u-marginLeftRight05emToChildren > * {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
+.u-marginLeftRight2emToChildren > * {
+  margin-right: 2em;
+  margin-left: 2em;
 }
 
 .u-left-aligined-forFlex {

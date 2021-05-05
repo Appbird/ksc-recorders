@@ -1,5 +1,5 @@
 import { IRecord, IRecordWithoutID } from "../../../../src/ts/type/record/IRecord";
-import { IRunner } from "../../../../src/ts/type/record/IRunner";
+import { INotificationItem, IRunner } from "../../../../src/ts/type/record/IRunner";
 import { IHashTagItem, IGameSystemInfoWithoutCollections } from "../../../../src/ts/type/list/IGameSystemInfo";
 import { OrderOfRecordArray } from "../../../../src/ts/type/record/OrderOfRecordArray";
 import { IGameModeItemWithoutCollections, ScoreType } from "../../../../src/ts/type/list/IGameModeItem";
@@ -101,6 +101,12 @@ export class RecordDataBase{
         this.getRunnersRef().doc(uid).set(userData);
         return userData
     }
+    async readNotificationsOfRunner(uid:string){
+        const runnerInfo = await recordDataBase.getRunnerInfo(uid)
+        await recordDataBase.writeRunnerInfo(uid,{...runnerInfo,numberOfUnreadNotification:0});
+        return;
+    }
+    sendNotification        = (uid:string,item:INotificationItem) => this.writeDoc<INotificationItem>(this.getRunnersRef().doc(uid).collection("notifications"),item)
 
     async searchHashTag(gameSystemID:string,names:string[],language:LanguageInApplication):Promise<(IHashTagItem|undefined)[]>{
         if (names.length > 10) throw new Error("指定するIDが多すぎます。")
@@ -193,7 +199,9 @@ export class RecordDataBase{
         const recordWrited = await this.getRecord(rrg.gameSystemID,rrg.gameModeID,recordID);
         
         const modifierList = ( (recordWrited.modifiedBy === undefined) ? [] : recordWrited.modifiedBy )
-        modifierList.push({ modifierID:modifierID,timestamp:Date.now(),before:{...recordWrited ,modifiedBy:undefined} });
+        delete recordWrited.modifiedBy; 
+        modifierList.push({ modifierID:modifierID,timestamp:Date.now(),before:recordWrited});
+        
         const modifiedOffer:IRecord = {
             ...record,modifiedBy:modifierList,id:recordID,
         }

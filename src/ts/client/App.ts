@@ -11,6 +11,7 @@ import { IGameModeItemWithoutCollections } from "../type/list/IGameModeItem";
 import { LoginAdministrator, LoginAdministratorReadOnly } from "./Administrator/LoginAdministrator";
 import { IAppUsedToChangeState } from "./interface/AppInterfaces";
 import firebase from "firebase/app";
+
 export default class App implements IAppUsedToChangeState{
     private _state:StateAdministrator;
     private loginAd:LoginAdministrator | null = null;
@@ -34,12 +35,26 @@ export default class App implements IAppUsedToChangeState{
         if (response.status !== 200) {console.log("Failed"); return;}
         firebase.initializeApp(await response.json());
 
-        this.loginAd = new LoginAdministrator();
-        this.loginAd.onStateChange( () => {
-            if (this.loginAd?.isUserLogin) this.header.changeUserIcon(String(this.loginAd.loginUserName),this.loginAd.loginUserIconPicture)
+        this.loginAd = new LoginAdministrator(this);
+        this.loginAd.onStateChange(async () => {
+            if (this.loginAd?.isUserLogin) {
+                await this.loginAd?.subscribe();
+                this.header.changeUserIcon(this.loginAd.loginUserName,this.loginAd.loginUserIconPicture,this.state.language)
+            }
             else this.header.deleteUserIcon();
+            this.goPreviousPage();
+        })
+        this.loginAd.setChangedEventListener( () => {
+            if (this.loginAd === null) return;
+            this.header.changeUserIcon(this.loginAd.loginUserName,this.loginAd.loginUserIconPicture,this.state.language)
         })
         
+    }
+    private goPreviousPage(){
+        const previousPage = this.historyAd.getPreviousPageData()
+        if (previousPage === null) {this.transition("mainMenu",null); return;}
+        console.info(`[KSSRs] KSSRs detected you had visited ${previousPage.pageState} page most recently, so KSSRs takes you to that page.`)
+        this.transition(previousPage.pageState,previousPage.requiredObject)
     }
     async login(){
         if (this.loginAd === null) throw new Error("firebaseが初期化されていません。")
@@ -66,8 +81,10 @@ export default class App implements IAppUsedToChangeState{
     async transition<T extends keyof PageStates>(nextState:T, requestObject:RequiredObjectType<PageStates[T]>,{ifAppendHistory=true,title=""}:{ifAppendHistory?:boolean,title?:string} = {}){
         scrollToTop();
         if (ifAppendHistory) this.historyAd.appendHistory()
+        
         try { 
             await this.transitionAd.transition(nextState,requestObject,{title:title})
+            if (ifAppendHistory) this.historyAd.registerCurrentPage();
         } catch(error) {
             this.errorCatcher(error,"ページの遷移に失敗しました。")
         }
@@ -89,9 +106,13 @@ export default class App implements IAppUsedToChangeState{
     }
     errorCatcher(error:any,title:string = "エラーが発生しました。"){
         if (!(error instanceof Error)){ console.error(`予期せぬエラーです。 : ${error}`); return; }
+        this.historyAd.removePreviousPageData();
         const errorInString = error.message;
         console.error(`${errorInString}\n${error.stack}`);
         this.transition("errorView",{title:title,message:errorInString});
+    }
+    notie(){
+
     }
     
 }

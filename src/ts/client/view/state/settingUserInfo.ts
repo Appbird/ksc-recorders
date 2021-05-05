@@ -117,42 +117,48 @@ export class S_SettingUserInfo
                                                 language:lang,
                                                 title:context.Input.Japanese.title,
                                                 description:context.Input.Japanese.description,
-                                                requiredField:true
+                                                requiredField:true,
+                                                icooon:"name"
                                             }),
                 English:            new EditorTextPart({
                                                 container:appendElement(editorSegment,"div"),
                                                 language:lang,
                                                 title:context.Input.English.title,
                                                 description:context.Input.English.description,
-                                                requiredField:true
+                                                requiredField:true,
+                                                icooon:"name"
                                             }),
                 JDescription:       new EditorTextPart({
                                                 container:appendElement(editorSegment,"div"),
                                                 language:lang,
                                                 title:context.Input.JapaneseDescription.title,
                                                 description:context.Input.JapaneseDescription.description,
-                                                requiredField:false
+                                                requiredField:false,
+                                                icooon:"feather"
                                             }),
                 EDescription:       new EditorTextPart({
                                                 container:appendElement(editorSegment,"div"),
                                                 language:lang,
                                                 title:context.Input.EnglishDescription.title,
                                                 description:context.Input.EnglishDescription.description,
-                                                requiredField:false
+                                                requiredField:false,
+                                                icooon:"feather"
                                             }),
                 twitterLink:       new EditorTextPart({
                                                 container:appendElement(editorSegment,"div"),
                                                 language:lang,
-                                                title:context.Input.JapaneseDescription.title,
-                                                description:context.Input.JapaneseDescription.description,
-                                                requiredField:false
+                                                title:context.Input.TwitterLink.title,
+                                                description:context.Input.TwitterLink.description,
+                                                requiredField:false,
+                                                icooon:"link"
                                             }),
                 youtubeLink:       new EditorTextPart({
                                                 container:appendElement(editorSegment,"div"),
                                                 language:lang,
-                                                title:context.Input.EnglishDescription.title,
-                                                description:context.Input.EnglishDescription.description,
-                                                requiredField:false
+                                                title:context.Input.YoutubeLink.title,
+                                                description:context.Input.YoutubeLink.description,
+                                                requiredField:false,
+                                                icooon:"link"
                                             }),
                 
             };
@@ -164,7 +170,7 @@ export class S_SettingUserInfo
             })
             const english = (await this.app.accessToAPI("list_runner",{id:runnerID})).result.English
             this.editorForm = new EditorFormManager(
-                editorHeader,lang,firebase.firestore().collection("runners"),`${english}'s`,inputForms,
+                editorHeader,lang,firebase.firestore().collection("runners"),`${english}'s information`,inputForms,
                 {
                     id:"",
                     Japanese:"",English:"",

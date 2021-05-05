@@ -9,6 +9,8 @@ export function createDefaultUserData(user:firebase.auth.UserRecord):IRunner{
         English: username,
         theDateOfRegistered: Date.now(),
         theNumberOfPost: 0, theDateOfLastPost:0, twitterLink:"",youtubeLink:"",idOfGameModeRunnerHavePlayed:[],idOfGameSystemRunnerHavePlayed:[],
-        isCommitteeMember: false, isMuted:false,photoURL:"",numberOfUnreadNotification:0
+        isCommitteeMember: false, isMuted:false,
+        photoURL:(user.photoURL) ? user.photoURL :"",
+        numberOfUnreadNotification:0
     }
 }

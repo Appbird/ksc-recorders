@@ -13,12 +13,235 @@ export const IReceivedDataAtServer_recordSearchSchema = {
   "defaultProperties": [
   ],
   "definitions": {
+    "IGameSystemEnvironment": {
+      "defaultProperties": [
+      ],
+      "properties": {
+        "gameDifficultyID": {
+          "type": "string"
+        },
+        "gameModeID": {
+          "type": "string"
+        },
+        "gameSystemID": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "gameDifficultyID",
+        "gameModeID",
+        "gameSystemID"
+      ],
+      "type": "object"
+    },
+    "IRecord": {
+      "defaultProperties": [
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "languageOfTagName": {
+          "$ref": "#/definitions/LanguageInApplication"
+        },
+        "link": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "modifiedBy": {
+          "items": {
+            "$ref": "#/definitions/ModifiedHistoryStack"
+          },
+          "type": "array"
+        },
+        "note": {
+          "type": "string"
+        },
+        "regulation": {
+          "$ref": "#/definitions/IRegulation"
+        },
+        "runnerID": {
+          "type": "string"
+        },
+        "score": {
+          "type": "number"
+        },
+        "tagID": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "tagName": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "timestamp_post": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "id",
+        "languageOfTagName",
+        "link",
+        "note",
+        "regulation",
+        "runnerID",
+        "score",
+        "tagID",
+        "tagName",
+        "timestamp_post"
+      ],
+      "type": "object"
+    },
+    "IRegulation": {
+      "defaultProperties": [
+      ],
+      "properties": {
+        "abilityIDs": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "gameSystemEnvironment": {
+          "$ref": "#/definitions/IGameSystemEnvironment"
+        },
+        "targetID": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "abilityIDs",
+        "gameSystemEnvironment",
+        "targetID"
+      ],
+      "type": "object"
+    },
+    "ISentRecordOffer": {
+      "defaultProperties": [
+      ],
+      "properties": {
+        "languageOfTagName": {
+          "$ref": "#/definitions/LanguageInApplication"
+        },
+        "link": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "note": {
+          "type": "string"
+        },
+        "regulation": {
+          "$ref": "#/definitions/IRegulation"
+        },
+        "score": {
+          "type": "number"
+        },
+        "tagName": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "languageOfTagName",
+        "link",
+        "note",
+        "regulation",
+        "score",
+        "tagName"
+      ],
+      "type": "object"
+    },
     "LanguageInApplication": {
       "enum": [
         "English",
         "Japanese"
       ],
       "type": "string"
+    },
+    "ModifiedHistoryStack": {
+      "defaultProperties": [
+      ],
+      "properties": {
+        "before": {
+          "defaultProperties": [
+          ],
+          "properties": {
+            "languageOfTagName": {
+              "$ref": "#/definitions/LanguageInApplication"
+            },
+            "link": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "note": {
+              "type": "string"
+            },
+            "regulation": {
+              "$ref": "#/definitions/IRegulation"
+            },
+            "runnerID": {
+              "type": "string"
+            },
+            "score": {
+              "type": "number"
+            },
+            "tagID": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "tagName": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "timestamp_approval": {
+              "type": "number"
+            },
+            "timestamp_post": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "languageOfTagName",
+            "link",
+            "note",
+            "regulation",
+            "runnerID",
+            "score",
+            "tagID",
+            "tagName",
+            "timestamp_post"
+          ],
+          "type": "object"
+        },
+        "modifierID": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "before",
+        "modifierID",
+        "timestamp"
+      ],
+      "type": "object"
     },
     "OrderOfRecordArray": {
       "enum": [

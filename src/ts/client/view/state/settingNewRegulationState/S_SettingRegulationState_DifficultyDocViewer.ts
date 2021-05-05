@@ -9,6 +9,7 @@ import { goBackFromDocToCollection, titleContext } from "./utility";
 import { IGameDifficultyItem } from "../../../../type/list/IGameDifficultyItem";
 import { EditorIDPart } from "../../parts/SetNewRegulation/Editor/EditorIDPart";
 import { ITargetItem } from "../../../../type/list/ITargetItem";
+import { choiceString } from "../../../../utility/aboutLang";
 
 const context = {
     ...titleContext,
@@ -94,14 +95,16 @@ export class S_SettingRegulationState_DifficultyDocViewer
                                             language:lang,
                                             title:context.Input.Japanese.title,
                                             description:context.Input.Japanese.description,
-                                            requiredField:true
+                                            requiredField:true,
+                                            icooon:"tag"
                                         }),
             English:            new EditorTextPart({
                                             container:appendElement(editorSegment,"div"),
                                             language:lang,
                                             title:context.Input.English.title,
                                             description:context.Input.English.description,
-                                            requiredField:true
+                                            requiredField:true,
+                                            icooon:"tag"
                                         }),
             TargetIDsIncludedInTheDifficulty:   
                                 new EditorIDPart({
@@ -111,21 +114,24 @@ export class S_SettingRegulationState_DifficultyDocViewer
                                     description:context.Input.EnglishDescription.description,
                                     requiredField:false,
                                     options:(await optionsRef.get()).docs.map(doc => doc.data() as ITargetItem),
-                                    observed:optionsRef
+                                    observed:optionsRef,
+                                    icooon:"list"
                                 }),
             JDescription:       new EditorTextPart({
                                             container:appendElement(editorSegment,"div"),
                                             language:lang,
                                             title:context.Input.JapaneseDescription.title,
                                             description:context.Input.JapaneseDescription.description,
-                                            requiredField:false
+                                            requiredField:false,
+                                            icooon:"feather"
                                         }),
             EDescription:       new EditorTextPart({
                                         container:appendElement(editorSegment,"div"),
                                         language:lang,
                                         title:context.Input.EnglishDescription.title,
                                         description:context.Input.EnglishDescription.description,
-                                        requiredField:false
+                                        requiredField:false,
+                                        icooon:"feather"
                                         }),
         };
         this.editorForm = new EditorFormManager(
@@ -137,9 +143,12 @@ export class S_SettingRegulationState_DifficultyDocViewer
                 TargetIDsIncludedInTheDifficulty:[]
             },{
                 ErrorCatcher:(error) => this.app.errorCatcher(error),
-                whenAppendNewItem: (id) => {
+                whenAppendNewItem: (id,data) => {
                     headerMaker.changeTitle({mainTitle:context.title,subTitle:context.titleDescription})
                     this.requiredObj.id = id;
+                    
+                    this.requiredObj.pathStack.pop();
+                    this.requiredObj.pathStack.push(choiceString(data,this.app.state.language));
                 },
                 whenReset: () => {},
                 id:this.requiredObj.id   

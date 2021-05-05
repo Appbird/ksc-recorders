@@ -6,7 +6,6 @@ import "firebase/firestore";
 import { choiceString } from "../../../../utility/aboutLang";
 import { SettingRegulationStateHeader } from "../../parts/SetNewRegulation/SettingRegulationStateHeader";
 import { appendElement } from "../../../utility/aboutElement";
-import { MultiLanguageString } from "../../../../type/foundation/MultiLanguageString";
 
 const context = {
     title:{
@@ -48,7 +47,7 @@ export class S_SettingNewRegulationState_CollectionViewer
                     if (this.requiredObj === null) throw new Error("オブジェクトが与えられていません。")
                     const id = this.requiredObj.collection.parent?.id;
                     if (id === undefined) throw new Error("上の階層がありません");
-                    this.requiredObj.pathStack.pop();
+                    this.requiredObj.pathStack.push("new Item");
                     this.transitionProperState(id);
                 }
             }])

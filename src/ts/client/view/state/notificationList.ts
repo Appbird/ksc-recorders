@@ -1,4 +1,4 @@
-import { IAppUsedToReadAndChangePage } from "../../interface/AppInterfaces";
+import { IAppUsedToChangeState } from "../../interface/AppInterfaces";
 import { PageStateBaseClass } from "./PageStateClass";
 import firebase from "firebase/app";
 import "firebase/firestore"
@@ -13,13 +13,19 @@ const context = {
     }
 }
 export class S_NotificationList
-    extends PageStateBaseClass<null,IAppUsedToReadAndChangePage>{
+    extends PageStateBaseClass<null,IAppUsedToChangeState>{
     async init(){
         this.generateLoadingSpinner()
         const title = new TitleCupsuled(appendElement(this.articleDOM,"div"));
         title.refresh(choiceString(context.title,this.app.state.language))
         const ref = firebase.firestore().collection("runners").doc(this.app.loginAdministratorReadOnly.loginUserID).collection("notifications")
-        const notificationList = new NotificationList(appendElement(this.articleDOM,"div"),this.app.state.language,ref)
+        const notificationList = new NotificationList(appendElement(this.articleDOM,"div"),this.app.state.language,ref,{
+            readNotification:async () => {
+                try {await this.app.accessToAPI("notification_read",{idToken:await this.app.loginAdministratorReadOnly.getIDToken()})}
+                catch(err) { this.app.errorCatcher(err); }
+            }
+        })
+        
         this.deleteLoadingSpinner();
     }
 

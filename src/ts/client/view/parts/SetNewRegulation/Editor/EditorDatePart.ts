@@ -57,7 +57,7 @@ export class EditorDatePart implements EditorPart<number>{
         this.datePicker.setDate(fixTime(time));
     }
     isFill(): boolean {
-        return true;
+        return this.datePicker.selectedDates.length !== 0;
     }
     disabled(state: boolean): void {
         const classList = this.datePicker.element.classList;

@@ -8,6 +8,7 @@ import { EditorDatePart } from "../../parts/SetNewRegulation/Editor/EditorDatePa
 import { DocViewerRequired } from "./Types";
 import { goBackFromDocToCollection, goDeeperFromDocToCollection, titleContext } from "./utility";
 import { SettingRegulationStateHeader } from "../../parts/SetNewRegulation/SettingRegulationStateHeader";
+import { choiceString } from "../../../../utility/aboutLang";
 const context = {
     ...titleContext,
     List:{
@@ -83,7 +84,7 @@ const context = {
             },
             description:[{
                 Japanese:"この作品のリリース日を入力してください。",
-                English:"Press the button below to set the released date of this title <strong> In Japan</strong>."
+                English:"Press the button below to set the released date of this title <strong>In Japanese</strong>."
             }]
         }
     }
@@ -114,6 +115,7 @@ export class S_SettingRegulationState_GameSystemDocViewer
                                             language:lang,
                                             title:context.Input.Japanese.title,
                                             description:context.Input.Japanese.description,
+                                            icooon:"name",
                                             requiredField:true
                                         }),
             English:            new EditorTextPart({
@@ -121,6 +123,7 @@ export class S_SettingRegulationState_GameSystemDocViewer
                                             language:lang,
                                             title:context.Input.English.title,
                                             description:context.Input.English.description,
+                                            icooon:"name",
                                             requiredField:true
                                         }),
                                         
@@ -129,6 +132,7 @@ export class S_SettingRegulationState_GameSystemDocViewer
                                             language:lang,
                                             title:context.Input.releasedData.title,
                                             description:context.Input.releasedData.description,
+                                            icooon:"ns",
                                             requiredField:true
                                         }),
             JDescription:       new EditorTextPart({
@@ -136,6 +140,7 @@ export class S_SettingRegulationState_GameSystemDocViewer
                                             language:lang,
                                             title:context.Input.JapaneseDescription.title,
                                             description:context.Input.JapaneseDescription.description,
+                                            icooon:"feather",
                                             requiredField:false
                                         }),
             EDescription:       new EditorTextPart({
@@ -143,6 +148,7 @@ export class S_SettingRegulationState_GameSystemDocViewer
                                         language:lang,
                                         title:context.Input.EnglishDescription.title,
                                         description:context.Input.EnglishDescription.description,
+                                        icooon:"feather",
                                         requiredField:false
                                     }),
         };
@@ -157,10 +163,13 @@ export class S_SettingRegulationState_GameSystemDocViewer
                 releasedDate:Date.now(),
             },{
                 ErrorCatcher:(error) => this.app.errorCatcher(error),
-                whenAppendNewItem: (id) => {
+                whenAppendNewItem: (id,data) => {
                     headerMaker.get("modes").classList.remove("u-unused")
                     headerMaker.changeTitle({mainTitle:context.title,subTitle:context.titleDescription})
                     this.requiredObj.id = id
+                    
+                    this.requiredObj.pathStack.pop();
+                    this.requiredObj.pathStack.push(choiceString(data,this.app.state.language));
                 },
                 whenReset: () => {},
                 id:this.requiredObj.id   

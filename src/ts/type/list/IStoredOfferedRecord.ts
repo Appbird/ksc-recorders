@@ -26,5 +26,4 @@ export interface ModifiedHistoryStack{
         tagID:string[];
         link:string[];
         note:string;
-        modifiedBy:undefined;
 }}

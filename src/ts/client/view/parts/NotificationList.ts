@@ -10,15 +10,20 @@ export class NotificationList implements IView {
     private container: Element;
     private observed: firebase.firestore.CollectionReference;
     private unsubscribe: () => void;
+    private readNotification: () => Promise<void>;
     private language: LanguageInApplication;
     private htmlC: HTMLConverter;
-    constructor(container: Element, language: LanguageInApplication,observed: firebase.firestore.CollectionReference,limit:number = 50) {
+    constructor(container: Element, language: LanguageInApplication,observed: firebase.firestore.CollectionReference,{
+            limit = 50,
+            readNotification
+        }:{limit?:number,readNotification:()=>Promise<void>}) {
         this.container = container;
         this.container.classList.add("c-list");
         this.language = language;
         this.observed = observed;
         this.htmlC = new HTMLConverter(language);
         this.prepare().catch((err) => console.error(err));
+        this.readNotification = readNotification;
         this.unsubscribe = this.observed.limit(limit).onSnapshot((querySnapshots) => {
             for (const querySnapshot of querySnapshots.docChanges()) {
                 switch (querySnapshot.type) {
@@ -37,10 +42,8 @@ export class NotificationList implements IView {
         }
     }
     read() {
-        const unreads = this.notificationList.filter(([, value]) => value.unread);
-        for (const [key, notification] of unreads) {
-            this.observed.doc(key).set({ ...notification, unread: false });
-        }
+        
+        this.readNotification();
     }
     append(INotificationItem: INotificationItem) {
         this.container.prepend(this.htmlC.elementWithoutEscaping`

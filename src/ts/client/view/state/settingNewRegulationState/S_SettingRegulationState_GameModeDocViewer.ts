@@ -9,6 +9,7 @@ import { EditorPositiveIntegerPart } from "../../parts/SetNewRegulation/Editor/E
 import { DocViewerRequired } from "./Types";
 import { goBackFromDocToCollection, goDeeperFromDocToCollection, titleContext } from "./utility";
 import { SettingRegulationStateHeader } from "../../parts/SetNewRegulation/SettingRegulationStateHeader";
+import { choiceString } from "../../../../utility/aboutLang";
 const context = {
     ...titleContext,
     List:{
@@ -146,14 +147,16 @@ export class S_SettingRegulationState_GameModeDocViewer
                                             language:lang,
                                             title:context.Input.Japanese.title,
                                             description:context.Input.Japanese.description,
-                                            requiredField:true
+                                            requiredField:true,
+                                            icooon:"tag"
                                         }),
             English:            new EditorTextPart({
                                             container:appendElement(editorSegment,"div"),
                                             language:lang,
                                             title:context.Input.English.title,
                                             description:context.Input.English.description,
-                                            requiredField:true
+                                            requiredField:true,
+                                            icooon:"tag"
                                         }),
             
             scoreType:          new EditorScoreTypePart({
@@ -162,28 +165,32 @@ export class S_SettingRegulationState_GameModeDocViewer
                                             title:context.Input.scoreType.title,
                                             description:context.Input.scoreType.description,
                                             requiredField:true,
-                                            indentifiedName:"scoreTypeSelector"
+                                            indentifiedName:"scoreTypeSelector",
+                                            icooon:"ds"
                                         }),
             maxNumberOfPlayer:  new EditorPositiveIntegerPart({
                                             container:appendElement(editorSegment,"div"),
                                             language:lang,
                                             title:context.Input.maxNumberOfPlayer.title,
                                             description:context.Input.maxNumberOfPlayer.description,
-                                            requiredField:true
+                                            requiredField:true,
+                                            icooon:"person"
                                         }),
             JDescription:       new EditorTextPart({
                                             container:appendElement(editorSegment,"div"),
                                             language:lang,
                                             title:context.Input.JapaneseDescription.title,
                                             description:context.Input.JapaneseDescription.description,
-                                            requiredField:false
+                                            requiredField:false,
+                                            icooon:"feather"
                                         }),
             EDescription:       new EditorTextPart({
                                         container:appendElement(editorSegment,"div"),
                                         language:lang,
                                         title:context.Input.EnglishDescription.title,
                                         description:context.Input.EnglishDescription.description,
-                                        requiredField:false
+                                        requiredField:false,
+                                        icooon:"feather"
                                         }),
         };
         const gameSystemID = this.requiredObj.collection.parent?.id
@@ -201,10 +208,13 @@ export class S_SettingRegulationState_GameModeDocViewer
                 gameSystemID:gameSystemID
             },{
                 ErrorCatcher:(error) => this.app.errorCatcher(error),
-                whenAppendNewItem: (id) => {
+                whenAppendNewItem: (id,data) => {
                     for (const id of ["abilities","targets","difficulties"]) headerMaker.get(id).classList.remove("u-unused")
                     headerMaker.changeTitle({mainTitle:context.title,subTitle:context.titleDescription})
                     this.requiredObj.id = id;
+                    
+                    this.requiredObj.pathStack.pop();
+                    this.requiredObj.pathStack.push(choiceString(data,this.app.state.language));
                 },
                 whenReset: () => {},
                 id:this.requiredObj.id   

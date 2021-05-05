@@ -10,6 +10,7 @@ import { EditorIDPart } from "../../parts/SetNewRegulation/Editor/EditorIDPart";
 import { ITargetItem } from "../../../../type/list/ITargetItem";
 import { SettingRegulationStateHeader } from "../../parts/SetNewRegulation/SettingRegulationStateHeader";
 import { IAbilityItem } from "../../../../type/list/IAbilityItem";
+import { choiceString } from "../../../../utility/aboutLang";
 
 const context = {
     ...titleContext,
@@ -93,28 +94,32 @@ export class S_SettingRegulationState_AbilityDocViewer
                                             language:lang,
                                             title:context.Input.Japanese.title,
                                             description:context.Input.Japanese.description,
-                                            requiredField:true
+                                            requiredField:true,
+                                            icooon:"tag"
                                         }),
             English:            new EditorTextPart({
                                             container:appendElement(editorSegment,"div"),
                                             language:lang,
                                             title:context.Input.English.title,
                                             description:context.Input.English.description,
-                                            requiredField:true
+                                            requiredField:true,
+                                            icooon:"tag"
                                         }),
             JDescription:       new EditorTextPart({
                                             container:appendElement(editorSegment,"div"),
                                             language:lang,
                                             title:context.Input.JapaneseDescription.title,
                                             description:context.Input.JapaneseDescription.description,
-                                            requiredField:false
+                                            requiredField:false,
+                                            icooon:"feather"
                                         }),
             EDescription:       new EditorTextPart({
                                         container:appendElement(editorSegment,"div"),
                                         language:lang,
                                         title:context.Input.EnglishDescription.title,
                                         description:context.Input.EnglishDescription.description,
-                                        requiredField:false
+                                        requiredField:false,
+                                        icooon:"feather"
                                         }),
         };
         this.editorForm = new EditorFormManager(
@@ -125,9 +130,12 @@ export class S_SettingRegulationState_AbilityDocViewer
                 JDescription:"",EDescription:""
             },{
                 ErrorCatcher:(error) => this.app.errorCatcher(error),
-                whenAppendNewItem: (id) => {
+                whenAppendNewItem: (id,data) => {
                     headerMaker.changeTitle({mainTitle:context.title,subTitle:context.titleDescription})
                     this.requiredObj.id = id;
+                    
+                    this.requiredObj.pathStack.pop();
+                    this.requiredObj.pathStack.push(choiceString(data,this.app.state.language));
                 },
                 whenReset: () => {},
                 id:this.requiredObj.id   

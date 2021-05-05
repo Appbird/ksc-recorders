@@ -31,7 +31,7 @@ export class EditorTextPart implements EditorPart<string> {
         this.htmlCon = new HTMLConverter(language);
 
         this._requiredField = requiredField;
-        this.container.appendChild(this.htmlCon.elementWithoutEscaping `<h1>${generateIcooonHTML({icooonName:icooon})}${title}</h1>`);
+        this.container.appendChild(this.htmlCon.elementWithoutEscaping `<h1>${generateIcooonHTML({icooonName:(icooon)})}${title}</h1>`);
         this.textInput = new TextInputCapsuled(appendElement(this.container,"div"), { defaultValue:"",className:"u-width90per" });
         this.ulist = new UListCupsuled(appendElement(this.container,"ul"),language,description)
     }
@@ -48,7 +48,7 @@ export class EditorTextPart implements EditorPart<string> {
         this.textInput.disabled(state);
     }
     isFill(): boolean {
-        return this.textInput.value.length === 0;
+        return this.textInput.value.length !== 0;
     }
     get requiredField():boolean{
         return this._requiredField

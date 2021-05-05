@@ -1,12 +1,11 @@
 import { IRunner } from "../../../type/record/IRunner";
 import { choiceString } from "../../../utility/aboutLang";
-import { HTMLConverter } from "../../../utility/ViewUtility";
 import { TargetGameMode } from "../../Administrator/StateAdminister";
 import { IAppUsedToReadAndChangePage } from "../../interface/AppInterfaces";
 import { appendElement } from "../../utility/aboutElement";
 import { MenuView, RequiredObjectToGenerateItem } from "../parts/MenuView";
 import { RecordGroupView } from "../parts/RecordsGroupView";
-import { StateInfoView } from "../parts/StateInfoView";
+import { UserInformationBoard } from "../parts/UserInformationBoard";
 import { PageStateBaseClass } from "./PageStateClass";
 
 const context = {
@@ -23,25 +22,10 @@ export class S_UserPageInSpecific
     extends PageStateBaseClass<TargetGameMode&{runnerID:string},IAppUsedToReadAndChangePage>{
     async init(){
         this.generateLoadingSpinner("people");
-        const htmlC = new HTMLConverter(this.app.state.language)
-        const runnerInfo = await (await this.app.accessToAPI("list_runner",{id:this.requiredObj.runnerID})).result
-        const titleView = this.articleDOM.appendChild(htmlC.elementWithoutEscaping`
-            <div class="u-width90per">
-                <div class="c-title">
-                    <div class="c-title__main">${runnerInfo}</div>
-                    <div class="c-title__main"><img href="${runnerInfo.photoURL}"></img></div>
-                </div>
-            </div>
-        `) as HTMLElement
-        new StateInfoView(appendElement(this.articleDOM,"div"))
-                                .appendInfo(`${runnerInfo.theNumberOfPost} Records`,"list")
-                                .appendInfo(`${runnerInfo.theDateOfLastPost} Records`,"history")
-        this.articleDOM.appendChild(htmlC.elementWithoutEscaping`<hr noshade class="u-bold">`)
-        this.articleDOM.appendChild(htmlC.elementWithoutEscaping`<p class="u-width90per">${{Japanese:runnerInfo.JDescription,English:runnerInfo.EDescription}}</p>`)
-        this.articleDOM.appendChild(htmlC.elementWithoutEscaping`<p class="u-width90per"><i class="fab fa-twitter"></i><a href="${runnerInfo.twitterLink}">${runnerInfo.twitterLink}</a></p>`)
-        this.articleDOM.appendChild(htmlC.elementWithoutEscaping`<p class="u-width90per"><i class="fab fa-youtube"></i><a href="${runnerInfo.youtubeLink}">${runnerInfo.youtubeLink}</a></p>`)
+        const runnerInfo = (await this.app.accessToAPI("list_runner",{id:this.requiredObj.runnerID})).result
+        new UserInformationBoard(appendElement(this.articleDOM,"div"),this.app.state.language,runnerInfo)
         
-        const menuDiv = new MenuView(appendElement(titleView,"div"),this.app.state.language,context.menuHeader,{displayDisabled:false});
+        const menuDiv = new MenuView(appendElement(this.articleDOM,"div"),this.app.state.language,context.menuHeader,{displayDisabled:false});
         for(const item of this.generateMenuItem(runnerInfo)) menuDiv.generateMenuItem(item);
 
         const records = (await this.app.accessToAPI("record_search",{
@@ -57,7 +41,7 @@ export class S_UserPageInSpecific
                 language:this.app.state.language
             }]
         })).result[0]
-        const recordViewer = new RecordGroupView(appendElement(titleView,"div"),records,this.app.state.scoreType,{
+        const recordViewer = new RecordGroupView(appendElement(this.articleDOM,"div"),records,this.app.state.scoreType,{
             clickOnCardEventListener:(record) => this.app.transition("detailView",{
                 gameSystemEnv:{
                     gameSystemID:this.app.state.gameSystemIDDisplayed,

@@ -12,6 +12,7 @@ export function goDeeperFromDocToCollection(app:IAppUsedToReadAndChangeOnlyPageS
 }
 export function goBackFromDocToCollection(app:IAppUsedToReadAndChangeOnlyPageState,requiredObj:DocViewerRequired){
     requiredObj.pathStack.pop()
+    console.log(requiredObj.collection.path)
     app.transition("settingNewRegulation_CollectionViewer",{
         collection:requiredObj.collection,
         pathStack:requiredObj.pathStack

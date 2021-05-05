@@ -1,10 +1,9 @@
 import { IRunner } from "../../../type/record/IRunner";
-import { HTMLConverter } from "../../../utility/ViewUtility";
 import { IAppUsedToReadAndChangePage } from "../../interface/AppInterfaces";
 import { appendElement } from "../../utility/aboutElement";
 import { MenuView, RequiredObjectToGenerateItem } from "../parts/MenuView";
-import { StateInfoView } from "../parts/StateInfoView";
 import { PageStateBaseClass } from "./PageStateClass";
+import { UserInformationBoard } from "../parts/UserInformationBoard";
 
 const context = {
     menuHeader:{
@@ -17,45 +16,16 @@ export class S_UserPageInWhole
     extends PageStateBaseClass<{runnerID:string},IAppUsedToReadAndChangePage>{
     async init(){
         this.generateLoadingSpinner("people")
-        const htmlC = new HTMLConverter(this.app.state.language)
+        
         const runnerInfo = (await this.app.accessToAPI("list_runner",{id:this.requiredObj.runnerID})).result
-        const titleView = this.articleDOM.appendChild(htmlC.elementWithoutEscaping`
-            <div class="u-width90per">
-                <div class="c-title">
-                    <div class="c-title__main">${runnerInfo}</div>
-                    <div class="c-title__main"><img href="${runnerInfo.photoURL}"></img></div>
-                </div>
-            </div>
-        `) as HTMLElement
-        new StateInfoView(appendElement(this.articleDOM,"div"))
-                                .appendInfo(`${runnerInfo.theNumberOfPost} Records`,"list")
-                                .appendInfo(`${runnerInfo.theDateOfLastPost} Records`,"history")
-        this.articleDOM.appendChild(htmlC.elementWithoutEscaping`<hr noshade class="u-bold">`)
+        new UserInformationBoard(appendElement(this.articleDOM,"div"),this.app.state.language,runnerInfo)
         
-        this.articleDOM.appendChild(htmlC.elementWithoutEscaping`<p class="u-width90per">${{Japanese:runnerInfo.JDescription,English:runnerInfo.EDescription}}</p>`)
-        this.articleDOM.appendChild(htmlC.elementWithoutEscaping`<p class="u-width90per"><i class="fab fa-twitter"></i><a href="${runnerInfo.twitterLink}">${runnerInfo.twitterLink}</a></p>`)
-        this.articleDOM.appendChild(htmlC.elementWithoutEscaping`<p class="u-width90per"><i class="fab fa-youtube"></i><a href="${runnerInfo.youtubeLink}">${runnerInfo.youtubeLink}</a></p>`)
-        
-        const menuDiv = new MenuView(appendElement(titleView,"div"),this.app.state.language,context.menuHeader,{displayDisabled:false});
+        const menuDiv = new MenuView(appendElement(this.articleDOM,"div"),this.app.state.language,context.menuHeader,{displayDisabled:false});
         for(const item of this.generateMenuItem(runnerInfo)) menuDiv.generateMenuItem(item);
         this.deleteLoadingSpinner();
     }   
     generateMenuItem(runnerInfo:IRunner):RequiredObjectToGenerateItem[]{
         return [
-            {
-                title:{
-                    Japanese:"ゲームモードリスト",
-                    English:"Gamemode List",
-                    icon:"list"
-                },
-                description:{
-                    Japanese: "ここで、走者が今まで活動してきたゲームモードを確認することが出来ます。",
-                    English: "You can see the list of gamemodes you have post records here."
-                },
-                isDisabled:false,
-                biggerTitle:true,
-                to:async () =>this.app.transition("gamemodeListOfPlayersPlayed",{runnersInfo:runnerInfo})
-            },
             {
             title:{
                 Japanese:"ログアウト",
@@ -82,7 +52,7 @@ export class S_UserPageInWhole
             title:{
                 Japanese:"ユーザー情報の設定",
                 English:"Setting user information",
-                icon:"list"
+                icon:"gear"
             },
             description:{
                 Japanese: "ここで、自身の情報を設定することが出来ます。",
@@ -92,6 +62,20 @@ export class S_UserPageInWhole
             biggerTitle:true,
             to:async () =>this.app.transition("settingUserInfo",null)
         },{
+            
+                title:{
+                    Japanese:"ゲームモードリスト",
+                    English:"Gamemode List",
+                    icon:"list"
+                },
+                description:{
+                    Japanese: "ここで、走者が今まで活動してきたゲームモードを確認することが出来ます。",
+                    English: "You can see the list of gamemodes you have post records here."
+                },
+                isDisabled:false,
+                biggerTitle:true,
+                to:async () =>this.app.transition("gamemodeListOfPlayersPlayed",{runnersInfo:runnerInfo})
+            },{
             title:{
                 Japanese:"通知",
                 English:"Notification",
@@ -113,3 +97,4 @@ export class S_UserPageInWhole
         ]
     }
 }
+

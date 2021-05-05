@@ -2,13 +2,14 @@ import { IRecord, IRecordWithoutID } from "../../../../src/ts/type/record/IRecor
 import { IRunner } from "../../../../src/ts/type/record/IRunner";
 import { IHashTagItem, IGameSystemInfoWithoutCollections } from "../../../../src/ts/type/list/IGameSystemInfo";
 import { OrderOfRecordArray } from "../../../../src/ts/type/record/OrderOfRecordArray";
-import { IGameModeItemWithoutCollections } from "../../../../src/ts/type/list/IGameModeItem";
+import { IGameModeItemWithoutCollections, ScoreType } from "../../../../src/ts/type/list/IGameModeItem";
 import { IGameDifficultyItem } from "../../../../src/ts/type/list/IGameDifficultyItem";
 import { ITargetItem } from "../../../../src/ts/type/list/ITargetItem";
 import { IAbilityItem } from "../../../../src/ts/type/list/IAbilityItem";
 import { LanguageInApplication } from "../../../../src/ts/type/LanguageInApplication";
 import { IItemOfResolveTableToName } from "../../../../src/ts/type/list/IItemOfResolveTableToName";
 import { firebaseAdmin } from "../function/firebaseAdmin";
+
 
 //[x] getRecordsWithConditionメソッドの実装
 export class RecordDataBase{
@@ -30,7 +31,7 @@ export class RecordDataBase{
     private async getCollection<T extends IItemOfResolveTableToName>(ref:FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>):Promise<T[]>{
         const result = await ref.get()
         if (result.empty) throw new Error(`[Not Found] コレクション ${ref.path} が存在しません。`);
-        return result.docs as unknown as T[];
+        return result.docs.map(doc => doc.data()) as T[];
     }
     private async getDoc<T extends IItemOfResolveTableToName>(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>):Promise<T>{
         const result = await ref.get()
@@ -165,26 +166,186 @@ export class RecordDataBase{
     async writeRecord(record:IRecordWithoutID):Promise<IRecord>{
         const rrg = record.regulation.gameSystemEnvironment;
         const result = await this.getGameModeRef(rrg.gameSystemID,rrg.gameModeID).collection("records").add(record)
-        return {...record,id:result.id};
+        const recordWithID = {...record,id:result.id}
+        await this.refreshInfoWhenWriting(recordWithID)
+        return recordWithID;
     }
-
+    
     async removeRecord(gameSystemID:string,gameModeID:string,recordID:string){
-        await this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(recordID).delete();
+        const ref = this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(recordID)
+        await this.refreshInfoWhenRemoving(await this.getRecord(gameSystemID,gameModeID,recordID))
+        await ref.delete();
         return;
     }
     
-    async modifyRecord(recordID:string,modifierID:string,record:IRecordWithoutID){
+    async modifyRecord(recordID:string,modifierID:string,record:IRecordWithoutID):Promise<IRecord>{
         const rrg = record.regulation.gameSystemEnvironment
         const ref =  this.getGameModeRef(rrg.gameSystemID,rrg.gameModeID).collection("records").doc(recordID);
         const recordWrited = await this.getRecord(rrg.gameSystemID,rrg.gameModeID,recordID);
         
         const modifierList = ( (recordWrited.modifiedBy === undefined) ? [] : recordWrited.modifiedBy )
         modifierList.push({ modifierID:modifierID,timestamp:Date.now(),before:{...recordWrited ,modifiedBy:undefined} });
-        const modifiedOffer:IRecordWithoutID = {
-            ...record,modifiedBy:modifierList
+        const modifiedOffer:IRecord = {
+            ...record,modifiedBy:modifierList,id:recordID,
         }
         await ref.set(modifiedOffer)
-        return {...modifiedOffer,id:recordID};
+        await this.refreshInfoWhenEditing(modifiedOffer)
+        return {...modifiedOffer};
+    }
+
+
+    //#NOTE 以下は他のドキュメントとの情報の整合性を取るための処理
+    //#NOTE 書き込み時
+    private async refreshInfoWhenWriting(record:IRecord){
+        const rr = record.regulation;
+        const rrg = rr.gameSystemEnvironment;
+        const runner = await this.getRunnerInfo(record.runnerID)
+        const gameSystem  = await this.getGameSystemInfo(rrg.gameSystemID);
+        const gameMode = await this.getGameModeInfo(rrg.gameSystemID,rrg.gameModeID);
+        const userHaveRunThisGameSystem = runner.idOfGameSystemRunnerHavePlayed.find((info) => info.id === rrg.gameSystemID)
+        const userHaveRunThisGameMode = runner.idOfGameModeRunnerHavePlayed.find((info) => info.id === `${rrg.gameSystemID}/${rrg.gameModeID}`)
+        if (!userHaveRunThisGameSystem) runner.idOfGameSystemRunnerHavePlayed.push({id:rrg.gameSystemID,times:1})
+            else userHaveRunThisGameSystem.times += 1;
+        if (!userHaveRunThisGameMode) runner.idOfGameModeRunnerHavePlayed.push({id:`${rrg.gameSystemID}/${rrg.gameModeID}`,times:1})
+            else userHaveRunThisGameMode.times += 1;
+        
+        await this.writeGameSystemInfo({
+            ...gameSystem,
+            recordsNumber:gameSystem.recordsNumber + 1,
+            dateOfLatestPost:record.timestamp_post,
+            runnersNumber: gameSystem.runnersNumber + ( userHaveRunThisGameSystem ? 0 : 1 )
+        })
+        await this.writeGameModeInfo(rrg.gameSystemID,{
+            ...gameMode,
+            dateOfLatestPost:record.timestamp_post,
+            recordsNumber:gameMode.recordsNumber + 1,
+            runnersNumber: gameMode.runnersNumber + (userHaveRunThisGameMode ? 0 : 1)
+        })
+        await this.writeRunnerInfo(record.runnerID,{
+            ...runner,
+            theDateOfLastPost:record.timestamp_post
+        })
+       
+        this.refreshFastestTableWhenWriting(record,runner,gameMode);
+    }
+    private async refreshFastestTableWhenWriting(record:IRecord,runner:IRunner,gameMode:IGameModeItemWithoutCollections){
+        const rr = record.regulation;
+        if (rr.abilityIDs.length !== 1) return;
+        const rrg = rr.gameSystemEnvironment;
+        const collectionRef = this.getGameModeRef(rrg.gameSystemID,rrg.gameModeID).collection("table");
+        const itemRefOfFastestTable = collectionRef.where("target__ability","==",`${rr.targetID}__${rr.abilityIDs[0]}`);
+        const fastestRecordIDResponse = (await itemRefOfFastestTable.get())
+        if (!fastestRecordIDResponse.empty){
+            const fastestScore = (fastestRecordIDResponse.docs[0].data()).score
+            if (!( (gameMode.scoreType === "score" && fastestScore < record.score) || 
+                (gameMode.scoreType === "time" && fastestScore > record.score))) return;
+        }
+        collectionRef.doc(fastestRecordIDResponse.docs[0].id).set({
+            target__ability:`${rr.targetID}__${rr.abilityIDs[0]}`,
+            score:record.score,
+            runnerInfo:{
+                Japanese:runner.Japanese,
+                English:runner.English
+            },
+            date:record.timestamp_post,
+            recordID:record.id,
+        })
+    }
+
+    //#NOTE 修正時
+    private async refreshInfoWhenEditing(record:IRecord){
+        const rr = record.regulation;
+        if (rr.abilityIDs.length !== 1) return;
+        const rrg = rr.gameSystemEnvironment;
+        const gameMode = await this.getGameModeInfo(rrg.gameSystemID,rrg.gameModeID);      
+
+        const collectionRef = this.getGameModeRef(rrg.gameSystemID,rrg.gameModeID).collection("table");
+        const itemRefOfFastestTable = collectionRef.where("target__ability","==",`${rr.targetID}__${rr.abilityIDs[0]}`);
+        const fastestRecordIDResponse = (await itemRefOfFastestTable.get())
+
+        if (fastestRecordIDResponse.empty || record.id !== fastestRecordIDResponse.docs[0].data().recordID) return;
+
+        const tableID = fastestRecordIDResponse.docs[0].id
+        this.refindFastestRecord(record,collectionRef.doc(tableID),gameMode.scoreType)
+    }
+    //#NOTE 削除時
+    private async refreshInfoWhenRemoving(record:IRecord){
+        const rr = record.regulation;
+        const rrg = rr.gameSystemEnvironment;
+        const runner = await this.getRunnerInfo(record.runnerID)
+        const gameSystem  = await this.getGameSystemInfo(rrg.gameSystemID);
+        const gameMode = await this.getGameModeInfo(rrg.gameSystemID,rrg.gameModeID);
+
+        const gameSystemInfo = runner.idOfGameSystemRunnerHavePlayed.find((info) => info.id === rrg.gameSystemID)
+        const gameModeInfo = runner.idOfGameModeRunnerHavePlayed.find((info) => info.id === `${rrg.gameSystemID}/${rrg.gameModeID}`)
+
+        if (gameSystemInfo !== undefined) gameSystemInfo.times--;
+        if (gameModeInfo !== undefined) gameModeInfo.times--;
+        const userHaveRunThisGameSystemOnlyOnce = (gameSystemInfo?.times === 0)
+        const userHaveRunThisGameModeOnlyOnce = (gameModeInfo?.times === 0)
+        
+        await this.writeGameSystemInfo({
+            ...gameSystem,
+            recordsNumber:gameSystem.recordsNumber-1,
+            runnersNumber: gameSystem.runnersNumber - ( userHaveRunThisGameSystemOnlyOnce ? 1 : 0 )
+        })
+        await this.writeGameModeInfo(rrg.gameSystemID,{
+            ...gameMode,
+            recordsNumber:gameMode.recordsNumber - 1,
+            runnersNumber: gameMode.runnersNumber - (userHaveRunThisGameModeOnlyOnce ? 1 : 0)
+        })
+        await this.writeRunnerInfo(record.runnerID,{
+            ...runner,
+        })
+       
+        this.refreshFastestTableWhenRemoving(record,gameMode.scoreType);
+    }
+
+    private async refreshFastestTableWhenRemoving(record:IRecord,scoreType:ScoreType){
+        const rr = record.regulation;
+
+        if (rr.abilityIDs.length !== 1) return;
+
+        const rrg = rr.gameSystemEnvironment;
+        const collectionRef = this.getGameModeRef(rrg.gameSystemID,rrg.gameModeID).collection("table");
+        const itemRefOfFastestTable = collectionRef.where("target__ability","==",`${rr.targetID}__${rr.abilityIDs[0]}`);
+        const fastestRecordIDResponse = (await itemRefOfFastestTable.get())
+
+        if (fastestRecordIDResponse.empty || record.id !== fastestRecordIDResponse.docs[0].data().recordID) return;
+
+        const tableID = fastestRecordIDResponse.docs[0].id
+        this.refindFastestRecord(record,collectionRef.doc(tableID),scoreType)
+        
+    }
+
+    //#NOTE 記録が修正/削除された際の記録
+    private async refindFastestRecord(record:IRecord,docRefToTableElement:FirebaseFirestore.DocumentData,scoreType:ScoreType){
+        const rr = record.regulation;
+        if (rr.abilityIDs.length !== 1) return;
+        const rrg = rr.gameSystemEnvironment;
+
+
+        await docRefToTableElement.delete();
+        const recordsInSameRegulation = await this.getRecordsWithCondition(rrg.gameSystemID,rrg.gameModeID,decideOrder(scoreType),"AllowForOrder",rr.abilityIDs,[rr.targetID],[])
+        if (recordsInSameRegulation.length === 0) return;
+        const fastestRecord = recordsInSameRegulation[0];
+        const runnerOfFastestRecord = await this.getRunnerInfo(fastestRecord.runnerID);
+        docRefToTableElement.set({
+            target__ability:`${rr.targetID}__${rr.abilityIDs[0]}`,
+            score:fastestRecord.score,
+            runnerInfo:{
+                Japanese:runnerOfFastestRecord.Japanese,
+                English:runnerOfFastestRecord.English
+            },
+            date:fastestRecord.timestamp_post,
+            recordID:fastestRecord.id,
+        })
+    }
+}
+function decideOrder(type:ScoreType){
+    switch(type){
+        case "score": return "HigherFirst";
+        case "time":  return "LowerFirst";
     }
 }
 

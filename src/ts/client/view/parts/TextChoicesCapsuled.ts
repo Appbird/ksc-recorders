@@ -17,6 +17,10 @@ export class TextChoicesCapsuled implements IView {
             return [value];
         return value;
     }
+    set valueAsArray(value:string[]){
+        this.choices.clearInput();
+        this.choices.setValue(value)
+    }
     destroy(){
         this.choices.destroy();
     }

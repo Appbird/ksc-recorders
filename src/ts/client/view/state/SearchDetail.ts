@@ -1,6 +1,6 @@
 import { APIFunctions } from "../../../type/api/relation";
 import { LanguageInApplication } from "../../../type/LanguageInApplication";
-import { IRecordResolved } from "../../../type/record/IRecord";
+import { IRecord, IRecordResolved } from "../../../type/record/IRecord";
 import { SearchCondition } from "../../../type/record/SearchCondition";
 import { choiceString } from "../../../utility/aboutLang";
 import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
@@ -11,22 +11,25 @@ import { TagsClickedCallbacks } from "../parts/TagsClickedCallbacks";
 import { PageStateBaseClass } from "./PageStateClass";
 
 export class S_SearchDetail
-    extends PageStateBaseClass<APIFunctions["record_detail"]["atServer"],IAppUsedToReadAndChangeOnlyPageState>{
+    extends PageStateBaseClass<APIFunctions["record_detail"]["atServer"]|{recordResolved:IRecordResolved},IAppUsedToReadAndChangeOnlyPageState>{
         async init(){
-            const detailDiv = this.articleDOM.appendChild(createElementWithIdAndClass({ id: "detail" }));
-            const relatedRecordDiv = this.articleDOM.appendChild(createElementWithIdAndClass({ id: "related" }));
-            const record = (await this.app.accessToAPI("record_detail",this.requiredObj)).result;
+                const detailDiv = this.articleDOM.appendChild(createElementWithIdAndClass({ id: "detail" }));
+                const relatedRecordDiv = this.articleDOM.appendChild(createElementWithIdAndClass({ id: "related" }));
+                let record:IRecordResolved;
+                if (((value:unknown):value is {recordResolved:IRecordResolved} => this.requiredObj.hasOwnProperty("recordResolved"))(this.requiredObj))
+                    record = this.requiredObj.recordResolved;
+                else record = (await this.app.accessToAPI("record_detail",this.requiredObj)).result;
+                
+                const rrg = record.regulation.gameSystemEnvironment;
+                const rr = record.regulation;
             
-            const rrg = record.regulation.gameSystemEnvironment;
-            const rr = record.regulation;
-
             const condition:SearchCondition = {
                 groupName: "", gameSystemEnv: { gameSystemID: rrg.gameSystemID, gameModeID: rrg.gameModeID }, 
                 orderOfRecordArray:  "LowerFirst", startOfRecordArray: 0, limitOfRecordArray: 100,
-                targetIDs: [rr.targetID], abilityIDs: rr.abilityIDs, abilityIDsCondition: "AllowForOrder", language: this.requiredObj.lang
+                targetIDs: [rr.targetID], abilityIDs: rr.abilityIDs, abilityIDsCondition: "AllowForOrder", language: this.app.state.language
             }
-
-            const relatedRecord = (await this.app.accessToAPI(
+            
+                const relatedRecord = (await this.app.accessToAPI(
                     "record_search", {
                         condition: [{
                             ...condition,
@@ -35,12 +38,11 @@ export class S_SearchDetail
                             },this.app.state.language)
                         }]
                 })).result[0];
-    
             let rank: number | undefined = relatedRecord.records.findIndex(element => element.id === record.id) + 1;
             const detailView = new RecordDetailView(detailDiv.appendChild(document.createElement("div")),record,{
                 rankOfTheRecord:rank,
                 language: this.app.state.language,
-                clickedCallBacks:this.generateClickedCallBacks(record,condition)
+                clickedCallBacks:generateClickedTagsCallBacks(this.app,record,condition)
             });
             new RecordGroupView(relatedRecordDiv.appendChild(document.createElement("div")),relatedRecord,this.app.state.scoreType,{
                 clickOnCardEventListener: (recordClicked) => {
@@ -56,43 +58,44 @@ export class S_SearchDetail
             });
         
         }
-        private generateClickedCallBacks(detail:IRecordResolved,baseCondition:SearchCondition):TagsClickedCallbacks{
-            return {
-                gameSystem: () => {
-                    baseCondition.gameSystemEnv.gameDifficultyID = detail.regulation.gameSystemEnvironment.gameDifficultyID
-                    baseCondition.targetIDs = [], 
-                    this.app.transition("searchResultView",{
-                        condition:[{
-                            ...baseCondition,
-                            gameSystemEnv:{
-                                ...baseCondition.gameSystemEnv,
-                                gameDifficultyID:detail.regulation.gameSystemEnvironment.gameDifficultyID
-                            },
-                            limitOfRecordArray: 3,
-                            targetIDs:[],abilityIDs:[]
-                    }]})
-                },
-                target: () => this.app.transition("searchResultView",{
-                    condition:[{
-                        ...baseCondition,
-                        limitOfRecordArray: 3,
-                        abilityIDs:[],
-                    }]
-                }),
-                ability: () => this.app.transition("searchResultView",{
-                    condition:[{
-                        ...baseCondition,
-                        limitOfRecordArray: 3,
-                        targetIDs:[]
-                    }]
-                }),
-                hashTag: () => this.app.transition("searchResultView",{
-                    condition:[{
-                        ...baseCondition,
-                        limitOfRecordArray: 3,
-                        tagIDs:detail.tagID
-                    }]
-                })
-        }
-    }
+        
+}
+export function generateClickedTagsCallBacks(app:IAppUsedToReadAndChangeOnlyPageState,detail:IRecordResolved,baseCondition:SearchCondition):TagsClickedCallbacks{
+    return {
+        gameSystem: () => {
+            baseCondition.gameSystemEnv.gameDifficultyID = detail.regulation.gameSystemEnvironment.gameDifficultyID
+            baseCondition.targetIDs = [], 
+            app.transition("searchResultView",{
+                condition:[{
+                    ...baseCondition,
+                    gameSystemEnv:{
+                        ...baseCondition.gameSystemEnv,
+                        gameDifficultyID:detail.regulation.gameSystemEnvironment.gameDifficultyID
+                    },
+                    limitOfRecordArray: 3,
+                    targetIDs:[],abilityIDs:[]
+            }]})
+        },
+        target: () => app.transition("searchResultView",{
+            condition:[{
+                ...baseCondition,
+                limitOfRecordArray: 3,
+                abilityIDs:[],
+            }]
+        }),
+        ability: () => app.transition("searchResultView",{
+            condition:[{
+                ...baseCondition,
+                limitOfRecordArray: 3,
+                targetIDs:[]
+            }]
+        }),
+        hashTag: () => app.transition("searchResultView",{
+            condition:[{
+                ...baseCondition,
+                limitOfRecordArray: 3,
+                tagIDs:detail.tagID
+            }]
+        })
+}
 }

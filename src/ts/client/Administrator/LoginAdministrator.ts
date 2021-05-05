@@ -1,9 +1,12 @@
 import firebase from "firebase/app";
 import "firebase/auth";
+import "firebase/firestore";
+import { IRunner } from "../../type/record/IRunner";
 export interface LoginAdministratorReadOnly{
     isUserLogin:boolean;
     loginUserName:string|null;
     loginUserIconPicture:string|null|undefined;
+    loginUserID:string;
     getIDToken():Promise<string>
 }
 export class LoginAdministrator implements LoginAdministratorReadOnly{
@@ -29,10 +32,16 @@ export class LoginAdministrator implements LoginAdministratorReadOnly{
         return user.displayName;
     }
     /**@throw */
+    get loginUserID(){
+        const user = firebase.auth().currentUser;
+        if ( user === null ) throw new Error("ログインしていません。")
+        return user.uid;
+    }
+    /**@throw */
     get loginUserIconPicture(){
         const user = firebase.auth().currentUser;
         if ( user === null ) throw new Error("ログインしていません。")
-        return firebase.auth().currentUser?.photoURL;
+        return user.photoURL;
     }
     /**@throw */
     getIDToken(){

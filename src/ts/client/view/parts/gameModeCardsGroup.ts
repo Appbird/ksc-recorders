@@ -42,6 +42,7 @@ export class GameModeCardsGroup implements IView{
             <div class="c-list__item">
                 <div class = "c-title">
                     <div class = "c-title__main u-smallerChara">${generateIcooonHTML(info)} ${choiceString(info,this.language)}</div>
+                    
                 </div>
                 ${writeElement(selectAppropriateDescription(info,this.language),"p")}
                 
@@ -63,7 +64,4 @@ export class GameModeCardsGroup implements IView{
             })
             
         }
-        get htmlElement(){
-            return this.container;
-        }
-}
+    }

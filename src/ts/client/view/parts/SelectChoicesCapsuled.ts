@@ -70,7 +70,7 @@ export class SelectChoicesCapsuled<T extends IItemOfResolveTableToName> implemen
             return choiced;
         return [choiced];
     }
-    setSelected(IDs:string[]){
+    setSelected(IDs:string|string[]){
         this._choices.setChoiceByValue(IDs)
     }
     setChoices(item: T[]) {

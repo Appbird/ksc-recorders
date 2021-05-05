@@ -17,6 +17,7 @@ export interface IGameModeItemWithoutCollections extends IItemOfResolveTableToNa
     dateOfLatestPost:number;
     maxNumberOfPlayer:number;
     scoreType:ScoreType;
+    gameSystemID:string;
 }
 export interface CollectionsInIGameModeItem{
     targets: ITargetItem[];

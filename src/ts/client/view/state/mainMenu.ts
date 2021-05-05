@@ -5,6 +5,8 @@ import { IAppUsedToReadAndChangePage } from "../../interface/AppInterfaces";
 import { PageStateBaseClass } from "./PageStateClass";
 import { MenuView, RequiredObjectToGenerateItem } from "../parts/MenuView";
 import { appendElement } from "../../utility/aboutElement";
+import { StateAdministrator } from "../../Administrator/StateAdminister";
+import { IRunner } from "../../../type/record/IRunner";
 
 export class S_MainMenu
     extends PageStateBaseClass<null|{gameSystem:IGameSystemInfoWithoutCollections, gameMode:IGameModeItemWithoutCollections},IAppUsedToReadAndChangePage>{
@@ -13,7 +15,7 @@ export class S_MainMenu
             super(app,articleDOM,required)
             this.htmlConverter = new HTMLConverter(this.app.state.language)
         }
-        init(){
+        async init(){
             //#CTODO ここに機能へつながるリンクを列挙する。ヘッダをクリックするとこのページに遷移する。
             
             if (this.requiredObj !== null) this.app.changeTargetGameMode(this.requiredObj);
@@ -31,12 +33,15 @@ export class S_MainMenu
             </div>
             `) as HTMLElement;
 
-
+            
             const mainMenu = new MenuView(appendElement(main,"div"),this.app.state.language,{
                 Japanese:"メインメニュー",
                 English:"Main menu"
             })
-            this.generateMainMenuInfo().map((info) => mainMenu.generateMenuItem(info));
+
+            await this.app.accessToAPI("list_runner",{id:this.app.loginAdministratorReadOnly.loginUserID}).catch(err => console.error(err));
+            const runnerInfo =  (this.app.loginAdministratorReadOnly.isUserLogin) ? (await this.app.accessToAPI("list_runner",{id:this.app.loginAdministratorReadOnly.loginUserID})).result : undefined;
+            this.generateMainMenuInfo(runnerInfo).map((info) => mainMenu.generateMenuItem(info));
             main.appendChild(element`<div class="u-space3em"></div>`)
 
             const detailMenu = new MenuView(appendElement(main,"div"),this.app.state.language,{
@@ -45,11 +50,12 @@ export class S_MainMenu
             })
             this.generateDetailMenuInfo().map(info => detailMenu.generateMenuItem(info));
             main.appendChild(element`<div class="u-space3em"></div>`)
-
+            
+            
         }
 
 
-        generateMainMenuInfo():RequiredObjectToGenerateItem[]{
+        generateMainMenuInfo(runnerInfo:IRunner|undefined):RequiredObjectToGenerateItem[]{
            const asg = this.app.state.gameSystemEnvDisplayed;
            const isSetTargetGameMode = asg.gameSystem!==null && asg.gameMode!==null
 
@@ -59,6 +65,7 @@ export class S_MainMenu
                ja:(isSetTargetGameMode) ? `${asg.gameSystem?.Japanese} / ${asg.gameMode?.Japanese}`:`未設定`,
                en:(isSetTargetGameMode) ? `${asg.gameSystem?.English} / ${asg.gameMode?.English}`:`未設定`
            }
+           
            //#TODO まともに日本語訳をする
             return [{
                 title:{
@@ -96,6 +103,40 @@ export class S_MainMenu
                 isDisabled:false,
                 biggerTitle:true,
                 to:() => this.app.transition("gameSystemSelector",null)
+            },
+            {
+                title:{
+                    Japanese:"ユーザーページ",
+                    English:"User Page",
+                    icon:"person"
+                },
+                description:{
+                    Japanese: (isLogIn) ? "あなたのユーザーページを見ることが出来ます。" : "ログインしてください。"
+                },
+                isDisabled:!this.app.loginAdministratorReadOnly.isUserLogin,
+                biggerTitle:true,
+                to:() => {
+                    if(StateAdministrator.checkGameSystemEnvIsSet(this.app.state.gameSystemEnvDisplayed)) this.app.transition("userPageInSpecific",{...this.app.state.gameSystemEnvDisplayed,runnerID:this.app.loginAdministratorReadOnly.loginUserID})
+                    else  this.app.transition("userPageInWhole",{runnerID:this.app.loginAdministratorReadOnly.loginUserID})
+                }
+            },{
+                title:{
+                    Japanese:"通知",
+                    English:"Notification",
+                    icon:"notification"
+                },
+                remarks:{
+                    Japanese:`<strong class="u-redChara">${(runnerInfo === undefined || runnerInfo.numberOfUnreadNotification === 0) ? "":runnerInfo.numberOfUnreadNotification+"件の未読"}</strong>`,
+                    English:`<strong class="u-redChara">${(runnerInfo === undefined || runnerInfo.numberOfUnreadNotification === 0) ? "":runnerInfo.numberOfUnreadNotification+" unread notifications"}</strong>`,
+                    icon:""
+                },
+                description:{
+                    Japanese: "通知を確認することが出来ます。",
+                    English: "You can check notifications from the service here."
+                },
+                isDisabled:!this.app.loginAdministratorReadOnly.isUserLogin,
+                biggerTitle:true,
+                to:() => this.app.transition("notificationList",null)
             },{
                 title:{
                     Japanese:"記録の閲覧",

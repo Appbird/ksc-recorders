@@ -7,8 +7,9 @@ import { deleteUserEventListener, setUserEventListener } from "./server/function
 const app = express();
 app.use(express.json())
 
-functions.auth.user().onCreate((user) => setUserEventListener(user,recordDataBase));
-functions.auth.user().onDelete((user) => deleteUserEventListener(user,recordDataBase));
+//#TODO 何故トリガーされないかの原因を探る。
+exports.createNewUser = functions.auth.user().onCreate((user) => setUserEventListener(user,recordDataBase));
+exports.deleteNewUser = functions.auth.user().onDelete((user) => deleteUserEventListener(user,recordDataBase));
 
 apiList.forEach( (value,key) => {
     app.post(`/api${key}`,async (req,res) => {

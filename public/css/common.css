@@ -508,7 +508,7 @@ label {
   cursor: pointer;
 }
 
-.c-list__item:hover {
+.c-list__item:hover:not(.--hoverAnimeDisabled) {
   background-color: #eee;
   transition: 0.1s;
 }
@@ -698,6 +698,11 @@ article h1::after {
 
 .u-background--logout, .u-background--exit {
   background: url("../icon/IcooonMono/exit.svg");
+  background-size: cover;
+}
+
+.u-background--notification {
+  background: url("../icon/IcooonMono/notification.svg");
   background-size: cover;
 }
 

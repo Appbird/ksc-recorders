@@ -15,7 +15,7 @@ import firebase from "firebase/app";
 type Callbacks = {
     ErrorCatcher:(error:any)=>void,
     whenReset:()=>void,
-    whenAppendNewItem:(id:any)=>void,
+    whenAppendNewItem:(id:string,data:{[key:string]:any})=>void,
 }
 const undefinedIDDisplayer = {
     Japanese:"新規",
@@ -153,7 +153,7 @@ export class EditorFormManager<TypeOfObserved extends IItemOfResolveTableToName>
         const ref = await this.pathOfDocObserved.add(this.data);
         this.data.id = ref.id
         this.pathOfDocObserved.doc(ref.id).set(this.data)
-        this.callbacks.whenAppendNewItem(ref.id);
+        this.callbacks.whenAppendNewItem(ref.id,this.data);
         return ref.id;
     }
     disabledAllInputs(state:boolean){

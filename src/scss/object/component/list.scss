@@ -8,7 +8,7 @@
     background-color:#fff;
     cursor:pointer;
 }
-.c-list__item:hover{
+.c-list__item:hover:not(.--hoverAnimeDisabled){
     background-color:#eee;
     transition: 0.1s;
 }

@@ -15,7 +15,7 @@ export abstract class PageStateBaseClass<T,AppInterface extends IAppUsedToRead> 
     }
     /** @abstract ページステートの開発者がページの初期化を実装します。 */
     abstract init():Promise<void>|void;
-    protected destroy():Promise<void>|void{};
+    destroy():Promise<void>|void{};
     /** ローディングスピナーをページ中に表示します。 */
     protected generateLoadingSpinner(spinnerKindClassName:string = "u-background--star",message?:String){
         this.loadingDisplayElement = this.articleDOM.appendChild(createElementWithIdAndClass({className:"c-loadingSpinnerPlaceHolder u-width50per u-marginUpDown5em"}))
@@ -46,6 +46,7 @@ export abstract class PageStateBaseClass<T,AppInterface extends IAppUsedToRead> 
 
 
 export interface IPageStateBaseClass<T>{
+    destroy():Promise<void>|void;
     init():Promise<void>|void;
     requiredObject:T;
 }

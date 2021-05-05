@@ -1,16 +1,17 @@
 import firebase from "firebase-admin"
 import { RecordDataBase } from "../../firestore/RecordDataBase"
-export function setUserEventListener(user:firebase.auth.UserRecord,recordDataBase:RecordDataBase){
+export async function setUserEventListener(user:firebase.auth.UserRecord,recordDataBase:RecordDataBase){
+    console.log("a");
     const userName = (user.displayName === undefined) ? "" : user.displayName
-    recordDataBase.writeRunnerInfo(user.uid,{
+    await recordDataBase.writeRunnerInfo(user.uid,{
         id:user.uid,
         Japanese: userName,
         English: userName,
         theDateOfRegistered: Date.now(),
-        theNumberOfPost: 0, theDateOfLastPost:0, twitterID:"",youtubeID:"",idOfGameModeRunnerHavePlayed:[],idOfGameSystemRunnerHavePlayed:[],
-        isCommitteeMember: false, isMuted:false
+        theNumberOfPost: 0, theDateOfLastPost:0, twitterLink:"",youtubeLink:"",idOfGameModeRunnerHavePlayed:[],idOfGameSystemRunnerHavePlayed:[],
+        isCommitteeMember: false, isMuted:false,photoURL:"",numberOfUnreadNotification:0
     })
 }
-export function deleteUserEventListener(user:firebase.auth.UserRecord,recordDataBase:RecordDataBase){
-    recordDataBase.deleteRunnerInfo(user.uid)
+export async function deleteUserEventListener(user:firebase.auth.UserRecord,recordDataBase:RecordDataBase){
+    await recordDataBase.deleteRunnerInfo(user.uid)
 }

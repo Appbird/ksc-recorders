@@ -18,7 +18,11 @@ export class MenuView implements IView {
     private htmlConverter: HTMLConverter;
     private mainMenu: HTMLElement;
     private language:LanguageInApplication
-    constructor(container: HTMLElement, language: LanguageInApplication, title: MultiLanguageString) {
+    private displayDisabled:boolean;
+    constructor(container: HTMLElement, language: LanguageInApplication, title: MultiLanguageString,{
+        displayDisabled = true
+    }:{displayDisabled?:boolean} = {}) {
+        this.displayDisabled = displayDisabled;
         this.htmlConverter = new HTMLConverter(language);
         this.mainMenu = container.appendChild(this.htmlConverter.elementWithoutEscaping`
                 <div class="c-list u-width90per">
@@ -37,6 +41,7 @@ export class MenuView implements IView {
         this.container.innerHTML = "";
     }
     generateMenuItem({ title, remarks, description, to, isDisabled, biggerTitle }: RequiredObjectToGenerateItem) {
+        if(!this.displayDisabled && isDisabled) return;
         const item = this.htmlConverter.elementWithoutEscaping`
             <div class="c-recordCard ${(isDisabled) ? "is-disable" : ""}">
                     <div class = "c-title">

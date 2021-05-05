@@ -13,6 +13,7 @@ import { TextInputCapsuled } from "./TextInputCapsuled";
 import SimpleMDE from "simplemde";
 import { TextChoicesCapsuled } from "./TextChoicesCapsuled";
 import { ISentRecordOffer } from "../../../type/api/record/changing/IReceivedDataAtServer_recordWrite";
+import { IRecord, IRecordResolved } from "../../../type/record/IRecord";
 
 export class OfferFormView implements IView {
     private container: HTMLElement;
@@ -45,9 +46,11 @@ export class OfferFormView implements IView {
     }
     //#CH  appへの依存を解消する。具体的にappを利用する処理を全てPage側で定義させ、それをコールバックでこちらに渡す。
     constructor(container:HTMLElement,app: IAppUsedToReadAndChangeOnlyPageState, difficulties: IGameDifficultyItem[], abilities: IAbilityItem[],{
-        onDecideEventListener
+        onDecideEventListener,
+        defaultRecord
     }:{
-        onDecideEventListener:(input:ISentRecordOffer)=>void;
+        onDecideEventListener:(input:ISentRecordOffer)=>void,
+        defaultRecord?:IRecord
     }) {
         this.container = container;
         this.container.classList.add("offerForm","u-width95per","u-marginUpDown2emToChildren")
@@ -90,9 +93,8 @@ export class OfferFormView implements IView {
             autosave:{
                 enabled:true, uniqueId:"offerForm__runnerNote"
             },
-            spellChecker:false
+            spellChecker:false,
         });
-        
         
         this.errorDisplay = this.container.appendChild(element`<div class="u-width90per u-margin2em u-redChara"></div>`).appendChild(document.createElement("h3"))
         this.container.appendChild(this.htmlConverter.elementWithoutEscaping`<div class="u-width50per u-margin2em"><div class="c-button">決定</div></div>`)
@@ -100,6 +102,18 @@ export class OfferFormView implements IView {
 
             
         this.container.appendChild(createElementWithIdAndClass({className:"u-space3em"}))
+        if (defaultRecord !== undefined) this.loadDefaultRecord(defaultRecord);
+    }
+    private loadDefaultRecord(record:IRecord){
+        const rr = record.regulation;
+        const rrg = rr.gameSystemEnvironment;
+        this.URLInput.value = record.link[0];
+        this.scoreInput.value = (this.app.state.scoreType === "time") ? converseMiliSecondsIntoTime(record.score):record.score.toString();
+        this.difficultyChoices.setSelected(rrg.gameDifficultyID)
+        this.abilityChoices.setSelected(rr.abilityIDs)
+        this.targetChoices.setSelected(rr.targetID)
+        this.tagInput.valueAsArray = record.tagName,
+        this.simpleMDE.value(record.note)
     }
     private async whenDecide(){
         const abilityIDs = this.abilityChoices.getValueAsArray();

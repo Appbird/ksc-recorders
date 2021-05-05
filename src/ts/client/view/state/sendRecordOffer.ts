@@ -7,16 +7,17 @@ export class S_SendRecordOffer
         async init(){
             this.generateLoadingSpinner("cloud");
             try {
-                await this.app.accessToAPI("record_write",{
+                const detailRecord = (await this.app.accessToAPI("record_write",{
                     record:this.requiredObj,
                     language:this.app.state.language,
                     IDToken:await this.app.loginAdministratorReadOnly.getIDToken()
-                })
+                })).result
+                this.deleteLoadingSpinner();
+                this.app.transition("detailView",{recordResolved:detailRecord});
             } catch(error){
                 if (error instanceof Error) return;
-                this.app.errorCatcher(error,"記録の送信に失敗しました。")
-
+                this.app.errorCatcher(error,"記録の登録に失敗しました。")
             }
-
         }
+        
 }

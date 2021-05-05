@@ -93,7 +93,7 @@ export class SettingRegulationView_CollectionViewer implements IView{
         
     }
     destroy(){
-        for (const [key,value] of this.cardObj) value.destroy()
+        for (const [,value] of this.cardObj) value.destroy()
         if (this.unsubscribe !== null) this.unsubscribe();
         this.container.innerHTML = "";
     }

@@ -6,6 +6,7 @@ module.exports = {
         path: `${__dirname}/public/js`,
         filename: "main.js"
     },
+    devtool: "source-map",
     module: {
       rules: [
         {

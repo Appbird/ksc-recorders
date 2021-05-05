@@ -186,6 +186,8 @@ export class S_SettingRegulationState_GameModeDocViewer
                                         requiredField:false
                                         }),
         };
+        const gameSystemID = this.requiredObj.collection.parent?.id
+        if (gameSystemID === undefined) throw new Error("対応するゲームシステムIDが存在しません。")
         this.editorForm = new EditorFormManager(
             editorHeader,lang,this.requiredObj.collection,this.requiredObj.pathStack.join(" > "),inputForms,
             {
@@ -195,7 +197,8 @@ export class S_SettingRegulationState_GameModeDocViewer
                 recordsNumber:0,runnersNumber:0,
                 dateOfLatestPost:Date.now(),
                 maxNumberOfPlayer:Date.now(),
-                scoreType:"time"
+                scoreType:"time",
+                gameSystemID:gameSystemID
             },{
                 ErrorCatcher:(error) => this.app.errorCatcher(error),
                 whenAppendNewItem: (id) => {

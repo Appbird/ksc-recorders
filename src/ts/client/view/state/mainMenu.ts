@@ -38,8 +38,13 @@ export class S_MainMenu
                 Japanese:"メインメニュー",
                 English:"Main menu"
             })
-
-            const runnerInfo =  (this.app.loginAdministratorReadOnly.isUserLogin) ? (await this.app.accessToAPI("list_runner",{id:this.app.loginAdministratorReadOnly.loginUserID})).result : undefined;
+            let runnerInfo:IRunner|undefined
+            try {
+                runnerInfo =  (this.app.loginAdministratorReadOnly.isUserLogin) ? (await this.app.accessToAPI("list_runner",{id:this.app.loginAdministratorReadOnly.loginUserID})).result : undefined;
+            } catch (err) {
+                runnerInfo = undefined;
+            }
+            
             this.generateMainMenuInfo(runnerInfo).map((info) => mainMenu.generateMenuItem(info));
             main.appendChild(element`<div class="u-space3em"></div>`)
 
@@ -194,6 +199,20 @@ export class S_MainMenu
                 biggerTitle:true,
                 //#TODO ここをクレジット用に設定する。GitHubのリンクにするのもアリか？
                 to:() => {this.app.transition("gameSystemSelector",null)}
+            },{
+                title:{
+                    Japanese:"ローディングスピナーを見る",
+                    English:"See Loading Spinner",
+                    icon:"writing"
+                },
+                description:{
+                    Japanese:"KSSRsのローディングスピナーを閲覧することが出来ます。",
+                    English:"You can see loading-spinners in KSSRs."
+                },
+                isDisabled:false,
+                biggerTitle:false,
+                //#TODO ここをクレジット用に設定する。GitHubのリンクにするのもアリか？
+                to:() => {this.app.transition("spinnerExhibition",null)}
             }]
     }
 }

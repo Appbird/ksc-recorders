@@ -1,53 +1,73 @@
 .c-loadingSpinnerPlaceHolder{
-  transition:cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
-  transform: translateY(0);
-  opacity: 0;
-}
-.c-loadingSpinnerPlaceHolder.--enable{
-  transform: translateY(1.5em);
-  opacity: 1;
-}
-.c-loadingSpinner {
-    margin: 25% auto 0;
+  display: flex;
+  justify-content: space-around;
+  overflow-y: hidden;
+  background-color:rgb(224, 224, 224);
+
+  &>.c-loadingSpinner {
     width: 100%;
+
+    padding-top:0; padding-bottom: 0;
+    transition:cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
+    transition-property: transform,height,padding-top,padding-bottom;
+
     display:flex;
-    justify-content:space-between;
-}
-.c-loadingSpinner:not(.--enable) {
-   margin: 0;
-}
-  
-  .c-loadingSpinner>.__spinner {
-    width: 1.5em;
-    height: 1.5em;
-    display: inline-block;
-    animation: sk-bouncedelay 5s infinite ease-in-out;
-    transform-origin:50% 50%;
-  }
-  .c-loadingSpinner>.__spinner::after {
-    content: "";
-    width: 1.5em; height: 1.5em;
-    border-radius: 50%;
-    display: inline-block;
-    background-color: rgb(75, 75, 75);
-    animation: sk-bouncedelay__after 5s infinite ease-in-out;
+    justify-content:space-around;
 
-    position: relative;
-    top: 0em; left: 0em;
-  }
-  .c-loadingSpinner>.__spinner.--star{
-    background: url("../icon/IcoonMono/star.svg");
-    background-size: cover;
-  }
+      &>.__spinner {
+        width: 1.5em;
+        
+        transition:cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
+        transition-property: height;
+        
+        height: 0em;
+        animation: sk-bouncedelay 5s infinite ease-in-out;
+        transform-origin:50% 50%;
 
+        &::after {
+          content: "";
+          width: 1.5em; height: 0em;
+          
+          transition:cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
+      transition-property: height;
+
+          border-radius: 50%;
+          display: inline-block;
+          background-color: rgb(75, 75, 75);
+          animation: sk-bouncedelay__after 5s infinite ease-in-out;
+          transform-origin:50% 50%;
+      
+          position: relative;
+          top: 0em; left: 0em;
+        }
+
+        &.--delay1, &.--delay1::after {
+          animation-delay: 0.35s;
+        }
+        &.--delay2, &.--delay2::after {
+          animation-delay: 0.7s;
+        }
+    }
+    
+  }
+} 
+
+.c-loadingSpinnerPlaceHolder.--enabled{
+  &>.c-loadingSpinner {
+    padding-top:3em; padding-bottom: 3em;
+
+    &>.__spinner {
+      height:1.5em;
+      &::after{
+        height: 1.5em;
+      }
+    }
+    
+  }
   
+}
   
-.c-loadingSpinner>.__spinner.--delay1,.c-loadingSpinner>.__spinner.--delay1::after {
-    animation-delay: 0.35s;
-}
-.c-loadingSpinner>.__spinner.--delay2,.c-loadingSpinner>.__spinner.--delay2::after {
-  animation-delay: 0.7s;
-}
+
   
 
 @keyframes sk-bouncedelay {

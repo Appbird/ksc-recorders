@@ -5,11 +5,14 @@ export class S_SpinnerExhibition
     extends PageStateBaseClass<null,IAppUsedToRead>{
         
         init(){
-            this.generateLoadingSpinner("");
-            this.generateLoadingSpinner("u-background--shortcake");
-            this.generateLoadingSpinner("u-background--difficulty");
-            this.generateLoadingSpinner("u-background--ns");
-            this.generateLoadingSpinner("u-background--ds");
-            this.generateLoadingSpinner("u-background--iceCream");
+            this.setLoadingSpinner();
+        }
+        setLoadingSpinner(){
+            this.generateLoadingSpinner();
+            setTimeout(()=>this.destroyLoadingSpinner(),5700)
+        }
+        destroyLoadingSpinner(){
+            this.deleteLoadingSpinner();
+            setTimeout(()=>this.setLoadingSpinner(),1500)
         }
 }

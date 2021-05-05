@@ -38,7 +38,6 @@ export default class App implements IAppUsedToChangeState{
         this.loginAd.onStateChange( () => {
             if (this.loginAd?.isUserLogin) this.header.changeUserIcon(String(this.loginAd.loginUserName),this.loginAd.loginUserIconPicture)
             else this.header.deleteUserIcon();
-            this.transitionAd.transition("mainMenu",null);
         })
         
     }

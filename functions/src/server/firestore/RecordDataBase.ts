@@ -9,6 +9,7 @@ import { IAbilityItem } from "../../../../src/ts/type/list/IAbilityItem";
 import { LanguageInApplication } from "../../../../src/ts/type/LanguageInApplication";
 import { IItemOfResolveTableToName } from "../../../../src/ts/type/list/IItemOfResolveTableToName";
 import { firebaseAdmin } from "../function/firebaseAdmin";
+import { createDefaultUserData } from "../utility";
 
 
 //[x] getRecordsWithConditionメソッドの実装
@@ -82,7 +83,6 @@ export class RecordDataBase{
     deleteTargetInfo           = (gameSystemID:string,gameModeID:string,id:string) => this.deleteDoc(this.getGameModeRef(gameSystemID,gameModeID).collection("targets").doc(id))
     
     getRunnerCollection     = () => this.getCollection<IRunner>(this.getRunnersRef())
-    getRunnerInfo           = (uid:string) => this.getDoc<IRunner>(this.getRunnersRef().doc(uid))
     writeRunnerInfo         = (uid:string,obj:IRunner) => this.modifyDoc<IRunner>(this.getRunnersRef().doc(uid),obj)
     modifyRunnerInfo        = this.writeRunnerInfo
     deleteRunnerInfo        = (uid:string) => this.deleteDoc(this.getRunnersRef().doc(uid))
@@ -93,6 +93,15 @@ export class RecordDataBase{
     modifyHashTagInfo       = (gameSystemID:string,id:string,obj:IHashTagItem) => this.modifyDoc<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("tags").doc(id),obj)
     deleteHashTagInfo       = (gameSystemID:string,id:string) => this.deleteDoc(this.getGameSystemRef(gameSystemID).collection("tags").doc(id))
     
+    getRunnerInfo           = async (uid:string):Promise<IRunner> => {
+        const info = await this.getRunnersRef().doc(uid).get()
+        if (info.exists) return info.data() as IRunner;
+        const user = await firebaseAdmin.auth.getUser(uid)
+        const userData = createDefaultUserData(user);
+        this.getRunnersRef().doc(uid).set(userData);
+        return userData
+    }
+
     async searchHashTag(gameSystemID:string,names:string[],language:LanguageInApplication):Promise<(IHashTagItem|undefined)[]>{
         if (names.length > 10) throw new Error("指定するIDが多すぎます。")
         const result = await this.getGameSystemRef(gameSystemID).collection("tags")

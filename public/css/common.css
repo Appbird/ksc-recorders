@@ -270,59 +270,59 @@ label {
 }
 
 .c-loadingSpinnerPlaceHolder {
-  transition: cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
-  transform: translateY(0);
-  opacity: 0;
-}
-
-.c-loadingSpinnerPlaceHolder.--enable {
-  transform: translateY(1.5em);
-  opacity: 1;
-}
-
-.c-loadingSpinner {
-  margin: 25% auto 0;
-  width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
+  overflow-y: hidden;
+  background-color: #e0e0e0;
 }
-
-.c-loadingSpinner:not(.--enable) {
-  margin: 0;
+.c-loadingSpinnerPlaceHolder > .c-loadingSpinner {
+  width: 100%;
+  padding-top: 0;
+  padding-bottom: 0;
+  transition: cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
+  transition-property: transform, height, padding-top, padding-bottom;
+  display: flex;
+  justify-content: space-around;
 }
-
-.c-loadingSpinner > .__spinner {
+.c-loadingSpinnerPlaceHolder > .c-loadingSpinner > .__spinner {
   width: 1.5em;
-  height: 1.5em;
-  display: inline-block;
+  transition: cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
+  transition-property: height;
+  height: 0em;
   animation: sk-bouncedelay 5s infinite ease-in-out;
   transform-origin: 50% 50%;
 }
-
-.c-loadingSpinner > .__spinner::after {
+.c-loadingSpinnerPlaceHolder > .c-loadingSpinner > .__spinner::after {
   content: "";
   width: 1.5em;
-  height: 1.5em;
+  height: 0em;
+  transition: cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
+  transition-property: height;
   border-radius: 50%;
   display: inline-block;
   background-color: #4b4b4b;
   animation: sk-bouncedelay__after 5s infinite ease-in-out;
+  transform-origin: 50% 50%;
   position: relative;
   top: 0em;
   left: 0em;
 }
-
-.c-loadingSpinner > .__spinner.--star {
-  background: url("../icon/IcoonMono/star.svg");
-  background-size: cover;
-}
-
-.c-loadingSpinner > .__spinner.--delay1, .c-loadingSpinner > .__spinner.--delay1::after {
+.c-loadingSpinnerPlaceHolder > .c-loadingSpinner > .__spinner.--delay1, .c-loadingSpinnerPlaceHolder > .c-loadingSpinner > .__spinner.--delay1::after {
   animation-delay: 0.35s;
 }
-
-.c-loadingSpinner > .__spinner.--delay2, .c-loadingSpinner > .__spinner.--delay2::after {
+.c-loadingSpinnerPlaceHolder > .c-loadingSpinner > .__spinner.--delay2, .c-loadingSpinnerPlaceHolder > .c-loadingSpinner > .__spinner.--delay2::after {
   animation-delay: 0.7s;
+}
+
+.c-loadingSpinnerPlaceHolder.--enabled > .c-loadingSpinner {
+  padding-top: 3em;
+  padding-bottom: 3em;
+}
+.c-loadingSpinnerPlaceHolder.--enabled > .c-loadingSpinner > .__spinner {
+  height: 1.5em;
+}
+.c-loadingSpinnerPlaceHolder.--enabled > .c-loadingSpinner > .__spinner::after {
+  height: 1.5em;
 }
 
 @keyframes sk-bouncedelay {

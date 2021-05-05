@@ -7,6 +7,7 @@ import { PageStateBaseClass } from "./PageStateClass";
 export class S_SearchConditionSelector
     extends PageStateBaseClass<{gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections}|null,IAppUsedToReadAndChangePage>{
     async init(){
+        this.generateLoadingSpinner("feather")
         if (this.requiredObj !== null) this.app.changeTargetGameMode(this.requiredObj)
         const difficulties = (await this.app.accessToAPI("list_difficulties",{
             gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed}
@@ -16,6 +17,7 @@ export class S_SearchConditionSelector
         })).result
         
         new SearchConditionSelectorView(this.articleDOM.appendChild(document.createElement("div")),this.app,difficulties,abilities)
+        this.deleteLoadingSpinner();
     }
 }
 

@@ -35,7 +35,7 @@ export class RecordDataBase{
     }
     private async getDoc<T extends IItemOfResolveTableToName>(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>):Promise<T>{
         const result = await ref.get()
-        if (result.exists) throw new Error(`[Not Found] ドキュメント ${ref.path} が存在しません。`);
+        if (!result.exists) throw new Error(`[Not Found] ドキュメント ${ref.path} が存在しません。`);
         return result.data() as T;
     }
     private async writeDoc<T extends IItemOfResolveTableToName>(ref:FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>,object:T):Promise<string>{

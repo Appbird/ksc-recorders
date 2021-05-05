@@ -22,6 +22,7 @@ const context = {
 export class S_UserPageInSpecific
     extends PageStateBaseClass<TargetGameMode&{runnerID:string},IAppUsedToReadAndChangePage>{
     async init(){
+        this.generateLoadingSpinner("people");
         const htmlC = new HTMLConverter(this.app.state.language)
         const runnerInfo = await (await this.app.accessToAPI("list_runner",{id:this.requiredObj.runnerID})).result
         const titleView = this.articleDOM.appendChild(htmlC.elementWithoutEscaping`
@@ -66,6 +67,7 @@ export class S_UserPageInSpecific
                 lang: this.app.state.language
             })
             })
+        this.deleteLoadingSpinner();
         }
         generateMenuItem(runnerInfo:IRunner):RequiredObjectToGenerateItem[]{
             return [

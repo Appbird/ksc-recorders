@@ -15,10 +15,12 @@ const context = {
 export class S_NotificationList
     extends PageStateBaseClass<null,IAppUsedToReadAndChangePage>{
     async init(){
+        this.generateLoadingSpinner()
         const title = new TitleCupsuled(appendElement(this.articleDOM,"div"));
         title.refresh(choiceString(context.title,this.app.state.language))
         const ref = firebase.firestore().collection("runners").doc(this.app.loginAdministratorReadOnly.loginUserID).collection("notifications")
         const notificationList = new NotificationList(appendElement(this.articleDOM,"div"),this.app.state.language,ref)
+        this.deleteLoadingSpinner();
     }
 
 }

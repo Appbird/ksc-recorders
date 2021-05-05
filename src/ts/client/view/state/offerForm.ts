@@ -7,6 +7,7 @@ import { PageStateBaseClass } from "./PageStateClass";
 export class S_OfferForm
     extends PageStateBaseClass<{targetGameMode:TargetGameMode}|null,IAppUsedToReadAndChangePage>{
         async init(){
+            this.generateLoadingSpinner();
             if ( this.app.state.gameSystemEnvDisplayed.gameSystem === null || this.app.state.gameSystemEnvDisplayed.gameMode === null) throw new Error("ターゲットゲームモードが定められていません。")
             if (this.requiredObj === null) this.requiredObj = {
                     targetGameMode:this.app.state.gameSystemEnvDisplayed
@@ -25,6 +26,7 @@ export class S_OfferForm
                     onDecideEventListener:(input) => this.sendInputInfo(input)
                 }
             )
+            this.deleteLoadingSpinner();
         }
         private sendInputInfo(input:ISentRecordOffer){
             this.app.transition("sendRecordOffer",input);

@@ -11,6 +11,7 @@ import { PageStateBaseClass } from "./PageStateClass";
 export class S_GamemodeListOfPlayersPlayed extends PageStateBaseClass<{runnersInfo:IRunner},IAppUsedToReadAndChangePage>{
     private listCache:Map<string,IGameSystemInfoWithoutCollections> = new Map<string,IGameSystemInfoWithoutCollections>();
     async init(){
+        this.generateLoadingSpinner("people")
         const list = this.requiredObj.runnersInfo.idOfGameModeRunnerHavePlayed;
         const gameModeListTitle = {
             Japanese:`${this.requiredObj.runnersInfo.Japanese}のゲームモードリスト`,
@@ -29,6 +30,7 @@ export class S_GamemodeListOfPlayersPlayed extends PageStateBaseClass<{runnersIn
             const [gameSystem,gameMode] = item.id.split("/")
             this.appendCard(listElement,await this.fetchGameSystemData(gameSystem),(await (await this.app.accessToAPI("list_gameMode",{gameSystemEnv:{gameSystemID:gameSystem},id:gameMode})).result));
         }
+        this.deleteLoadingSpinner();
     }
     private async fetchGameSystemData(id:string){
         if (!this.listCache.has(id)) this.listCache.set(id,(await this.app.accessToAPI("list_gameSystem",{id:id})).result)

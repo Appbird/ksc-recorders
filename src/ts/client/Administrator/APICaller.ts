@@ -18,7 +18,6 @@ export class APIAdministrator {
             let responseMessage:string;
             try{
                 responseMessage = JSON.parse(responseText).message
-                
             } catch(error) {
                 responseMessage = `メッセージがありませんでした : ${responseText}`
             }

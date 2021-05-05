@@ -1,6 +1,5 @@
 import { APIFunctions } from "../../../type/api/relation";
-import { LanguageInApplication } from "../../../type/LanguageInApplication";
-import { IRecord, IRecordResolved } from "../../../type/record/IRecord";
+import { IRecordResolved } from "../../../type/record/IRecord";
 import { SearchCondition } from "../../../type/record/SearchCondition";
 import { choiceString } from "../../../utility/aboutLang";
 import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
@@ -13,6 +12,7 @@ import { PageStateBaseClass } from "./PageStateClass";
 export class S_SearchDetail
     extends PageStateBaseClass<APIFunctions["record_detail"]["atServer"]|{recordResolved:IRecordResolved},IAppUsedToReadAndChangeOnlyPageState>{
         async init(){
+            this.generateLoadingSpinner()
                 const detailDiv = this.articleDOM.appendChild(createElementWithIdAndClass({ id: "detail" }));
                 const relatedRecordDiv = this.articleDOM.appendChild(createElementWithIdAndClass({ id: "related" }));
                 let record:IRecordResolved;
@@ -56,7 +56,7 @@ export class S_SearchDetail
                     })
                 } 
             });
-        
+            this.deleteLoadingSpinner();
         }
         
 }

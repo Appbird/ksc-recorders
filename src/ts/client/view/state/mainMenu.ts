@@ -17,7 +17,7 @@ export class S_MainMenu
         }
         async init(){
             //#CTODO ここに機能へつながるリンクを列挙する。ヘッダをクリックするとこのページに遷移する。
-            
+            this.generateLoadingSpinner("star")
             if (this.requiredObj !== null) this.app.changeTargetGameMode(this.requiredObj);
 
             const main = this.articleDOM.appendChild(this.htmlConverter.elementWithoutEscaping`
@@ -39,7 +39,6 @@ export class S_MainMenu
                 English:"Main menu"
             })
 
-            await this.app.accessToAPI("list_runner",{id:this.app.loginAdministratorReadOnly.loginUserID}).catch(err => console.error(err));
             const runnerInfo =  (this.app.loginAdministratorReadOnly.isUserLogin) ? (await this.app.accessToAPI("list_runner",{id:this.app.loginAdministratorReadOnly.loginUserID})).result : undefined;
             this.generateMainMenuInfo(runnerInfo).map((info) => mainMenu.generateMenuItem(info));
             main.appendChild(element`<div class="u-space3em"></div>`)
@@ -51,7 +50,7 @@ export class S_MainMenu
             this.generateDetailMenuInfo().map(info => detailMenu.generateMenuItem(info));
             main.appendChild(element`<div class="u-space3em"></div>`)
             
-            
+            this.deleteLoadingSpinner();
         }
 
 

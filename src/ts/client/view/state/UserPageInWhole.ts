@@ -16,8 +16,9 @@ const context = {
 export class S_UserPageInWhole
     extends PageStateBaseClass<{runnerID:string},IAppUsedToReadAndChangePage>{
     async init(){
+        this.generateLoadingSpinner("people")
         const htmlC = new HTMLConverter(this.app.state.language)
-        const runnerInfo = await (await this.app.accessToAPI("list_runner",{id:this.requiredObj.runnerID})).result
+        const runnerInfo = (await this.app.accessToAPI("list_runner",{id:this.requiredObj.runnerID})).result
         const titleView = this.articleDOM.appendChild(htmlC.elementWithoutEscaping`
             <div class="u-width90per">
                 <div class="c-title">
@@ -37,6 +38,7 @@ export class S_UserPageInWhole
         
         const menuDiv = new MenuView(appendElement(titleView,"div"),this.app.state.language,context.menuHeader,{displayDisabled:false});
         for(const item of this.generateMenuItem(runnerInfo)) menuDiv.generateMenuItem(item);
+        this.deleteLoadingSpinner();
     }   
     generateMenuItem(runnerInfo:IRunner):RequiredObjectToGenerateItem[]{
         return [

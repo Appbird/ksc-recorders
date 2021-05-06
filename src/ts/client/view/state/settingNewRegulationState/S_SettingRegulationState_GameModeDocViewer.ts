@@ -103,7 +103,7 @@ const context = {
                 English:"Record Type in this gamemode"
             },
             description:[{
-                Japanese:"このゲームモードにおいてスコアかタイムのいづれかが記録の基準となっているかを選択してください。",
+                Japanese:"このゲームモードにおいてスコアかタイムのいずれかが記録の基準となっているかを選択してください。",
                 //#TODO ここの英訳
                 English:""
             }]
@@ -127,6 +127,7 @@ export class S_SettingRegulationState_GameModeDocViewer
     extends PageStateBaseClass<DocViewerRequired, IAppUsedToChangeState> {
     private editorForm:EditorFormManager<HandledType>|null = null;
     init() {
+        const unset = (this.requiredObj.id===undefined)
         const headerMaker = new SettingRegulationStateHeader(
             appendElement(this.articleDOM,"div"),this.app.state.language,
             {
@@ -134,9 +135,9 @@ export class S_SettingRegulationState_GameModeDocViewer
                 subTitle:  (this.requiredObj.id !== undefined) ? context.titleDescription:context.titleWithoutIDDescription
             },[
                 {id:"back",title:context.List.backSelectable.title,description:context.List.backSelectable.explain,unused:false, onClickCallBack: () => goBackFromDocToCollection(this.app,this.requiredObj)},
-                {id:"abilities",title:context.List.abilitySelectable.title,description:context.List.abilitySelectable.explain,unused:true, onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"abilities")},
-                {id:"targets",title:context.List.targetSelectable.title,description:context.List.targetSelectable.explain,unused:true, onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"targets")},
-                {id:"difficulties",title:context.List.difficultySelectable.title,description:context.List.difficultySelectable.explain,unused:true, onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"difficulties")},
+                {id:"abilities",title:context.List.abilitySelectable.title,description:context.List.abilitySelectable.explain,unused:unset, onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"abilities")},
+                {id:"targets",title:context.List.targetSelectable.title,description:context.List.targetSelectable.explain,unused:unset, onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"targets")},
+                {id:"difficulties",title:context.List.difficultySelectable.title,description:context.List.difficultySelectable.explain,unused:unset, onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"difficulties")},
             ])
         const lang = this.app.state.language;
         const editorHeader:HTMLElement = appendElement(this.articleDOM,"div");
@@ -215,8 +216,17 @@ export class S_SettingRegulationState_GameModeDocViewer
                     
                     this.requiredObj.pathStack.pop();
                     this.requiredObj.pathStack.push(choiceString(data,this.app.state.language));
+                    this.app.notie.successAlert({
+                        Japanese:`${data.Japanese}の登録に成功しました！`,
+                        English:`Registering ${data.English} is completed successfully!`,
+                    });
                 },
-                whenReset: () => {},
+                whenReset: () => {
+                    this.app.notie.successAlert({
+                        Japanese:`操作していたデータはサーバーサイドの操作により削除されました。`,
+                        English:`The data you were editting was deleted by operation of the server.`,
+                    });
+                },
                 id:this.requiredObj.id   
             })
         

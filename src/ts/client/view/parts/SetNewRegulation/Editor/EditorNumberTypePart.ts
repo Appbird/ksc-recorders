@@ -27,10 +27,9 @@ export class EditorPositiveIntegerPart implements EditorPart<number>{
         if(requiredField && description.length !== 0) description.unshift(context_required)
         this.container = container;
         this.htmlCon = new HTMLConverter(language);
-        const eleCon = this.htmlCon.elementWithoutEscaping 
 
         this._requiredField = requiredField;
-        this.container.appendChild(eleCon`<h1>${generateIcooonHTML({icooonName:icooon})}${title}</h1>`);
+        this.container.appendChild(this.htmlCon.elementWithoutEscaping `<h1>${generateIcooonHTML({icooonName:icooon})}${title}</h1>`);
         this.input = new NumberInputCupsuled(appendElement(this.container,"div"),language,{allowDecimal:false,min:1})
         this.ulist = new UListCupsuled(appendElement(this.container,"ul"),language,description)
     }

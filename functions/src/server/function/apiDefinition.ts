@@ -7,6 +7,7 @@ import { isIReceivedDataAtServer_pickUp_UseSIdMIdId } from "../../../../src/ts/t
 import { isIReceivedDataAtServer_recordDetail } from "../../../../src/ts/type/api/record/notChanging/IReceivedDataAtServer_recordDetail.validator";
 import { isIReceivedDataAtServer_recordSearch } from "../../../../src/ts/type/api/record/notChanging/IReceivedDataAtServer_recordSearch.validator";
 import { isIReceivedDataAtServer_notificationRead } from "../../../../src/ts/type/api/notification/IReceivedDataAtServer_notificationRead.validator";
+import { isIReceivedDataAtServer_recordWrite } from "../../../../src/ts/type/api/record/changing/IReceivedDataAtServer_recordWrite.validator";
 //#CH 出来ることならTypeScript_json_validatorの出力結果を一つにまとめたい。--collection trueオプションをどう使えばいいのだろうか…。
 import { APIFunctions } from "../../../../src/ts/type/api/relation";
 import { IReceivedData, IReceivedDataAtClient, IReceivedDataAtServer } from "../../../../src/ts/type/api/transmissionBase";
@@ -17,6 +18,7 @@ import { ability, difficulty, gameMode, gameSystem, hashTag, runner, target } fr
 import { detail } from "./record/detail";
 import { search } from "./record/search";
 import { readNotification } from "./readNotification";
+import { write } from "./record/write";
 
 class APIList{
     private apiDefinition = new Map<string,apiInterface<IReceivedData>>()
@@ -40,6 +42,7 @@ export const apiList = new APIList();
 
 apiList.set<APIFunctions["record_search"]> ("/record/search", isIReceivedDataAtServer_recordSearch, search)
 apiList.set<APIFunctions["record_detail"]> ("/record/detail", isIReceivedDataAtServer_recordDetail, detail)
+apiList.set<APIFunctions["record_write"]>("/record/write", isIReceivedDataAtServer_recordWrite, write)
 
 apiList.set<APIFunctions["list_gameSystems"]>  ("/list/gameSystems", isIReceivedDataAtServer_getlist_UseId, gameSystems)
 apiList.set<APIFunctions["list_runners"]>      ("/list/runners", isIReceivedDataAtServer_getlist_UseId, runners)
@@ -56,6 +59,7 @@ apiList.set<APIFunctions["list_hashTag"]>    ("/list/hashTag",isIReceivedDataAtS
 apiList.set<APIFunctions["list_difficulty"]> ("/list/difficulty", isIReceivedDataAtServer_pickUp_UseSIdMIdId, difficulty)
 apiList.set<APIFunctions["list_ability"]>    ("/list/ability", isIReceivedDataAtServer_pickUp_UseSIdMIdId, ability)
 apiList.set<APIFunctions["list_target"]>     ("/list/target", isIReceivedDataAtServer_pickUp_UseSIdMIdId, target)
+
 apiList.set<APIFunctions["notification_read"]>("/notification/read", isIReceivedDataAtServer_notificationRead, readNotification)
 
 

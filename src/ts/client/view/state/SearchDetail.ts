@@ -79,6 +79,7 @@ export function generateClickedTagsCallBacks(app:IAppUsedToReadAndChangeOnlyPage
         target: () => app.transition("searchResultView",{
             condition:[{
                 ...baseCondition,
+                groupName:choiceString({Japanese:"同じ計測対象の記録",English:"Records which have a same target"},app.state.language),
                 limitOfRecordArray: 3,
                 abilityIDs:[],
             }]
@@ -86,6 +87,7 @@ export function generateClickedTagsCallBacks(app:IAppUsedToReadAndChangeOnlyPage
         ability: () => app.transition("searchResultView",{
             condition:[{
                 ...baseCondition,
+                groupName:choiceString({Japanese:"同じ能力を使った記録",English:"Records which use same abilities"},app.state.language),
                 limitOfRecordArray: 3,
                 targetIDs:[]
             }]
@@ -93,6 +95,7 @@ export function generateClickedTagsCallBacks(app:IAppUsedToReadAndChangeOnlyPage
         hashTag: () => app.transition("searchResultView",{
             condition:[{
                 ...baseCondition,
+                groupName:choiceString({Japanese:"同じハッシュタグをもつ記録",English:"Records which have same hashTag"},app.state.language),
                 limitOfRecordArray: 3,
                 tagIDs:detail.tagID
             }]

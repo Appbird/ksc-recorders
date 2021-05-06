@@ -136,8 +136,17 @@ export class S_SettingRegulationState_AbilityDocViewer
                     
                     this.requiredObj.pathStack.pop();
                     this.requiredObj.pathStack.push(choiceString(data,this.app.state.language));
+                    this.app.notie.successAlert({
+                        Japanese:`${data.Japanese}の登録に成功しました！`,
+                        English:`Registering ${data.English} is completed successfully!`,
+                    });
                 },
-                whenReset: () => {},
+                whenReset: () => {
+                    this.app.notie.successAlert({
+                        Japanese:`操作していたデータはサーバーサイドの操作により削除されました。`,
+                        English:`The data you were editting was deleted by operation of the server.`,
+                    });
+                },
                 id:this.requiredObj.id   
             })
         

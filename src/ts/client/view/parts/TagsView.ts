@@ -1,3 +1,4 @@
+import { appendElement } from "../../utility/aboutElement";
 import { IView } from "../IView";
 import { TagView } from "./TagView";
 export type TagKind = "ability"|"target"|"gameSystem"|"hashTag"
@@ -17,7 +18,8 @@ export class TagsView implements IView{
     }:{
         callBackOnClick?:(tagKind:TagKind,tagName:string)=>void
     }={}){
-        const index = this.tags.push(new TagView(document.createElement("div"),tagName,tagKind))
+        
+        const index = this.tags.push(new TagView(appendElement(this.container,"div"),tagName,tagKind))
         if (callBackOnClick !== undefined) this.tags[index - 1].addClickEventListener(callBackOnClick)
         return this.tags[index - 1];
     }

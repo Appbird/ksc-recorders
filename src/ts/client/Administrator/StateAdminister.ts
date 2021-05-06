@@ -18,7 +18,7 @@ export interface StateAdministerReadOnly {
 }
 
 export class StateAdministrator implements StateAdministerReadOnly {
-    private _state: keyof PageStates = "none";
+    private _state: keyof PageStates = "NowLoading";
     private _requiredObj: RequiredObjectType<PageStates[keyof PageStates]> = null;
     private _gameSystemEnvDisplayed: GameSystemEnvDisplayed = {
         gameSystem: null, gameMode: null

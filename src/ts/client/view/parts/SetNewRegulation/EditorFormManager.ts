@@ -57,6 +57,7 @@ export class EditorFormManager<TypeOfObserved extends IItemOfResolveTableToName>
         this.id = id;
         this.language = language;
         this.pathOfDocObserved = pathOfDocObserved;
+        console.log(`[KSSRs] connecting ${pathOfDocObserved.path}/${(id) ? id:"(new)"}  ...`)
         this.inputForm = inputForms;
         this.data = {};
         this.callbacks = {
@@ -77,8 +78,9 @@ export class EditorFormManager<TypeOfObserved extends IItemOfResolveTableToName>
         this.id = undefined;
         const defaultObj:{[key:string]:any} = {};
         this.data = Object.assign(this.defaultObject);
-        this.reflectView(defaultObj)
+        this.reflectView(this.data)
         this.refreshTitle();
+        
     }
     private refreshTitle(){
         this.title.refresh(`Editing : ${this.pathInString}`,(this.id === undefined) ? choiceString(undefinedIDDisplayer,this.language):this.id,{
@@ -92,6 +94,7 @@ export class EditorFormManager<TypeOfObserved extends IItemOfResolveTableToName>
     }
     private subscribe(){
         this.unsubscribe = this.pathOfDocObserved.doc(this.id).onSnapshot(querySnapshot => {
+            console.info(`[KSSRs-InfoEditor] change from the server detected.`)
             const data = querySnapshot.data();
             if (data === undefined) return;
             this.reflectView(data);
@@ -103,7 +106,7 @@ export class EditorFormManager<TypeOfObserved extends IItemOfResolveTableToName>
             editor.addChangeEventListener((changed) => {
                 const beforeChange = this.data[key]
                 
-                console.info(`[KSSRs-InfoEditor] change detected : Property ${key} >>> from ${beforeChange} to ${changed}`)
+                console.info(`[KSSRs-InfoEditor] change on the client detected : Property ${key} >>> from ${beforeChange} to ${changed}`)
                     
                 this.data[key] = changed;
                 if (this.id !== undefined) {
@@ -128,6 +131,7 @@ export class EditorFormManager<TypeOfObserved extends IItemOfResolveTableToName>
      * @param item ここに入れた値は画面表示更新前にListItemInputForm#dataプロパティに代入される。
      */
     private reflectView(item?:{[key:string]:any}){
+        
         if (item !== undefined) this.data = item;
         for (const [key,editor] of this.inputFormsTuples){
             if (editor === undefined) continue;
@@ -169,7 +173,11 @@ export class EditorFormManager<TypeOfObserved extends IItemOfResolveTableToName>
         return this.inputFormsTuples.every(([,editor]) => (editor!==undefined) ? (!editor.requiredField || editor.isFill() ):true)
     }
     destroy(){
-        if (this.unsubscribe !== null) this.unsubscribe();
+        if (this.unsubscribe !== null){
+            this.unsubscribe();
+            console.log(`[KSSRs] unsubscribe onSnapshot ${this.pathOfDocObserved.path}/${this.id}.`)
+        }
+
         this.container.innerHTML = "";
     }
     get inputFormsTuples():[string,EditorPart<any>|undefined][]{

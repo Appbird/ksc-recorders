@@ -11,7 +11,7 @@ import { IGameModeItemWithoutCollections } from "../type/list/IGameModeItem";
 import { LoginAdministrator, LoginAdministratorReadOnly } from "./Administrator/LoginAdministrator";
 import { IAppUsedToChangeState } from "./interface/AppInterfaces";
 import firebase from "firebase/app";
-
+import {PageNotificationAdministrator} from "./Administrator/PageNotificationAdministrator"
 export default class App implements IAppUsedToChangeState{
     private _state:StateAdministrator;
     private loginAd:LoginAdministrator | null = null;
@@ -19,15 +19,18 @@ export default class App implements IAppUsedToChangeState{
     private historyAd:HistoryAdministrator;
     private header:HeaderController = new HeaderController();
     private apiCaller:APIAdministrator = new APIAdministrator();
+    private _notie:PageNotificationAdministrator;
 
     constructor(articleDOM:HTMLElement,language:LanguageInApplication){
         this._state = new StateAdministrator(language);
-        this.historyAd = new HistoryAdministrator(this)
+        this._notie = new PageNotificationAdministrator(this);
+        this.historyAd = new HistoryAdministrator(this);
         this.transitionAd = new TransitionAdministrator(articleDOM,this,this._state);
         this.header.deleteUserIcon();
         document.getElementById("header")?.addEventListener("click",() => {
             this.transition("mainMenu",null)
         })
+        this.transition("NowLoading",null,{ifAppendHistory:false});
     }
     async init(){
 
@@ -42,7 +45,7 @@ export default class App implements IAppUsedToChangeState{
                 this.header.changeUserIcon(this.loginAd.loginUserName,this.loginAd.loginUserIconPicture,this.state.language)
             }
             else this.header.deleteUserIcon();
-            this.goPreviousPage();
+            this.goPrevious();
         })
         this.loginAd.setChangedEventListener( () => {
             if (this.loginAd === null) return;
@@ -50,11 +53,16 @@ export default class App implements IAppUsedToChangeState{
         })
         
     }
-    private goPreviousPage(){
+    private goPrevious(){
         const previousPage = this.historyAd.getPreviousPageData()
         if (previousPage === null) {this.transition("mainMenu",null); return;}
         console.info(`[KSSRs] KSSRs detected you had visited ${previousPage.pageState} page most recently, so KSSRs takes you to that page.`)
         this.transition(previousPage.pageState,previousPage.requiredObject)
+
+        const previousTargetGamemode = this.historyAd.getPreviousTargetGamemode();
+        if (previousTargetGamemode === null) return;
+        console.info(`[KSSRs] KSSRs detected you had set the targetGamemode ${previousTargetGamemode.gameSystem.English} / ${previousTargetGamemode.gameMode.English}, so KSSRs set that again.`)
+        this.changeTargetGameMode(previousTargetGamemode)
     }
     async login(){
         if (this.loginAd === null) throw new Error("firebaseが初期化されていません。")
@@ -96,9 +104,11 @@ export default class App implements IAppUsedToChangeState{
         this._state.setLanguage(lang);
     }
     changeTargetGameMode(gameSystemEnv:{gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections}|null){
+        
         if (gameSystemEnv === null) return this.header.changeHeaderRightLeft("Kirby-Speed/Score-Recorders","KSSRs");
         if (this.state.gameSystemEnvDisplayed.gameSystem?.id === gameSystemEnv.gameSystem.id && this.state.gameSystemEnvDisplayed.gameMode?.id === gameSystemEnv.gameMode.id) return;
         this._state.setGameSystemEnv(gameSystemEnv)
+        this.historyAd.registerCurrentTargetGamemode()
         return this.header.changeHeaderRightLeft(gameSystemEnv.gameSystem.English,gameSystemEnv.gameMode.English);    
     }
     accessToAPI<T extends keyof APIFunctions>(functionName: T, requiredObj: APIFunctions[T]["atServer"]): Promise<APIFunctions[T]["atClient"]>{
@@ -107,11 +117,13 @@ export default class App implements IAppUsedToChangeState{
     errorCatcher(error:any,title:string = "エラーが発生しました。"){
         if (!(error instanceof Error)){ console.error(`予期せぬエラーです。 : ${error}`); return; }
         this.historyAd.removePreviousPageData();
+        this.historyAd.removeTargetGamemode();
         const errorInString = error.message;
         console.error(`${errorInString}\n${error.stack}`);
         this.transition("errorView",{title:title,message:errorInString});
     }
-    notie(){
+    get notie(){
+        return this._notie;
 
     }
     

@@ -142,7 +142,7 @@ export class S_MainMenu
                 },
                 description:{
                     Japanese:
-                        (isSetTargetGameMode) ?  `今までの${targetGameMode.ja}を検索して閲覧することが出来ます。`:`<strong>閲覧するゲームタイトル/モードを設定してください。</strong>`
+                        (isSetTargetGameMode) ?  `今までの「${targetGameMode.ja}」の記録を検索して閲覧することが出来ます。`:`<strong>閲覧するゲームタイトル/モードを設定してください。</strong>`
                 },
                 isDisabled:!isSetTargetGameMode,
                 biggerTitle:true,
@@ -177,7 +177,7 @@ export class S_MainMenu
                     Japanese:"取り扱うゲームタイトルとゲームモードを増やすことができます。"
                 },
                 isDisabled:!this.app.loginAdministratorReadOnly.isUserLogin,
-                to:() => {this.app.transition("settingNewRegulation_CollectionViewer",null)},
+                to:() => {this.app.transition("settingNewRegulation_CollectionViewer",null,{ifAppendHistory:false})},
                 biggerTitle:true,
             },{
                 title:{
@@ -204,7 +204,6 @@ export class S_MainMenu
                 },
                 isDisabled:false,
                 biggerTitle:false,
-                //#TODO ここをクレジット用に設定する。GitHubのリンクにするのもアリか？
                 to:() => {this.app.transition("spinnerExhibition",null)}
             }]
     }

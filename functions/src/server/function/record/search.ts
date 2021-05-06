@@ -6,7 +6,6 @@ import { IRecord } from "../../../../../src/ts/type/record/IRecord";
 import { ControllerOfTableForResolvingID } from "../../recordConverter/ControllerOfTableForResolvingID";
 import { RecordDataBase } from "../../firestore/RecordDataBase";
 import { IReceivedData_recordSearch } from "../../../../../src/ts/type/api/record/relation";
-import clone from "clone-deep";
 
 export async function search(recordDataBase:RecordDataBase,input:IReceivedData_recordSearch["atServer"]):Promise<IReceivedData_recordSearch["atClient"]>{
     
@@ -41,21 +40,21 @@ function countRunners(record:IRecord[]):number{
 }
 
 async function prepareForDifficultySearch(converter:ControllerOfTableForResolvingID,recordDataBase:RecordDataBase,input:SearchCondition):Promise<SearchCondition[]>{
-  
+    
     if (input.gameSystemEnv.gameDifficultyID === undefined) throw new Error("予期せぬエラーが発生しました。")
     const gameEnv = input.gameSystemEnv;
     let targetIDs:string[]
     if (input.gameSystemEnv.gameDifficultyID === "whole") targetIDs = (await recordDataBase.getTargetCollection(gameEnv.gameSystemID,gameEnv.gameModeID)).map((ele) => ele.id)
     else targetIDs = (await recordDataBase.getGameDifficultyInfo(gameEnv.gameSystemID,gameEnv.gameModeID,input.gameSystemEnv.gameDifficultyID)).TargetIDsIncludedInTheDifficulty;
-    
+    console.info(`[KSSRs] 検索条件にDifficultyIDの指定があるため、この条件は敵の検索 [${targetIDs.join(",")}] に置き換えられます。`)
     const targetNames = await Promise.all(
         targetIDs.map( targetID => converter.resolveTargetID(gameEnv.gameSystemID,gameEnv.gameModeID,targetID,input.language))
     )
-    input.gameSystemEnv.gameDifficultyID = undefined;
+    delete input.gameSystemEnv.gameDifficultyID;
     return targetIDs.map( (targetID,index) => {
-        const result = clone(input);
-            result.targetIDs = [targetID]
-            result.groupName = targetNames[index]
-        return result;
+        return { ...input,
+            targetIDs:[targetID],
+            groupName:targetNames[index]
+        }
     })
 }

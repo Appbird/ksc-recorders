@@ -39,10 +39,9 @@ export class EditorScoreTypePart implements EditorPart<ScoreType>{
         if(requiredField && description.length !== 0) description.unshift(context_required)
         this.container = container;
         this.htmlCon = new HTMLConverter(language);
-        const eleCon = this.htmlCon.elementWithoutEscaping 
 
         this._requiredField = requiredField;
-        this.container.appendChild(eleCon`<h1>${generateIcooonHTML({icooonName:icooon})}${title}</h1>`);
+        this.container.appendChild(this.htmlCon.elementWithoutEscaping`<h1>${generateIcooonHTML({icooonName:icooon})}${title}</h1>`);
         this.input = new RadioButtonCupsuled<ScoreType>(appendElement(this.container,"div"), indentifiedName,language,
             [
                 {optionLabel:context.option_time,value:"time"},
@@ -51,7 +50,7 @@ export class EditorScoreTypePart implements EditorPart<ScoreType>{
         this.ulist = new UListCupsuled(appendElement(this.container,"ul"),language,description)
     }
     addChangeEventListener(callback: (changed: ScoreType) => void): void {
-        this.addChangeEventListener(callback);
+        this.input.onChangeEventListener(callback);
     }
     refresh(value: ScoreType): void {
         this.input.value = value;

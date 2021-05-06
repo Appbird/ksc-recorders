@@ -32,9 +32,9 @@ const context = {
 }
 export class S_SettingNewRegulationState_CollectionViewer
     extends PageStateBaseClass<{collection:firebase.firestore.CollectionReference,pathStack:string[]}|null,IAppUsedToChangeState>{
-
+        private settingRegulationView:SettingRegulationView_CollectionViewer|null = null;
     init(){
-        if (this.requiredObj === null) this.requiredObj = {collection:firebase.firestore().collection("title"),pathStack:["titles"]}
+        if (this.requiredObj === null) this.requiredObj = {collection:firebase.firestore().collection("titles"),pathStack:["titles"]}
 
         const headerMaker = new SettingRegulationStateHeader(
             appendElement(this.articleDOM,"div"),this.app.state.language,
@@ -46,26 +46,28 @@ export class S_SettingNewRegulationState_CollectionViewer
                 onClickCallBack: () => {
                     if (this.requiredObj === null) throw new Error("オブジェクトが与えられていません。")
                     const id = this.requiredObj.collection.parent?.id;
-                    if (id === undefined) throw new Error("上の階層がありません");
-                    this.requiredObj.pathStack.push("new Item");
-                    this.transitionProperState(id);
+                    const ref = this.requiredObj.collection.parent?.parent
+                    if (id === undefined || ref === undefined) throw new Error("上の階層がありません");
+                    this.requiredObj.pathStack.pop();
+                    
+                    this.transitionProperState(id,ref,this.requiredObj.pathStack,this.requiredObj.pathStack[this.requiredObj.pathStack.length-2]);
                 }
             }])
 
-        new SettingRegulationView_CollectionViewer(this.articleDOM,this.requiredObj.collection,this.app.state.language,{
+        this.settingRegulationView = new SettingRegulationView_CollectionViewer(this.articleDOM,this.requiredObj.collection,this.app.state.language,{
             whenStart:()=> this.generateLoadingSpinner("feather"),
             whenReady:() => this.deleteLoadingSpinner(),
             onClickEventListener: (id,item) => {
                 if (this.requiredObj === null) throw new Error()
                 this.requiredObj.pathStack.push(choiceString(item,this.app.state.language))
-                this.transitionProperState(id);
+                this.transitionProperState(id,this.requiredObj.collection,this.requiredObj.pathStack,this.requiredObj.pathStack[this.requiredObj.pathStack.length-2]);
             }
         })
     }
-    private transitionProperState(id:string){
+    private transitionProperState(id:string,collection:firebase.firestore.CollectionReference,pathStack:string[],docWantToGo:string){
         if (this.requiredObj === null) throw new Error()
         const moveTo = (() => {
-            switch (this.requiredObj.pathStack[this.requiredObj.pathStack.length-2]){
+            switch (docWantToGo){
                 case "targets":         return "settingRegulation_TargetDocViewer";
                 case "abilities":       return "settingRegulation_AbilityDocViewer";
                 case "difficulties":    return "settingRegulation_DifficultyDocViewer";
@@ -75,9 +77,12 @@ export class S_SettingNewRegulationState_CollectionViewer
             }
         })()
         this.app.transition(moveTo,{
-            collection:this.requiredObj.collection,
+            collection:collection,
             id:id,
-            pathStack:this.requiredObj.pathStack
-        })
+            pathStack:pathStack
+        },{ifAppendHistory:false})
+    }
+    destroy(){
+        if (this.settingRegulationView !== null) this.settingRegulationView.destroy();
     }
 }

@@ -80,9 +80,9 @@ export class RecordDetailView implements IView{
             const standardInfoDiv = findElementByClassNameWithErrorPossibility(recordDetailElement,"standardInfo")
             const evidenceMovieDiv = findElementByClassNameWithErrorPossibility(recordDetailElement,"evidenceMovie")
             new MovieWidgetCreator(evidenceMovieDiv,recordDetail.link[0]).setWidget()
-            this.generateTagViewsForRecord(standardInfoDiv,recordDetail,language,clickedCallBacks)
+            this.generateTagViewsForRecord(standardInfoDiv,recordDetail,clickedCallBacks)
         
-        return this;
+
     }
 
     destroy(){
@@ -90,7 +90,7 @@ export class RecordDetailView implements IView{
         
     }
 
-    private generateTagViewsForRecord(container:Element,record:IRecordResolved, langugage:LanguageInApplication,
+    private generateTagViewsForRecord(container:Element,record:IRecordResolved,
         clickedCallBacks:TagsClickedCallbacks = {}
     ){ 
         const tagsViews = [
@@ -104,10 +104,10 @@ export class RecordDetailView implements IView{
         tagsViews[0].appendTag(record.regulation.targetName,"target",{callBackOnClick:clickedCallBacks.target})
 
         record.regulation.abilityNames.forEach( ele => 
-            tagsViews[1].appendTag(ele,"gameSystem",{callBackOnClick:clickedCallBacks.target})
+            tagsViews[1].appendTag(ele,"ability",{callBackOnClick:clickedCallBacks.target})
         )
         record.tagName.forEach( ele => 
-            tagsViews[2].appendTag(ele,"gameSystem",{callBackOnClick:clickedCallBacks.gameSystem})
+            tagsViews[2].appendTag(ele,"hashTag",{callBackOnClick:clickedCallBacks.gameSystem})
         )
 
     }

@@ -35,8 +35,9 @@ export class SelectChoicesCapsuled<T extends IItemOfResolveTableToName> implemen
                 removeItemButton: removeItemButton,
                 shouldSort: true,
                 noChoicesText: choiceDescription(noChoiceText, language),
-                noResultsText: choiceDescription(noResultText, language)
+                noResultsText: choiceDescription(noResultText, language),
             });
+            
         this._language = language;
         this._data = data;
         this._choices = result;
@@ -53,7 +54,7 @@ export class SelectChoicesCapsuled<T extends IItemOfResolveTableToName> implemen
             result.setChoices(data.map((ele) => { return { value: ele.id, label: choiceString(ele, language) }; }));
         });
     }
-    addEventListener(eventType: "addItem" | "click" | "hideDropdown" | "change", callback: (event: any) => void) {
+    addEventListener(eventType: "addItem" | "click" | "hideDropdown" | "change" | "choice", callback: (event: any) => void) {
         this.container.addEventListener(eventType, callback);
     }
     getValue(valueOnly: boolean = true) {

@@ -28,7 +28,9 @@ export class TextInputCapsuled implements IView{
         
         this.element = document.createElement("input");
         this.element.setAttribute("type", "text");
-        this.element.classList.add("c-textInput", "u-underline",...className.split(" "));
+        if (className.length !== 0) this.element.classList.add("c-textInput", "u-underline",...className.replace(/\s{2,}/g," ").split(" "));
+        else this.element.classList.add("c-textInput", "u-underline");
+        
         this.element.placeholder = placeHolder;
         
         if (chara !== undefined && chara !== "") this.element.classList.add(chara);

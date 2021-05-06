@@ -1,4 +1,4 @@
-import { S_None } from "./none";
+import { S_NowLoading } from "./nowLoading";
 import { S_ErrorState} from "./ErrorState"
 import { PageStatesConstructorObj} from "../../interface/PageStatesStructure";
 import { S_SearchDetail } from "./SearchDetail";
@@ -10,7 +10,6 @@ import { S_MainMenu } from "./mainMenu";
 import { IAppUsedToRead } from "../../interface/AppInterfaces";
 import { PageStateBaseClass } from "./PageStateClass";
 import { S_OfferForm } from "./offerForm";
-import { S_SendRecordOffer } from "./sendRecordOffer";
 import { S_SpinnerExhibition } from "./SpinnerExhibition";
 import { S_SettingNewRegulationState_CollectionViewer } from "./settingNewRegulationState/S_SettingRegulationState_CollectionViewer";
 import { S_SettingRegulationState_GameSystemDocViewer } from "./settingNewRegulationState/S_SettingRegulationState_GameSystemDocViewer";
@@ -33,7 +32,6 @@ export interface PageStatesWithRequiredObject{
     detailView:S_SearchDetail,
     searchResultView:S_SearchResult,
     gameModeSeletor:S_GameModeSelector,
-    sendRecordOffer:S_SendRecordOffer,
 
     userPageInWhole:S_UserPageInWhole,
     userPageInSpecific:S_UserPageInSpecific,
@@ -48,7 +46,7 @@ export interface PageStatesWithRequiredObject{
     settingRegulation_DifficultyDocViewer:S_SettingRegulationState_DifficultyDocViewer,
 }
 export interface PageStateWithoutRequiredObject{
-    none:S_None,
+    NowLoading:S_NowLoading,
     searchConditionSelectorView:S_SearchConditionSelector,
     gameSystemSelector:S_GameSystemSelector,
     mainMenu:S_MainMenu,
@@ -57,7 +55,7 @@ export interface PageStateWithoutRequiredObject{
     settingNewRegulation_CollectionViewer:S_SettingNewRegulationState_CollectionViewer
 }
 export const pageStates:PageStatesConstructorObj= {
-    none:S_None,
+    NowLoading:S_NowLoading,
     searchConditionSelectorView:S_SearchConditionSelector,
     gameSystemSelector:S_GameSystemSelector,
     mainMenu:S_MainMenu,
@@ -70,7 +68,6 @@ export const pageStates:PageStatesConstructorObj= {
     detailView:S_SearchDetail,
     searchResultView:S_SearchResult,
     gameModeSeletor:S_GameModeSelector,
-    sendRecordOffer:S_SendRecordOffer,
     notificationList:S_NotificationList,
 
     userPageInWhole:S_UserPageInWhole,

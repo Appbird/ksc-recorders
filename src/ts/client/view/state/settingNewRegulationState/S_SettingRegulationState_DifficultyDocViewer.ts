@@ -67,8 +67,23 @@ const context = {
                 English:"Enter this ability's short description in English."
             }]
         }
+        ,
+        TargetIDs:{
+            title:{
+                Japanese:"この難易度に含まれるセグメント (登場する敵など)",
+                English:"The Segments (such as boss or stages) this difficulty includes"
+            },
+            description:[{
+                Japanese:"この難易度で登場する敵やステージを登録して下さい。",
+                English:"Enter stages or enemys in this difficulty."
+            },
+            {
+                Japanese:"順番に注意して下さい。",
+                English:"Be careful of the order of the items!"
+            }]
+        }
         
-    }
+    },
 }
 type HandledType = IGameDifficultyItem
 export class S_SettingRegulationState_DifficultyDocViewer
@@ -110,8 +125,8 @@ export class S_SettingRegulationState_DifficultyDocViewer
                                 new EditorIDPart({
                                     container:appendElement(editorSegment,"div"),
                                     language:lang,
-                                    title:context.Input.EnglishDescription.title,
-                                    description:context.Input.EnglishDescription.description,
+                                    title:context.Input.TargetIDs.title,
+                                    description:context.Input.TargetIDs.description,
                                     requiredField:false,
                                     options:(await optionsRef.get()).docs.map(doc => doc.data() as ITargetItem),
                                     observed:optionsRef,
@@ -149,8 +164,17 @@ export class S_SettingRegulationState_DifficultyDocViewer
                     
                     this.requiredObj.pathStack.pop();
                     this.requiredObj.pathStack.push(choiceString(data,this.app.state.language));
+                    this.app.notie.successAlert({
+                        Japanese:`${data.Japanese}の登録に成功しました！`,
+                        English:`Registering ${data.English} is completed successfully!`,
+                    });
                 },
-                whenReset: () => {},
+                whenReset: () => {
+                    this.app.notie.successAlert({
+                        Japanese:`操作していたデータはサーバーサイドの操作により削除されました。`,
+                        English:`The data you were editting was deleted by operation of the server.`,
+                    });
+                },
                 id:this.requiredObj.id   
             })
         

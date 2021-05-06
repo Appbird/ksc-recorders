@@ -18,11 +18,11 @@ export class NumberInputCupsuled implements IView {
         
         this.container = container;
         const htmlConverter = new HTMLConverter(language);
-        this.container.classList.add("c-radioSelectors");
+        this.container.classList.add("u-width90per")
         this._value = 0
         this.min = min; this.max = max;
         this.allowDecimal = allowDecimal;
-        this.input = this.container.appendChild(htmlConverter.elementWithoutEscaping`<input class="c-textInput u-biggerChara" type="number"></input>`) as HTMLInputElement;
+        this.input = this.container.appendChild(htmlConverter.elementWithoutEscaping`<input class="c-textInput u-underline u-biggerChara" type="number"></input>`) as HTMLInputElement;
         this.input.addEventListener("change",() => {
             try{this.value = Number(this.input.value)}
             catch(error){ this.input.value = "0"; this.value = 0; }
@@ -45,7 +45,8 @@ export class NumberInputCupsuled implements IView {
     private round(){
         if (!this.allowDecimal) this._value = Math.round(this._value)
         if (this.max !== undefined && this._value > this.max) this._value = this.max;
-        if (this.min !== undefined && this._value > this.min) this._value = this.min;
+        if (this.min !== undefined && this._value < this.min) this._value = this.min;
+        this.input.value = String(this._value);
     }
     destroy() {
         this.container.innerHTML = "";

@@ -13,7 +13,7 @@ import { TextInputCapsuled } from "./TextInputCapsuled";
 import SimpleMDE from "simplemde";
 import { TextChoicesCapsuled } from "./TextChoicesCapsuled";
 import { ISentRecordOffer } from "../../../type/api/record/changing/IReceivedDataAtServer_recordWrite";
-import { IRecord, IRecordResolved } from "../../../type/record/IRecord";
+import { IRecord } from "../../../type/record/IRecord";
 
 export class OfferFormView implements IView {
     private container: HTMLElement;
@@ -24,7 +24,6 @@ export class OfferFormView implements IView {
 
     private URLInput: TextInputCapsuled;
     private scoreInput: TextInputCapsuled;
-    private isTextInputRight: boolean = false;
 
     private htmlConverter: HTMLConverter;
 
@@ -73,6 +72,7 @@ export class OfferFormView implements IView {
         //#CH 追加されるタグの色を対応させる。
         
         this.setTargetDropdownEventListener();
+        this.setTargetChoices();
         this.setURLInputChangeEventListener();
         this.setScoreInputChangeEventListener();
         
@@ -116,10 +116,20 @@ export class OfferFormView implements IView {
         this.simpleMDE.value(record.note)
     }
     private async whenDecide(){
+        try {       
+            this.evidenceMovie.set(this.URLInput.value);
+            this.modifyScoreInput();
+        }catch(err){
+            this.errorDisplay.textContent = choiceString({
+                Japanese:"[Error] 入力が不正な必須項目が存在します。",
+                English:"[Error] There is a required field which is entered incorrectly."
+            },this.app.state.language)
+            return;
+        }
         const abilityIDs = this.abilityChoices.getValueAsArray();
         const targetID = this.targetChoices.getValueAsValue()
         const difficultyID = this.difficultyChoices.getValueAsValue();
-        if (this.isTextInputRight || difficultyID === undefined || targetID === undefined || abilityIDs.length === 0 ){
+        if (difficultyID === undefined || targetID === undefined || abilityIDs.length === 0 ){
                 this.errorDisplay.textContent = choiceString({
                     Japanese:"[Error] 入力されていない必須項目が存在します。",
                     English:"[Error] There is a required field which is not entered correctly."
@@ -282,7 +292,7 @@ export class OfferFormView implements IView {
         </div>`);
         return new SelectChoicesCapsuled(
             findElementByClassNameWithErrorPossibility(targetSelector, "offerForm__targetSelector__Choices").appendChild(document.createElement("select")),
-            targets, { language: this.app.state.language, needMultipleSelect: false });
+            targets, { language: this.app.state.language, needMultipleSelect: false, });
     }
 
     private createAbilityChoices(abilities: IAbilityItem[]) {

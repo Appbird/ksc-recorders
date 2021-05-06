@@ -181,35 +181,50 @@ article.is-seqEnd:before {
 }
 
 .c-radioSelectors {
-  width: 100%;
   display: flex;
   overflow: hidden;
   justify-content: center;
 }
 
-.c-radioSelectors input {
-  width: 100%;
-  height: 3em;
-  opacity: 0;
-}
-
-label {
-  position: absolute;
-  top: 0;
-  left: 0;
+.c-radioSelectors > .__item {
   color: #666;
-  width: 100%;
-  height: 100%;
   background: #fff;
   align-items: center;
+  display: flex;
   justify-content: center;
-  font-weight: normal;
+  font-weight: lighter;
+  width: 10em;
+  height: 3em;
+  border: solid #666 thin;
+  border-right: none;
 }
 
-.c-radioSelectors input:checked + label {
-  background: #01b43d;
+.c-radioSelectors > .__item:first-child {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+
+.c-radioSelectors > .__item:last-child {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  border-right: solid #666 thin;
+}
+
+.c-radioSelectors > .__item.--checked {
   font-weight: bold;
+  background-color: #22c901;
   color: #fff;
+}
+
+.c-radioSelectors.--disabled > .__item {
+  background-color: #d1d1d1;
+  color: #525252;
+}
+
+.c-radioSelectors.--disabled > .__item.--checked {
+  font-weight: bold;
+  background-color: #168101;
+  color: #c9c9c9;
 }
 
 .c-icooon {

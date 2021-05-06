@@ -4,7 +4,7 @@ import { IAppUsedToReadAndChangePage } from "../../interface/AppInterfaces";
 import { OfferFormView } from "../parts/OfferFormView";
 import { PageStateBaseClass } from "./PageStateClass";
 
-export class S_OfferForm
+export class S_ModifyRecordForm
     extends PageStateBaseClass<{targetGameMode:TargetGameMode,id:string},IAppUsedToReadAndChangePage>{
         async init(){
             this.generateLoadingSpinner();
@@ -26,7 +26,6 @@ export class S_OfferForm
             this.deleteLoadingSpinner();
         }
         private sendInputInfo(input:ISentRecordOffer){
-            this.app.transition("sendRecordOffer",input);
         }
 }
 

@@ -125,6 +125,15 @@ export class SearchConditionSelectorView implements IView{
     }
     private generateCondition(targetSelected:string[],abilitySelected:string[],gameSystemID:string,gameModeID:string){
         const difficultySelectedID = this.difficultyChoices.getValueAsValue();
+        console.info(`[KSSRs] Searching ... ${JSON.stringify({
+            groupName: "", groupSubName:"",
+            gameSystemEnv:{
+                gameSystemID:gameSystemID, gameModeID:gameModeID,
+                gameDifficultyID:(difficultySelectedID === null) ? "whole": difficultySelectedID
+            },
+            language:this.app.state.language, startOfRecordArray:0,limitOfRecordArray:3,
+            orderOfRecordArray:this.app.state.superiorScore, abilityIDs:abilitySelected
+        })}`)
         if (targetSelected.length === 0){
             return [{
                 groupName: "", groupSubName:"",

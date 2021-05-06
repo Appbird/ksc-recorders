@@ -38,7 +38,7 @@ export class SettingRegulationView_CollectionViewer implements IView{
     }&Callbacks){
         this.container = container;
         this.path = path;
-        console.log(`[KSSRs] Now trying to connect ${path.path} ...`)
+        console.log(`[KSSRs] connecting ${path.path} ...`)
         this.language = language;
         const collectionViewer = this.container.appendChild(document.createElement("div"))
         const htmlC = new HTMLConverter(language);
@@ -53,7 +53,6 @@ export class SettingRegulationView_CollectionViewer implements IView{
         this.callbacks = {whenReady,whenStart}
         this.onClickEventListener = onClickEventListener;
         this.generate();
-
         
     }
     private async generate(){
@@ -69,9 +68,10 @@ export class SettingRegulationView_CollectionViewer implements IView{
         for (const item of items) this.setItem(item.id,item)
 
         this.unsubscribe = this.path.onSnapshot(querySnapshot => {
+            console.info(`[KSSRs-InfoEditor] change from the server detected.`)
             for(const docChange of querySnapshot.docChanges()){
                 switch(docChange.type){
-                    case "removed": this.removeItem(docChange.doc.id)
+                    case "removed": this.removeItem(docChange.doc.id);break;
                     default:        this.setItem(docChange.doc.id,docChange.doc.data() as (IItemOfResolveTableToName&icooonResolvable))
                 }  
             }
@@ -95,7 +95,10 @@ export class SettingRegulationView_CollectionViewer implements IView{
     }
     destroy(){
         for (const [,value] of this.cardObj) value.destroy()
-        if (this.unsubscribe !== null) this.unsubscribe();
+        if (this.unsubscribe !== null) {
+            this.unsubscribe();
+            console.log(`[KSSRs] unsubscribe onSnapshot ${this.path.path}.`)
+        }
         this.container.innerHTML = "";
     }
 }
@@ -114,12 +117,14 @@ class ListItem implements IView{
     }
     change(info:IItemOfResolveTableToNameLackingOfID&icooonResolvable){
         this.container.innerHTML = `
-        <div class="c-list__item">
-            <div class = "c-title">
-                <div class = "c-title__main u-smallerChara">${generateIcooonHTML(info)} ${choiceString(info,this.language)}</div>
-            </div>
-            <p class="description">${selectAppropriateDescription(info,this.language)}</p>
-        </div>`
+            <div class="c-list__item">
+                <div class="u-width90per">
+                    <div class = "c-title">
+                        <div class = "c-title__main u-smallerChara">${generateIcooonHTML(info)} ${choiceString(info,this.language)}</div>
+                    </div>
+                    <p class="description">${selectAppropriateDescription(info,this.language)}</p>
+                </div>
+            </div>`
     }
     destroy(){
         this.container.innerHTML = "";

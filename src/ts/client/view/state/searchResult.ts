@@ -9,6 +9,7 @@ export class S_SearchResult
         this.generateLoadingSpinner();
         const requestConditions = this.requiredObj;
         const result = (await this.app.accessToAPI("record_search", requestConditions )).result;
+        console.info("[KSSRs] Received result Data.")
         result.map(receivedData => new RecordGroupView(this.articleDOM.appendChild(document.createElement("div")),receivedData,this.app.state.scoreType,{
             clickOnCardEventListener: (recordClicked) => 
                 this.app.transition("detailView",{
@@ -20,6 +21,6 @@ export class S_SearchResult
                     id:recordClicked.id
                 })
         }));
-        this.generateLoadingSpinner();
+        this.deleteLoadingSpinner();
     }
 }

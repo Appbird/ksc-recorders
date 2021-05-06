@@ -6,7 +6,7 @@ import { EditorTextPart } from "../parts/SetNewRegulation/Editor/EditorTextPart"
 import { EditorFormManager, InputFormObject } from "../parts/SetNewRegulation/EditorFormManager";
 import { SettingRegulationStateHeader } from "../parts/SetNewRegulation/SettingRegulationStateHeader";
 import { PageStateBaseClass } from "./PageStateClass";
-import { titleContext } from "./settingNewRegulationState/utility";
+import { generateBaseEditors, generateDescriptionEditors, titleContext } from "./settingNewRegulationState/utility";
 import firebase from "firebase/app";
 import "firebase/firestore";
 const context = {
@@ -112,38 +112,8 @@ export class S_SettingUserInfo
             const editorHeader:HTMLElement = appendElement(this.articleDOM,"div");
             const editorSegment:HTMLElement = appendElement(this.articleDOM,"div");
             const inputForms:InputFormObject<HandledType>= {
-                Japanese:           new EditorTextPart({
-                                                container:appendElement(editorSegment,"div"),
-                                                language:lang,
-                                                title:context.Input.Japanese.title,
-                                                description:context.Input.Japanese.description,
-                                                requiredField:true,
-                                                icooon:"name"
-                                            }),
-                English:            new EditorTextPart({
-                                                container:appendElement(editorSegment,"div"),
-                                                language:lang,
-                                                title:context.Input.English.title,
-                                                description:context.Input.English.description,
-                                                requiredField:true,
-                                                icooon:"name"
-                                            }),
-                JDescription:       new EditorTextPart({
-                                                container:appendElement(editorSegment,"div"),
-                                                language:lang,
-                                                title:context.Input.JapaneseDescription.title,
-                                                description:context.Input.JapaneseDescription.description,
-                                                requiredField:false,
-                                                icooon:"feather"
-                                            }),
-                EDescription:       new EditorTextPart({
-                                                container:appendElement(editorSegment,"div"),
-                                                language:lang,
-                                                title:context.Input.EnglishDescription.title,
-                                                description:context.Input.EnglishDescription.description,
-                                                requiredField:false,
-                                                icooon:"feather"
-                                            }),
+                ...generateBaseEditors(editorSegment,lang,context),
+                ...generateDescriptionEditors(editorSegment,lang,context),
                 twitterLink:       new EditorTextPart({
                                                 container:appendElement(editorSegment,"div"),
                                                 language:lang,

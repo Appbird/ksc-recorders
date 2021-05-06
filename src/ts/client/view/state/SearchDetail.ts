@@ -1,18 +1,24 @@
 import { APIFunctions } from "../../../type/api/relation";
-import { IRecordResolved } from "../../../type/record/IRecord";
+import { MultiLanguageString } from "../../../type/foundation/MultiLanguageString";
+import { LanguageInApplication } from "../../../type/LanguageInApplication";
+import { IRecord, IRecordResolved } from "../../../type/record/IRecord";
 import { SearchCondition } from "../../../type/record/SearchCondition";
 import { choiceString } from "../../../utility/aboutLang";
+import { HTMLConverter } from "../../../utility/ViewUtility";
+import { StateAdministrator } from "../../Administrator/StateAdminister";
 import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
-import { createElementWithIdAndClass } from "../../utility/aboutElement";
+import { appendElement, createElementWithIdAndClass } from "../../utility/aboutElement";
+import { IView } from "../IView";
 import { RecordDetailView } from "../parts/RecordDetailView";
 import { RecordGroupView } from "../parts/RecordsGroupView";
 import { TagsClickedCallbacks } from "../parts/TagsClickedCallbacks";
 import { PageStateBaseClass } from "./PageStateClass";
 
-export class S_SearchDetail
+export class S_DetailViewer
     extends PageStateBaseClass<APIFunctions["record_detail"]["atServer"]|{recordResolved:IRecordResolved},IAppUsedToReadAndChangeOnlyPageState>{
         async init(){
             this.generateLoadingSpinner()
+                const operationDiv = this.articleDOM.appendChild(createElementWithIdAndClass({ id: "detail" }));
                 const detailDiv = this.articleDOM.appendChild(createElementWithIdAndClass({ id: "detail" }));
                 const relatedRecordDiv = this.articleDOM.appendChild(createElementWithIdAndClass({ id: "related" }));
                 let record:IRecordResolved;
@@ -34,7 +40,7 @@ export class S_SearchDetail
                         condition: [{
                             ...condition,
                             groupName:choiceString({
-                                Japanese:"同レギュレーションの記録", English:"" //#TODO 英訳
+                                Japanese:"同条件の記録", English:"Records which has same conditions." //#CTODO 英訳
                             },this.app.state.language)
                         }]
                 })).result[0];
@@ -57,9 +63,67 @@ export class S_SearchDetail
                 } 
             });
             this.deleteLoadingSpinner();
+
+
+            new RecordOperation(operationDiv,this.app.state.language,[{
+                text:{
+                    Japanese:"記録を編集する",
+                    English:"Edit this record"
+                },
+                iconClass:"fas fa-star",
+                color:"green",
+                callback: () =>{ 
+                    if(!StateAdministrator.checkGameSystemEnvIsSet(this.app.state.gameSystemEnvDisplayed)) return;
+                    this.app.transition("modifyRecordForm",{targetGameMode:this.app.state.gameSystemEnvDisplayed,id:record.id})
+                }
+            },{
+                text:{
+                    Japanese:"記録を削除する",
+                    English:"Delete this record"
+                },
+                iconClass:"fas fa-star",
+                color:"red",
+                //#TODO notieに確認ウィンドウを付け、その後modify_recordとremove_recordを実装する。
+                callback: () => this.app.notie
+
+            }])
         }
         
 }
+
+class RecordOperation implements IView{
+    private container:HTMLElement;
+    private buttonsSegment:HTMLElement;
+    private htmlC:HTMLConverter
+    constructor(container:HTMLElement,language:LanguageInApplication,
+        buttonInfo:{text:MultiLanguageString,iconClass:string,color:string,callback:()=>void}[]
+    ){
+        this.container = container;
+        this.container.classList.add("c-operationSegment");
+        const header = this.container.appendChild(createElementWithIdAndClass({className:"__title"}))
+        header.textContent = choiceString({
+            Japanese:"特殊操作",
+            English:"Special Operation"
+        },language)
+        this.buttonsSegment= this.container.appendChild(createElementWithIdAndClass({className:"c-operationButtons u-marginUpDown2emToChildren"}))
+
+        this.htmlC = new HTMLConverter(language);
+        
+        for (const operation of this.operations()) this.append(operation)
+    }
+    private append({text,iconClass,color,callback}:{text:MultiLanguageString,iconClass:string,color:string,callback:()=>void}){
+        this.buttonsSegment.appendChild(this.htmlC.elementWithoutEscaping`
+            <div class="__button --${color}">
+                <div class="__icon"><i class="${iconClass}"></i></div>
+                <div class="__text"><p>${text}<p></div>
+            </div>
+        ` as HTMLElement).addEventListener("click",() => callback())
+    }
+    destroy(){
+        this.container.innerHTML = "";
+    }
+}
+
 export function generateClickedTagsCallBacks(app:IAppUsedToReadAndChangeOnlyPageState,detail:IRecordResolved,baseCondition:SearchCondition):TagsClickedCallbacks{
     return {
         gameSystem: () => {

@@ -1,13 +1,12 @@
 import { IAppUsedToChangeState } from "../../../interface/AppInterfaces";
 import { PageStateBaseClass } from "../PageStateClass";
 import { EditorFormManager, InputFormObject } from "../../parts/SetNewRegulation/EditorFormManager";
-import { EditorTextPart } from "../../parts/SetNewRegulation/Editor/EditorTextPart";
 import { appendElement } from "../../../utility/aboutElement";
 import { IGameModeItemWithoutCollections } from "../../../../type/list/IGameModeItem";
 import { EditorScoreTypePart } from "../../parts/SetNewRegulation/Editor/EditorScoreTypePart";
 import { EditorPositiveIntegerPart } from "../../parts/SetNewRegulation/Editor/EditorNumberTypePart";
 import { DocViewerRequired } from "./Types";
-import { goBackFromDocToCollection, goDeeperFromDocToCollection, titleContext } from "./utility";
+import { goBackFromDocToCollection, goDeeperFromDocToCollection, titleContext,generateBaseEditors,generateDescriptionEditors, createEditorSegmentBaseElement } from "./utility";
 import { SettingRegulationStateHeader } from "../../parts/SetNewRegulation/SettingRegulationStateHeader";
 import { choiceString } from "../../../../utility/aboutLang";
 const context = {
@@ -143,25 +142,10 @@ export class S_SettingRegulationState_GameModeDocViewer
         const editorHeader:HTMLElement = appendElement(this.articleDOM,"div");
         const editorSegment:HTMLElement = appendElement(this.articleDOM,"div");
         const inputForms:InputFormObject<HandledType>= {
-            Japanese:           new EditorTextPart({
-                                            container:appendElement(editorSegment,"div"),
-                                            language:lang,
-                                            title:context.Input.Japanese.title,
-                                            description:context.Input.Japanese.description,
-                                            requiredField:true,
-                                            icooon:"tag"
-                                        }),
-            English:            new EditorTextPart({
-                                            container:appendElement(editorSegment,"div"),
-                                            language:lang,
-                                            title:context.Input.English.title,
-                                            description:context.Input.English.description,
-                                            requiredField:true,
-                                            icooon:"tag"
-                                        }),
+            ...generateBaseEditors(editorSegment,lang,context),
             
             scoreType:          new EditorScoreTypePart({
-                                            container:appendElement(editorSegment,"div"),
+                container:createEditorSegmentBaseElement(editorSegment),
                                             language:lang,
                                             title:context.Input.scoreType.title,
                                             description:context.Input.scoreType.description,
@@ -170,29 +154,15 @@ export class S_SettingRegulationState_GameModeDocViewer
                                             icooon:"ds"
                                         }),
             maxNumberOfPlayer:  new EditorPositiveIntegerPart({
-                                            container:appendElement(editorSegment,"div"),
+                container:createEditorSegmentBaseElement(editorSegment),
                                             language:lang,
                                             title:context.Input.maxNumberOfPlayer.title,
                                             description:context.Input.maxNumberOfPlayer.description,
                                             requiredField:true,
                                             icooon:"person"
                                         }),
-            JDescription:       new EditorTextPart({
-                                            container:appendElement(editorSegment,"div"),
-                                            language:lang,
-                                            title:context.Input.JapaneseDescription.title,
-                                            description:context.Input.JapaneseDescription.description,
-                                            requiredField:false,
-                                            icooon:"feather"
-                                        }),
-            EDescription:       new EditorTextPart({
-                                        container:appendElement(editorSegment,"div"),
-                                        language:lang,
-                                        title:context.Input.EnglishDescription.title,
-                                        description:context.Input.EnglishDescription.description,
-                                        requiredField:false,
-                                        icooon:"feather"
-                                        }),
+
+            ...generateDescriptionEditors(editorSegment,lang,context)
         };
         const gameSystemID = this.requiredObj.collection.parent?.id
         if (gameSystemID === undefined) throw new Error("対応するゲームシステムIDが存在しません。")

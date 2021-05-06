@@ -36,7 +36,7 @@ export class EditorIDPart implements EditorPart<string[]> {
         this.htmlCon = new HTMLConverter(language);
         this._requiredField = requiredField;
         this.container.appendChild(this.htmlCon.elementWithoutEscaping`
-            <h1>${generateIcooonHTML({icooonName:icooon})}${title}</h1>
+            <h1 class="u-noUnderline">${generateIcooonHTML({icooonName:icooon})}${title}</h1>
         `);
         
         this.selectInput = new SelectChoicesCapsuled(this.container.appendChild(document.createElement("select")), options, { language: language,needMultipleSelect:true });

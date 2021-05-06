@@ -49,7 +49,7 @@ export class MenuView implements IView {
                         ${(remarks === undefined) ? `` : `<div class = "c-title__sub"><i class="c-icooon u-background--${remarks.icon}"></i> ${choiceString(remarks, this.language)}</div>`}
                     </div>
                     <hr noshade class="u-thin">
-                    <div class = "u-width95per">${description}</div>
+                    <div class = "u-width95per u-flex"><div class="u-fixedSpace_menuIconWidth"></div>${description}</div>
             </div>` as HTMLElement;
             
         this.mainMenu.appendChild(item);

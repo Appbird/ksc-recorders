@@ -41,7 +41,7 @@ export class EditorScoreTypePart implements EditorPart<ScoreType>{
         this.htmlCon = new HTMLConverter(language);
 
         this._requiredField = requiredField;
-        this.container.appendChild(this.htmlCon.elementWithoutEscaping`<h1>${generateIcooonHTML({icooonName:icooon})}${title}</h1>`);
+        this.container.appendChild(this.htmlCon.elementWithoutEscaping`<h1 class="u-noUnderline">${generateIcooonHTML({icooonName:icooon})}${title}</h1>`);
         this.input = new RadioButtonCupsuled<ScoreType>(appendElement(this.container,"div"), indentifiedName,language,
             [
                 {optionLabel:context.option_time,value:"time"},

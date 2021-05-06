@@ -180,6 +180,86 @@ article.is-seqEnd:before {
   transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.c-operationSegment > .__title {
+  margin: 0;
+  font-size: 1em;
+  width: 94%;
+  padding: 0.2em 3%;
+  color: #c5c5c5;
+  background-color: #7c7c7c;
+}
+
+.c-operationButtons {
+  display: flex;
+  width: 100%;
+  background-color: #868686;
+  justify-content: space-evenly;
+}
+.c-operationButtons > .__button {
+  display: flex;
+  justify-content: space-between;
+}
+.c-operationButtons > .__button > * {
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.2s ease;
+  transition-property: border-bottom, transform;
+}
+.c-operationButtons > .__button > .__icon {
+  font-size: 1.2em;
+  width: 2em;
+  height: 2em;
+  border-bottom-width: 5px;
+  border-bottom-style: solid;
+}
+.c-operationButtons > .__button > .__text {
+  width: 10em;
+  height: 2em;
+  font-size: 1.2em;
+  border-bottom-width: 5px;
+  border-bottom-style: solid;
+}
+.c-operationButtons > .__button:hover > .__icon {
+  transform: translateY(2px);
+  border-bottom-width: 3px;
+}
+.c-operationButtons > .__button:hover > .__text {
+  transform: translateY(2px);
+  border-bottom-width: 3px;
+}
+.c-operationButtons > .__button > .__icon {
+  border-bottom-color: #272727;
+  background-color: #474747;
+}
+.c-operationButtons > .__button > .__text {
+  border-bottom-color: #505050;
+  background-color: #7d7e7d;
+}
+.c-operationButtons > .__button.--green > .__icon {
+  border-bottom-color: #005f0d;
+  background-color: #008111;
+}
+.c-operationButtons > .__button.--green > .__text {
+  border-bottom-color: #1f9c00;
+  background-color: #55bd0f;
+}
+.c-operationButtons > .__button.--red > .__icon {
+  border-bottom-color: #550707;
+  background-color: #a11a15;
+}
+.c-operationButtons > .__button.--red > .__text {
+  border-bottom-color: #7c0000;
+  background-color: #d32222;
+}
+
+.c-inlineSpace {
+  display: inline-block;
+  width: 15%;
+  height: 1em;
+}
+
 .c-radioSelectors {
   display: flex;
   overflow: hidden;
@@ -432,7 +512,7 @@ article.is-seqEnd:before {
 }
 
 .c-recordCardsGroup .c-recordCard {
-  margin: 0.5em auto;
+  margin: 1em auto;
 }
 
 .c-stateInfo {
@@ -532,7 +612,7 @@ article h1 {
   padding: 0;
 }
 
-article h1::after {
+article h1:not(.u-noUnderline):after {
   content: "";
   display: inline-block;
   width: 100%;
@@ -783,6 +863,10 @@ article h1::after {
   flex-flow: wrap;
 }
 
+.u-flex {
+  display: flex;
+}
+
 .u-font--ForNumber {
   font-family: "Montserrat", sans-serif;
 }
@@ -853,6 +937,18 @@ article h1::after {
   height: 6em;
 }
 
+@media screen and (max-width: 800px) {
+  .u-fixedSpace_menuIconWidth {
+    max-width: 3em;
+    min-width: 3em;
+  }
+}
+@media screen and (min-width: 800px) {
+  .u-fixedSpace_menuIconWidth {
+    max-width: 3.5em;
+    min-width: 3.5em;
+  }
+}
 .u-width90per {
   width: 90%;
   margin-left: 5%;

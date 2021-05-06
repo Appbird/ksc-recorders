@@ -84,7 +84,7 @@ export class EditorFormManager<TypeOfObserved extends IItemOfResolveTableToName>
     }
     private refreshTitle(){
         this.title.refresh(`Editing : ${this.pathInString}`,(this.id === undefined) ? choiceString(undefinedIDDisplayer,this.language):this.id,{
-            chara:"u-smallerChara"
+            chara:"u-smallerChara",hr:"u-bold"
         })
     }
     private async fetchData(){

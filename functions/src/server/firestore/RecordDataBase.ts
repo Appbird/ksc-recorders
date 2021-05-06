@@ -226,13 +226,13 @@ export class RecordDataBase{
         if (!userHaveRunThisGameMode) runner.idOfGameModeRunnerHavePlayed.push({id:`${rrg.gameSystemID}/${rrg.gameModeID}`,times:1})
             else userHaveRunThisGameMode.times += 1;
         
-        await this.writeGameSystemInfo({
+        await this.modifyGameSystemInfo(gameSystem.id,{
             ...gameSystem,
             recordsNumber:gameSystem.recordsNumber + 1,
             dateOfLatestPost:record.timestamp_post,
             runnersNumber: gameSystem.runnersNumber + ( userHaveRunThisGameSystem ? 0 : 1 )
         })
-        await this.writeGameModeInfo(rrg.gameSystemID,{
+        await this.modifyGameModeInfo(rrg.gameSystemID,rrg.gameModeID,{
             ...gameMode,
             dateOfLatestPost:record.timestamp_post,
             recordsNumber:gameMode.recordsNumber + 1,
@@ -301,17 +301,17 @@ export class RecordDataBase{
         const userHaveRunThisGameSystemOnlyOnce = (gameSystemInfo?.times === 0)
         const userHaveRunThisGameModeOnlyOnce = (gameModeInfo?.times === 0)
         
-        await this.writeGameSystemInfo({
+        await this.modifyGameSystemInfo(gameSystem.id,{
             ...gameSystem,
             recordsNumber:gameSystem.recordsNumber-1,
             runnersNumber: gameSystem.runnersNumber - ( userHaveRunThisGameSystemOnlyOnce ? 1 : 0 )
         })
-        await this.writeGameModeInfo(rrg.gameSystemID,{
+        await this.modifyGameModeInfo(rrg.gameSystemID,gameMode.id,{
             ...gameMode,
             recordsNumber:gameMode.recordsNumber - 1,
             runnersNumber: gameMode.runnersNumber - (userHaveRunThisGameModeOnlyOnce ? 1 : 0)
         })
-        await this.writeRunnerInfo(record.runnerID,{
+        await this.modifyRunnerInfo(record.runnerID,{
             ...runner,
         })
        

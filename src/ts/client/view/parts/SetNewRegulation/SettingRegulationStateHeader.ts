@@ -23,7 +23,7 @@ export class SettingRegulationStateHeader implements IView {
         this.language = language
         const htmlConverter = new HTMLConverter(language);
         this.title = new TitleCupsuled(appendElement(this.container,"div"));
-        this.title.refresh(choiceString(mainTitle,language),choiceString(subTitle,language));
+        this.title.refresh(choiceString(mainTitle,language),choiceString(subTitle,language),{hr:"u-bold"});
         const menu = this.container.appendChild(appendElement(this.container,"div"));
         const list = menu.appendChild(createElementWithIdAndClass({ className: "c-list" }));
         for (const item of items) {

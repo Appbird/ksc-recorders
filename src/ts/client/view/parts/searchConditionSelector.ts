@@ -27,7 +27,7 @@ export class SearchConditionSelectorView implements IView{
         this.app = app;
         if (!StateAdministrator.checkGameSystemEnvIsSet(this.app.state.gameSystemEnvDisplayed)) throw new Error("閲覧する記録のゲームタイトルとゲームモードが設定されていません。")
         this.container = container;
-        this.container.classList.add("searchConditionSelector");
+        this.container.classList.add("searchConditionSelector","u-marginUpDown2emToChildren");
         this.container.appendChild(element`
         <div class="articleTitle">
             <div class="c-title">
@@ -35,7 +35,7 @@ export class SearchConditionSelectorView implements IView{
             </div>
             <hr noshade class="u-bold">
         </div>`)
-        const context = this.container.appendChild(createElementWithIdAndClass({className:"u-width90per"}))
+        const context = this.container.appendChild(createElementWithIdAndClass({className:"u-width90per u-marginUpDown2emToChildren"}))
         this.htmlConverter = new HTMLConverter(this.app.state.language)
         context.appendChild(this.difficultyColumn)
         context.appendChild(this.targetColumn)
@@ -84,7 +84,7 @@ export class SearchConditionSelectorView implements IView{
         )
         this.difficultyChoices = new SelectChoicesCapsuled(this.difficultyColumn.appendChild( document.createElement("select") ),difficulties,{language:this.app.state.language})
 
-        this.targetChoices = new SelectChoicesCapsuled(this.targetColumn.appendChild( document.createElement("select")),[],{language:this.app.state.language,maxItemCount:10,disable:true,needMultipleSelect:true})
+        this.targetChoices = new SelectChoicesCapsuled(this.targetColumn.appendChild( document.createElement("select")),[],{language:this.app.state.language,maxItemCount:10,needMultipleSelect:true})
         
         //#CTODO 思えばモードによって最大プレイ人数が変わるので、データベースにそのデータを組み込んでおく必要がある。
         
@@ -96,7 +96,7 @@ export class SearchConditionSelectorView implements IView{
                         EDescription:`This mode can be played with at most ${maxNumberOfPlayer} kirbys (friends)!`
                     }
             })
-        
+        this.setTargetChoices()
         this.difficultyChoices.addEventListener("change",() => {
             this.targetChoices.enable();
             if (this.difficultyChoices.getValue(true) === undefined) { this.targetChoices.disable(); return; }
@@ -125,15 +125,6 @@ export class SearchConditionSelectorView implements IView{
     }
     private generateCondition(targetSelected:string[],abilitySelected:string[],gameSystemID:string,gameModeID:string){
         const difficultySelectedID = this.difficultyChoices.getValueAsValue();
-        console.info(`[KSSRs] Searching ... ${JSON.stringify({
-            groupName: "", groupSubName:"",
-            gameSystemEnv:{
-                gameSystemID:gameSystemID, gameModeID:gameModeID,
-                gameDifficultyID:(difficultySelectedID === null) ? "whole": difficultySelectedID
-            },
-            language:this.app.state.language, startOfRecordArray:0,limitOfRecordArray:3,
-            orderOfRecordArray:this.app.state.superiorScore, abilityIDs:abilitySelected
-        })}`)
         if (targetSelected.length === 0){
             return [{
                 groupName: "", groupSubName:"",

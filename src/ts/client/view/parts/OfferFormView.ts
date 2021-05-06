@@ -36,6 +36,7 @@ export class OfferFormView implements IView {
     private simpleMDE:SimpleMDE;
     private errorDisplay:HTMLElement;
     private onDecideEventListener:(input:ISentRecordOffer)=>void;
+    private button:HTMLElement;
     destroy(){
         this.tagInput.destroy();
         this.difficultyChoices.destroy();
@@ -97,8 +98,8 @@ export class OfferFormView implements IView {
         });
         
         this.errorDisplay = this.container.appendChild(element`<div class="u-width90per u-margin2em u-redChara"></div>`).appendChild(document.createElement("h3"))
-        this.container.appendChild(this.htmlConverter.elementWithoutEscaping`<div class="u-width50per u-margin2em"><div class="c-button">決定</div></div>`)
-            .addEventListener("click",() => this.whenDecide())
+        this.button = this.container.appendChild(this.htmlConverter.elementWithoutEscaping`<div class="u-width50per u-margin2em"><div class="c-button">決定</div></div>`) as HTMLElement
+        this.button.addEventListener("click",() => this.whenDecide())
 
             
         this.container.appendChild(createElementWithIdAndClass({className:"u-space3em"}))
@@ -116,6 +117,8 @@ export class OfferFormView implements IView {
         this.simpleMDE.value(record.note)
     }
     private async whenDecide(){
+        if (this.button.classList.contains("u-unused")) return;
+        this.button.classList.add("u-unused")
         try {       
             this.evidenceMovie.set(this.URLInput.value);
             this.modifyScoreInput();
@@ -124,6 +127,7 @@ export class OfferFormView implements IView {
                 Japanese:"[Error] 入力が不正な必須項目が存在します。",
                 English:"[Error] There is a required field which is entered incorrectly."
             },this.app.state.language)
+            this.button.classList.remove("u-unused")
             return;
         }
         const abilityIDs = this.abilityChoices.getValueAsArray();
@@ -134,6 +138,7 @@ export class OfferFormView implements IView {
                     Japanese:"[Error] 入力されていない必須項目が存在します。",
                     English:"[Error] There is a required field which is not entered correctly."
                 },this.app.state.language)
+                this.button.classList.remove("u-unused")
                 return;
             }
         this.onDecideEventListener({

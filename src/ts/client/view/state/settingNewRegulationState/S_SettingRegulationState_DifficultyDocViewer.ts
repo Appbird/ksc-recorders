@@ -5,7 +5,7 @@ import { EditorTextPart } from "../../parts/SetNewRegulation/Editor/EditorTextPa
 import { appendElement } from "../../../utility/aboutElement";
 import { DocViewerRequired } from "./Types";
 import { SettingRegulationStateHeader } from "../../parts/SetNewRegulation/SettingRegulationStateHeader";
-import { goBackFromDocToCollection, titleContext } from "./utility";
+import { createEditorSegmentBaseElement, generateBaseEditors, generateDescriptionEditors, goBackFromDocToCollection, titleContext } from "./utility";
 import { IGameDifficultyItem } from "../../../../type/list/IGameDifficultyItem";
 import { EditorIDPart } from "../../parts/SetNewRegulation/Editor/EditorIDPart";
 import { ITargetItem } from "../../../../type/list/ITargetItem";
@@ -105,25 +105,11 @@ export class S_SettingRegulationState_DifficultyDocViewer
         const optionsRef = this.requiredObj.collection.parent?.collection("targets");
         if (optionsRef === undefined) throw new Error("計測対象コレクションが存在しません。")
         const inputForms:InputFormObject<HandledType>= {
-            Japanese:           new EditorTextPart({
-                                            container:appendElement(editorSegment,"div"),
-                                            language:lang,
-                                            title:context.Input.Japanese.title,
-                                            description:context.Input.Japanese.description,
-                                            requiredField:true,
-                                            icooon:"tag"
-                                        }),
-            English:            new EditorTextPart({
-                                            container:appendElement(editorSegment,"div"),
-                                            language:lang,
-                                            title:context.Input.English.title,
-                                            description:context.Input.English.description,
-                                            requiredField:true,
-                                            icooon:"tag"
-                                        }),
+
+            ...generateBaseEditors(editorSegment,lang,context),
             TargetIDsIncludedInTheDifficulty:   
                                 new EditorIDPart({
-                                    container:appendElement(editorSegment,"div"),
+                                    container:createEditorSegmentBaseElement(editorSegment),
                                     language:lang,
                                     title:context.Input.TargetIDs.title,
                                     description:context.Input.TargetIDs.description,
@@ -132,22 +118,8 @@ export class S_SettingRegulationState_DifficultyDocViewer
                                     observed:optionsRef,
                                     icooon:"list"
                                 }),
-            JDescription:       new EditorTextPart({
-                                            container:appendElement(editorSegment,"div"),
-                                            language:lang,
-                                            title:context.Input.JapaneseDescription.title,
-                                            description:context.Input.JapaneseDescription.description,
-                                            requiredField:false,
-                                            icooon:"feather"
-                                        }),
-            EDescription:       new EditorTextPart({
-                                        container:appendElement(editorSegment,"div"),
-                                        language:lang,
-                                        title:context.Input.EnglishDescription.title,
-                                        description:context.Input.EnglishDescription.description,
-                                        requiredField:false,
-                                        icooon:"feather"
-                                        }),
+                                
+            ...generateDescriptionEditors(editorSegment,lang,context)
         };
         this.editorForm = new EditorFormManager(
             editorHeader,lang,this.requiredObj.collection,this.requiredObj.pathStack.join(" > "),inputForms,

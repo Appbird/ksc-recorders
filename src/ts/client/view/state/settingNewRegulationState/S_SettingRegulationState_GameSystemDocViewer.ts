@@ -2,11 +2,10 @@ import { IAppUsedToChangeState } from "../../../interface/AppInterfaces";
 import { PageStateBaseClass } from "../PageStateClass";
 import { EditorFormManager, InputFormObject } from "../../parts/SetNewRegulation/EditorFormManager";
 import { IGameSystemInfoWithoutCollections } from "../../../../type/list/IGameSystemInfo";
-import { EditorTextPart } from "../../parts/SetNewRegulation/Editor/EditorTextPart";
 import { appendElement } from "../../../utility/aboutElement";
 import { EditorDatePart } from "../../parts/SetNewRegulation/Editor/EditorDatePart";
 import { DocViewerRequired } from "./Types";
-import { goBackFromDocToCollection, goDeeperFromDocToCollection, titleContext } from "./utility";
+import { createEditorSegmentBaseElement, generateBaseEditors, generateDescriptionEditors, goBackFromDocToCollection, goDeeperFromDocToCollection, titleContext } from "./utility";
 import { SettingRegulationStateHeader } from "../../parts/SetNewRegulation/SettingRegulationStateHeader";
 import { choiceString } from "../../../../utility/aboutLang";
 const context = {
@@ -110,47 +109,19 @@ export class S_SettingRegulationState_GameSystemDocViewer
         const editorHeader:HTMLElement = appendElement(this.articleDOM,"div");
         const editorSegment:HTMLElement = appendElement(this.articleDOM,"div");
         const inputForms:InputFormObject<HandledType>= {
-            Japanese:           new EditorTextPart({
-                                            container:appendElement(editorSegment,"div"),
-                                            language:lang,
-                                            title:context.Input.Japanese.title,
-                                            description:context.Input.Japanese.description,
-                                            icooon:"name",
-                                            requiredField:true
-                                        }),
-            English:            new EditorTextPart({
-                                            container:appendElement(editorSegment,"div"),
-                                            language:lang,
-                                            title:context.Input.English.title,
-                                            description:context.Input.English.description,
-                                            icooon:"name",
-                                            requiredField:true
-                                        }),
+
+            ...generateBaseEditors(editorSegment,lang,context),
                                         
             releasedDate:       new EditorDatePart({
-                                            container:appendElement(editorSegment,"div"),
+                container:createEditorSegmentBaseElement(editorSegment),
                                             language:lang,
                                             title:context.Input.releasedData.title,
                                             description:context.Input.releasedData.description,
                                             icooon:"ns",
                                             requiredField:true
                                         }),
-            JDescription:       new EditorTextPart({
-                                            container:appendElement(editorSegment,"div"),
-                                            language:lang,
-                                            title:context.Input.JapaneseDescription.title,
-                                            description:context.Input.JapaneseDescription.description,
-                                            icooon:"feather",
-                                            requiredField:false
-                                        }),
-            EDescription:       new EditorTextPart({
-                                        container:appendElement(editorSegment,"div"),
-                                        language:lang,
-                                        title:context.Input.EnglishDescription.title,
-                                        description:context.Input.EnglishDescription.description,
-                                        icooon:"feather",
-                                        requiredField:false
-                                    }),
+                                        
+            ...generateDescriptionEditors(editorSegment,lang,context)
         };
         this.editorForm = new EditorFormManager(
             editorHeader,lang,this.requiredObj.collection,this.requiredObj.pathStack.join(" > "),inputForms,

@@ -4,7 +4,7 @@ article h1{
     padding:0;
 }
 
-article h1::after{
+article h1:not(.u-noUnderline):after{
     content:"";
     display: inline-block;
     width: 100%;

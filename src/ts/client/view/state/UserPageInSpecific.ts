@@ -68,7 +68,6 @@ export class S_UserPageInSpecific
                     isDisabled:(this.app.loginAdministratorReadOnly.loginUserID !== runnerInfo.id),
                     biggerTitle:true,
                     to:async () => { 
-                        try{await this.app.logout();}catch(err){this.app.errorCatcher(err)}
                         this.app.transition("userPageInWhole",{runnerID:this.requiredObj.runnerID})
                     }
                 },

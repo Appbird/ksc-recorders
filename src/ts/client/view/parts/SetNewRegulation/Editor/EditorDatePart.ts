@@ -30,7 +30,7 @@ export class EditorDatePart implements EditorPart<number>{
         this._requiredField = requiredField;
         const htmlConverter = new HTMLConverter(language);
 
-        this.container.appendChild(htmlConverter.elementWithoutEscaping`<h1>${generateIcooonHTML({icooonName:icooon})}${title}</h1>`);
+        this.container.appendChild(htmlConverter.elementWithoutEscaping`<h1 class="u-noUnderline">${generateIcooonHTML({icooonName:icooon})}${title}</h1>`);
         this.datePickerElement = appendElement(this.container,"input")
         this.ulist = new UListCupsuled(appendElement(this.container,"ul"),language,description)
         

@@ -9,10 +9,12 @@ export class TitleCupsuled implements IView{
     refresh(main:string,sub?:string,{
         underline = true,
         chara = "",
-        subChara = ""
+        subChara = "",
+        hr = "u-thin"
     }:{
         chara?:"u-biggerChara"|"u-smallerChara"|"",
-        subChara?:"u-biggerChara"|"u-smallerChara"|""
+        subChara?:"u-biggerChara"|"u-smallerChara"|"",
+        hr?:"u-thin"|"u-bold"
         underline?:boolean
     } = {}){
         this.container.innerHTML = "";
@@ -22,7 +24,7 @@ export class TitleCupsuled implements IView{
         </div>
         `);
         if (sub !== undefined) title.appendChild(elementWithoutEscaping`<div class="c-title__sub ${subChara}">${sub}</div>`)
-        if (underline) this.container.appendChild(elementWithoutEscaping`<hr noshade class="u-thin">`)
+        if (underline) this.container.appendChild(elementWithoutEscaping`<hr noshade class="${hr}">`)
     }
     destroy(){
         this.container.innerHTML = "";

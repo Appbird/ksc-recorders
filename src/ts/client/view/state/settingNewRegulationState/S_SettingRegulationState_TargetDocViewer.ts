@@ -1,10 +1,9 @@
 import { IAppUsedToChangeState } from "../../../interface/AppInterfaces";
 import { PageStateBaseClass } from "../PageStateClass";
 import { EditorFormManager, InputFormObject } from "../../parts/SetNewRegulation/EditorFormManager";
-import { EditorTextPart } from "../../parts/SetNewRegulation/Editor/EditorTextPart";
 import { appendElement } from "../../../utility/aboutElement";
 import { DocViewerRequired } from "./Types";
-import { goBackFromDocToCollection, titleContext } from "./utility";
+import { generateBaseEditors, generateDescriptionEditors, goBackFromDocToCollection, titleContext } from "./utility";
 import { ITargetItem } from "../../../../type/list/ITargetItem";
 import { SettingRegulationStateHeader } from "../../parts/SetNewRegulation/SettingRegulationStateHeader";
 import { choiceString } from "../../../../utility/aboutLang";
@@ -85,38 +84,8 @@ export class S_SettingRegulationState_TargetDocViewer
         const editorHeader:HTMLElement = appendElement(this.articleDOM,"div");
         const editorSegment:HTMLElement = appendElement(this.articleDOM,"div");
         const inputForms:InputFormObject<HandledType>= {
-            Japanese:           new EditorTextPart({
-                                            container:appendElement(editorSegment,"div"),
-                                            language:lang,
-                                            title:context.Input.Japanese.title,
-                                            description:context.Input.Japanese.description,
-                                            icooon:"tag",
-                                            requiredField:true
-                                        }),
-            English:            new EditorTextPart({
-                                            container:appendElement(editorSegment,"div"),
-                                            language:lang,
-                                            title:context.Input.English.title,
-                                            description:context.Input.English.description,
-                                            requiredField:true,
-                                            icooon:"tag",
-                                        }),
-            JDescription:       new EditorTextPart({
-                                            container:appendElement(editorSegment,"div"),
-                                            language:lang,
-                                            title:context.Input.JapaneseDescription.title,
-                                            description:context.Input.JapaneseDescription.description,
-                                            icooon:"feather",
-                                            requiredField:false
-                                        }),
-            EDescription:       new EditorTextPart({
-                                        container:appendElement(editorSegment,"div"),
-                                        language:lang,
-                                        title:context.Input.EnglishDescription.title,
-                                        description:context.Input.EnglishDescription.description,
-                                        icooon:"feather",
-                                        requiredField:false
-                                        }),
+            ...generateBaseEditors(editorSegment,lang,context),
+            ...generateDescriptionEditors(editorSegment,lang,context)
         };
         this.editorForm = new EditorFormManager(
             editorHeader,lang,this.requiredObj.collection,this.requiredObj.pathStack.join(" > "),inputForms,
@@ -150,4 +119,5 @@ export class S_SettingRegulationState_TargetDocViewer
         if (this.editorForm !== null) this.editorForm.destroy();
     }
 }
+
 

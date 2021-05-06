@@ -1,0 +1,104 @@
+
+.c-operationSegment{
+    &>.__title{
+        margin: 0;
+        font-size: 1em;
+        width:94%;
+        padding:0.2em 3%;
+        color:rgb(197, 197, 197);
+        background-color:rgb(124, 124, 124);
+        
+    }
+
+    
+}
+.c-operationButtons {
+    display:flex;
+    width:100%;
+    background-color:rgb(134, 134, 134);
+    justify-content:space-evenly;
+
+    
+    &>.__button{
+        display: flex;
+        justify-content: space-between;
+        &>*{
+            color:white;
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            
+            transition: 0.2s ease;
+            transition-property: border-bottom, transform;
+        }
+        &>.__icon{
+            
+            font-size: 1.2em;
+            width:2em;
+            height:2em;
+            border-bottom-width: 5px;
+            border-bottom-style: solid;
+        }
+        &>.__text{
+            width: 10em;
+            height: 2em;
+            font-size: 1.2em;
+            
+            border-bottom-width: 5px;
+            border-bottom-style: solid;
+            
+        }
+        &:hover{
+        
+            &>.__icon{
+                transform: translateY(2px);
+                border-bottom-width: 3px;
+            }
+            &>.__text{
+                transform: translateY(2px);
+                border-bottom-width: 3px;
+            }
+        }
+        
+        &>.__icon{
+                
+            border-bottom-color: rgb(39, 39, 39);
+            background-color:rgb(71, 71, 71);
+        }
+        &>.__text{
+            
+            border-bottom-color: rgb(80, 80, 80);
+            background-color:rgb(125, 126, 125);
+        }
+
+        &.--green{
+            &>.__icon{
+                
+                border-bottom-color: rgb(0, 95, 13);
+                background-color:rgb(0, 129, 17);
+            }
+            &>.__text{
+                
+                border-bottom-color: rgb(31, 156, 0);
+                background-color:rgb(85, 189, 15);
+            }
+        }
+
+        
+        &.--red{
+            &>.__icon{
+                border-bottom-color: rgb(85, 7, 7);
+                background-color:rgb(161, 26, 21);
+            }
+            &>.__text{
+                
+                border-bottom-color: rgb(124, 0, 0);
+                background-color:rgb(211, 34, 34);
+            }
+        }
+        
+    }
+    
+    
+}
+

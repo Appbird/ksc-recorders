@@ -2,6 +2,7 @@ import { IRecord, IRecordResolved } from "../../../../../src/ts/type/record/IRec
 import { converseMiliSecondsIntoTime } from "../../../../../src/ts/utility/timeUtility";
 import { RecordDataBase } from "../../firestore/RecordDataBase";
 import {webhookURL} from "./secret.json"
+import fetch from "node-fetch";
 //#NOTE これの実行には{webhookURL:string}型のオブジェクトが記述されたjsonファイルを書き込んでおく必要がある。
 
 export class DiscordWebhookers{
@@ -15,8 +16,8 @@ export class DiscordWebhookers{
         const rrg = rr.gameSystemEnvironment
         const gameSystem = await this.recordDatabase.getGameSystemInfo(rrg.gameSystemID)
         const gameMode = await this.recordDatabase.getGameModeInfo(rrg.gameSystemID,rrg.gameModeID)
-        const userIconURL = (await this.recordDatabase.getRunnerInfo(record.id)).photoURL;
-        fetch(webhookURL,{
+        const userIconURL = (await this.recordDatabase.getRunnerInfo(record.runnerID)).photoURL;
+        await fetch(webhookURL,{
             method:"POST",
             body:JSON.stringify({
                 content: `:mailbox_with_mail: New Post! @${gameSystem.English}/${gameMode.English}`,
@@ -57,11 +58,11 @@ export class DiscordWebhookers{
         const userIconURL = (await this.recordDatabase.getRunnerInfo(recordResolved.id)).photoURL;
         const deletedBy = (await this.recordDatabase.getRunnerInfo(uid)).English;
 
-        fetch(webhookURL,{
+        await fetch(webhookURL,{
             
             method:"POST",
             body:JSON.stringify({
-                content: `:closed_book: Record Deleted By ${deletedBy} @${gameSystem.English}/${gameMode.English}\nThe following JSON string is the data of the deleted Record.\n\n\`\`\`${JSON.stringify(recordResolved)}\`\`\``,
+                content: `:closed_book: Record Deleted By ${deletedBy} @${gameSystem.English}/${gameMode.English}\nThe following JSON string is the data of the deleted Record.\n\n\`\`\`${JSON.stringify(record)}\`\`\``,
                 embeds:{
                     title:`Deleted Record Information >> KSSRs/${rrg.gameSystemName}/${rrg.gameModeName}/${rr.targetName}`,
                     author:{
@@ -84,6 +85,48 @@ export class DiscordWebhookers{
                     },{
                         name:`:clock3: ${gameMode.scoreType === "time" ? "Time" : "Score"}`,
                         value: gameMode.scoreType === "time" ? converseMiliSecondsIntoTime(recordResolved.score) : recordResolved.score
+                    }]
+                },
+                
+            })
+        })
+    }
+    async modifyRecordRemovedMessage(uid:string,recordResolved:IRecordResolved){
+        const rr = recordResolved.regulation
+        const rrg = rr.gameSystemEnvironment
+        const gameSystem = await this.recordDatabase.getGameSystemInfo(rrg.gameSystemID)
+        const gameMode = await this.recordDatabase.getGameModeInfo(rrg.gameSystemID,rrg.gameModeID)
+        const userIconURL = (await this.recordDatabase.getRunnerInfo(recordResolved.id)).photoURL;
+        const modifiedBy = (await this.recordDatabase.getRunnerInfo(uid)).English;
+        if (recordResolved.modifiedBy === undefined) return
+        const mostRecently = recordResolved.modifiedBy[recordResolved.modifiedBy.length-1];
+        await fetch(webhookURL,{
+            
+            method:"POST",
+            body:JSON.stringify({
+                content: `:closed_book: Record Modified By ${modifiedBy} @${gameSystem.English}/${gameMode.English}`,
+                embeds:{
+                    title:`Deleted Record Information >> KSSRs/${rrg.gameSystemName}/${rrg.gameModeName}/${rr.targetName}`,
+                    author:{
+                        name:recordResolved.runnerName,
+                        url:`${this.host}/user/${recordResolved.runnerName}`,
+                        icon_url:userIconURL
+                    },
+                    footer:{
+                        text:"Kirby-Speed/Score-Recorders",
+                        url:this.host
+                    },
+                    field:[{
+                        name:`:star: Ability`,
+                        value:`ID (${mostRecently.before.regulation.abilityIDs.join(",")}) >> ${rr.abilityIDs.join(`,`)}`
+                    },
+                    {
+                        name:`:flag_white: Target`,
+                        value:`ID (${mostRecently.before.regulation.targetID}) >> ${rr.targetID}`
+                        
+                    },{
+                        name:`:clock3: ${gameMode.scoreType === "time" ? "Time" : "Score"}`,
+                        value:`${gameMode.scoreType === "time" ? converseMiliSecondsIntoTime(recordResolved.score) : recordResolved.score} >> ${gameMode.scoreType === "time" ? converseMiliSecondsIntoTime(recordResolved.score) : recordResolved.score}`
                     }]
                 },
                 

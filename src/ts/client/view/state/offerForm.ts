@@ -24,8 +24,9 @@ export class S_OfferForm
                 this.app,difficulties,abilities,{
                     onDecideEventListener:async (input) => {
                         this.articleDOM.innerHTML = "";
-                        this.generateLoadingSpinner("cloud");
                         try {
+                            this.app.goToTop();
+                            this.generateLoadingSpinner("cloud");
                             const detailRecord = (await this.app.accessToAPI("record_write",{
                                 record:input,
                                 language:this.app.state.language,

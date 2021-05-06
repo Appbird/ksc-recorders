@@ -1,4 +1,9 @@
+import { MultiLanguageString } from "../../../../type/foundation/MultiLanguageString";
+import { LanguageInApplication } from "../../../../type/LanguageInApplication";
+import { element } from "../../../../utility/ViewUtility";
 import { IAppUsedToReadAndChangeOnlyPageState } from "../../../interface/AppInterfaces";
+import { appendElement } from "../../../utility/aboutElement";
+import { EditorTextPart } from "../../parts/SetNewRegulation/Editor/EditorTextPart";
 import { DocViewerRequired } from "./Types";
 
 type CollectionName = "modes"|"abilities"|"targets"|"difficulties"
@@ -21,6 +26,62 @@ export function goBackFromDocToCollection(app:IAppUsedToReadAndChangeOnlyPageSta
     },{ifAppendHistory:false})
 }
 
+export function createEditorSegmentBaseElement(container:HTMLElement,):HTMLElement{
+    const result = appendElement(container,"div")
+    container.appendChild(element`<hr noshade class="u-thin">`);
+    return result;
+}
+
+export function generateBaseEditors(container:HTMLElement,lang:LanguageInApplication,context:{
+        Input:{
+            Japanese:{title:MultiLanguageString,description:MultiLanguageString[]},
+            English:{title:MultiLanguageString,description:MultiLanguageString[]},
+        },
+}){
+    return {
+        Japanese:           new EditorTextPart({
+            container:createEditorSegmentBaseElement(appendElement(container,"div")),
+                                    language:lang,
+                                    title:context.Input.Japanese.title,
+                                    description:context.Input.Japanese.description,
+                                    icooon:"tag",
+                                    requiredField:true
+                                }),
+        English:            new EditorTextPart({
+            container:createEditorSegmentBaseElement(appendElement(container,"div")),
+                                        language:lang,
+                                        title:context.Input.English.title,
+                                        description:context.Input.English.description,
+                                        requiredField:true,
+                                        icooon:"tag",
+                                    }),
+    }
+}
+export function generateDescriptionEditors(container:HTMLElement,lang:LanguageInApplication,context:{
+    Input:{
+        JapaneseDescription:{title:MultiLanguageString,description:MultiLanguageString[]},
+        EnglishDescription:{title:MultiLanguageString,description:MultiLanguageString[]},
+    },
+}){
+return {
+    JDescription:       new EditorTextPart({
+        container:createEditorSegmentBaseElement(appendElement(container,"div")),
+                                    language:lang,
+                                    title:context.Input.JapaneseDescription.title,
+                                    description:context.Input.JapaneseDescription.description,
+                                    icooon:"feather",
+                                    requiredField:false
+                                }),
+    EDescription:       new EditorTextPart({
+        container:createEditorSegmentBaseElement(appendElement(container,"div")),
+                                language:lang,
+                                title:context.Input.EnglishDescription.title,
+                                description:context.Input.EnglishDescription.description,
+                                icooon:"feather",
+                                requiredField:false
+                                }),
+}
+}
 export const titleContext = {
     titleWithoutID:{
         Japanese:"アイテムの登録",

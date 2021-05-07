@@ -1,7 +1,7 @@
 import { S_NowLoading } from "./nowLoading";
 import { S_ErrorState} from "./ErrorState"
 import { PageStatesConstructorObj} from "../../interface/PageStatesStructure";
-import { S_DetailViewer } from "./SearchDetail";
+import { S_DetailViewer } from "./DetailViewer";
 import { S_SearchConditionSelector } from "./searchConditionSelector";
 import { S_SearchResult } from "./searchResult";
 import { S_GameSystemSelector } from "./gameSystemSelector";

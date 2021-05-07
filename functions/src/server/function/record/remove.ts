@@ -4,6 +4,7 @@ import { ControllerOfTableForResolvingID } from "../../recordConverter/Controlle
 import { authentication } from "../foundation/auth";
 import { DiscordWebhookers } from "../webhooks/discord";
 
+//#CH ユーザーの権限認証をこの関数から分離したい、APIList側にそういうチェック関数を持たせられないか？
 export async function remove(recordDataBase:RecordDataBase,input:APIFunctions["record_delete"]["atServer"]):Promise<APIFunctions["record_delete"]["atClient"]>{
     const uid = await authentication(input.IDToken);
     const deleted = await recordDataBase.getRecord(input.gameSystemEnv.gameSystemID,input.gameSystemEnv.gameModeID,input.recordID)

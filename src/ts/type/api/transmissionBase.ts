@@ -12,3 +12,13 @@ export interface IReceivedData{
 export interface ValidatorOnReceivedDataAtServer<T extends IReceivedDataAtServer>{
     
 }
+export interface IReceivedDataAtServerNeedAuthentication{
+    IDToken:string;
+}
+export interface IReceivedDataAtServerNeedOwner{
+    gameSystemEnv:{
+        gameModeID:string
+        gameSystemID:string
+    }
+    recordID:string;
+}

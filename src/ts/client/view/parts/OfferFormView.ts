@@ -73,7 +73,6 @@ export class OfferFormView implements IView {
         //#CH 追加されるタグの色を対応させる。
         
         this.setTargetDropdownEventListener();
-        this.setTargetChoices();
         this.setURLInputChangeEventListener();
         this.setScoreInputChangeEventListener();
         
@@ -103,7 +102,11 @@ export class OfferFormView implements IView {
 
             
         this.container.appendChild(createElementWithIdAndClass({className:"u-space3em"}))
-        if (defaultRecord !== undefined) this.loadDefaultRecord(defaultRecord);
+        
+        this.setTargetChoices().then( () => {
+            if (defaultRecord !== undefined) this.loadDefaultRecord(defaultRecord);
+        })
+        
     }
     private loadDefaultRecord(record:IRecord){
         const rr = record.regulation;

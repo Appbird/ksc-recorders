@@ -13,13 +13,88 @@ export const IReceivedDataAtServer_recordModifySchema = {
   "defaultProperties": [
   ],
   "definitions": {
-    "IGameSystemEnvironment": {
+    "LanguageInApplication": {
+      "enum": [
+        "English",
+        "Japanese"
+      ],
+      "type": "string"
+    },
+    "RecordPropertiesInModifiable": {
       "defaultProperties": [
       ],
       "properties": {
-        "gameDifficultyID": {
+        "link": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "note": {
           "type": "string"
         },
+        "regulation": {
+          "defaultProperties": [
+          ],
+          "properties": {
+            "abilityIDs": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "gameSystemEnvironment": {
+              "defaultProperties": [
+              ],
+              "properties": {
+                "gameDifficultyID": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "gameDifficultyID"
+              ],
+              "type": "object"
+            },
+            "targetID": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "abilityIDs",
+            "gameSystemEnvironment",
+            "targetID"
+          ],
+          "type": "object"
+        },
+        "score": {
+          "type": "number"
+        },
+        "tagName": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        }
+      },
+      "required": [
+        "link",
+        "note",
+        "regulation",
+        "score",
+        "tagName"
+      ],
+      "type": "object"
+    }
+  },
+  "properties": {
+    "IDToken": {
+      "type": "string"
+    },
+    "gameSystemEnv": {
+      "defaultProperties": [
+      ],
+      "properties": {
         "gameModeID": {
           "type": "string"
         },
@@ -28,202 +103,27 @@ export const IReceivedDataAtServer_recordModifySchema = {
         }
       },
       "required": [
-        "gameDifficultyID",
         "gameModeID",
         "gameSystemID"
       ],
       "type": "object"
     },
-    "IRecord": {
-      "defaultProperties": [
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "languageOfTagName": {
-          "$ref": "#/definitions/LanguageInApplication"
-        },
-        "link": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "modifiedBy": {
-          "items": {
-            "$ref": "#/definitions/ModifiedHistoryStack"
-          },
-          "type": "array"
-        },
-        "note": {
-          "type": "string"
-        },
-        "regulation": {
-          "$ref": "#/definitions/IRegulation"
-        },
-        "runnerID": {
-          "type": "string"
-        },
-        "score": {
-          "type": "number"
-        },
-        "tagID": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "tagName": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "timestamp_post": {
-          "type": "number"
-        }
-      },
-      "required": [
-        "id",
-        "languageOfTagName",
-        "link",
-        "note",
-        "regulation",
-        "runnerID",
-        "score",
-        "tagID",
-        "tagName",
-        "timestamp_post"
-      ],
-      "type": "object"
-    },
-    "IRegulation": {
-      "defaultProperties": [
-      ],
-      "properties": {
-        "abilityIDs": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "gameSystemEnvironment": {
-          "$ref": "#/definitions/IGameSystemEnvironment"
-        },
-        "targetID": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "abilityIDs",
-        "gameSystemEnvironment",
-        "targetID"
-      ],
-      "type": "object"
-    },
-    "LanguageInApplication": {
-      "enum": [
-        "English",
-        "Japanese"
-      ],
-      "type": "string"
-    },
-    "ModifiedHistoryStack": {
-      "defaultProperties": [
-      ],
-      "properties": {
-        "before": {
-          "defaultProperties": [
-          ],
-          "properties": {
-            "languageOfTagName": {
-              "$ref": "#/definitions/LanguageInApplication"
-            },
-            "link": {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            "note": {
-              "type": "string"
-            },
-            "regulation": {
-              "$ref": "#/definitions/IRegulation"
-            },
-            "runnerID": {
-              "type": "string"
-            },
-            "score": {
-              "type": "number"
-            },
-            "tagID": {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            "tagName": {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            "timestamp_approval": {
-              "type": "number"
-            },
-            "timestamp_post": {
-              "type": "number"
-            }
-          },
-          "required": [
-            "languageOfTagName",
-            "link",
-            "note",
-            "regulation",
-            "runnerID",
-            "score",
-            "tagID",
-            "tagName",
-            "timestamp_post"
-          ],
-          "type": "object"
-        },
-        "modifierID": {
-          "type": "string"
-        },
-        "timestamp": {
-          "type": "number"
-        }
-      },
-      "required": [
-        "before",
-        "modifierID",
-        "timestamp"
-      ],
-      "type": "object"
-    }
-  },
-  "properties": {
-    "IDToken": {
-      "$ref": "#/definitions/LanguageInApplication"
-    },
     "language": {
       "$ref": "#/definitions/LanguageInApplication"
     },
-    "record": {
-      "$ref": "#/definitions/IRecord"
-    },
     "recordID": {
       "type": "string"
+    },
+    "recordModified": {
+      "$ref": "#/definitions/RecordPropertiesInModifiable"
     }
   },
   "required": [
     "IDToken",
+    "gameSystemEnv",
     "language",
-    "record",
-    "recordID"
+    "recordID",
+    "recordModified"
   ],
   "type": "object"
 };

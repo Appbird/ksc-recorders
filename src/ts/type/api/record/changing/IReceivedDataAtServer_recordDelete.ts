@@ -1,10 +1,5 @@
-import { IReceivedDataAtServer } from "../../transmissionBase";
+import { IReceivedDataAtServer, IReceivedDataAtServerNeedAuthentication, IReceivedDataAtServerNeedOwner } from "../../transmissionBase";
 
-export interface IReceivedDataAtServer_recordDelete extends IReceivedDataAtServer {
-    gameSystemEnv: {
-        gameSystemID: string;
-        gameModeID: string;
-    };
-    recordID: string;
-    IDToken: string;
+export interface IReceivedDataAtServer_recordDelete extends IReceivedDataAtServer,IReceivedDataAtServerNeedAuthentication,IReceivedDataAtServerNeedOwner {
+
 }

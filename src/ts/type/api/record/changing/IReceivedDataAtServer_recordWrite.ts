@@ -1,11 +1,10 @@
 import { LanguageInApplication } from "../../../LanguageInApplication";
-import { IReceivedDataAtServer } from "../../transmissionBase";
+import { IReceivedDataAtServer, IReceivedDataAtServerNeedAuthentication } from "../../transmissionBase";
 import { IRegulation } from "../../../foundation/IRegulation";
 
-export interface IReceivedDataAtServer_recordWrite extends IReceivedDataAtServer {
+export interface IReceivedDataAtServer_recordWrite extends IReceivedDataAtServer,IReceivedDataAtServerNeedAuthentication {
     record: ISentRecordOffer;
     language: LanguageInApplication;
-    IDToken: string;
 }
 
 export interface ISentRecordOffer{

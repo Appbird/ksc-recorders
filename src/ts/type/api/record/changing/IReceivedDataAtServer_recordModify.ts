@@ -1,10 +1,23 @@
 import { LanguageInApplication } from "../../../LanguageInApplication";
-import { IReceivedDataAtServer } from "../../transmissionBase";
-import { IRecord } from "../../../record/IRecord";
+import { IReceivedDataAtServer, IReceivedDataAtServerNeedAuthentication, IReceivedDataAtServerNeedOwner } from "../../transmissionBase";
 
-export interface IReceivedDataAtServer_recordModify extends IReceivedDataAtServer {
-    record: IRecord;
-    recordID: string;
+export interface IReceivedDataAtServer_recordModify extends IReceivedDataAtServer,IReceivedDataAtServerNeedAuthentication,IReceivedDataAtServerNeedOwner {
+    recordModified: RecordPropertiesInModifiable
+
     language: LanguageInApplication;
-    IDToken: LanguageInApplication;
 }
+
+export interface RecordPropertiesInModifiable{
+    note:string;
+    link:string[];
+    tagName:string[];
+    score:number;
+    regulation:{
+        abilityIDs:string[]
+        targetID:string
+        gameSystemEnvironment:{
+            gameDifficultyID:string
+        }
+    }
+
+};

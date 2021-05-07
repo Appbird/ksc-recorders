@@ -55,7 +55,7 @@ export class DiscordWebhookers{
         const rrg = rr.gameSystemEnvironment
         const gameSystem = await this.recordDatabase.getGameSystemInfo(rrg.gameSystemID)
         const gameMode = await this.recordDatabase.getGameModeInfo(rrg.gameSystemID,rrg.gameModeID)
-        const userIconURL = (await this.recordDatabase.getRunnerInfo(recordResolved.id)).photoURL;
+        const userIconURL = (await this.recordDatabase.getRunnerInfo(recordResolved.runnerID)).photoURL;
         const deletedBy = (await this.recordDatabase.getRunnerInfo(uid)).English;
 
         await fetch(webhookURL,{
@@ -91,12 +91,12 @@ export class DiscordWebhookers{
             })
         })
     }
-    async modifyRecordRemovedMessage(uid:string,recordResolved:IRecordResolved){
+    async sendRecordModifiedMessage(uid:string,recordResolved:IRecordResolved){
         const rr = recordResolved.regulation
         const rrg = rr.gameSystemEnvironment
         const gameSystem = await this.recordDatabase.getGameSystemInfo(rrg.gameSystemID)
         const gameMode = await this.recordDatabase.getGameModeInfo(rrg.gameSystemID,rrg.gameModeID)
-        const userIconURL = (await this.recordDatabase.getRunnerInfo(recordResolved.id)).photoURL;
+        const userIconURL = (await this.recordDatabase.getRunnerInfo(recordResolved.runnerID)).photoURL;
         const modifiedBy = (await this.recordDatabase.getRunnerInfo(uid)).English;
         if (recordResolved.modifiedBy === undefined) return
         const mostRecently = recordResolved.modifiedBy[recordResolved.modifiedBy.length-1];

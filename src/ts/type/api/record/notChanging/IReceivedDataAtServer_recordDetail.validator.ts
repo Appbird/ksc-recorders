@@ -34,70 +34,6 @@ export const IReceivedDataAtServer_recordDetailSchema = {
       ],
       "type": "object"
     },
-    "IRecord": {
-      "defaultProperties": [
-      ],
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "languageOfTagName": {
-          "$ref": "#/definitions/LanguageInApplication"
-        },
-        "link": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "modifiedBy": {
-          "items": {
-            "$ref": "#/definitions/ModifiedHistoryStack"
-          },
-          "type": "array"
-        },
-        "note": {
-          "type": "string"
-        },
-        "regulation": {
-          "$ref": "#/definitions/IRegulation"
-        },
-        "runnerID": {
-          "type": "string"
-        },
-        "score": {
-          "type": "number"
-        },
-        "tagID": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "tagName": {
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "timestamp_post": {
-          "type": "number"
-        }
-      },
-      "required": [
-        "id",
-        "languageOfTagName",
-        "link",
-        "note",
-        "regulation",
-        "runnerID",
-        "score",
-        "tagID",
-        "tagName",
-        "timestamp_post"
-      ],
-      "type": "object"
-    },
     "IRegulation": {
       "defaultProperties": [
       ],
@@ -168,78 +104,69 @@ export const IReceivedDataAtServer_recordDetailSchema = {
       ],
       "type": "string"
     },
-    "ModifiedHistoryStack": {
+    "RecordPropertiesInModifiable": {
       "defaultProperties": [
       ],
       "properties": {
-        "before": {
+        "link": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "note": {
+          "type": "string"
+        },
+        "regulation": {
           "defaultProperties": [
           ],
           "properties": {
-            "languageOfTagName": {
-              "$ref": "#/definitions/LanguageInApplication"
-            },
-            "link": {
+            "abilityIDs": {
               "items": {
                 "type": "string"
               },
               "type": "array"
             },
-            "note": {
+            "gameSystemEnvironment": {
+              "defaultProperties": [
+              ],
+              "properties": {
+                "gameDifficultyID": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "gameDifficultyID"
+              ],
+              "type": "object"
+            },
+            "targetID": {
               "type": "string"
-            },
-            "regulation": {
-              "$ref": "#/definitions/IRegulation"
-            },
-            "runnerID": {
-              "type": "string"
-            },
-            "score": {
-              "type": "number"
-            },
-            "tagID": {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            "tagName": {
-              "items": {
-                "type": "string"
-              },
-              "type": "array"
-            },
-            "timestamp_approval": {
-              "type": "number"
-            },
-            "timestamp_post": {
-              "type": "number"
             }
           },
           "required": [
-            "languageOfTagName",
-            "link",
-            "note",
-            "regulation",
-            "runnerID",
-            "score",
-            "tagID",
-            "tagName",
-            "timestamp_post"
+            "abilityIDs",
+            "gameSystemEnvironment",
+            "targetID"
           ],
           "type": "object"
         },
-        "modifierID": {
-          "type": "string"
-        },
-        "timestamp": {
+        "score": {
           "type": "number"
+        },
+        "tagName": {
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
         }
       },
       "required": [
-        "before",
-        "modifierID",
-        "timestamp"
+        "link",
+        "note",
+        "regulation",
+        "score",
+        "tagName"
       ],
       "type": "object"
     }

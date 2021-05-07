@@ -120,7 +120,7 @@ export default class App implements IAppUsedToChangeState{
         this.historyAd.removeTargetGamemode();
         const errorInString = error.message;
         console.error(`${errorInString}\n${error.stack}`);
-        this.transition("errorView",{title:title,message:errorInString});
+        this.transition("errorView",{title:title,message:errorInString},{ifAppendHistory:false});
     }
     get notie(){
         return this._notie;

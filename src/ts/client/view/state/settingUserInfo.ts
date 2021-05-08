@@ -1,4 +1,4 @@
-import { IRunner } from "../../../type/record/IRunner";
+import { IRunner, IRunnerEditable } from "../../../type/record/IRunner";
 import { StateAdministrator } from "../../Administrator/StateAdminister";
 import { IAppUsedToChangeState } from "../../interface/AppInterfaces";
 import { appendElement } from "../../utility/aboutElement";
@@ -87,7 +87,7 @@ const context = {
         
     }
 }
-type HandledType = IRunner
+type HandledType = IRunnerEditable
 export class S_SettingUserInfo
     extends PageStateBaseClass<null, IAppUsedToChangeState> {
         private editorForm:EditorFormManager<HandledType>|null = null;
@@ -142,14 +142,9 @@ export class S_SettingUserInfo
             this.editorForm = new EditorFormManager(
                 editorHeader,lang,firebase.firestore().collection("runners"),`${english}'s information`,inputForms,
                 {
-                    id:"",
                     Japanese:"",English:"",
-                    JDescription:"",EDescription:"",
-                    theDateOfLastPost:Date.now(),theDateOfRegistered:Date.now(),
-                    theNumberOfPost:0,isMuted:false,
-                    isCommitteeMember:false,twitterLink:"",
-                    youtubeLink:"",idOfGameModeRunnerHavePlayed:[],idOfGameSystemRunnerHavePlayed:[],
-                    numberOfUnreadNotification:0,photoURL:""
+                    JDescription:"",EDescription:"",twitterLink:"",youtubeLink:"",photoURL:"",
+                    numberOfUnreadNotification:0
                 },{
                     ErrorCatcher:(error) => this.app.errorCatcher(error),
                     whenAppendNewItem: () => {},

@@ -1,0 +1,10 @@
+{
+    "header":{
+        "Japanese":"記録の基本情報",
+        "English":"Basic Information of the Record"
+    },
+    "runnersNoteHeader":{
+        "Japanese": "走者ノート",
+        "English": "Runner's Notes"
+    }
+}

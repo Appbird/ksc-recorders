@@ -22,7 +22,7 @@ const undefinedIDDisplayer = {
 }
 export type InputFormObject<T> = {[P in keyof T]?:EditorPart<T[P]>} 
 
-export class EditorFormManager<TypeOfObserved extends IItemOfResolveTableToName> implements IView {
+export class EditorFormManager<TypeOfObserved extends object> implements IView {
     private pathOfDocObserved:firebase.firestore.CollectionReference
     private id:string|undefined;
     private unsubscribe:(()=>void)|null = null;

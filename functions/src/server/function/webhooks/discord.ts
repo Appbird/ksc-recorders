@@ -4,7 +4,7 @@ import { RecordDataBase } from "../../firestore/RecordDataBase";
 import {webhookURL} from "./secret.json"
 import fetch from "node-fetch";
 //#NOTE これの実行には{webhookURL:string}型のオブジェクトが記述されたjsonファイルを書き込んでおく必要がある。
-
+//#CTODO こいつがちゃんと投稿されるか確認する。
 export class DiscordWebhookers{
     private readonly host:string = "https://localhost:5000"
     private readonly recordDatabase:RecordDataBase
@@ -19,7 +19,11 @@ export class DiscordWebhookers{
         const userIconURL = (await this.recordDatabase.getRunnerInfo(record.runnerID)).photoURL;
         await fetch(webhookURL,{
             method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
             body:JSON.stringify({
+                color: 5620992,
                 content: `:mailbox_with_mail: New Post! @${gameSystem.English}/${gameMode.English}`,
                 embeds:{
                     title:`KSSRs/${rrg.gameSystemName}/${rrg.gameModeName}/${rr.targetName}`,
@@ -61,6 +65,9 @@ export class DiscordWebhookers{
         await fetch(webhookURL,{
             
             method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
             body:JSON.stringify({
                 content: `:closed_book: Record Deleted By ${deletedBy} @${gameSystem.English}/${gameMode.English}\nThe following JSON string is the data of the deleted Record.\n\n\`\`\`${JSON.stringify(record)}\`\`\``,
                 embeds:{
@@ -91,18 +98,19 @@ export class DiscordWebhookers{
             })
         })
     }
-    async sendRecordModifiedMessage(uid:string,recordResolved:IRecordResolved){
+    async sendRecordModifiedMessage(uid:string,beforeModified:IRecordResolved,recordResolved:IRecordResolved){
         const rr = recordResolved.regulation
         const rrg = rr.gameSystemEnvironment
         const gameSystem = await this.recordDatabase.getGameSystemInfo(rrg.gameSystemID)
         const gameMode = await this.recordDatabase.getGameModeInfo(rrg.gameSystemID,rrg.gameModeID)
         const userIconURL = (await this.recordDatabase.getRunnerInfo(recordResolved.runnerID)).photoURL;
         const modifiedBy = (await this.recordDatabase.getRunnerInfo(uid)).English;
-        if (recordResolved.modifiedBy === undefined) return
-        const mostRecently = recordResolved.modifiedBy[recordResolved.modifiedBy.length-1];
         await fetch(webhookURL,{
             
             method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
             body:JSON.stringify({
                 content: `:closed_book: Record Modified By ${modifiedBy} @${gameSystem.English}/${gameMode.English}`,
                 embeds:{
@@ -118,11 +126,11 @@ export class DiscordWebhookers{
                     },
                     field:[{
                         name:`:star: Ability`,
-                        value:`ID (${mostRecently.before.regulation.abilityIDs.join(",")}) >> ${rr.abilityIDs.join(`,`)}`
+                        value:`ID (${beforeModified.regulation.abilityNames.join(",")}) >> ${rr.abilityIDs.join(`,`)}`
                     },
                     {
                         name:`:flag_white: Target`,
-                        value:`ID (${mostRecently.before.regulation.targetID}) >> ${rr.targetID}`
+                        value:`ID (${beforeModified.regulation.targetName}) >> ${rr.targetID}`
                         
                     },{
                         name:`:clock3: ${gameMode.scoreType === "time" ? "Time" : "Score"}`,

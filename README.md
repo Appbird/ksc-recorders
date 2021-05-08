@@ -12,6 +12,8 @@
 https://developer.twitter.com/en/docs/twitter-for-websites/javascript-api/overview
 - IFrame Player API
 https://developers.google.com/youtube/iframe_api_reference?hl=ja
+- quicktype
+https://quicktype.io/
 
 ## フォント / アイコン
 - Font Awesome 5
@@ -24,3 +26,6 @@ https://fonts.google.com/specimen/Montserrat
 https://fonts.google.com/specimen/Quicksand
 - M PLUS Rounded 1c
 https://fonts.google.com/specimen/M+PLUS+Rounded+1c
+
+- ファビコン favicon.icoを作ろう!
+https://ao-system.net/favicon/

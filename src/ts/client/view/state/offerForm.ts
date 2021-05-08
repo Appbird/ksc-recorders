@@ -1,6 +1,7 @@
+import { ISentRecordOffer } from "../../../type/api/record/changing/IReceivedDataAtServer_recordWrite";
 import { TargetGameMode } from "../../Administrator/StateAdminister";
 import { IAppUsedToChangeState } from "../../interface/AppInterfaces";
-import { OfferFormView } from "../parts/OfferFormView";
+import { OfferFormView } from "../parts/OfferFormView/OfferFormView";
 import { PageStateBaseClass } from "./PageStateClass";
 
 export class S_OfferForm
@@ -22,29 +23,29 @@ export class S_OfferForm
             const view = new OfferFormView(
                 this.articleDOM.appendChild(document.createElement("div")),
                 this.app,difficulties,abilities,{
-                    onDecideEventListener:async (input) => {
-                        this.articleDOM.innerHTML = "";
-                        try {
-                            this.app.goToTop();
-                            this.generateLoadingSpinner("cloud");
-                            const detailRecord = (await this.app.accessToAPI("record_write",{
-                                record:input,
-                                language:this.app.state.language,
-                                IDToken:await this.app.loginAdministratorReadOnly.getIDToken()
-                            })).result
-                            this.deleteLoadingSpinner();
-                            
-                            await this.app.transition("detailView",{recordResolved:detailRecord});
-                            
-                            this.app.notie.successAlert({Japanese:"記録の登録に成功しました！",English:"Registering Record is Completed Successfully!"})
-                        } catch(error){
-                            if (error instanceof Error) return;
-                            this.app.errorCatcher(error,"記録の登録に失敗しました。")
-                        }
-                    }
+                    onDecideEventListener:async (input) => this.decide(input)
                 }
             )
             this.deleteLoadingSpinner();
+        }
+
+        private async decide(input:ISentRecordOffer){
+            try {
+                this.app.goToTop();
+                this.generateLoadingSpinner("cloud");
+                const detailRecord = (await this.app.accessToAPI("record_write",{
+                    record:input,
+                    language:this.app.state.language,
+                    IDToken:await this.app.loginAdministratorReadOnly.getIDToken()
+                })).result
+                this.deleteLoadingSpinner();
+                
+                await this.app.transition("detailView",{recordResolved:detailRecord});
+                
+                this.app.notie.successAlert({Japanese:"記録の登録に成功しました！",English:"Registering Record is Completed Successfully!"})
+            } catch(error){
+                this.app.errorCatcher(error,"記録の登録に失敗しました。")
+            }
         }
 }
 

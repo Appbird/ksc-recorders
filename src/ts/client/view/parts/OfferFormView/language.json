@@ -1,0 +1,12 @@
+{
+    
+    "RunnersNote":{
+        "Notice":[{
+            "Japanese": "[任意] 走者ノートをmarkdownで書きます。",
+            "English": "[Optional] You can write notes in markdown here."
+        },{
+            "Japanese": "10秒に一度オートセーブを行います。",
+            "English": "The notes is saved once every 10 seconds."
+        }]
+    }
+}

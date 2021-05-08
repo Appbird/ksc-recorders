@@ -1,8 +1,7 @@
 import { ISentRecordOffer } from "../../../type/api/record/changing/IReceivedDataAtServer_recordWrite";
-import { IRecord } from "../../../type/record/IRecord";
 import { TargetGameMode } from "../../Administrator/StateAdminister";
 import { IAppUsedToChangeState } from "../../interface/AppInterfaces";
-import { OfferFormView } from "../parts/OfferFormView";
+import { OfferFormView } from "../parts/OfferFormView/OfferFormView";
 import { PageStateBaseClass } from "./PageStateClass";
 
 export class S_ModifyRecordForm
@@ -29,7 +28,11 @@ export class S_ModifyRecordForm
             const view = new OfferFormView(
                 this.articleDOM.appendChild(document.createElement("div")),
                 this.app,difficulties,abilities,{
-                    onDecideEventListener:(input) => this.sendInputInfo(this.app.state.gameSystemIDDisplayed,this.app.state.gameModeIDDisplayed,this.requiredObj.id,input),
+                    onDecideEventListener:async (input) => {
+                        this.app.goToTop();
+                        this.sendInputInfo(this.app.state.gameSystemIDDisplayed,this.app.state.gameModeIDDisplayed,this.requiredObj.id,input)
+                        
+                    },
                     defaultRecord:record
                 }
             )
@@ -37,6 +40,9 @@ export class S_ModifyRecordForm
         }
         private async sendInputInfo(gameSystemID:string,gameModeID:string,recordID:string,recordModified:ISentRecordOffer){
             try{
+                
+                this.generateLoadingSpinner("cloud")
+
                 const language = this.app.state.language;
                 await this.app.accessToAPI("record_modify",{
                     gameSystemEnv:{
@@ -50,9 +56,9 @@ export class S_ModifyRecordForm
                     Japanese:"書き換えに成功しました！",
                     English:"Rewrite Successfully!"
                 })
-                
                 this.app.transition("detailView",{gameSystemEnv:{gameSystemID:gameSystemID,gameModeID:gameModeID},id:recordID,lang:this.app.state.language})
-                                    
+                
+                this.deleteLoadingSpinner();
             }catch(err){
                 this.app.errorCatcher(err)
             }

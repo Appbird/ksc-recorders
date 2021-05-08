@@ -11,7 +11,7 @@ export async function remove(recordDataBase:RecordDataBase,input:APIFunctions["r
         const cotfr = new ControllerOfTableForResolvingID(recordDataBase);
         const resolvedRecord = await cotfr.convertRecordIntoRecordResolved(deleted,"English")
     
-    //#TODO Discordに通知する際にuidを使う。
+    //#CTODO Discordに通知する際にuidを使う。
     recordDataBase.removeRecord(
         input.gameSystemEnv.gameSystemID,
         input.gameSystemEnv.gameModeID,

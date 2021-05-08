@@ -4,7 +4,7 @@ import { RecordDataBase } from "../../firestore/RecordDataBase"
 import { createDefaultUserData } from "../../utility";
 //#NOTE 何故か発火しない
 export async function setUserEventListener(user:firebase.auth.UserRecord,recordDataBase:RecordDataBase){
-    await recordDataBase.writeRunnerInfo(user.uid,createDefaultUserData(user));
+    await recordDataBase.writeRunnerInfo(user.uid,createDefaultUserData(user),{privateDocWrite:true});
 }
 export async function deleteUserEventListener(user:firebase.auth.UserRecord,recordDataBase:RecordDataBase){
     await recordDataBase.deleteRunnerInfo(user.uid)

@@ -34,23 +34,29 @@ export default class App implements IAppUsedToChangeState{
     }
     async init(){
 
-        const response = await fetch('/__/firebase/init.json');
-        if (response.status !== 200) {console.log("Failed"); return;}
-        firebase.initializeApp(await response.json());
+        try{
+            const response = await fetch('/__/firebase/init.json');
+            if (response.status !== 200) {console.log("Failed"); return;}
+            firebase.initializeApp(await response.json());
 
-        this.loginAd = new LoginAdministrator(this);
-        this.loginAd.onStateChange(async () => {
-            if (this.loginAd?.isUserLogin) {
-                await this.loginAd?.subscribe();
+            this.loginAd = new LoginAdministrator(this);
+            this.loginAd.onStateChange(async () => {
+                try{
+                    if (this.loginAd?.isUserLogin) {
+                        await this.loginAd?.subscribe();
+                        this.header.changeUserIcon(this.loginAd.loginUserName,this.loginAd.loginUserIconPicture,this.state.language)
+                    }
+                    else this.header.deleteUserIcon();
+                    this.goPrevious();
+                }catch(err){this.errorCatcher(err)}
+            })
+            this.loginAd.setChangedEventListener( () => {
+                if (this.loginAd === null) return;
                 this.header.changeUserIcon(this.loginAd.loginUserName,this.loginAd.loginUserIconPicture,this.state.language)
-            }
-            else this.header.deleteUserIcon();
-            this.goPrevious();
-        })
-        this.loginAd.setChangedEventListener( () => {
-            if (this.loginAd === null) return;
-            this.header.changeUserIcon(this.loginAd.loginUserName,this.loginAd.loginUserIconPicture,this.state.language)
-        })
+            })
+        }catch(err){
+            this.errorCatcher(err);
+        }
         
     }
     private goPrevious(){
@@ -128,7 +134,7 @@ export default class App implements IAppUsedToChangeState{
     }
     goToTop(){
         var scrolled = ( window.pageYOffset !== undefined ) ? window.pageYOffset: document.documentElement.scrollTop;
-        window.scrollTo( 0, Math.floor( scrolled / 2 ) );
+        window.scrollTo( 0, Math.floor( scrolled / 1.5 ) );
         if ( scrolled > 2 ) { window.setTimeout( ()=>this.goToTop(), 30 );}
     }
     

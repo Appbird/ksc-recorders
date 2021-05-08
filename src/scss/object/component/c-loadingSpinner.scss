@@ -15,12 +15,12 @@
     justify-content:space-around;
 
       &>.__spinner {
-        width: 1.5em;
+        width: 1.5em; 
+        height: 0em;
         
         transition:cubic-bezier(0.165, 0.84, 0.44, 1) 0.3s;
         transition-property: height;
         
-        height: 0em;
         animation: sk-bouncedelay 5s infinite ease-in-out;
         transform-origin:50% 50%;
 

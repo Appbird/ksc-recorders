@@ -1,20 +1,20 @@
-import { IAbilityItem } from "../../../type/list/IAbilityItem";
-import { IGameDifficultyItem } from "../../../type/list/IGameDifficultyItem";
-import { ITargetItem } from "../../../type/list/ITargetItem";
-import { choiceDescription, choiceString } from "../../../utility/aboutLang";
-import { converseMiliSecondsIntoTime, convertScoreIntoNumber, convertTimeIntoNumber } from "../../../utility/timeUtility";
-import { element, HTMLConverter } from "../../../utility/ViewUtility";
-import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
-import { createElementWithIdAndClass, createElementWithIdTagClass, findElementByClassNameWithErrorPossibility, generateIcooonHTML } from "../../utility/aboutElement";
-import { IView } from "../IView";
-import { MovieWidgetCreator } from "./MovieWidgetCreator";
-import { SelectChoicesCapsuled } from "./SelectChoicesCapsuled";
-import { TextInputCapsuled } from "./TextInputCapsuled";
+import { IAbilityItem } from "../../../../type/list/IAbilityItem";
+import { IGameDifficultyItem } from "../../../../type/list/IGameDifficultyItem";
+import { ITargetItem } from "../../../../type/list/ITargetItem";
+import { choiceDescription, choiceString } from "../../../../utility/aboutLang";
+import { converseMiliSecondsIntoTime, convertScoreIntoNumber, convertTimeIntoNumber } from "../../../../utility/timeUtility";
+import { element, HTMLConverter } from "../../../../utility/ViewUtility";
+import { IAppUsedToReadAndChangeOnlyPageState } from "../../../interface/AppInterfaces";
+import { createElementWithIdAndClass, createElementWithIdTagClass, findElementByClassNameWithErrorPossibility, generateIcooonHTML } from "../../../utility/aboutElement";
+import { IView } from "../../IView";
+import { MovieWidgetCreator } from "../MovieWidgetCreator";
+import { SelectChoicesCapsuled } from "../SelectChoicesCapsuled";
+import { TextInputCapsuled } from "../TextInputCapsuled";
 import SimpleMDE from "simplemde";
-import { TextChoicesCapsuled } from "./TextChoicesCapsuled";
-import { ISentRecordOffer } from "../../../type/api/record/changing/IReceivedDataAtServer_recordWrite";
-import { IRecord } from "../../../type/record/IRecord";
-
+import { TextChoicesCapsuled } from "../TextChoicesCapsuled";
+import { ISentRecordOffer } from "../../../../type/api/record/changing/IReceivedDataAtServer_recordWrite";
+import { IRecord } from "../../../../type/record/IRecord";
+import context from "./language.json"
 export class OfferFormView implements IView {
     private container: HTMLElement;
     private app: IAppUsedToReadAndChangeOnlyPageState;
@@ -83,9 +83,8 @@ export class OfferFormView implements IView {
                                 <div class="offerForm__noteInput">
                                     <h1>${generateIcooonHTML({icooonName:"notebook"})}${{Japanese:"走者ノート"}}</h1>
                                     <ul class="u-margin05em">
-                                        <li>${{Japanese:"[任意] 記録を出すうえで必要となる事項を書きます。"}}</li>
-                                        <li>${{Japanese:"markdownでの記述が出来ます。"}}</li>
-                                        <li>${{ Japanese: "10秒に一度オートセーブを行います。" }}</li>
+                                        <li>${context.RunnersNote.Notice[0]}</li>
+                                        <li>${context.RunnersNote.Notice[1]}</li>
                                     </ul>
                                 </div>
                                 `
@@ -239,7 +238,7 @@ export class OfferFormView implements IView {
                 <div class="c-title offerForm__textInput__link">
                 </div>
                 <ul class="u-margin05em offerForm__textInput__linkDescription">
-                    <li>${{ Japanese: "<strong class='u-redChara'>[必須]</strong> 登録する記録の証拠となる動画へのリンクを貼ります。", English: "English Description" }}</li>
+                    <li>${{ Japanese: "<strong class='u-redChara'>[必須]</strong> 登録する記録の証拠となる動画へのリンクを貼ります。", English: "<strong class='u-redChara'>[必須]</strong>" }}</li>
                     <li>${{ Japanese: "TwitterかYoutubeのいずれかのリンクのみを受け付けます。", English: "English Description" }}</li>
                     <li>${{ Japanese: "Youtubeへのリンクの場合、動画の開始秒数を指定することが出来ます。" }}</li>
                 </ul>

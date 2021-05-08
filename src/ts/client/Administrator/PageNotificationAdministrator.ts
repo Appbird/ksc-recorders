@@ -33,8 +33,13 @@ export class PageNotificationAdministrator{
     successAlert(text:string|MultiLanguageString){
         notie.alert({type:"success",text:choiceString(text,this.app.state.language)})
     }
-    confirmAlert(text:string|MultiLanguageString,ok:string|MultiLanguageString,okCallback:()=>void,cancel:string|MultiLanguageString,cancelCallback:()=>void){
-        console.log("called");
+    confirmAlert({text,ok={Japanese:"はい",English:"Yes"},okCallback,cancel={Japanese:"いいえ",English:"No"},cancelCallback}:{
+        text:string|MultiLanguageString,
+        ok?:string|MultiLanguageString,
+        okCallback?:()=>void,
+        cancel?:string|MultiLanguageString,
+        cancelCallback?:()=>void
+    }){
         notie.confirm({
             text:choiceString(text,this.app.state.language),
             submitText:choiceString(ok,this.app.state.language),

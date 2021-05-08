@@ -1,6 +1,5 @@
 import { expected_IRegulation, IRegulation, IRegulationResolved } from "../foundation/IRegulation";
 import { LanguageInApplication } from "../LanguageInApplication";
-import { ModifiedHistoryStack } from "../list/IStoredOfferedRecord";
 
 //#NOTE ここでの"Resolved"は、「IDを対応する文字列に置き換えた(ID解決済)状態である」ことを表す。Resolvedのオブジェクトでは、対応するResolvedでないオブジェクトのうち「Dを表さないパラメタ」を削除している。
 //#NOTE また、"InShort"(日本語訳として「要約すると」)は、本来の記録よりも、「簡単に表示するにあたって必要ないデータを削った状態である」ことを表す。
@@ -28,7 +27,6 @@ export interface IRecord extends IRecordInShort{
     tagID: string[];
     link: string[];
     note: string;
-    modifiedBy?:ModifiedHistoryStack[];
 }
 export interface IRecordWithoutID{
     //[x] ここの命名をtimeInMiliSecondではなくscoreにしたい…。
@@ -42,7 +40,6 @@ export interface IRecordWithoutID{
     tagID: string[];
     link: string[];
     note: string;
-    modifiedBy?:ModifiedHistoryStack[];
 }
 export const expected_IRecord = {
     id: "string",
@@ -58,4 +55,21 @@ export interface IRecordResolved extends IRecord{
     runnerName: string;
     tagName: string[];
     regulation: IRegulationResolved;
+}
+
+
+export interface ModifiedHistoryStack{
+    modifierID:string,timestamp:number,
+    before:{
+        score:number;
+        timestamp_post:number;
+        timestamp_approval?:number;
+        regulation:IRegulation;
+        runnerID:string;
+        tagName: string[];
+        languageOfTagName:LanguageInApplication;
+        tagID:string[];
+        link:string[];
+        note:string;
+    }
 }

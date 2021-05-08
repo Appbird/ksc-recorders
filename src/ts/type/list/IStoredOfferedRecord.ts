@@ -1,5 +1,6 @@
 import { IRegulation } from "../foundation/IRegulation";
 import { LanguageInApplication } from "../LanguageInApplication";
+import { ModifiedHistoryStack } from "../record/IRecord";
 
 
 export interface IStoredOfferedRecord {
@@ -13,17 +14,3 @@ export interface IStoredOfferedRecord {
     note: string;
     modifiedBy?:ModifiedHistoryStack[];
 }
-export interface ModifiedHistoryStack{
-    modifierID:string,timestamp:number,
-    before:{
-        score:number;
-        timestamp_post:number;
-        timestamp_approval?:number;
-        regulation:IRegulation;
-        runnerID:string;
-        tagName: string[];
-        languageOfTagName:LanguageInApplication;
-        tagID:string[];
-        link:string[];
-        note:string;
-}}

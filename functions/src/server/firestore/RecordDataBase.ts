@@ -1,5 +1,5 @@
 import { IRecord, IRecordWithoutID } from "../../../../src/ts/type/record/IRecord";
-import { INotificationItem, IRunner } from "../../../../src/ts/type/record/IRunner";
+import { INotificationItem, IRunner, IRunnerEditable } from "../../../../src/ts/type/record/IRunner";
 import { IHashTagItem, IGameSystemInfoWithoutCollections } from "../../../../src/ts/type/list/IGameSystemInfo";
 import { OrderOfRecordArray } from "../../../../src/ts/type/record/OrderOfRecordArray";
 import { IGameModeItemWithoutCollections, ScoreType } from "../../../../src/ts/type/list/IGameModeItem";
@@ -83,8 +83,6 @@ export class RecordDataBase{
     deleteTargetInfo           = (gameSystemID:string,gameModeID:string,id:string) => this.deleteDoc(this.getGameModeRef(gameSystemID,gameModeID).collection("targets").doc(id))
     
     getRunnerCollection     = () => this.getCollection<IRunner>(this.getRunnersRef())
-    writeRunnerInfo         = (uid:string,obj:IRunner) => this.modifyDoc<IRunner>(this.getRunnersRef().doc(uid),obj)
-    modifyRunnerInfo        = this.writeRunnerInfo
     deleteRunnerInfo        = (uid:string) => this.deleteDoc(this.getRunnersRef().doc(uid))
     
     getHashTagCollection    = (gameSystemID:string) => this.getCollection<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("tags"))
@@ -95,15 +93,30 @@ export class RecordDataBase{
     
     getRunnerInfo           = async (uid:string):Promise<IRunner> => {
         const info = await this.getRunnersRef().doc(uid).get()
-        if (info.exists) return info.data() as IRunner;
+        const infoLimitedWrite = await this.getRunnersRef().doc(uid).collection("limitedWrite").doc("onlyServerOperation").get()
+        if (info.exists) return {...info.data(),...infoLimitedWrite.data()} as IRunner;
         const user = await firebaseAdmin.auth.getUser(uid)
         const userData = createDefaultUserData(user);
-        this.getRunnersRef().doc(uid).set(userData);
+        this.writeRunnerInfo(uid,userData,{privateDocWrite:true});
         return userData
     }
+
+    writeRunnerInfo = (uid:string,obj:IRunner,{privateDocWrite}:{
+        privateDocWrite:boolean
+    }) => {
+        const {Japanese,English,JDescription,EDescription,twitterLink,youtubeLink,photoURL,numberOfUnreadNotification,...Uneditabledata}:IRunner = obj;
+        const data:IRunnerEditable = {Japanese,English,twitterLink,youtubeLink,photoURL,numberOfUnreadNotification}
+        if (JDescription !== undefined) obj.JDescription = JDescription;
+        if (EDescription !== undefined) obj.EDescription = EDescription;
+        this.getRunnersRef().doc(uid).set(data)
+        if (privateDocWrite) this.getRunnersRef().doc(uid).collection("limitedWrite").doc("onlyServerOperation").set(Uneditabledata)
+
+    }
+
+    modifyRunnerInfo        = this.writeRunnerInfo
     async readNotificationsOfRunner(uid:string){
         const runnerInfo = await recordDataBase.getRunnerInfo(uid)
-        await recordDataBase.writeRunnerInfo(uid,{...runnerInfo,numberOfUnreadNotification:0});
+        await recordDataBase.writeRunnerInfo(uid,{...runnerInfo,numberOfUnreadNotification:0},{privateDocWrite:true});
         return;
     }
     sendNotification        = (uid:string,item:INotificationItem) => this.writeDoc<INotificationItem>(this.getRunnersRef().doc(uid).collection("notifications"),item)
@@ -187,6 +200,11 @@ export class RecordDataBase{
     }
     
     async removeRecord(gameSystemID:string,gameModeID:string,recordID:string){
+
+        const modifiedHistoryRef = this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(recordID).collection("modifiedHistoryStack")
+        const modifiedHistoryData = await modifiedHistoryRef.get();
+        for (const doc of modifiedHistoryData.docs) doc.ref.delete();
+
         const ref = this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(recordID)
         await this.refreshInfoWhenRemoving(await this.getRecord(gameSystemID,gameModeID,recordID))
         await ref.delete();
@@ -195,19 +213,21 @@ export class RecordDataBase{
     
     async modifyRecord(recordID:string,modifierID:string,record:IRecordWithoutID):Promise<IRecord>{
         const rrg = record.regulation.gameSystemEnvironment
-        const ref =  this.getGameModeRef(rrg.gameSystemID,rrg.gameModeID).collection("records").doc(recordID);
-        const recordWrited = await this.getRecord(rrg.gameSystemID,rrg.gameModeID,recordID);
         
-        const modifierList = ( (recordWrited.modifiedBy === undefined) ? [] : recordWrited.modifiedBy )
-        delete recordWrited.modifiedBy; 
-        modifierList.push({ modifierID:modifierID,timestamp:Date.now(),before:recordWrited});
+        const ref =  this.getGameModeRef(rrg.gameSystemID,rrg.gameModeID).collection("records").doc(recordID);
+        const recordModifiedHistoryRef = ref.collection("modifiedHistoryStack")
+        const recordBeforeModified = await this.getRecord(rrg.gameSystemID,rrg.gameModeID,recordID);
+        await recordModifiedHistoryRef.add({ modifierID:modifierID,timestamp:Date.now(),before:recordBeforeModified});
         
         const modifiedOffer:IRecord = {
-            ...record,modifiedBy:modifierList,id:recordID,
+            ...record,id:recordID,
         }
         await ref.set(modifiedOffer)
         await this.refreshInfoWhenEditing(modifiedOffer)
-        return {...modifiedOffer};
+        return modifiedOffer;
+    }
+    async getModifiedHistoryStack(gameSystemID:string,gameModeID:string,recordID:string){
+        return (await this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(recordID).collection("modifiedHistoryStack").get()).docs.map(doc => doc.data())
     }
 
 
@@ -241,7 +261,7 @@ export class RecordDataBase{
         await this.writeRunnerInfo(record.runnerID,{
             ...runner,
             theDateOfLastPost:record.timestamp_post
-        })
+        },{privateDocWrite:true})
        
         this.refreshFastestTableWhenWriting(record,runner,gameMode);
     }
@@ -313,7 +333,7 @@ export class RecordDataBase{
         })
         await this.modifyRunnerInfo(record.runnerID,{
             ...runner,
-        })
+        },{privateDocWrite:true})
        
         this.refreshFastestTableWhenRemoving(record,gameMode.scoreType);
     }

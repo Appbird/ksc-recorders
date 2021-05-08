@@ -32,10 +32,11 @@ export async function modify(recordDataBase:RecordDataBase,input:APIFunctions["r
     const record = await recordDataBase.modifyRecord(input.recordID,modifier,result);
     const cotfr = new ControllerOfTableForResolvingID(recordDataBase);
     
+    const recordBeforeModifiedResolved = await cotfr.convertRecordIntoRecordResolved(recordBeforeModified,input.language);
     const recordResolved = await cotfr.convertRecordIntoRecordResolved(record,input.language);
     
     const discord = new DiscordWebhookers(recordDataBase);
-    await discord.sendRecordModifiedMessage(modifier,recordResolved)
+    await discord.sendRecordModifiedMessage(modifier,recordBeforeModifiedResolved,recordResolved)
     return {
         isSucceeded:true,
         result: recordResolved

@@ -1,13 +1,14 @@
-import { IRecordResolved } from "../../../type/record/IRecord";
-import { converseMiliSecondsIntoTime } from "../../../utility/timeUtility";
-import {  elementWithoutEscaping } from "../../../utility/ViewUtility";
-import { IView } from "../IView";
-import { TagsView } from "./TagsView";
-import { convertNumberToRank } from "../../../utility/rankUtility";
-import { MovieWidgetCreator } from "./MovieWidgetCreator";
-import { LanguageInApplication } from "../../../type/LanguageInApplication";
-import { TagsClickedCallbacks } from "./TagsClickedCallbacks";
-import { findElementByClassNameWithErrorPossibility } from "../../utility/aboutElement";
+import { IRecordResolved } from "../../../../type/record/IRecord";
+import { converseMiliSecondsIntoTime } from "../../../../utility/timeUtility";
+import {  elementWithoutEscaping } from "../../../../utility/ViewUtility";
+import { IView } from "../../IView";
+import { TagsView } from "../TagsView";
+import { convertNumberToRank } from "../../../../utility/rankUtility";
+import { MovieWidgetCreator } from "../MovieWidgetCreator";
+import { LanguageInApplication } from "../../../../type/LanguageInApplication";
+import { TagsClickedCallbacks } from "../TagsClickedCallbacks";
+import { findElementByClassNameWithErrorPossibility } from "../../../utility/aboutElement";
+import context from "./language.json"
 const marked = require("marked")
 
 export class RecordDetailView implements IView{
@@ -19,11 +20,12 @@ export class RecordDetailView implements IView{
         container:HTMLElement,
         recordDetail:IRecordResolved,
         { 
-            rankOfTheRecord, language ,clickedCallBacks = {}
+            rankOfTheRecord, clickedCallBacks = {},onClickRunnerName
         }:{
             rankOfTheRecord:number,
-            language:LanguageInApplication,
-            clickedCallBacks:TagsClickedCallbacks
+            language:LanguageInApplication
+            clickedCallBacks:TagsClickedCallbacks,
+            onClickRunnerName:()=>void,
         }
     ){
         this.container = container;
@@ -33,7 +35,7 @@ export class RecordDetailView implements IView{
                 <div class="recordDetail">
 
                         <div class="c-title">
-                            <div class="c-title__main">記録の基本情報</div>
+                            <div class="c-title__main">${context.header}</div>
                         </div>
 
                     <hr noshade class="u-bold">
@@ -48,7 +50,7 @@ export class RecordDetailView implements IView{
                         
                         <div class="c-title">
                             <div class="c-title__main u-biggerChara">${converseMiliSecondsIntoTime(recordDetail.score)}</div>
-                            <div class="c-title__sub u-biggerChara onClickFirer_RunnerName">${(rankOfTheRecord === 0) ? "" : convertNumberToRank(rankOfTheRecord)}: <i class="fas fa-user"></i>${recordDetail.runnerName}</div>
+                            <div class="c-title__sub u-biggerChara onClickEvent_RunnerName">${(rankOfTheRecord === 0) ? "" : convertNumberToRank(rankOfTheRecord)}: <i class="fas fa-user"></i>${recordDetail.runnerName}</div>
                         </div>
                         <hr noshade class="u-thin">
                         <div class="tagsDetail"></div>
@@ -60,7 +62,7 @@ export class RecordDetailView implements IView{
 
 
                     <div class="c-title">
-                        <div class="c-title__main">走者ノート</div>
+                        <div class="c-title__main">${context.runnersNoteHeader}</div>
                     </div>
 
                     <hr noshade class="u-bold">
@@ -76,7 +78,7 @@ export class RecordDetailView implements IView{
             `)
             
             //#TODO クリックすると走者ページに飛ぶようにしたい
-
+            findElementByClassNameWithErrorPossibility(recordDetailElement,"onClickEvent_RunnerName").addEventListener("click",() => onClickRunnerName())
             const standardInfoDiv = findElementByClassNameWithErrorPossibility(recordDetailElement,"standardInfo")
             const evidenceMovieDiv = findElementByClassNameWithErrorPossibility(recordDetailElement,"evidenceMovie")
             new MovieWidgetCreator(evidenceMovieDiv,recordDetail.link[0]).setWidget()

@@ -31,7 +31,7 @@ export class S_DetailViewer
     extends PageStateBaseClass<APIFunctions["record_detail"]["atServer"]|{recordResolved:IRecordResolved},IAppUsedToChangeState>{
         async init(){
             this.generateLoadingSpinner()
-                const operationDiv = this.articleDOM.appendChild(createElementWithIdAndClass({ id: "detail" }));
+                const operationDiv = this.articleDOM.appendChild(createElementWithIdAndClass({ id: "operation" }));
                 const detailDiv = this.articleDOM.appendChild(createElementWithIdAndClass({ id: "detail" }));
                 const relatedRecordDiv = this.articleDOM.appendChild(createElementWithIdAndClass({ id: "related" }));
                 let record:IRecordResolved;
@@ -86,7 +86,7 @@ export class S_DetailViewer
         }
         private prepareOperation(operationDiv:HTMLElement,record:IRecord){
             const privilege = (() => {
-                if (this.app.loginAdministratorReadOnly.userInformation.id === record.runnerID) return "Owner"
+                if (this.app.loginAdministratorReadOnly.loginUserID === record.runnerID) return "Owner"
                 if (this.app.loginAdministratorReadOnly.userInformation.isCommitteeMember) return "ComitteeMember"
                 return undefined;
             })()

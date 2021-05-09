@@ -1,6 +1,6 @@
 import { IRecordResolved } from "../../../../type/record/IRecord";
 import { converseMiliSecondsIntoTime } from "../../../../utility/timeUtility";
-import {  elementWithoutEscaping } from "../../../../utility/ViewUtility";
+import {  elementWithoutEscaping, HTMLConverter } from "../../../../utility/ViewUtility";
 import { IView } from "../../IView";
 import { TagsView } from "../TagsView";
 import { convertNumberToRank } from "../../../../utility/rankUtility";
@@ -20,7 +20,7 @@ export class RecordDetailView implements IView{
         container:HTMLElement,
         recordDetail:IRecordResolved,
         { 
-            rankOfTheRecord, clickedCallBacks = {},onClickRunnerName
+            rankOfTheRecord, clickedCallBacks = {},onClickRunnerName,language
         }:{
             rankOfTheRecord:number,
             language:LanguageInApplication
@@ -29,9 +29,9 @@ export class RecordDetailView implements IView{
         }
     ){
         this.container = container;
-
+        const htmlC = new HTMLConverter(language);
         const recordDetailElement = this.container.appendChild(
-            elementWithoutEscaping`
+            htmlC.elementWithoutEscaping`
                 <div class="recordDetail">
 
                         <div class="c-title">
@@ -83,8 +83,6 @@ export class RecordDetailView implements IView{
             const evidenceMovieDiv = findElementByClassNameWithErrorPossibility(recordDetailElement,"evidenceMovie")
             new MovieWidgetCreator(evidenceMovieDiv,recordDetail.link[0]).setWidget()
             this.generateTagViewsForRecord(standardInfoDiv,recordDetail,clickedCallBacks)
-        
-
     }
 
     destroy(){

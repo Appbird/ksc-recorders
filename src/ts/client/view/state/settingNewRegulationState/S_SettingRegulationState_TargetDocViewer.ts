@@ -18,8 +18,8 @@ const context = {
             },
             explain:{
                 Japanese:"上の階層に戻ります。",
-                //#TODO 英訳
-                English:""
+                //#CTODO 英訳
+                English:"return to shallower directory."
             },
         }
     },

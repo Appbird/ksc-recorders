@@ -1,7 +1,7 @@
 import { IAbilityItem } from "../../../../type/list/IAbilityItem";
 import { IGameDifficultyItem } from "../../../../type/list/IGameDifficultyItem";
 import { ITargetItem } from "../../../../type/list/ITargetItem";
-import { choiceDescription, choiceString } from "../../../../utility/aboutLang";
+import { choiceString } from "../../../../utility/aboutLang";
 import { converseMiliSecondsIntoTime, convertScoreIntoNumber, convertTimeIntoNumber } from "../../../../utility/timeUtility";
 import { element, HTMLConverter } from "../../../../utility/ViewUtility";
 import { IAppUsedToReadAndChangeOnlyPageState } from "../../../interface/AppInterfaces";
@@ -96,7 +96,7 @@ export class OfferFormView implements IView {
         });
         
         this.errorDisplay = this.container.appendChild(element`<div class="u-width90per u-margin2em u-redChara"></div>`).appendChild(document.createElement("h3"))
-        this.button = this.container.appendChild(this.htmlConverter.elementWithoutEscaping`<div class="u-width50per u-margin2em"><div class="c-button">決定</div></div>`) as HTMLElement
+        this.button = this.container.appendChild(this.htmlConverter.elementWithoutEscaping`<div class="u-width50per u-margin2em"><div class="c-button">${context.DecideButton}</div></div>`) as HTMLElement
         this.button.addEventListener("click",() => this.whenDecide())
 
             
@@ -125,10 +125,7 @@ export class OfferFormView implements IView {
             this.evidenceMovie.set(this.URLInput.value);
             this.modifyScoreInput();
         }catch(err){
-            this.errorDisplay.textContent = choiceString({
-                Japanese:"[Error] 入力が不正な必須項目が存在します。",
-                English:"[Error] There is a required field which is entered incorrectly."
-            },this.app.state.language)
+            this.errorDisplay.textContent = choiceString(context.ErrorText.invalid,this.app.state.language)
             this.button.classList.remove("u-unused")
             return;
         }
@@ -136,10 +133,7 @@ export class OfferFormView implements IView {
         const targetID = this.targetChoices.getValueAsValue()
         const difficultyID = this.difficultyChoices.getValueAsValue();
         if (difficultyID === undefined || targetID === undefined || abilityIDs.length === 0 ){
-                this.errorDisplay.textContent = choiceString({
-                    Japanese:"[Error] 入力されていない必須項目が存在します。",
-                    English:"[Error] There is a required field which is not entered correctly."
-                },this.app.state.language)
+                this.errorDisplay.textContent = choiceString(context.ErrorText.lack,this.app.state.language)
                 this.button.classList.remove("u-unused")
                 return;
             }
@@ -178,7 +172,7 @@ export class OfferFormView implements IView {
             try {
                 this.modifyScoreInput();
             } catch (error) {
-                const errorBaseMsg = choiceDescription({ JDescription: "入力されたタイム/記録が不正です。", EDescription: "invalid time/score string." }, this.app.state.language);
+                const errorBaseMsg = choiceString(context.ScoreInput.Error, this.app.state.language);
                 if (!(error instanceof Error)) {
                     this.scoreInput.setError(errorBaseMsg); return;
                 }
@@ -194,9 +188,9 @@ export class OfferFormView implements IView {
                 this.evidenceMovie.setWidget();
                 this.URLInput.setError("");
             } catch (error) {
-                const errorBaseMsg = choiceDescription({ JDescription: "入力されたURLが不正です。", EDescription: "invalid link." }, this.app.state.language);
+                const errorBaseMsg = choiceString(context.URLInput.Error, this.app.state.language);
                 if (!(error instanceof Error)) {
-                    this.URLInput.setError(`入力されたURLが不正です。`); return;
+                    this.URLInput.setError(errorBaseMsg); return;
                 }
                 this.URLInput.setError(errorBaseMsg);
             }
@@ -232,23 +226,23 @@ export class OfferFormView implements IView {
         //#CH ここあたりのコードを分離したいけどするべきか迷う
     private createTextInput(): { link: TextInputCapsuled; score: TextInputCapsuled; } {
         const offerForm__textInputElement = this.container.appendChild(
-            //#TODO 英語訳の追加
+            //#CTODO 英語訳の追加
             createElementWithIdAndClass({ className: "offerForm__textInput" })).appendChild(this.htmlConverter.elementWithoutEscaping`
             <div class="offerForm__textInput">
                 <div class="c-title offerForm__textInput__link">
                 </div>
                 <ul class="u-margin05em offerForm__textInput__linkDescription">
-                    <li>${{ Japanese: "<strong class='u-redChara'>[必須]</strong> 登録する記録の証拠となる動画へのリンクを貼ります。", English: "<strong class='u-redChara'>[必須]</strong>" }}</li>
-                    <li>${{ Japanese: "TwitterかYoutubeのいずれかのリンクのみを受け付けます。", English: "English Description" }}</li>
-                    <li>${{ Japanese: "Youtubeへのリンクの場合、動画の開始秒数を指定することが出来ます。" }}</li>
+                    <li>${context.URLInput.Notice[0]}</li>
+                    <li>${context.URLInput.Notice[1]}</li>
+                    <li>${context.URLInput.Notice[2]}</li>
                 </ul>
-            <h1>${generateIcooonHTML({icooonName:"time"})}${{Japanese:"記録"}}</h1>
+            <h1>${generateIcooonHTML({icooonName:"time"})}${context.ScoreInput.Header}</h1>
                 <div class="c-title offerForm__textInput__score">
                 </div>
                 <ul class="u-margin05em offerForm__textInput__scoreDescription">
-                    <li>${{Japanese:"<strong class='u-redChara'>[必須]</strong> 計測区間で得たスコア,あるいはかかった時間を記述します。"}}</li>
-                    <li><strong>${{ Japanese: "01:00:00 / 02:12.32-03:12.32 / 60.00といった形式でも入力が出来ます。" }}</strong></li>
-                    <li>${{ Japanese: "この場合、全て01:00.00に統一されます。" }}</li>
+                    <li>${context.ScoreInput.Notice[0]}</li>
+                    <li><strong>${context.ScoreInput.Notice[1]}</strong></li>
+                    <li>${context.ScoreInput.Notice[2]}</li>
                 </ul>
             </div>`
             );
@@ -275,11 +269,11 @@ export class OfferFormView implements IView {
     private createDifficultyChoices(difficulties: IGameDifficultyItem[]) {
         const difficultySelector = this.container.appendChild(this.htmlConverter.elementWithoutEscaping`
         <div class="offerForm__difficultySelector">
-            <h1>${generateIcooonHTML({icooonName:"difficulty"})}${{Japanese:"難易度"}}</h1>
+            <h1>${generateIcooonHTML({icooonName:"difficulty"})}${context.DifficultyChoices.Header}</h1>
             <div class="offerForm__difficultySelector__Choices">
             </div>
             <ul class="u-margin05em">
-                <li>${{ Japanese: "<strong class='u-redChara'>[必須]</strong> 取得した記録がどの難易度で取られたかを入力します。" }}</li>
+                <li>${context.DifficultyChoices.Notice[0]}</li>
             </ul>
         </div>`);
         return new SelectChoicesCapsuled(
@@ -290,11 +284,11 @@ export class OfferFormView implements IView {
     private createTargetChoices(targets: ITargetItem[]) {
         const targetSelector = this.container.appendChild(this.htmlConverter.elementWithoutEscaping`
         <div class="offerForm__targetSelector">
-            <h1>${generateIcooonHTML({icooonName:"flag"})}${{Japanese:"計測対象"}}</h1>
+            <h1>${generateIcooonHTML({icooonName:"flag"})}${context.TargetChoices.Header}</h1>
             <div class="offerForm__targetSelector__Choices">
             </div>
             <ul class="u-margin05em">
-                <li>${{ Japanese: "<strong class='u-redChara'>[必須]</strong> どの敵を倒したか / どのステージをクリアしたかを入力します。" }}</li>
+                <li>${context.TargetChoices.Notice[0]}</li>
             </ul>
         </div>`);
         return new SelectChoicesCapsuled(
@@ -306,12 +300,12 @@ export class OfferFormView implements IView {
         const maxNumberOfPlayer = this.app.state.gameSystemEnvDisplayed.gameMode?.maxNumberOfPlayer
         const abilitySelector = this.container.appendChild(this.htmlConverter.elementWithoutEscaping`
         <div class="offerForm__abilitySelector">
-            <h1>${generateIcooonHTML({icooonName:"star"})}${{Japanese:"自機の能力"}}</h1>
+            <h1>${generateIcooonHTML({icooonName:"star"})}${context.AbilityChoices.Header}</h1>
             <div class="offerForm__abilitySelector__Choices">
             </div>
             <ul class="u-margin05em">
-                    <li>${{ Japanese: "<strong class='u-redChara'>[必須]</strong> この記録を取った時のカービィのコピー能力を選びます。" }}</li>
-                    <li>${{ Japanese: "<strong>順序が考慮される</strong>ので注意してください。" }}</li>
+                    <li>${context.AbilityChoices.Notice[0]}</li>
+                    <li>${context.AbilityChoices.Notice[1]}</li>
                     <li>${{ Japanese: `このゲームモードは${maxNumberOfPlayer}人プレイまで対応しています。` }}</li>
             </ul>
         </div>`);
@@ -321,20 +315,21 @@ export class OfferFormView implements IView {
                 maxItemCount:this.app.state.gameSystemEnvDisplayed.gameMode?.maxNumberOfPlayer,
                 needMultipleSelect: true, needDuplicatedSelect: true ,
                 maxItemText:
-                    {JDescription:`このゲームモードは最大${maxNumberOfPlayer}人プレイまで対応しています。`,
-                    EDescription:`This mode can be played with at most ${maxNumberOfPlayer} kirbys (friends)!`}
+                    {
+                        JDescription:`このゲームモードは最大${maxNumberOfPlayer}人プレイまで対応しています。`,
+                        EDescription:`This mode can be played with ${maxNumberOfPlayer} kirbys (friends) at most.`
+                    }
             });
     }
 
     private createTagInputChoices() {
         const tagSegment = this.container.appendChild(this.htmlConverter.elementWithoutEscaping`
         <div class="offerForm__tagInput">
-        <h1>${generateIcooonHTML({icooonName:"tag"})}${{Japanese:"タグ"}}</h1>
+        <h1>${generateIcooonHTML({icooonName:"tag"})}${context.TagInput.Header}</h1>
             <div class="offerForm__tagInput__Choices">
             </div>
             <ul class="u-margin05em">
-                    <li>${{ Japanese: "[任意] 使ったTAにおけるテクニックの名前などをタグとして登録します。" }}</li>
-                    <li>${{ Japanese: "検索がより容易になります。" }}</li>
+                    <li>${context.TagInput.Notice[0]}</li>
             </ul>
         </div>`);
         return new TextChoicesCapsuled(

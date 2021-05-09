@@ -3,7 +3,9 @@ export interface EditorPart<T> {
     refresh(value: T): void;
     isFill(): boolean;
     disabled(state:boolean):void,
-    destroy():void
+    destroy():void;
+    checker?():void;
+    displayError?():void;
     readonly requiredTypeInString:string;
     readonly requiredField:boolean;
     readonly value: T;

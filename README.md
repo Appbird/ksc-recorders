@@ -1,13 +1,16 @@
 # Kirby-Speed/Score-Recorders
 星のカービィシリーズのゲームにおいてスコアを記録し集積するためのRTAプラットフォームです。
-この作品はHAL研究所とは一切の関係のない二次創作物です。
-そのため、何か不明な点等があればAppbirdに一報ください。
-(詳細な説明はのちに追加)
+**この作品はHAL研究所とは一切の関係のない二次創作物です。**
+**そのため、何か不明な点等があれば、Discordのサーバーにて質問を行ってください。**
 
-[ 作成者 ] Appbird
+Kirby-Speed/Score-Recorders (KSSRs) is a site that provides leaderboards, scoreboard for speedrunning on videogames of Kirby's series.
+**This site is a fan fiction which has no relation with HAL Laboratory, inc.**
+**If you have any problems about using KSSRs, please contact us on Discord Server.**
 
-# 利用したもの
-#TODO 後でpackage.jsonに記載されているものもまとめる。
+[ Discord Server ]
+[ 作成者 / Creators ] Appbird (Twitter:@projectappbird)
+
+# 利用したもの Library / Frameworks
 - Twitter widget.js
 https://developer.twitter.com/en/docs/twitter-for-websites/javascript-api/overview
 - IFrame Player API
@@ -15,7 +18,7 @@ https://developers.google.com/youtube/iframe_api_reference?hl=ja
 - quicktype
 https://quicktype.io/
 
-## フォント / アイコン
+## フォント / アイコン Font / Icon
 - Font Awesome 5
 https://fontawesome.com/
 - ICOOON MONO

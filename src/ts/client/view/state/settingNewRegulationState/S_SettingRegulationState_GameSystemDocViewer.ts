@@ -13,13 +13,13 @@ const context = {
     List:{
         backSelectable:{
             title:{
-                Japanese:"タイトルのリストに戻る",
-                English:"back to the list of title."
+                Japanese:"ゲームタイトルのリストに戻る",
+                English:"back to the list of titles."
             },
             explain:{
-                Japanese:"",
-                //#TODO 英訳
-                English:""
+                Japanese:"ここを押すとより浅い階層に戻ることが出来ます。",
+                //#CTODO 英訳
+                English:"Press this button to go back to shallower directory."
             },
         },
         modeSelectable:{

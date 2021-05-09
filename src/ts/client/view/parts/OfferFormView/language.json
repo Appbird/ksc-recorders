@@ -1,12 +1,100 @@
 {
-    
+    "ScoreInput":{
+        
+        "Header":{
+            "Japanese":"記録","English":"Time / Score"
+        },
+        "Notice":[{
+            "Japanese":"<strong class='u-redChara'>[必須]</strong> 計測区間で得たスコア,あるいはかかった時間を記述します。",
+            "English":"<strong class='u-redChara'>[Required]</strong> Write Time/Score of your record in this field."
+        },{
+            "Japanese": "01:00:00 / 02:12.32-03:12.32 / 60.00といった形式でも入力が出来ます。",
+            "English":"You can enter in either formats as 01:00.00, 01:00:00, 060.00 or 02:12.32-03:12.32."
+        },{
+            "Japanese":"この場合、全て01:00.00に統一されます。",
+            "English":"In this case, these will be unified into 01:00.00."
+        }],
+        "Error":{
+            "Japanese": "入力されたタイム/記録が不正です。",
+            "English": "invalid time/score string." 
+        }
+    },
+    "URLInput":{
+        "Notice":[{ 
+            "Japanese": "<strong class='u-redChara'>[必須]</strong> 登録する記録の証拠となる動画へのリンクを貼ります。", 
+            "English": "<strong class='u-redChara'>[Required]</strong> Enter a link of video proof." 
+        },{ 
+            "Japanese": "TwitterかYoutubeのいずれかのリンクのみを受け付けます。",
+            "English": "This field only accepts a link from Twitter and Youtube." 
+        },{ 
+            "Japanese": "Youtubeへのリンクの場合、動画の開始秒数を指定することが出来ます。",
+            "English" : "When it is from Youtube, you can set the start of the movie by using URL parameter `t`."
+        }],
+        "Error":{ "Japanese": "入力されたURLが不正です。", "English": "invalid link." }
+    },
+    "DifficultyChoices":{
+        "Header":{
+            "Japanese":"難易度",
+            "English":"Difficulty"
+        },
+        "Notice":[{
+            "Japanese": "<strong class='u-redChara'>[必須]</strong> 取得した記録がどの難易度で取られたかを入力します。",
+            "English": "<strong class='u-redChara'>[Required]</strong> Enter difficulty of the gamemode you run in the record." 
+        }]
+    },
+    "TargetChoices":{
+        "Header":{
+            "Japanese":"計測対象",
+            "English": "Target ( Boss / Stage )"
+        },
+        "Notice":[{
+            "Japanese": "<strong class='u-redChara'>[必須]</strong> どの敵を倒したか / どのステージをクリアしたかを入力します。",
+            "English": "<strong class='u-redChara'>[Required]</strong> Select the enemy / stage."
+        }]
+    },
+    "AbilityChoices":{
+        "Header":{
+            "Japanese":"自機の能力"
+        },
+        "Notice":[{
+            "Japanese": "<strong class='u-redChara'>[必須]</strong> この記録を取った時のカービィのコピー能力を選びます。",
+            "English": "<strong class='u-redChara'>[Required]</strong> Select abilities which you used in the record."
+        },{
+            "Japanese": "<strong>順序が考慮される</strong>ので注意してください。",
+            "English" : "<strong>Be careful with the order!</strong>"
+        }
+        ]
+    },
+    "TagInput":{
+        "Header":{
+            "Japanese":"タグ"
+        },
+        "Notice":[{
+            "Japanese": "[任意] 使ったTAにおけるテクニックの名前などをタグとして登録します。",
+            "English": "[Optional] You can tag the record here. (such as techniques in your record)"
+        }]
+    },
     "RunnersNote":{
         "Notice":[{
             "Japanese": "[任意] 走者ノートをmarkdownで書きます。",
-            "English": "[Optional] You can write notes in markdown here."
+            "English": "[Optional] You can write notes about your record's strat in markdown here."
         },{
             "Japanese": "10秒に一度オートセーブを行います。",
             "English": "The notes is saved once every 10 seconds."
         }]
+    },
+    "DecideButton":{
+        "Japanese":"決定",
+        "English":"Submit"
+    },
+    "ErrorText":{
+        "invalid":{
+            "Japanese":"[Error] 入力が不正な必須項目が存在します。",
+            "English":"[Error] There is a required field which is entered incorrectly."
+        },
+        "lack":{
+            "Japanese":"[Error] 入力されていない必須項目が存在します。",
+            "English":"[Error] There is a required field which is not entered correctly."
+        }
     }
 }

@@ -28,11 +28,9 @@ export class TransitionAdministrator {
         this.articleDOM.classList.add("is-seqStart")
         await new Promise((resolve) => setTimeout(()=>resolve(undefined),400));
         this.clearView();
-        
-        this.articleDOM.classList.add("is-seqEnd")
-
         if (pageStates[nextState] === undefined) throw new Error(`指定されたキー${nextState}に対応するページ状態が存在しません。`);
         this.pageState = new pageStates[nextState](this.app,this.articleDOM,requestObject);
+        this.articleDOM.classList.add("is-seqEnd")
         await this.pageState.init();
 
         this.state.setState(nextState,this.pageState.requiredObject)

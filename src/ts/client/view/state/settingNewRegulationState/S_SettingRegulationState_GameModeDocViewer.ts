@@ -19,8 +19,8 @@ const context = {
             },
             explain:{
                 Japanese:"上の階層に戻ります。",
-                //#TODO 英訳
-                English:""
+                //#CTODO 英訳
+                English:"return to shallower directory."
             },
         },
         targetSelectable:{
@@ -99,12 +99,12 @@ const context = {
         scoreType:{
             title:{
                 Japanese:"記録の種類",
-                English:"Record Type in this gamemode"
+                English:"Type of records in this gamemode"
             },
             description:[{
-                Japanese:"このゲームモードにおいてスコアかタイムのいずれかが記録の基準となっているかを選択してください。",
-                //#TODO ここの英訳
-                English:""
+                Japanese:"このゲームモードにおける評価基準を選択してください。",
+                //#CTODO ここの英訳
+                English:"Select the measurement on this gamemode."
             }]
         },
         maxNumberOfPlayer:{
@@ -114,8 +114,8 @@ const context = {
             },
             description:[{
                 Japanese:"このゲームモードでは何人まで一度に遊べるかを入力してください。",
-                //#TODO ここの英訳
-                English:""
+                //#CTODO ここの英訳
+                English:"Enter the number of players which this gamemode can hold."
             }]
         }
         

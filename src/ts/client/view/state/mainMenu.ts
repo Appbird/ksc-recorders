@@ -64,7 +64,7 @@ export class S_MainMenu
                en:(isSetTargetGameMode) ? `${asg.gameSystem?.English} / ${asg.gameMode?.English}`:`未設定`
            }
            
-           //#TODO まともに日本語訳をする
+           //#CTODO まともに日本語訳をする
             return [{
                 title:{
                     Japanese:(isLogIn) ?  "ログアウト":"サインイン / ログイン",
@@ -76,7 +76,8 @@ export class S_MainMenu
                     icon:"person"
                 } : undefined,
                 description:{
-                    Japanese: (isLogIn) ? "サービスからログアウトします。" : "ログインをすると記録の申請ができるようになります。ログインにはGoogleアカウントが必要です。"
+                    Japanese: (isLogIn) ? "サービスからログアウトします。" : "ログインをすると記録の申請ができるようになります。ログインにはGoogleアカウントが必要です。",
+                    English: (isLogIn) ? "Logout from KSSRs" : "It is necessary for users who want to post their records to login. Login requires your google account."
                 },
                 isDisabled:false,
                 biggerTitle:true,
@@ -95,7 +96,8 @@ export class S_MainMenu
                     icon:"ds"
                 },
                 description:{
-                    Japanese:"ここであなたが閲覧/投稿しようとしている記録が取得されたゲームタイトルとゲームモードを予め設定します。"
+                    Japanese:"ここであなたが閲覧/投稿しようとしている記録が取得されたゲームタイトルとゲームモードを予め設定します。",
+                    English: "Set your <strong>target gamemode</strong> to look records posted to KSSRs."
                 },
                 isDisabled:false,
                 biggerTitle:true,
@@ -108,7 +110,8 @@ export class S_MainMenu
                     icon:"person"
                 },
                 description:{
-                    Japanese: (isLogIn) ? "あなたのユーザーページを見ることが出来ます。" : "ログインしてください。"
+                    Japanese: (isLogIn) ? "あなたのユーザーページを見ることが出来ます。" : "ログインしてください。",
+                    English: (isLogIn) ? "clicking here takes you to your page." : "You need to login first to see here."
                 },
                 isDisabled:!this.app.loginAdministratorReadOnly.isUserLogin,
                 biggerTitle:true,
@@ -142,7 +145,10 @@ export class S_MainMenu
                 },
                 description:{
                     Japanese:
-                        (isSetTargetGameMode) ?  `今までの「${targetGameMode.ja}」の記録を検索して閲覧することが出来ます。`:`<strong>閲覧するゲームタイトル/モードを設定してください。</strong>`
+                        (isSetTargetGameMode) ?  `今までの「${targetGameMode.ja}」の記録を検索して閲覧することが出来ます。`:`<strong>閲覧するゲームタイトル/モードを設定してください。</strong>`,
+                    English:
+                        (isSetTargetGameMode) ?  `In this page, you can search records in ${targetGameMode.en}.`:`<strong>You need to set your target gamemode first.</strong>`
+                
                 },
                 isDisabled:!isSetTargetGameMode,
                 biggerTitle:true,
@@ -158,6 +164,11 @@ export class S_MainMenu
                         if (!isLogIn) return "<strong>申請にはログインが必要です。</strong>"
                         if (!isSetTargetGameMode) return "<strong>閲覧するゲームタイトル/モードを設定してください。</strong>"
                         return "自分の取った記録を、このページに掲示するために申請することができます。"
+                    })(),
+                    English:(() => {
+                        if (!isLogIn) return "<strong>Login is indispensable to submit your record.</strong>"
+                        if (!isSetTargetGameMode) return "<strong>Setting your target gamemode is indispensable to submit your record.</strong>"
+                        return "You can submit your record to KSSRs here."
                     })()
                 },
                 isDisabled:!isSetTargetGameMode || !isLogIn,
@@ -170,11 +181,12 @@ export class S_MainMenu
              return [{
                 title:{
                     Japanese:"新ゲームタイトル/ゲームモードの制定申請",
-                    English:"「新ゲームタイトル/ゲームモードの制定申請」の訳が入る",
+                    English:"Setting New Titles/Gamemodes",
                     icon:"feather"
                 },
                 description:{
-                    Japanese:"取り扱うゲームタイトルとゲームモードを増やすことができます。"
+                    Japanese:"取り扱うゲームタイトルとゲームモードを増やすことができます。",
+                    English:"Setting these enables KSSRs to cover more titles/gamemodes."
                 },
                 isDisabled:!this.app.loginAdministratorReadOnly.isUserLogin,
                 to:() => {this.app.transition("settingNewRegulation_CollectionViewer",null,{ifAppendHistory:false})},
@@ -186,12 +198,13 @@ export class S_MainMenu
                     icon:"writing"
                 },
                 description:{
-                    Japanese:"KSSRsを開発するにあたって、使用したツール、ライブラリなどを記しています。"
+                    Japanese:"KSSRsを開発するにあたって、使用したツール、ライブラリなどを記しています。",
+                    English:"Frameworks, tools and etc which I use for developing KSSRs are written in this page."
                 },
                 isDisabled:false,
                 biggerTitle:true,
                 //#TODO ここをクレジット用に設定する。GitHubのリンクにするのもアリか？
-                to:() => {this.app.transition("gameSystemSelector",null)}
+                to:() => {this.app.transition("credits",null)}
             },{
                 title:{
                     Japanese:"ローディングスピナーを見る",

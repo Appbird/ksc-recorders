@@ -3,17 +3,18 @@ import { TitleCupsuled } from "./TitleCupsuled";
 
 //#CTODO 破壊的変更によって影響を受けるOfferFormViewの対応する
 export class TextInputCapsuled implements IView{
-    private element: HTMLInputElement;
+    private element: HTMLInputElement|HTMLTextAreaElement;
     private errorElement:Element|null;
     private titleElement:TitleCupsuled|null = null;
     constructor(container: Element, {
-        placeHolder = "", errorViewer= null, chara = "", defaultValue = "", title, className = ""
+        placeHolder = "", errorViewer= null, chara = "", defaultValue = "", title, className = "",allowNewLine = false
     }:{ 
         placeHolder?:string,
         errorViewer?:Element|null,
         chara?:"u-biggerChara"|"u-smallerChara"|"",
         className?:string
         defaultValue?:string,
+        allowNewLine?:boolean,
         title?:{
             titleViewer:Element
             main:string, sub:string
@@ -26,11 +27,10 @@ export class TextInputCapsuled implements IView{
             this.titleElement.refresh(title.main,title.sub,{underline:false,chara:"u-smallerChara"})
         }
         
-        this.element = document.createElement("input");
+        this.element = document.createElement((allowNewLine) ? "textarea":"input");
         this.element.setAttribute("type", "text");
         if (className.length !== 0) this.element.classList.add("c-textInput", "u-underline",...className.replace(/\s{2,}/g," ").split(" "));
-        else this.element.classList.add("c-textInput", "u-underline");
-        
+            else this.element.classList.add("c-textInput", "u-underline");
         this.element.placeholder = placeHolder;
         
         if (chara !== undefined && chara !== "") this.element.classList.add(chara);

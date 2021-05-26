@@ -30,6 +30,9 @@ const context = {
     }
 
 }
+// #TODO この画面がAbility,Targetについての画面の時のみ、EditorCSVPartを適切な箇所に表示し、CSVによる一括入力を許可する。
+// #NOTE 特定の場所をクリックするとエディタが展開されるようにしたい。確定ボタンを押すと送信されるようにする…？
+// #NOTE 送信する際に、二重送信を防ぐためボタンをdisabledにしておく。
 export class S_SettingNewRegulationState_CollectionViewer
     extends PageStateBaseClass<{collection:firebase.firestore.CollectionReference,pathStack:string[]}|null,IAppUsedToChangeState>{
         private settingRegulationView:SettingRegulationView_CollectionViewer|null = null;

@@ -42,7 +42,7 @@ export class EditorCSVForInputingItemPart implements EditorPart<IItemOfResolveTa
     get value(): IItemOfResolveTableToNameLackingOfID[] {
         //#TODO ここを変更する
         //*> テキストデータをCSVとして読み取り、型に合うようなデータに変換する。
-        return this.textInput.value;
+        return ;
     }
     refresh(value: IItemOfResolveTableToNameLackingOfID[]) {
         //#TODO ここを変更する。
@@ -65,3 +65,28 @@ export class EditorCSVForInputingItemPart implements EditorPart<IItemOfResolveTa
     }
 }
 
+
+function convertCSVToData(input:string):IItemOfResolveTableToNameLackingOfID[]{
+    const lines = input.split("\n");
+    const header = lines.shift()?.replace(/\s/g,"").split(",");
+    if (header === undefined) throw new Error("CSVで表される表のカラムが未定義です。")
+    if (!checkIfColumnsAreCorrect(header,["Japanese","English"]) && !checkIfColumnsAreCorrect(header,["Japanese","English","JDescription","EDescription"])) throw new Error("CSVで表される表のカラムが未定義です。")
+    const dataInLines = lines.map(line => line.replace(/\s/g,"").split(","))
+    if (!dataInLines.every(dataInLine => dataInLine.length === header.length)) throw new Error("CSVで表されるの行ごとの要素数が不揃いです。")
+    return dataInLines.map( dataInLine => { 
+        return (header.length === 2) ?
+            {
+                Japanese:dataInLine[0], English:dataInLine[1]
+            }:
+            {
+                Japanese:dataInLine[0], English:dataInLine[1],
+                JDescription:dataInLine[2], EDescription:dataInLine[3]
+            }
+    })
+    
+}
+function checkIfColumnsAreCorrect(expecteds:string[],actuals:string[]):boolean{
+    const expectedCopied = expecteds.concat().sort()
+    const actualsCopied = actuals.concat().sort()
+    return expectedCopied.every((expected,index) => actualsCopied[index] === expected)
+}

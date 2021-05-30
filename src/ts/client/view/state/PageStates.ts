@@ -24,6 +24,7 @@ import { S_SettingUserInfo } from "./settingUserInfo";
 import { S_NotificationList } from "./notificationList";
 import { S_ModifyRecordForm } from "./modifyRecordForm";
 import { S_Credits } from "./credits/credits";
+import { S_SettingRegulationState_CollectionAppender } from "./settingNewRegulationState/S_InsertingNewCollection";
 
 export type RequiredObjectType<StateClass> = StateClass extends PageStateBaseClass<infer U,IAppUsedToRead>? U : never;
 export type UsedIAppLimited<IAppLimited> = IAppLimited extends PageStateBaseClass<any,infer U>? U:never;
@@ -48,6 +49,7 @@ export interface PageStatesWithRequiredObject{
     settingRegulation_AbilityDocViewer:S_SettingRegulationState_AbilityDocViewer,
     settingRegulation_TargetDocViewer:S_SettingRegulationState_TargetDocViewer,
     settingRegulation_DifficultyDocViewer:S_SettingRegulationState_DifficultyDocViewer,
+    settingRegulation_CollectionAppender: S_SettingRegulationState_CollectionAppender,
 }
 export interface PageStateWithoutRequiredObject{
     NowLoading:S_NowLoading,
@@ -85,7 +87,7 @@ export const pageStates:PageStatesConstructorObj= {
     settingRegulation_AbilityDocViewer:S_SettingRegulationState_AbilityDocViewer,
     settingRegulation_TargetDocViewer:S_SettingRegulationState_TargetDocViewer,
     settingRegulation_DifficultyDocViewer:S_SettingRegulationState_DifficultyDocViewer,
-
+    settingRegulationState_CollectionAppender: S_SettingRegulationState_CollectionAppender,
 
     modifyRecordForm:S_ModifyRecordForm,
     credits:S_Credits

@@ -43,7 +43,7 @@ const context = {
             },
             {
                 Japanese:"CSVのカラムは<strong>Japanese,English</strong>か<strong>Japanese,English,JDescription,EDescription</strong>のいずれかである必要があります。",
-                English:"The CSV's Column must be either <strong>Japanese,English</strong> or <strong>Japanese,English,JDescription,EDescription</strong>."
+                English:"The CSV's Columns must be either <strong>Japanese,English</strong> or <strong>Japanese,English,JDescription,EDescription</strong>."
             },{
                 Japanese:"CSVを入力するにあたってExcelを使うことが出来ます。",
                 English: "You can use Excel to write the CSV."
@@ -68,9 +68,10 @@ export class S_SettingRegulationState_CollectionAppender
             this.app.state.language,
             {
                 mainTitle: context.title,
-                subTitle:  `${context.titleDescription} / ${this.requiredObj.pathStack}`
+                subTitle:  `${context.titleDescription}`
             },[{
-                id:"back",title:context.List.backSelectable.title,description:context.List.backSelectable.explain,unused:false, onClickCallBack: () => goBackFromDocToCollection(this.app,this.requiredObj)
+                id:"back",title:context.List.backSelectable.title,description:context.List.backSelectable.explain,unused:false,
+                onClickCallBack: () => this.app.transition("settingNewRegulation_CollectionViewer",this.requiredObj)
             }])
         const lang = this.app.state.language;
         const editorHeader:HTMLElement = appendElement(this.articleDOM,"div");
@@ -107,8 +108,13 @@ export class S_SettingRegulationState_CollectionAppender
                     Japanese:`アイテムの登録に成功しました！`,
                     English:`Registering new items is completed successfully!`,
                 });
+                this.app.transition("settingNewRegulation_CollectionViewer",this.requiredObj)
             } catch(error) {
-                editor.displayError({Japanese:"コレクションを正しく追加できませんでした",English:"Failed to add new items."})
+                if (!(error instanceof Error)){
+                    console.error(error)
+                    return;
+                }
+                editor.displayError({Japanese:`コレクションを正しく追加できませんでした: ${error.message}`,English:`Failed to add new items: ${error.message}`})
                 return;
             }
         })

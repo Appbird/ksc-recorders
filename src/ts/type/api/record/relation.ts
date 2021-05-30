@@ -1,5 +1,6 @@
 import { IReceivedData } from "../transmissionBase";
 import { IReceivedDataAtClient_recordDelete } from "./changing/IReceivedDataAtClient_recordDelete";
+import { IReceivedDataAtServer_recordModerate } from "./changing/IReceivedDataAtServer_recordModerate";
 import { IReceivedDataAtClient_recordModify } from "./changing/IReceivedDataAtClient_recordModify";
 import { IReceivedDataAtClient_recordWrite } from "./changing/IReceivedDataAtClient_recordWrite";
 import { IReceivedDataAtServer_recordDelete } from "./changing/IReceivedDataAtServer_recordDelete";
@@ -11,6 +12,7 @@ import { IReceivedDataAtClient_recordSearch } from "./notChanging/IReceivedDataA
 import { IReceivedDataAtServer_recordDetail } from "./notChanging/IReceivedDataAtServer_recordDetail";
 import { IReceivedDataAtServer_recordRawdata } from "./notChanging/IReceivedDataAtServer_recordRawdata";
 import { IReceivedDataAtServer_recordSearch } from "./notChanging/IReceivedDataAtServer_recordSearch";
+import { IReceivedDataAtClient_recordModerate } from "./changing/IReceivedDataAtClient_recordModerate";
 
 export interface IReceivedData_recordSearch extends IReceivedData{
     atServer: IReceivedDataAtServer_recordSearch
@@ -23,6 +25,10 @@ export interface IReceivedData_recordDetail extends IReceivedData{
 export interface IReceivedData_recordRawdata extends IReceivedData{
     atServer: IReceivedDataAtServer_recordRawdata
     atClient: IReceivedDataAtClient_recordRawdata
+}
+export interface IReceivedData_recordModerate extends IReceivedData {
+    atServer: IReceivedDataAtServer_recordModerate;
+    atClient: IReceivedDataAtClient_recordModerate;
 }
 export interface IReceivedData_recordWrite extends IReceivedData {
     atServer: IReceivedDataAtServer_recordWrite;

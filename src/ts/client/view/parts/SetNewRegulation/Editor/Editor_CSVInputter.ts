@@ -12,8 +12,9 @@ export class EditorCSVForInputingItemPart implements EditorPart<IItemOfResolveTa
     private textInput: TextInputCapsuled;
     private htmlCon: HTMLConverter;
     private _requiredField:boolean;
-    private ulist:UListCupsuled
-    private static readonly _requiredTypeInString = "string";
+    private ulist:UListCupsuled;
+    private errorMsg?:MultiLanguageString;
+    private static readonly _requiredTypeInString = "IItemOfResolveTableToNameLackingOfID[]";
     get requiredTypeInString(){
         return EditorCSVForInputingItemPart._requiredTypeInString;
     }
@@ -30,7 +31,6 @@ export class EditorCSVForInputingItemPart implements EditorPart<IItemOfResolveTa
         if(requiredField && description.length !== 0) description.unshift(context_required)
         this.container = container;
         this.htmlCon = new HTMLConverter(language);
-
         this._requiredField = requiredField;
         this.container.appendChild(this.htmlCon.elementWithoutEscaping `<h1 class="u-noUnderline">${generateIcooonHTML({icooonName:(icooon)})}${title}</h1>`);
         this.textInput = new TextInputCapsuled(appendElement(this.container,"div"), { defaultValue:"",className:"u-width90per", allowNewLine:true });
@@ -39,30 +39,45 @@ export class EditorCSVForInputingItemPart implements EditorPart<IItemOfResolveTa
     addChangeEventListener(callback: (changed: IItemOfResolveTableToNameLackingOfID[]) => void) {
         this.textInput.addEventListener("change", () => callback(this.value));
     }
+    /** @throws 形式が不完全であったときにエラーを出します。 */
     get value(): IItemOfResolveTableToNameLackingOfID[] {
-        //#TODO ここを変更する
+        //#CTODO ここを変更する
         //*> テキストデータをCSVとして読み取り、型に合うようなデータに変換する。
-        return ;
+        return convertCSVToData(this.textInput.value);
     }
     refresh(value: IItemOfResolveTableToNameLackingOfID[]) {
-        //#TODO ここを変更する。
-        this.textInput.value = value;
+        //#CTODO ここを変更する。
+        this.textInput.value = 
+            "Japanese,English,JDescription,EDescription\n" +
+            value.map( item => `${item.Japanese},${item.English},${item.JDescription},${item.EDescription}`).join("\n")
     }
     disabled(state:boolean){
         this.textInput.disabled(state);
     }
     isFill(): boolean {
-        //#TODO ここの条件を変更する。
+        //#CTODO ここの条件を変更する。
         //*> CSVの形式を満たしていなければ、満たされていないとみなす。
-        return this.textInput.value.length !== 0;
+        try{
+            this.value
+            return true;
+        }catch(error){
+            return false;
+        }
     }
     get requiredField():boolean{
         return this._requiredField
+    }
+    /** @param  error 指定なしだとエラー表示を削除できる。*/
+    displayError(error?:MultiLanguageString){
+        if (this.errorMsg !== undefined) this.ulist.deleteFirst();
+        this.errorMsg = error;
+        if (error !== undefined) this.ulist.unshift(error)
     }
     destroy(){
         this.textInput.destroy();
         this.ulist.destroy();
     }
+
 }
 
 

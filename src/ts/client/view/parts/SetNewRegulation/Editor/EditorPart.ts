@@ -1,3 +1,5 @@
+import { MultiLanguageString } from "../../../../../type/foundation/MultiLanguageString";
+
 export interface EditorPart<T> {
     addChangeEventListener(callback: (changed: T) => void): void;
     refresh(value: T): void;
@@ -5,7 +7,7 @@ export interface EditorPart<T> {
     disabled(state:boolean):void,
     destroy():void;
     checker?():void;
-    displayError?():void;
+    displayError?(error?:MultiLanguageString):void;
     readonly requiredTypeInString:string;
     readonly requiredField:boolean;
     readonly value: T;

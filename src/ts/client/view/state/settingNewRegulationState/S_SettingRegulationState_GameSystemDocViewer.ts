@@ -100,10 +100,10 @@ export class S_SettingRegulationState_GameSystemDocViewer
                 subTitle:  (this.requiredObj.id !== undefined) ? context.titleDescription:context.titleWithoutIDDescription
             },[
             {
-                id:"back",title:context.List.backSelectable.title,description:context.List.backSelectable.explain,unused:false, onClickCallBack: () => goBackFromDocToCollection(this.app,this.requiredObj)
+                id:"back",icooon:"folder",title:context.List.backSelectable.title,description:context.List.backSelectable.explain,unused:false, onClickCallBack: () => goBackFromDocToCollection(this.app,this.requiredObj)
             },
             {
-                id:"modes",title:context.List.modeSelectable.title,description:context.List.modeSelectable.explain,unused:(this.requiredObj.id===undefined), onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"modes")
+                id:"modes",icooon:"ns",title:context.List.modeSelectable.title,description:context.List.modeSelectable.explain,unused:(this.requiredObj.id===undefined), onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"modes")
             }])
         const lang = this.app.state.language;
         const editorHeader:HTMLElement = appendElement(this.articleDOM,"div");

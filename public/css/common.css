@@ -837,6 +837,16 @@ article h1:not(.u-noUnderline):after {
   background-size: cover;
 }
 
+.u-background--duplicated {
+  background: url("../icon/IcooonMono/duplicateDocument.svg");
+  background-size: cover;
+}
+
+.u-background--folder {
+  background: url("../icon/IcooonMono/folder.svg");
+  background-size: cover;
+}
+
 .u-margin05em {
   margin: 0.5em;
 }

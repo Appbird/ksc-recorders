@@ -277,7 +277,7 @@ export class RecordDataBase{
             if (!( (gameMode.scoreType === "score" && fastestScore < record.score) || 
                 (gameMode.scoreType === "time" && fastestScore > record.score))) return;
         }
-        collectionRef.doc(fastestRecordIDResponse.docs[0].id).set({
+        collectionRef.doc(`${rr.targetID}__${rr.abilityIDs[0]}`).set({
             target__ability:`${rr.targetID}__${rr.abilityIDs[0]}`,
             score:record.score,
             runnerInfo:{

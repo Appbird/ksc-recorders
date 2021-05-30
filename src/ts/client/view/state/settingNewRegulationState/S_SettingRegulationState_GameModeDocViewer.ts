@@ -133,10 +133,10 @@ export class S_SettingRegulationState_GameModeDocViewer
                 mainTitle: (this.requiredObj.id !== undefined) ? context.title:context.titleWithoutID,
                 subTitle:  (this.requiredObj.id !== undefined) ? context.titleDescription:context.titleWithoutIDDescription
             },[
-                {id:"back",title:context.List.backSelectable.title,description:context.List.backSelectable.explain,unused:false, onClickCallBack: () => goBackFromDocToCollection(this.app,this.requiredObj)},
-                {id:"abilities",title:context.List.abilitySelectable.title,description:context.List.abilitySelectable.explain,unused:unset, onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"abilities")},
-                {id:"targets",title:context.List.targetSelectable.title,description:context.List.targetSelectable.explain,unused:unset, onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"targets")},
-                {id:"difficulties",title:context.List.difficultySelectable.title,description:context.List.difficultySelectable.explain,unused:unset, onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"difficulties")},
+                {id:"back",icooon:"folder",title:context.List.backSelectable.title,description:context.List.backSelectable.explain,unused:false, onClickCallBack: () => goBackFromDocToCollection(this.app,this.requiredObj)},
+                {id:"abilities",icooon:"star",title:context.List.abilitySelectable.title,description:context.List.abilitySelectable.explain,unused:unset, onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"abilities")},
+                {id:"targets",icooon:"flag",title:context.List.targetSelectable.title,description:context.List.targetSelectable.explain,unused:unset, onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"targets")},
+                {id:"difficulties",icooon:"difficulty",title:context.List.difficultySelectable.title,description:context.List.difficultySelectable.explain,unused:unset, onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"difficulties")},
             ])
         const lang = this.app.state.language;
         const editorHeader:HTMLElement = appendElement(this.articleDOM,"div");

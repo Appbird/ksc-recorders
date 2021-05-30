@@ -66,22 +66,7 @@ export class S_SettingNewRegulationState_CollectionViewer
                 mainTitle: context.title,
                 subTitle:  context.titleDescription
             },[{
-                id:"insertNewDataByCSV",title:context.List.CSVSelectable.title,description:context.List.CSVSelectable.explain,unused:(ps[ps.length-1] !== "targets"&&ps[ps.length-1] !== "abilities"),
-                onClickCallBack: async () => {
-                    if (this.requiredObj === null) throw new Error("ターゲットが設定されていません。")
-                    this.app.transition("settingRegulation_CollectionAppender",this.requiredObj,{ifAppendHistory:false})
-                }
-            },{
-                id:"copyData",title:context.List.copySelectable.title,description:context.List.copySelectable.explain,unused:(ps[ps.length-1] !== "targets"&&ps[ps.length-1] !== "abilities"),
-                onClickCallBack: async () => {
-                    if (this.requiredObj === null) throw new Error("ターゲットが設定されていません。")
-                    navigator.clipboard.writeText(await convertToCSV(this.requiredObj?.collection))
-                        .then(() => this.app.notie.successAlert({Japanese:"クリップボードにコピーできました！",English:"Successed in copying to clipboard!"}))
-                        .catch(() => this.app.notie.errorAlert({Japanese:"クリップボードにコピーできませんでした...",English:"Failed to copy to clipboard..."}))
-                    
-                }
-            },{
-                id:"modes",title:context.List.backSelectable.title,description:context.List.backSelectable.explain,unused:(this.requiredObj.pathStack.length === 1),
+                id:"modes",title:context.List.backSelectable.title,description:context.List.backSelectable.explain,unused:(this.requiredObj.pathStack.length === 1),icooon:"folder",
                 onClickCallBack: () => {
                     if (this.requiredObj === null) throw new Error("オブジェクトが与えられていません。")
                     const id = this.requiredObj.collection.parent?.id;
@@ -90,6 +75,21 @@ export class S_SettingNewRegulationState_CollectionViewer
                     this.requiredObj.pathStack.pop();
                     
                     this.transitionProperState(id,ref,this.requiredObj.pathStack,this.requiredObj.pathStack[this.requiredObj.pathStack.length-2]);
+                }
+            },{
+                id:"insertNewDataByCSV",title:context.List.CSVSelectable.title,description:context.List.CSVSelectable.explain,unused:(ps[ps.length-1] !== "targets"&&ps[ps.length-1] !== "abilities"),icooon:"writing",
+                onClickCallBack: async () => {
+                    if (this.requiredObj === null) throw new Error("ターゲットが設定されていません。")
+                    this.app.transition("settingRegulation_CollectionAppender",this.requiredObj,{ifAppendHistory:false})
+                }
+            },{
+                id:"copyData",title:context.List.copySelectable.title,description:context.List.copySelectable.explain,unused:(ps[ps.length-1] !== "targets"&&ps[ps.length-1] !== "abilities"),icooon:"duplicated",
+                onClickCallBack: async () => {
+                    if (this.requiredObj === null) throw new Error("ターゲットが設定されていません。")
+                    navigator.clipboard.writeText(await convertToCSV(this.requiredObj?.collection))
+                        .then(() => this.app.notie.successAlert({Japanese:"クリップボードにコピーできました！",English:"Successed in copying to clipboard!"}))
+                        .catch(() => this.app.notie.errorAlert({Japanese:"クリップボードにコピーできませんでした...",English:"Failed to copy to clipboard..."}))
+                    
                 }
             }])
 

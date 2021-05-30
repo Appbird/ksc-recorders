@@ -68,15 +68,15 @@ export class S_SettingRegulationState_CollectionAppender
             this.app.state.language,
             {
                 mainTitle: context.title,
-                subTitle:  `${context.titleDescription}`
+                subTitle:  context.titleDescription
             },[{
-                id:"back",title:context.List.backSelectable.title,description:context.List.backSelectable.explain,unused:false,
+                id:"back",icooon:"folder",title:context.List.backSelectable.title,description:context.List.backSelectable.explain,unused:false,
                 onClickCallBack: () => this.app.transition("settingNewRegulation_CollectionViewer",this.requiredObj,{ifAppendHistory:false})
             }])
         const lang = this.app.state.language;
         const editorHeader:HTMLElement = appendElement(this.articleDOM,"div");
         const title = new TitleCupsuled(editorHeader);
-        title.refresh(`Editing : ${this.requiredObj.pathStack}`,"Add by CSV",{
+        title.refresh(`Editing : ${this.requiredObj.pathStack.join(" > ")}`,"Add by CSV",{
             chara:"u-smallerChara",hr:"u-bold"
         })
         const editorSegment:HTMLElement = appendElement(this.articleDOM,"div");

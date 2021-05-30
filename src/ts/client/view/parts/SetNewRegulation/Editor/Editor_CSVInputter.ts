@@ -71,7 +71,7 @@ export class EditorCSVForInputingItemPart implements EditorPart<IItemOfResolveTa
     displayError(error?:MultiLanguageString){
         if (this.errorMsg !== undefined) this.ulist.deleteFirst();
         this.errorMsg = error;
-        if (error !== undefined) this.ulist.unshift(error)
+        if (error !== undefined) this.ulist.unshift(error,true)
     }
     destroy(){
         this.textInput.destroy();
@@ -83,7 +83,7 @@ export class EditorCSVForInputingItemPart implements EditorPart<IItemOfResolveTa
 
 function convertCSVToData(input:string):IItemOfResolveTableToNameLackingOfID[]{
     const lines = input.split("\n");
-    const header = lines.shift()?.replace(/\s/g,"").split(",");
+    const header = lines.shift()?.split(",");
     if (header === undefined) throw new Error("CSVで表される表のカラムが未定義です。")
     if (!checkIfColumnsAreCorrect(header,["Japanese","English"]) && !checkIfColumnsAreCorrect(header,["Japanese","English","JDescription","EDescription"])) throw new Error("CSVで表される表のカラムが未定義です。")
     const dataInLines = lines.map(line => line.replace(/\s/g,"").split(","))

@@ -14,9 +14,9 @@ export class UListCupsuled implements IView{
             this.append(notice);
         }
     }
-    unshift(notice:MultiLanguageString){
+    unshift(notice:MultiLanguageString,attention:boolean = false){
         const ele = document.createElement(`li`);
-        ele.innerHTML = choiceString(notice,this.language)
+        ele.innerHTML = `<p class="${(attention) ? "u-redChara" : ""}">${choiceString(notice,this.language)}</p>`
         this.container.prepend(ele)
     }
     append(notice:MultiLanguageString){

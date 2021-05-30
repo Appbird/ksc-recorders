@@ -106,7 +106,7 @@ export class S_SettingRegulationState_TargetDocViewer
                     });
                 },
                 whenReset: () => {
-                    this.app.notie.successAlert({
+                    this.app.notie.errorAlert({
                         Japanese:`操作していたデータはサーバーサイドの操作により削除されました。`,
                         English:`The data you were editting was deleted by operation of the server.`,
                     });

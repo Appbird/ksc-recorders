@@ -498,6 +498,13 @@ article.is-seqEnd:before {
   width: 100%;
 }
 
+textarea.c-textInput {
+  resize: vertical;
+  overflow-y: visible;
+  border: 1px #646464 solid;
+  border-radius: 3px;
+}
+
 .c-textInput::placeholder {
   color: #b9b9b9;
 }
@@ -1000,6 +1007,10 @@ article h1:not(.u-noUnderline):after {
 
 .u-width30perWithoutMargin {
   width: 30%;
+}
+
+.u-height15em {
+  height: 15em;
 }
 
 /*# sourceMappingURL=common.css.map */

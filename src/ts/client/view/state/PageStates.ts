@@ -87,7 +87,7 @@ export const pageStates:PageStatesConstructorObj= {
     settingRegulation_AbilityDocViewer:S_SettingRegulationState_AbilityDocViewer,
     settingRegulation_TargetDocViewer:S_SettingRegulationState_TargetDocViewer,
     settingRegulation_DifficultyDocViewer:S_SettingRegulationState_DifficultyDocViewer,
-    settingRegulationState_CollectionAppender: S_SettingRegulationState_CollectionAppender,
+    settingRegulation_CollectionAppender: S_SettingRegulationState_CollectionAppender,
 
     modifyRecordForm:S_ModifyRecordForm,
     credits:S_Credits

@@ -6,7 +6,6 @@ import "firebase/firestore";
 import { choiceString } from "../../../../utility/aboutLang";
 import { SettingRegulationStateHeader } from "../../parts/SetNewRegulation/SettingRegulationStateHeader";
 import { appendElement } from "../../../utility/aboutElement";
-import { Japanese } from "flatpickr/dist/l10n/ja";
 import { IItemOfResolveTableToName } from "../../../../type/list/IItemOfResolveTableToName";
 
 const context = {
@@ -60,19 +59,20 @@ export class S_SettingNewRegulationState_CollectionViewer
     init(){
         if (this.requiredObj === null) this.requiredObj = {collection:firebase.firestore().collection("titles"),pathStack:["titles"]}
 
+        const ps = this.requiredObj.pathStack;
         const headerMaker = new SettingRegulationStateHeader(
             appendElement(this.articleDOM,"div"),this.app.state.language,
             {
                 mainTitle: context.title,
                 subTitle:  context.titleDescription
             },[{
-                id:"insertNewDataByCSV",title:context.List.copySelectable.title,description:context.List.copySelectable.explain,unused:false,
+                id:"insertNewDataByCSV",title:context.List.CSVSelectable.title,description:context.List.CSVSelectable.explain,unused:(ps[ps.length-1] !== "targets"&&ps[ps.length-1] !== "abilities"),
                 onClickCallBack: async () => {
                     if (this.requiredObj === null) throw new Error("ターゲットが設定されていません。")
-                    this.app.transition("settingRegulation_CollectionAppender",this.requiredObj)
+                    this.app.transition("settingRegulation_CollectionAppender",this.requiredObj,{ifAppendHistory:false})
                 }
             },{
-                id:"copyData",title:context.List.copySelectable.title,description:context.List.copySelectable.explain,unused:false,
+                id:"copyData",title:context.List.copySelectable.title,description:context.List.copySelectable.explain,unused:(ps[ps.length-1] !== "targets"&&ps[ps.length-1] !== "abilities"),
                 onClickCallBack: async () => {
                     if (this.requiredObj === null) throw new Error("ターゲットが設定されていません。")
                     navigator.clipboard.writeText(await convertToCSV(this.requiredObj?.collection))
@@ -119,7 +119,9 @@ export class S_SettingNewRegulationState_CollectionViewer
             collection:collection,
             id:id,
             pathStack:pathStack
-        },{ifAppendHistory:false})
+        },{
+            ifAppendHistory:false
+        })
     }
     destroy(){
         if (this.settingRegulationView !== null) this.settingRegulationView.destroy();

@@ -15,6 +15,12 @@
     font-size: 3em;
     width:100%;
 }
+textarea.c-textInput{
+    resize: vertical;
+    overflow-y:visible;
+    border: 1px rgb(100, 100, 100) solid;
+    border-radius: 3px;
+}
 .c-textInput::placeholder{
     color:rgb(185, 185, 185)
 }

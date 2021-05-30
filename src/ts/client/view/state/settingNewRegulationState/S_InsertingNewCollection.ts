@@ -1,7 +1,7 @@
 import { IAppUsedToChangeState } from "../../../interface/AppInterfaces";
 import { PageStateBaseClass } from "../PageStateClass";
 import { appendElement } from "../../../utility/aboutElement";
-import { goBackFromDocToCollection, titleContext } from "./utility";
+import { titleContext } from "./utility";
 import { SettingRegulationStateHeader } from "../../parts/SetNewRegulation/SettingRegulationStateHeader";
 import { EditorCSVForInputingItemPart } from "../../parts/SetNewRegulation/Editor/Editor_CSVInputter";
 import { element } from "../../../../utility/ViewUtility";
@@ -71,7 +71,7 @@ export class S_SettingRegulationState_CollectionAppender
                 subTitle:  `${context.titleDescription}`
             },[{
                 id:"back",title:context.List.backSelectable.title,description:context.List.backSelectable.explain,unused:false,
-                onClickCallBack: () => this.app.transition("settingNewRegulation_CollectionViewer",this.requiredObj)
+                onClickCallBack: () => this.app.transition("settingNewRegulation_CollectionViewer",this.requiredObj,{ifAppendHistory:false})
             }])
         const lang = this.app.state.language;
         const editorHeader:HTMLElement = appendElement(this.articleDOM,"div");
@@ -108,7 +108,7 @@ export class S_SettingRegulationState_CollectionAppender
                     Japanese:`アイテムの登録に成功しました！`,
                     English:`Registering new items is completed successfully!`,
                 });
-                this.app.transition("settingNewRegulation_CollectionViewer",this.requiredObj)
+                this.app.transition("settingNewRegulation_CollectionViewer",this.requiredObj,{ifAppendHistory:false})
             } catch(error) {
                 if (!(error instanceof Error)){
                     console.error(error)

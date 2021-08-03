@@ -4,7 +4,7 @@ import { IItemOfResolveTableToNameLackingOfID } from "../../../../../type/list/I
 import { HTMLConverter } from "../../../../../utility/ViewUtility";
 import { appendElement, generateIcooonHTML } from "../../../../utility/aboutElement";
 import { TextInputCapsuled } from "../../TextInputCapsuled";
-import { UListCupsuled } from "../../UListCupsuled";
+import { UListCupsuled } from "../../Input/UListCupsuled";
 import { context_required, EditorPart } from "./EditorPart";
 
 export class EditorCSVForInputingItemPart implements EditorPart<IItemOfResolveTableToNameLackingOfID[]> {

@@ -27,7 +27,7 @@ export class GameModeCardsGroup implements IView{
                 <div id="articleTitle">
                     <div class="c-title">
                             <div class="c-title__main"> ${generateIcooonHTML(gameSystemInfo)} ${choiceString(gameSystemInfo,this.language)}</div>
-                            <div class="c-title__sub">select the item of game mode where records you're looking for was set.</div>
+                            <div class="c-title__sub">Select the gamemode of the title.</div>
                     </div>
                     <hr noshade class="u-bold">
                 </div>

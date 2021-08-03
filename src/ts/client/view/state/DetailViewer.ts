@@ -7,7 +7,7 @@ import { IAppUsedToChangeState, IAppUsedToReadAndChangeOnlyPageState } from "../
 import { createElementWithIdAndClass } from "../../utility/aboutElement";
 import { RecordDetailView } from "../parts/RecordDetailView/RecordDetailView";
 import { RecordGroupView } from "../parts/RecordsGroupView";
-import { TagsClickedCallbacks } from "../parts/TagsClickedCallbacks";
+import { TagsClickedCallbacks } from "../parts/Interface/TagsClickedCallbacks";
 import { PageStateBaseClass } from "./PageStateClass";
 import { RecordOperation } from "../parts/RecordOperation";
 
@@ -21,9 +21,17 @@ const context = {
             Japanese:"記録を削除する",
             English:"Delete this record"
         },
-        confirm:{
+        verify:{
+            Japanese:"記録を承認する",
+            English:"Verify this record"
+        },
+        confirm_delete:{
             Japanese:"この記録を削除します。こうかいしませんね？",
             English:"Are you sure you want to delete this record?",
+        },
+        confirm_verify:{
+            Japanese:"この記録を承認しますか？",
+            English:"Are you sure you want to verify this record?",
         }
     }
 }
@@ -41,7 +49,7 @@ export class S_DetailViewer
                 
                 const rrg = record.regulation.gameSystemEnvironment;
                 const rr = record.regulation;
-            
+
             const condition:SearchCondition = {
                 groupName: "", gameSystemEnv: { gameSystemID: rrg.gameSystemID, gameModeID: rrg.gameModeID }, 
                 orderOfRecordArray:  "LowerFirst", startOfRecordArray: 0, limitOfRecordArray: 100,
@@ -53,10 +61,11 @@ export class S_DetailViewer
                         condition: [{
                             ...condition,
                             groupName:choiceString({
-                                Japanese:"同条件の記録", English:"Records which has same conditions." //#CTODO 英訳
+                                Japanese:"同条件の記録", English:"Records which are in the same conditions."
                             },this.app.state.language)
                         }]
                 })).result[0];
+            
             let rank: number | undefined = relatedRecord.records.findIndex(element => element.id === record.id) + 1;
             const detailView = new RecordDetailView(detailDiv.appendChild(document.createElement("div")),record,{
                 rankOfTheRecord:rank,
@@ -65,7 +74,8 @@ export class S_DetailViewer
                     if (!StateAdministrator.checkGameSystemEnvIsSet(this.app.state.gameSystemEnvDisplayed)) return;
                     this.app.transition("userPageInSpecific",{...this.app.state.gameSystemEnvDisplayed,runnerID:record.runnerID})
                 },
-                clickedCallBacks:generateClickedTagsCallBacks(this.app,record,condition)
+                clickedCallBacks:generateClickedTagsCallBacks(this.app,record,condition),
+                verifiedTime: this.app.loginAdministratorReadOnly.userInformation_uneditable.isCommitteeMember ? "time" : "date"
             });
             new RecordGroupView(relatedRecordDiv.appendChild(document.createElement("div")),relatedRecord,this.app.state.scoreType,{
                 clickOnCardEventListener: (recordClicked) => {
@@ -85,24 +95,31 @@ export class S_DetailViewer
            
         }
         private prepareOperation(operationDiv:HTMLElement,record:IRecord){
-            const privilege = (() => {
-                if (this.app.loginAdministratorReadOnly.loginUserID === record.runnerID) return "Owner"
-                if (this.app.loginAdministratorReadOnly.userInformation.isCommitteeMember) return "ComitteeMember"
-                return undefined;
-            })()
+            
+            const privilege:Privilege[] = []
+            if (this.app.loginAdministratorReadOnly.loginUserID === record.runnerID) privilege.push("Owner")
+            if (this.app.loginAdministratorReadOnly.userInformation_uneditable.isCommitteeMember) privilege.push("ComitteeMember")
             if (privilege === undefined) return;
-            new RecordOperation(operationDiv,this.app.state.language,privilege,(err)=>this.app.errorCatcher(err),[{
+            new RecordOperation(operationDiv,this.app.state.language,privilege,(err)=>this.app.errorCatcher(err),[
+            {
+                text: context.operation.verify,
+                iconClass: "fas fa-check",
+                color: "blue",
+                callback: () => this.confirmWhenVerify(record,operationDiv),
+                enable: privilege.includes("ComitteeMember") && ( record.moderatorIDs === undefined || record.moderatorIDs.length === 0)
+            },{
                 text:context.operation.modify,
                 iconClass:"fas fa-star",
                 color:"green",
-                callback: () =>this.moveToModifyRecord(record)
+                callback: () => this.moveToModifyRecord(record),
+                enable: privilege.includes("Owner") || privilege.includes("ComitteeMember")
             },{
                 text:context.operation.delete,
                 iconClass:"fas fa-trash-alt",
                 color:"red",
                 //#CTODO notieに確認ウィンドウを付け、その後modify_recordとremove_recordを実装する。
-                callback: () => this.confirmWhenDelete(record)
-
+                callback: () => this.confirmWhenDelete(record,operationDiv),
+                enable: privilege.includes("Owner") || privilege.includes("ComitteeMember")
             }])
         }
         private moveToModifyRecord(record:IRecord){
@@ -111,10 +128,16 @@ export class S_DetailViewer
 
         }
         
-        private confirmWhenDelete(record:IRecord){
+        private confirmWhenDelete(record:IRecord,operationDiv:HTMLElement){
             this.app.notie.confirmAlert({
-                text:context.operation.confirm, 
-                okCallback:()=>this.deleteRecord(record)}
+                text:context.operation.confirm_delete, 
+                okCallback:async ()=>{
+                    this.generateLoadingSpinner()
+                    operationDiv.classList.add("u-unused")
+                    await this.deleteRecord(record)
+                    this.deleteLoadingSpinner()
+                }
+            }
             )
         }
         private async deleteRecord(record:IRecord){
@@ -132,6 +155,32 @@ export class S_DetailViewer
                 English:"the Record is now deleted."
             })
             this.app.transition("mainMenu",null)
+        }
+        private confirmWhenVerify(record:IRecord,operationDiv:HTMLElement){
+            this.app.notie.confirmAlert({
+                text:context.operation.confirm_verify, 
+                okCallback:async ()=>{
+                    this.generateLoadingSpinner()
+                    operationDiv.classList.add("u-unused")
+                    await this.verifyRecord(record).catch((err) => this.app.errorCatcher(err))
+                    this.deleteLoadingSpinner()
+                }
+                })
+        }
+        private async verifyRecord(record:IRecord){
+            await this.app.accessToAPI("record_moderate",{
+                gameSystemEnv: {
+                    gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed
+                },
+                recordId:record.id,
+                IDToken: await this.app.loginAdministratorReadOnly.getIDToken()
+            })
+            this.app.notie.successAlert({
+                Japanese:"この記録は承認されました！",
+                English:"The record is now verified!"
+            })
+            const rrg = record.regulation.gameSystemEnvironment
+            this.app.transition("detailView",{id:record.id,gameSystemEnv:{gameSystemID:rrg.gameSystemID, gameModeID:rrg.gameModeID},lang:this.app.state.language})
         }
         
 }
@@ -180,3 +229,5 @@ export function generateClickedTagsCallBacks(app:IAppUsedToReadAndChangeOnlyPage
         })
 }
 }
+
+export type Privilege = "Owner" | "ComitteeMember"

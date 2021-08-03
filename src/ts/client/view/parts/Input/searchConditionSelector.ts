@@ -1,12 +1,12 @@
-import { IAbilityItem } from "../../../type/list/IAbilityItem";
-import { IGameDifficultyItem } from "../../../type/list/IGameDifficultyItem";
-import { element, HTMLConverter } from "../../../utility/ViewUtility";
-import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
-import { createElementWithIdAndClass, generateIcooonHTML } from "../../utility/aboutElement";
-import { IView } from "../IView";
-import { choiceString } from "../../../utility/aboutLang";
-import { ITargetItem } from "../../../type/list/ITargetItem";
-import { StateAdministrator } from "../../Administrator/StateAdminister";
+import { IAbilityItem } from "../../../../type/list/IAbilityItem";
+import { IGameDifficultyItem } from "../../../../type/list/IGameDifficultyItem";
+import { element, HTMLConverter } from "../../../../utility/ViewUtility";
+import { IAppUsedToReadAndChangeOnlyPageState } from "../../../interface/AppInterfaces";
+import { createElementWithIdAndClass, generateIcooonHTML } from "../../../utility/aboutElement";
+import { IView } from "../../IView";
+import { choiceString } from "../../../../utility/aboutLang";
+import { ITargetItem } from "../../../../type/list/ITargetItem";
+import { StateAdministrator } from "../../../Administrator/StateAdminister";
 import { SelectChoicesCapsuled } from "./SelectChoicesCapsuled";
 
 export class SearchConditionSelectorView implements IView{

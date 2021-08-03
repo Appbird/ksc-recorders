@@ -1,13 +1,12 @@
-import { IReceivedDataAtClient } from "../../transmissionBase";
+import { IReceivedDataAtServer } from "../../transmissionBase";
 
 
-export interface IReceivedDataAtServer_recordModerate extends IReceivedDataAtClient {
+export interface IReceivedDataAtServer_recordModerate extends IReceivedDataAtServer {
     recordId: string;
     gameSystemEnv: {
         gameSystemID: string;
         gameModeID: string;
     };
-    id: string;
-    idToken: string;
+    IDToken: string;
 
 }

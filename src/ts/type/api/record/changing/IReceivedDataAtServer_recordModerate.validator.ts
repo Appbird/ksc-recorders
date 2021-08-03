@@ -13,6 +13,9 @@ export const IReceivedDataAtServer_recordModerateSchema = {
   "defaultProperties": [
   ],
   "properties": {
+    "IDToken": {
+      "type": "string"
+    },
     "gameSystemEnv": {
       "defaultProperties": [
       ],
@@ -30,29 +33,13 @@ export const IReceivedDataAtServer_recordModerateSchema = {
       ],
       "type": "object"
     },
-    "id": {
-      "type": "string"
-    },
-    "idToken": {
-      "type": "string"
-    },
-    "isSucceeded": {
-      "type": "boolean"
-    },
-    "message": {
-      "type": "string"
-    },
     "recordId": {
       "type": "string"
-    },
-    "result": {
     }
   },
   "required": [
+    "IDToken",
     "gameSystemEnv",
-    "id",
-    "idToken",
-    "isSucceeded",
     "recordId"
   ],
   "type": "object"

@@ -255,6 +255,14 @@ article.is-seqEnd:before {
   border-bottom-color: #7c0000;
   background-color: #d32222;
 }
+.c-operationSegment > .c-operationButtons > .__button.--blue > .__icon {
+  border-bottom-color: #040e2c;
+  background-color: #0d1f88;
+}
+.c-operationSegment > .c-operationButtons > .__button.--blue > .__text {
+  border-bottom-color: #0f177f;
+  background-color: #3226dd;
+}
 .c-operationSegment > .c-operationButtons.--enabled {
   height: auto;
 }
@@ -561,6 +569,8 @@ textarea.c-textInput {
   margin: 0.1em;
   padding: 0.3em;
   border-radius: 0.5em;
+  border-width: 3px;
+  border-style: solid;
 }
 
 .c-tag {
@@ -572,26 +582,25 @@ textarea.c-textInput {
 }
 
 .c-tag.--hashTag {
-  background-color: #464444;
-  color: white;
+  border-color: #464444;
 }
 
 .c-tag.--runner {
-  background-color: #b9b9b9;
+  border-color: #b9b9b9;
   font-size: 1.5em;
   font-weight: bolder;
 }
 
 .c-tag.--ability {
-  background-color: #ffc2ed;
+  border-color: #ffc2ed;
 }
 
 .c-tag.--target {
-  background-color: #9fe0fc;
+  border-color: #9fe0fc;
 }
 
 .c-tag.--gameSystem {
-  background-color: #ffd17b;
+  border-color: #ffd17b;
 }
 
 .c-title {
@@ -847,26 +856,6 @@ article h1:not(.u-noUnderline):after {
   background-size: cover;
 }
 
-.u-margin05em {
-  margin: 0.5em;
-}
-
-.u-margin2em {
-  margin: 2em;
-}
-
-.u-marginUpDown05em {
-  margin: 0.5em 0;
-}
-
-.u-marginUpDown2em {
-  margin: 2em 0;
-}
-
-.u-marginUpDown5em {
-  margin: 5em 0;
-}
-
 .u-marginUpDown05emToChildren > * {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
@@ -885,6 +874,32 @@ article h1:not(.u-noUnderline):after {
 .u-marginLeftRight2emToChildren > * {
   margin-right: 2em;
   margin-left: 2em;
+}
+
+.u-marginLeftRight05em {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
+.u-margin05em {
+  margin: 0.5em;
+}
+
+.u-margin2em {
+  margin: 2em;
+}
+
+.u-marginUpDown05em {
+  margin: 0.5em 0;
+}
+
+.u-marginUpDown2em {
+  margin: 2em 0;
+}
+
+.u-marginUpDown5em {
+  margin-top: 5em;
+  margin-bottom: 5em;
 }
 
 .u-left-aligined-forFlex {
@@ -913,6 +928,10 @@ article h1:not(.u-noUnderline):after {
 
 .u-bolderChara {
   font-weight: 900;
+}
+
+.u-smallerChara {
+  font-size: smaller;
 }
 
 .u-smallerChara.c-title__main {
@@ -951,6 +970,18 @@ article h1:not(.u-noUnderline):after {
 
 .u-underline {
   border-bottom: 2px solid #131313;
+}
+
+.u-inline {
+  display: inline-block;
+}
+
+.u-clickable {
+  cursor: pointer;
+}
+
+.u-wordbreak {
+  word-break: break-all;
 }
 
 .u-space50vh {

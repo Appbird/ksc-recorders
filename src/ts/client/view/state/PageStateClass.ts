@@ -7,12 +7,12 @@ const spinnerKind = [
     "gear","tag","time","link","cloud","feather","key","menu","writing",
     "login","logout","notification"
 ]
-export abstract class PageStateBaseClass<T,AppInterface extends IAppUsedToRead> implements IPageStateBaseClass<T> {
+export abstract class PageStateBaseClass<RequiredObjectType,AppInterface extends IAppUsedToRead> implements IPageStateBaseClass<RequiredObjectType> {
     protected app:AppInterface;
-    protected requiredObj:T;
+    protected requiredObj:RequiredObjectType;
     protected articleDOM:HTMLElement;
     private loadingDisplayElement:HTMLElement;
-    constructor(app:AppInterface,articleDOM:HTMLElement,requiredObj:T){
+    constructor(app:AppInterface,articleDOM:HTMLElement,requiredObj:RequiredObjectType){
         this.app = app;
         this.requiredObj = requiredObj;
         this.articleDOM = articleDOM;
@@ -29,7 +29,7 @@ export abstract class PageStateBaseClass<T,AppInterface extends IAppUsedToRead> 
     abstract init():Promise<void>|void;
     destroy():Promise<void>|void{};
     /** ローディングスピナーをページ中に表示します。 */
-    protected generateLoadingSpinner(spinnerKindClassName?:string,message?:String){
+    protected generateLoadingSpinner(spinnerKindClassName?:string,message?:string){
         if (spinnerKind !== undefined) spinnerKindClassName = spinnerKind[Math.floor(Math.random() * spinnerKind.length)]
         for (let index = 0; index < this.loadingDisplayElement.children.length; index++){
             const item = this.loadingDisplayElement.children.item(index)
@@ -46,7 +46,7 @@ export abstract class PageStateBaseClass<T,AppInterface extends IAppUsedToRead> 
     protected deleteLoadingSpinner(){
         this.loadingDisplayElement.parentElement?.classList.remove("--enabled")
     }
-    get requiredObject():T{
+    get requiredObject():RequiredObjectType{
         return this.requiredObj
     }
 }

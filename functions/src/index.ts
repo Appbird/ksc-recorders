@@ -26,7 +26,7 @@ apiList.forEach( (value,key) => {
         try {
             //#NOTE privilege checker
             if (value.privilege!=="everyone"){
-                if (!( (provided):provided is IReceivedDataAtServerNeedAuthentication => provided.hasOwnProperty("IDToken"))(req.body)) throw new Error("サーバーの設定にミスがあります。(認証を必要としない機能に権限がつけられています。)")
+                if (!( (provided):provided is IReceivedDataAtServerNeedAuthentication => provided.hasOwnProperty("IDToken"))(req.body)) throw new Error("[rejected] トークンを必要とするリクエストにトークンが付与されていませんでした。")
                 const uid = await authentication(req.body.IDToken);
                 if (!checkPrivilege(value.privilege,req.body,uid)) throw new Error(`[rejected] このユーザー(uid: ${uid} )には操作 /api${key} を行う権限${value.privilege}がありません。`)
             }
@@ -35,7 +35,8 @@ apiList.forEach( (value,key) => {
         
         try {
             //#NOTE process
-            res.status(200).json(await value.process(recordDataBase,req.body))
+            const result = await value.process(recordDataBase,req.body)
+            res.status(200).json(result)
         }catch(error){ res.status(500).json(errorCatcher(key,"failed",error)); return;}
         console.log(`\u001b[32m[${new Date().toLocaleString()}] Process /api${key} was completed Successfully! \u001b[0m\n`)
         

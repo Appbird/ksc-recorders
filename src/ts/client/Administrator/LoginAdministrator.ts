@@ -2,7 +2,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import { MultiLanguageString } from "../../type/foundation/MultiLanguageString";
-import { IRunner } from "../../type/record/IRunner";
+import { IRunner, IRunnerEditable, IRunnerUneditable } from "../../type/record/IRunner";
 import { IAppUsedToRead } from "../interface/AppInterfaces";
 
 export interface LoginAdministratorReadOnly{
@@ -10,13 +10,16 @@ export interface LoginAdministratorReadOnly{
     loginUserName:MultiLanguageString|null;
     loginUserIconPicture:string|null|undefined;
     loginUserID:string;
-    userInformation:IRunner;
+    userInformation:IRunnerEditable;
+    userInformation_uneditable:IRunnerUneditable
     getIDToken():Promise<string>
 }
 export class LoginAdministrator implements LoginAdministratorReadOnly{
-    private userInfo:IRunner|null =null;
-    private unsubscribe:null|(()=>void) = null;
-    private callbacks:((userdata:IRunner)=>void)[] = [];
+    private userInfo:IRunnerEditable|null =null;
+    private userInfo_uneditable:IRunnerUneditable|null =null;
+    private unsubscribe_main:null|(()=>void) = null;
+    private unsubscribe_sub:null|(()=>void) = null;
+    private callbacks:((userdata:IRunnerEditable)=>void)[] = [];
     private app:IAppUsedToRead;
     constructor(app:IAppUsedToRead){
         firebase.auth().useDeviceLanguage();
@@ -27,21 +30,32 @@ export class LoginAdministrator implements LoginAdministratorReadOnly{
         if ( user === null ) throw new Error("ログインしていません。")
         const ref = firebase.firestore().collection("runners").doc(user.uid);
         this.userInfo = (await this.app.accessToAPI("list_runner",{id: user.uid})).result;
-        if (this.unsubscribe !== null) return;
-        this.unsubscribe = ref.onSnapshot(snapshot => {
+        if (this.unsubscribe_main !== null) return;
+        this.unsubscribe_main = ref.onSnapshot(async snapshot => {
             console.log("[KSSRs] User information change detected.")
              const data = snapshot.data()
              if (data === undefined ){
-                 if (this.unsubscribe !== null){ this.unsubscribe(); this.unsubscribe = null; }
+                 if (this.unsubscribe_main !== null){ this.unsubscribe_main(); this.unsubscribe_main = null; }
                  this.logout(); return;
              }
-             this.userInfo = data as IRunner;
              
-             for (const callback of this.callbacks) callback(data  as IRunner);
+             this.userInfo = data as IRunnerEditable;
+             
+             for (const callback of this.callbacks) callback(this.userInfo);
+        })
+
+        this.unsubscribe_sub = ref.collection("limitedWrite").doc("onlyServerOperation").onSnapshot(snapshot =>{
+            console.log("[KSSRs] User information change detected.")
+             const data = snapshot.data()
+             if (data === undefined ){
+                 if (this.unsubscribe_sub !== null){ this.unsubscribe_sub(); this.unsubscribe_sub = null; }
+                 this.logout(); return;
+             }
+             this.userInfo_uneditable = data as IRunnerUneditable;
         })
         console.log("[KSSRs] User information is loaded completely.")
     }
-    setChangedEventListener(callback:(userdata:IRunner)=>void){
+    setChangedEventListener(callback:(userdata:IRunnerEditable)=>void){
         this.callbacks.push(callback)
     }
     /**@throw */
@@ -53,7 +67,7 @@ export class LoginAdministrator implements LoginAdministratorReadOnly{
     /**@throw */
     async logout(){
         console.log("[KSSRs] Logout")
-        if(this.unsubscribe !== null) this.unsubscribe();
+        if(this.unsubscribe_main !== null) this.unsubscribe_main();
         await firebase.auth().signOut()
     }
     get isUserLogin(){
@@ -81,13 +95,17 @@ export class LoginAdministrator implements LoginAdministratorReadOnly{
         if ( user === null ) throw new Error("ログインしていません。")
         return this.userInfo?.photoURL || user.photoURL;
     }
-    get userInformation():IRunner{
+    get userInformation():IRunnerEditable{
         if (firebase.auth().currentUser === null) throw new Error("ログインしていません。")
         if (this.userInfo === null) {
             this.subscribe().catch(err => console.error(err));
             throw new Error("## データを取得できていません。\n\nヘッダーをクリックして下さい。\n\nPlease click the header above this.")
         }
         return this.userInfo;
+    }
+    get userInformation_uneditable():IRunnerUneditable{
+        if (this.userInfo_uneditable === null) throw new Error("ユーザー情報のうち編集不可能なものが読み込まれていません。")
+        return this.userInfo_uneditable
     }
     /**@throw */
     getIDToken(){

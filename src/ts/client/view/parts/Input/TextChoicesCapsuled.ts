@@ -1,5 +1,5 @@
 import Choices from "choices.js";
-import { IView } from "../IView";
+import { IView } from "../../IView";
 
 
 export class TextChoicesCapsuled implements IView {

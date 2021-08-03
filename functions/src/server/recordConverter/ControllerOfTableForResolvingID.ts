@@ -118,6 +118,7 @@ export class ControllerOfTableForResolvingID{
                     gameModeName:await this.resolveGameModeID(rrg.gameSystemID,rrg.gameModeID,lang)
                 }
             },
+            moderatorIDsResolved: (record.moderatorIDs === undefined) ? [] : await Promise.all( record.moderatorIDs.map(moderatorID => this.resolveRunnerID(moderatorID.id,lang))),
             runnerName: await this.resolveRunnerID(record.runnerID,lang),
             tagName: await Promise.all(record.tagID.map((element) => this.resolveTagID(rrg.gameSystemID,element,lang)))
         }

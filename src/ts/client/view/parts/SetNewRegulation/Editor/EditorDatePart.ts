@@ -2,7 +2,7 @@ import { MultiLanguageString } from "../../../../../type/foundation/MultiLanguag
 import { LanguageInApplication } from "../../../../../type/LanguageInApplication";
 import { HTMLConverter } from "../../../../../utility/ViewUtility";
 import { appendElement, generateIcooonHTML } from "../../../../utility/aboutElement";
-import { UListCupsuled } from "../../UListCupsuled";
+import { UListCupsuled } from "../../Input/UListCupsuled";
 import { context_required, EditorPart } from "./EditorPart";
 import flatPicker from "flatpickr";
 import { Instance } from "flatpickr/dist/types/instance";

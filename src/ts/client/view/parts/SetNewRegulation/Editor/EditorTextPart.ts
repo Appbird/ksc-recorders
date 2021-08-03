@@ -3,7 +3,7 @@ import { LanguageInApplication } from "../../../../../type/LanguageInApplication
 import { HTMLConverter } from "../../../../../utility/ViewUtility";
 import { appendElement, generateIcooonHTML } from "../../../../utility/aboutElement";
 import { TextInputCapsuled } from "../../TextInputCapsuled";
-import { UListCupsuled } from "../../UListCupsuled";
+import { UListCupsuled } from "../../Input/UListCupsuled";
 import { context_required, EditorPart } from "./EditorPart";
 
 export class EditorTextPart implements EditorPart<string> {

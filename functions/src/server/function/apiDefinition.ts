@@ -11,6 +11,7 @@ import { isIReceivedDataAtServer_notificationRead } from "../../../../src/ts/typ
 import { isIReceivedDataAtServer_recordWrite } from "../../../../src/ts/type/api/record/changing/IReceivedDataAtServer_recordWrite.validator";
 import { isIReceivedDataAtServer_recordDelete } from "../../../../src/ts/type/api/record/changing/IReceivedDataAtServer_recordDelete.validator";
 import { isIReceivedDataAtServer_recordModify } from "../../../../src/ts/type/api/record/changing/IReceivedDataAtServer_recordModify.validator";
+import { isIReceivedDataAtServer_recordModerate } from "../../../../src/ts/type/api/record/changing/IReceivedDataAtServer_recordModerate.validator";
 //#CH 出来ることならTypeScript_json_validatorの出力結果を一つにまとめたい。--collection trueオプションをどう使えばいいのだろうか…。
 import { APIFunctions } from "../../../../src/ts/type/api/relation";
 import { IReceivedData, IReceivedDataAtClient, IReceivedDataAtServer } from "../../../../src/ts/type/api/transmissionBase";
@@ -25,6 +26,7 @@ import { write } from "./record/write";
 import { remove } from "./record/remove";
 import { modify } from "./record/modify";
 import { rawdata } from "./record/rawdata";
+import { moderate } from "./record/moderate";
 
 class APIList{
     private apiDefinition = new Map<string,apiInterface<IReceivedData>>()
@@ -53,6 +55,7 @@ apiList.set<APIFunctions["record_rawdata"]>  ("/record/rawdata", isIReceivedData
 apiList.set<APIFunctions["record_write"]>   ("/record/write", isIReceivedDataAtServer_recordWrite, write)
 apiList.set<APIFunctions["record_delete"]>  ("/record/delete", isIReceivedDataAtServer_recordDelete, remove,{privilege:"comiteeMemberOrOwner"})
 apiList.set<APIFunctions["record_modify"]>  ("/record/modify", isIReceivedDataAtServer_recordModify, modify,{privilege:"comiteeMemberOrOwner"})
+apiList.set<APIFunctions["record_moderate"]>  ("/record/moderate", isIReceivedDataAtServer_recordModerate, moderate,{privilege:"onlyCommiteeMember"})
 
 apiList.set<APIFunctions["list_gameSystems"]>  ("/list/gameSystems", isIReceivedDataAtServer_getlist_UseId, gameSystems)
 apiList.set<APIFunctions["list_runners"]>      ("/list/runners", isIReceivedDataAtServer_getlist_UseId, runners)

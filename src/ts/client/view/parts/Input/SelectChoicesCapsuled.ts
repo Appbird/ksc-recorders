@@ -1,8 +1,8 @@
 import Choices from "choices.js";
-import { choiceDescription, choiceString, MultiLanguageDescription, selectAppropriateName } from "../../../utility/aboutLang";
-import { IItemOfResolveTableToName } from "../../../type/list/IItemOfResolveTableToName";
-import { LanguageInApplication } from "../../../type/LanguageInApplication";
-import { IView } from "../IView";
+import { choiceDescription, choiceString, MultiLanguageDescription, selectAppropriateName } from "../../../../utility/aboutLang";
+import { IItemOfResolveTableToName } from "../../../../type/list/IItemOfResolveTableToName";
+import { LanguageInApplication } from "../../../../type/LanguageInApplication";
+import { IView } from "../../IView";
 
 export class SelectChoicesCapsuled<T extends IItemOfResolveTableToName> implements IView {
     private _data: T[];

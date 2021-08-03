@@ -1,7 +1,7 @@
-import { MultiLanguageString } from "../../../type/foundation/MultiLanguageString";
-import { LanguageInApplication } from "../../../type/LanguageInApplication";
-import { choiceString } from "../../../utility/aboutLang";
-import { IView } from "../IView";
+import { MultiLanguageString } from "../../../../type/foundation/MultiLanguageString";
+import { LanguageInApplication } from "../../../../type/LanguageInApplication";
+import { choiceString } from "../../../../utility/aboutLang";
+import { IView } from "../../IView";
 
 export class UListCupsuled implements IView{
     private container:HTMLElement;

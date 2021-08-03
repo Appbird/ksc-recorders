@@ -16,7 +16,7 @@ export class GameSystemCardGroup implements IView{
             onReady,
             title={
                 main:"検索対象とするゲームシステム",
-                sub:"Select the item of title where records you're looking for was set."
+                sub:"Select the title."
             }
         }:{
             language:LanguageInApplication,

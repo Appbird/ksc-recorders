@@ -8,10 +8,10 @@ import { IAppUsedToReadAndChangeOnlyPageState } from "../../../interface/AppInte
 import { createElementWithIdAndClass, createElementWithIdTagClass, findElementByClassNameWithErrorPossibility, generateIcooonHTML } from "../../../utility/aboutElement";
 import { IView } from "../../IView";
 import { MovieWidgetCreator } from "../MovieWidgetCreator";
-import { SelectChoicesCapsuled } from "../SelectChoicesCapsuled";
+import { SelectChoicesCapsuled } from "../Input/SelectChoicesCapsuled";
 import { TextInputCapsuled } from "../TextInputCapsuled";
 import SimpleMDE from "simplemde";
-import { TextChoicesCapsuled } from "../TextChoicesCapsuled";
+import { TextChoicesCapsuled } from "../Input/TextChoicesCapsuled";
 import { ISentRecordOffer } from "../../../../type/api/record/changing/IReceivedDataAtServer_recordWrite";
 import { IRecord } from "../../../../type/record/IRecord";
 import context from "./language.json"

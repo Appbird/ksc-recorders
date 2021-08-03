@@ -3,6 +3,7 @@ import { LanguageInApplication } from "../../../type/LanguageInApplication";
 import { HTMLConverter } from "../../../utility/ViewUtility";
 import { createElementWithIdAndClass, createElementWithIdTagClass } from "../../utility/aboutElement";
 import { IView } from "../IView";
+import { Privilege } from "../state/DetailViewer";
 const context = {
     header:{
         Japanese: "特殊操作 [権限:", English: "Special Operation [Privilege:"
@@ -14,8 +15,8 @@ export class RecordOperation implements IView {
     private htmlC: HTMLConverter;
     private arrow:HTMLElement
     private errorCatcher: (err: any) => void;
-    constructor(container: HTMLElement, language: LanguageInApplication,privilegeName:"Owner"|"ComitteeMember", errorCatcher: (err: any) => void,
-        buttonInfo: { text: MultiLanguageString; iconClass: string; color: string; callback: () => void; }[]
+    constructor(container: HTMLElement, language: LanguageInApplication,privilegeName:Privilege[], errorCatcher: (err: any) => void,
+        buttonInfo: { text: MultiLanguageString; iconClass: string; color: string; callback: () => void; enable:boolean }[]
     ) {
         this.container = container;
         this.errorCatcher = errorCatcher;
@@ -24,12 +25,12 @@ export class RecordOperation implements IView {
         
         const header = this.container.appendChild(createElementWithIdAndClass({ className: "__title" }));
         this.arrow = header.appendChild(createElementWithIdTagClass({className:"fas fa-angle-right"},"i"))
-        header.appendChild(this.htmlC.elementWithoutEscaping`<p>${context.header} ${privilegeName} ]</p>`)
+        header.appendChild(this.htmlC.elementWithoutEscaping`<p>${context.header} ${privilegeName.join(", ")} ]</p>`)
         header.addEventListener("click",()=>this.toggle())
         this.buttonsSegment = this.container.appendChild(createElementWithIdAndClass({ className: "c-operationButtons u-unused" }));
 
 
-        for (const operation of buttonInfo) this.append(operation);
+        for (const operation of buttonInfo) if(operation.enable) this.append(operation);
     }
     private toggle(){
         this.arrow.classList.toggle("fa-angle-right")

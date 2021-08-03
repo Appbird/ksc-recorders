@@ -3,9 +3,9 @@ import { LanguageInApplication } from "../../../../../type/LanguageInApplication
 import { ScoreType } from "../../../../../type/list/IGameModeItem";
 import { HTMLConverter } from "../../../../../utility/ViewUtility";
 import { generateIcooonHTML, appendElement } from "../../../../utility/aboutElement";
-import { UListCupsuled } from "../../UListCupsuled";
+import { UListCupsuled } from "../../Input/UListCupsuled";
 import { context_required, EditorPart } from "./EditorPart";
-import { RadioButtonCupsuled } from "../../RadioButtonCupsuled";
+import { RadioButtonCupsuled } from "../../Input/RadioButtonCupsuled";
 
 const context = {
     option_score:{

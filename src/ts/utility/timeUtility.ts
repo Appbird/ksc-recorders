@@ -28,3 +28,16 @@ export function convertTimeIntoNumber(score:string):number{
             return Math.abs(converseTimeIntoMiliSeconds(timePoints[0]) - converseTimeIntoMiliSeconds(timePoints[1]))
     throw new Error("タイムは00:00.00, 00.00, 00:00.00 - 00:00.00といった形式で入力されなければなりません。")
 }
+
+export function formatDate(datenum:number, mode:"date"|"time"):string{
+    const date = new Date(datenum)
+    return (()=>{
+        switch(mode) {
+            case "date":
+                return `on ${date.getFullYear()}-${WriteNumberIn2Digits(date.getMonth() + 1)}-${WriteNumberIn2Digits(date.getDate())}`
+            case "time":
+                return `at ${date.getFullYear()}-${WriteNumberIn2Digits(date.getMonth() + 1)}-${WriteNumberIn2Digits(date.getDate())}  ${WriteNumberIn2Digits(date.getHours())}:${WriteNumberIn2Digits(date.getMinutes())}`
+        }
+    })().replace(/\//g,"-")
+    
+}

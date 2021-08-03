@@ -3,8 +3,8 @@ import { LanguageInApplication } from "../../../../../type/LanguageInApplication
 import { ITargetItem } from "../../../../../type/list/ITargetItem";
 import { HTMLConverter } from "../../../../../utility/ViewUtility";
 import { appendElement, generateIcooonHTML } from "../../../../utility/aboutElement";
-import { SelectChoicesCapsuled } from "../../SelectChoicesCapsuled";
-import { UListCupsuled } from "../../UListCupsuled";
+import { SelectChoicesCapsuled } from "../../Input/SelectChoicesCapsuled";
+import { UListCupsuled } from "../../Input/UListCupsuled";
 import { context_required, EditorPart } from "./EditorPart";
 import firebase from "firebase/app";
 

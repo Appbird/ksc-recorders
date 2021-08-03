@@ -1,22 +1,3 @@
-.u-margin05em{
-    margin:0.5em;
-}
-.u-margin2em{
-    margin:2em;
-}
-
-.u-marginUpDown05em{
-    margin:0.5em 0;
-}
-.u-marginUpDown2em{
-    margin:2em 0;
-}
-
-.u-marginUpDown5em{
-    margin:5em 0;
-}
-
-
 .u-marginUpDown05emToChildren>*{
     margin-top:0.5em;
     margin-bottom: 0.5em;
@@ -32,4 +13,27 @@
 .u-marginLeftRight2emToChildren>*{
     margin-right: 2.0em;
     margin-left: 2.0em;
+}
+
+.u-marginLeftRight05em{
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+.u-margin05em{
+    margin:0.5em;
+}
+.u-margin2em{
+    margin:2em;
+}
+
+.u-marginUpDown05em{
+    margin:0.5em 0;
+}
+.u-marginUpDown2em{
+    margin:2em 0;
+}
+
+.u-marginUpDown5em{
+    margin-top:5em;
+    margin-bottom: 5em;
 }

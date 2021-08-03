@@ -20,6 +20,7 @@ export interface IRecord extends IRecordInShort{
     score: number;
     //[x] timestampを追加する
     timestamp_post: number;
+    moderatorIDs: {id:string,date:number}[]; 
     regulation: IRegulation;
     runnerID: string;
     tagName: string[];
@@ -40,6 +41,7 @@ export interface IRecordWithoutID{
     tagID: string[];
     link: string[];
     note: string;
+    moderatorIDs?: {id:string,date:number}[]; 
 }
 export const expected_IRecord = {
     id: "string",
@@ -55,6 +57,7 @@ export interface IRecordResolved extends IRecord{
     runnerName: string;
     tagName: string[];
     regulation: IRegulationResolved;
+    moderatorIDsResolved: string[];
 }
 
 
@@ -63,7 +66,6 @@ export interface ModifiedHistoryStack{
     before:{
         score:number;
         timestamp_post:number;
-        timestamp_approval?:number;
         regulation:IRegulation;
         runnerID:string;
         tagName: string[];

@@ -7,6 +7,8 @@
     margin: 0.1em;
     padding: 0.3em;
     border-radius : 0.5em;
+    border-width: 3px;
+    border-style: solid;
 }
 .c-tag{
     cursor: default;
@@ -16,23 +18,22 @@
 }
 
 .c-tag.--hashTag{
-    background-color: rgb(70, 68, 68);
-    color: rgb(255, 255, 255);
+    border-color: rgb(70, 68, 68);
 }
 
 .c-tag.--runner{
-    background-color: rgb(185, 185, 185);
+    border-color: rgb(185, 185, 185);
     font-size: 1.5em;
     font-weight: bolder;
 }
 
 .c-tag.--ability{
-    background-color: rgb(255, 194, 237);
+    border-color: rgb(255, 194, 237);
 }
 
 .c-tag.--target{
-    background-color: rgb(159, 224, 252);
+    border-color: rgb(159, 224, 252);
 }
 .c-tag.--gameSystem{
-    background-color: rgb(255, 209, 123);
+    border-color: rgb(255, 209, 123);
 }

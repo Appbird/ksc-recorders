@@ -1,7 +1,7 @@
-import { MultiLanguageString } from "../../../type/foundation/MultiLanguageString";
-import { LanguageInApplication } from "../../../type/LanguageInApplication";
-import { HTMLConverter } from "../../../utility/ViewUtility";
-import { IView } from "../IView";
+import { MultiLanguageString } from "../../../../type/foundation/MultiLanguageString";
+import { LanguageInApplication } from "../../../../type/LanguageInApplication";
+import { HTMLConverter } from "../../../../utility/ViewUtility";
+import { IView } from "../../IView";
 
 export class NumberInputCupsuled implements IView {
     private container: HTMLElement;

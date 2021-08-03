@@ -94,6 +94,7 @@ export class RecordDataBase{
     getRunnerInfo           = async (uid:string):Promise<IRunner> => {
         const info = await this.getRunnersRef().doc(uid).get()
         const infoLimitedWrite = await this.getRunnersRef().doc(uid).collection("limitedWrite").doc("onlyServerOperation").get()
+        
         if (info.exists) return {...info.data(),...infoLimitedWrite.data()} as IRunner;
         const user = await firebaseAdmin.auth.getUser(uid)
         const userData = createDefaultUserData(user);
@@ -113,7 +114,7 @@ export class RecordDataBase{
 
     }
 
-    modifyRunnerInfo        = this.writeRunnerInfo
+    modifyRunnerInfo = this.writeRunnerInfo
     async readNotificationsOfRunner(uid:string){
         const runnerInfo = await recordDataBase.getRunnerInfo(uid)
         await recordDataBase.writeRunnerInfo(uid,{...runnerInfo,numberOfUnreadNotification:0},{privateDocWrite:true});
@@ -133,7 +134,7 @@ export class RecordDataBase{
 
     async getRecord(gameSystemID:string,gameModeID:string,recordID:string):Promise<IRecord>{
         const result = await this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(recordID).get();
-        const record = result.data() as IRecordWithoutID | undefined;
+        const record = result.data() as IRecord | undefined;
         if (!result.exists || record === undefined) throw new Error(`指定されたゲームID${gameSystemID},モードID${gameModeID}内の記録ID${recordID}に対応するモードが存在しません。`);
         return {...record, id:result.id};
     }
@@ -190,11 +191,20 @@ export class RecordDataBase{
             }
     }
 
+    async verifyRecord(gameSystemID:string,gameModeID:string,recordID:string,moderatorID:string){
+        const record = await this.getRecord(gameSystemID,gameModeID,recordID)
+        record.moderatorIDs.push({id:moderatorID,date:Date.now()})
+        console.log(`[${new Date().toUTCString()}:Verified] Record ${gameSystemID}/${gameModeID}/${recordID} is verified.`)
+        await this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(recordID).set(record)
+        return record;
+    }
+
     //#NOTE Recordについてはデータ内部にidを含めない状態でデータベースに保存している。一方で、その他のデータ(TargetやAbilityなど)は内部にidを含めて保存している。
     async writeRecord(record:IRecordWithoutID):Promise<IRecord>{
         const rrg = record.regulation.gameSystemEnvironment;
-        const result = await this.getGameModeRef(rrg.gameSystemID,rrg.gameModeID).collection("records").add(record)
-        const recordWithID = {...record,id:result.id}
+        const result = await this.getGameModeRef(rrg.gameSystemID,rrg.gameModeID).collection("records").add({})
+        const recordWithID:IRecord = {...record,id:result.id,moderatorIDs:[]}
+        await this.getGameModeRef(rrg.gameSystemID,rrg.gameModeID).collection("records").doc(result.id).set(recordWithID)
         await this.refreshInfoWhenWriting(recordWithID)
         return recordWithID;
     }
@@ -220,7 +230,7 @@ export class RecordDataBase{
         await recordModifiedHistoryRef.add({ modifierID:modifierID,timestamp:Date.now(),before:recordBeforeModified});
         
         const modifiedOffer:IRecord = {
-            ...record,id:recordID,
+            ...record,id:recordID,moderatorIDs:[]
         }
         await ref.set(modifiedOffer)
         await this.refreshInfoWhenEditing(modifiedOffer)
@@ -250,13 +260,13 @@ export class RecordDataBase{
             ...gameSystem,
             recordsNumber:gameSystem.recordsNumber + 1,
             dateOfLatestPost:record.timestamp_post,
-            runnersNumber: gameSystem.runnersNumber + ( userHaveRunThisGameSystem ? 0 : 1 )
+            runnersNumber: gameSystem.runnersNumber + ( userHaveRunThisGameSystem?.times === 1 ? 1 : 0 )
         })
         await this.modifyGameModeInfo(rrg.gameSystemID,rrg.gameModeID,{
             ...gameMode,
             dateOfLatestPost:record.timestamp_post,
             recordsNumber:gameMode.recordsNumber + 1,
-            runnersNumber: gameMode.runnersNumber + (userHaveRunThisGameMode ? 0 : 1)
+            runnersNumber: gameMode.runnersNumber + ( userHaveRunThisGameMode?.times === 1 ? 1 : 0)
         })
         await this.writeRunnerInfo(record.runnerID,{
             ...runner,
@@ -323,7 +333,7 @@ export class RecordDataBase{
         
         await this.modifyGameSystemInfo(gameSystem.id,{
             ...gameSystem,
-            recordsNumber:gameSystem.recordsNumber-1,
+            recordsNumber:gameSystem.recordsNumber - 1,
             runnersNumber: gameSystem.runnersNumber - ( userHaveRunThisGameSystemOnlyOnce ? 1 : 0 )
         })
         await this.modifyGameModeInfo(rrg.gameSystemID,gameMode.id,{

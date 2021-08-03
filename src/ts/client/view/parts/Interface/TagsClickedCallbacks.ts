@@ -1,4 +1,4 @@
-import { TagKind } from "./TagsView";
+import { TagKind } from "../TagsView";
 
 
 export interface TagsClickedCallbacks {

@@ -96,6 +96,18 @@
                     background-color:rgb(211, 34, 34);
                 }
             }
+
+            &.--blue{
+                &>.__icon{
+                    border-bottom-color: rgb(4, 14, 44);
+                    background-color:rgb(13, 31, 136);
+                }
+                &>.__text{
+                    
+                    border-bottom-color: rgb(15, 23, 127);
+                    background-color:rgb(50, 38, 221);
+                }
+            }
             
         }
 

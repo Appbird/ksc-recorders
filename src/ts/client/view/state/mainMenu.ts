@@ -21,11 +21,15 @@ export class S_MainMenu
 
             const main = this.articleDOM.appendChild(this.htmlConverter.elementWithoutEscaping`
             <div>
-                <div class="c-title u-width95per">
+                <div class="c-title u-width95per u-biggerChara">
                     <div class="c-title__main">Welcome to Kirby-Speed/Score-Recorders!</div>
                 </div>
                 <hr noshade class="u-thin">
-                <div class="u-width95per">${{Japanese:"ここでは、「星のカービィ」シリーズにおけるゲームのスコア/タイムを記録したり、閲覧することができます。"}}</div>
+                <p class="u-width95per">
+                ${{
+                    Japanese:"Kirby-Speed/Score-Recorders(KSSRs)へようこそ！<br>KSSRsはカービィシリーズにおけるゲームのタイム/スコアを集積するサイトです。ボスやステージごとの記録集積に特化しています。",
+                    English:"Kirby-Speed/Score-Recorders(KSSRs) is the page that provides scoreboards about the games of the Kirby series, which specializes in recording time/score specific for each Boss and Stage."
+                }}</p>
                 
                 <div class="u-space2em"></div>
                 <div class="u-width90per">
@@ -238,8 +242,8 @@ export class S_MainMenu
             biggerTitle:false,
         },{
             title:{
-                Japanese:"クレジット",
-                English:"Credits",
+                Japanese:"利用規約/クレジット",
+                English:"Term Of Use / Credits",
                 icon:"writing"
             },
             description:{

@@ -32,10 +32,10 @@ export async function modify(recordDataBase:RecordDataBase,input:APIFunctions["r
     const record = await recordDataBase.modifyRecord(input.recordID,modifier,result);
     const cotfr = new ControllerOfTableForResolvingID(recordDataBase);
     
-   const recordResolved = await cotfr.convertRecordIntoRecordResolved(record,input.language);
+    const recordResolved = await cotfr.convertRecordIntoRecordResolved(record,input.language);
     
     const discord = new Notificator(recordDataBase);
-    await discord.sendRecordModifiedMessage(recordDataBase,modifier,recordResolved,input.reason)
+    await discord.sendRecordModifiedMessage(recordDataBase,modifier,(input.language === "English") ? recordResolved:await cotfr.convertRecordIntoRecordResolved(record,"English"),input.reason)
     return {
         isSucceeded:true,
         result: recordResolved

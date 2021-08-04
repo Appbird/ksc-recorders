@@ -20,7 +20,14 @@ const notie = require("notie") as {
         submitCallback?:()=>void,
         cancelCallback?:()=>void
     },submitCallbackOptional?:()=>void,cancelCallbackOptional?:()=>void) => void;
-
+    input:({text,submitText,cancelText,submitCallback,placeholder,spellcheck}:{
+        text: string,
+        submitText: string, // optional, default = 'Submit'
+        cancelText: string, // optional, default = 'Cancel'
+        submitCallback?: (value:string) => void, // optional
+        placeholder?: string, // default: ''
+        spellcheck: string, // default: 'default'
+    },submitCallbackOptional?:(value:any) => void, cancelCallbackOptional?:(value:any) => void) => void
 }
 export class PageNotificationAdministrator{
     private app:IAppUsedToRead;
@@ -48,5 +55,22 @@ export class PageNotificationAdministrator{
             cancelCallback:cancelCallback,
         })
     }
-    
+    reasonInputerAleart({text,ok={Japanese:"はい",English:"Yes"},okCallback,cancel={Japanese:"いいえ",English:"No"},placeholder}:{
+        text:string|MultiLanguageString,
+        ok?:string|MultiLanguageString,
+        okCallback?:(value:string)=>void,
+        cancel?:string|MultiLanguageString,
+        placeholder?:string|MultiLanguageString
+    }){
+        
+        notie.input({
+            text:choiceString(text,this.app.state.language),
+            submitText:choiceString(ok,this.app.state.language),
+            cancelText:choiceString(cancel,this.app.state.language),
+            submitCallback:okCallback,
+            placeholder:choiceString(placeholder,this.app.state.language),
+            spellcheck:"false"
+        })
+        
+    }
 }

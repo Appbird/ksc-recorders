@@ -116,7 +116,7 @@ export class S_UserPageInSpecific
                 },
                 remarks:{
                     Japanese:`<strong class="u-redChara">${(runnerInfo.numberOfUnreadNotification === 0) ? "":runnerInfo.numberOfUnreadNotification+"件の未読"}</strong>`,
-                    English:`<strong class="u-redChara">${(runnerInfo.numberOfUnreadNotification === 0) ? "":runnerInfo.numberOfUnreadNotification+" unread notifications"}</strong>`,
+                    English:`<strong class="u-redChara">There are ${(runnerInfo.numberOfUnreadNotification === 0) ? "":runnerInfo.numberOfUnreadNotification+" new notifications."}</strong>`,
                     icon:""
                 },
                 description:{

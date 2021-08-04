@@ -934,6 +934,10 @@ article h1:not(.u-noUnderline):after {
   color: #4437b6;
 }
 
+.u-grayChara {
+  color: #9e9e9e;
+}
+
 .u-bolderChara {
   font-weight: 900;
 }

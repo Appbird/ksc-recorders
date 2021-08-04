@@ -46,10 +46,9 @@ export class NotificationList implements IView {
                 <div class="u-width90per u-margin05em u-marginUpDown05emToChildren">
                     
                     <i class="${notificationItem.iconCSSClass} u-inline"></i>
-                    <div class="u-inline"> <strong>${choiceString(notificationItem.from,this.language)}</strong> 
+                    <div class="u-inline u-grayChara"> <strong>${choiceString(notificationItem.from,this.language)}</strong> 
                             ${formatDate(notificationItem.postedDate,"time")} 
                     </div>
-                    <hr noshade="" class="u-thin">
                     ${marked(choiceString(notificationItem,this.language))}
                 </div>
             </div>

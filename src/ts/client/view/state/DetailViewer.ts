@@ -129,25 +129,30 @@ export class S_DetailViewer
         }
         
         private confirmWhenDelete(record:IRecord,operationDiv:HTMLElement){
-            this.app.notie.confirmAlert({
+            this.app.notie.reasonInputerAleart({
                 text:context.operation.confirm_delete, 
-                okCallback:async ()=>{
+                okCallback:async (reason:string)=>{
                     this.generateLoadingSpinner()
                     operationDiv.classList.add("u-unused")
-                    await this.deleteRecord(record)
+                    await this.deleteRecord(record,reason)
                     this.deleteLoadingSpinner()
+                },
+                placeholder:{
+                    Japanese: "ここに削除する理由を簡単に記入して下さい。",
+                    English: "Enter the reason why you delete this record in short."
                 }
             }
             )
         }
-        private async deleteRecord(record:IRecord){
+        private async deleteRecord(record:IRecord,reason:string){
             if(!StateAdministrator.checkGameSystemEnvIsSet(this.app.state.gameSystemEnvDisplayed)) return;
             await this.app.accessToAPI("record_delete",{
                 gameSystemEnv: {
                     gameModeID:this.app.state.gameModeIDDisplayed, gameSystemID:this.app.state.gameSystemIDDisplayed
                 },
                 recordID:record.id,
-                IDToken: await this.app.loginAdministratorReadOnly.getIDToken()
+                IDToken: await this.app.loginAdministratorReadOnly.getIDToken(),
+                reason
             })
             
             this.app.notie.successAlert({

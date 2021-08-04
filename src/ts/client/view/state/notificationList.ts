@@ -17,7 +17,7 @@ export class S_NotificationList
     async init(){
         this.generateLoadingSpinner()
         const title = new TitleCupsuled(appendElement(this.articleDOM,"div"));
-        title.refresh(choiceString(context.title,this.app.state.language))
+        title.refresh(`<i class="c-icooon u-background--notification"></i>` + choiceString(context.title,this.app.state.language))
         const ref = firebase.firestore().collection("runners").doc(this.app.loginAdministratorReadOnly.loginUserID).collection("notifications")
         const notificationList = new NotificationList(appendElement(this.articleDOM,"div"),this.app.state.language,ref,{
             readNotification:async () => {

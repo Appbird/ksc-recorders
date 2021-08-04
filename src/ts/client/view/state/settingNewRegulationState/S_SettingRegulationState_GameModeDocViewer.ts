@@ -25,8 +25,8 @@ const context = {
         },
         targetSelectable:{
             title:{
-                Japanese:"計測対象",
-                English:"Targets(Segments)"
+                Japanese:"セグメント",
+                English:"Segments"
             },
             explain:{
                 Japanese:"このゲームモードの、計測対象となるセグメント(ボスやステージなど)を羅列しているリストです。",

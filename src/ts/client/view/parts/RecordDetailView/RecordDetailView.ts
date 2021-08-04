@@ -52,7 +52,7 @@ export class RecordDetailView implements IView{
                         
                         <div class="c-title">
                             <div class="c-title__main u-biggerChara">${converseMiliSecondsIntoTime(recordDetail.score)}</div>
-                            <div class="c-title__sub u-biggerChara onClickEvent_RunnerName">${(rankOfTheRecord === 0) ? "" : convertNumberToRank(rankOfTheRecord)}: <i class="fas fa-user u-marginLeftRight05em"></i><p class="u-inline u-underline u-clickable">${recordDetail.runnerName}</p></div>
+                            <div class="c-title__sub u-biggerChara onClickEvent_RunnerName">${(rankOfTheRecord === 0) ? "" : `${convertNumberToRank(rankOfTheRecord)}:`} <i class="fas fa-user u-marginLeftRight05em"></i><p class="u-inline u-underline u-clickable">${recordDetail.runnerName}</p></div>
                         </div>
                         <hr noshade class="u-thin">
                         <div class="verificationBoard u-left-align"></div>
@@ -89,7 +89,7 @@ export class RecordDetailView implements IView{
                     nameElement.addEventListener("click", onClickRunnerName)
                 }
             } else {
-                verificationBoard.appendChild(htmlC.elementWithoutEscaping`<div> Unverified </div>`)
+                verificationBoard.appendChild(htmlC.elementWithoutEscaping`<div class="u-redChara u-bolderChara"> Unverified </div>`)
             }
             
             const tagInfoDiv = findElementByClassNameWithErrorPossibility(recordDetailElement,"tagsDetail")

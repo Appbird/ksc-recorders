@@ -19,7 +19,7 @@ export class TitleCupsuled implements IView{
     } = {}){
         this.container.innerHTML = "";
         const title = this.container.appendChild(elementWithoutEscaping`
-        <div class="c-title">
+        <div class="c-title u-margin05em">
             <div class="c-title__main ${chara}">${main}</div>
         </div>
         `);

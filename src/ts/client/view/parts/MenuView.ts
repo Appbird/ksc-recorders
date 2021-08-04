@@ -25,10 +25,9 @@ export class MenuView implements IView {
         this.displayDisabled = displayDisabled;
         this.htmlConverter = new HTMLConverter(language);
         this.mainMenu = container.appendChild(this.htmlConverter.elementWithoutEscaping`
-                <div class="c-list u-width90per">
+                <div class="c-list u-marginUpDown05emToChildren u-width90per">
                     <div class="c-title">
                         <div class="c-title__main">${title}</div>
-                        <div class="c-title__sub">menu</div>
                     </div>
                     <hr noshade class="u-thin">
                     

@@ -41,11 +41,18 @@ export class S_MainMenu
             this.generateMainMenuInfo().map((info) => mainMenu.generateMenuItem(info));
             main.appendChild(element`<div class="u-space3em"></div>`)
 
-            const detailMenu = new MenuView(appendElement(main,"div"),this.app.state.language,{
-                Japanese:"詳細設定 / その他",
-                English:"Detail Settings / etc."
+            const settingMenu = new MenuView(appendElement(main,"div"),this.app.state.language,{
+                Japanese:"設定",
+                English:"Settings"
             })
-            this.generateDetailMenuInfo().map(info => detailMenu.generateMenuItem(info));
+            this.generateSettingMenuInfo().map(info => settingMenu.generateMenuItem(info));
+            main.appendChild(element`<div class="u-space3em"></div>`)
+
+            const etcMenu = new MenuView(appendElement(main,"div"),this.app.state.language,{
+                Japanese:"その他",
+                English:"etc"
+            })
+            this.generateDetailMenuInfo().map(info => etcMenu.generateMenuItem(info));
             main.appendChild(element`<div class="u-space3em"></div>`)
             
             this.deleteLoadingSpinner();
@@ -53,56 +60,17 @@ export class S_MainMenu
 
 
         generateMainMenuInfo():RequiredObjectToGenerateItem[]{
-           const runnerInfo = (this.app.loginAdministratorReadOnly.isUserLogin) ? this.app.loginAdministratorReadOnly.userInformation: undefined;
            const asg = this.app.state.gameSystemEnvDisplayed;
            const isSetTargetGameMode = asg.gameSystem!==null && asg.gameMode!==null
 
            const isLogIn = this.app.loginAdministratorReadOnly.isUserLogin;
-           const userName = (isLogIn) ? this.app.loginAdministratorReadOnly.loginUserName:"";
            const targetGameMode = {
                ja:(isSetTargetGameMode) ? `${asg.gameSystem?.Japanese} / ${asg.gameMode?.Japanese}`:`未設定`,
                en:(isSetTargetGameMode) ? `${asg.gameSystem?.English} / ${asg.gameMode?.English}`:`未設定`
            }
            
            //#CTODO まともに日本語訳をする
-            return [{
-                title:{
-                    Japanese:(isLogIn) ?  "ログアウト":"サインイン / ログイン",
-                    English:(isLogIn) ? "Log out":"Sign In / Log In",
-                    icon:(isLogIn) ? "logout":"login"
-                },
-                remarks:(isLogIn) ? {
-                    ...userName,
-                    icon:"person"
-                } : undefined,
-                description:{
-                    Japanese: (isLogIn) ? "サービスからログアウトします。" : "ログインをすると記録の申請ができるようになります。ログインにはGoogleアカウントが必要です。",
-                    English: (isLogIn) ? "Logout from KSSRs" : "It is necessary for users who want to post their records to login. Login requires your google account."
-                },
-                isDisabled:false,
-                biggerTitle:true,
-                to:() => {
-                    (isLogIn) ? this.app.logout():this.app.login()
-                }
-            },{
-                title:{
-                    Japanese:"ゲームタイトル/モードの設定",
-                    English:"Set Watching Title/Mode",
-                    icon:"star"
-                },
-                remarks:{
-                    Japanese:targetGameMode.ja,
-                    English:targetGameMode.en,
-                    icon:"ds"
-                },
-                description:{
-                    Japanese:"ここであなたが閲覧/投稿しようとしている記録が取得されたゲームタイトルとゲームモードを予め設定します。",
-                    English: "Set your <strong>target gamemode</strong> to look records posted to KSSRs."
-                },
-                isDisabled:false,
-                biggerTitle:true,
-                to:() => this.app.transition("gameSystemSelector",null)
-            },
+            return [
             {
                 title:{
                     Japanese:"ユーザーページ",
@@ -111,7 +79,7 @@ export class S_MainMenu
                 },
                 description:{
                     Japanese: (isLogIn) ? "あなたのユーザーページを見ることが出来ます。" : "ログインしてください。",
-                    English: (isLogIn) ? "clicking here takes you to your page." : "You need to login first to see here."
+                    English: (isLogIn) ? "clicking here takes you to your personal page." : "You need to login first to see here."
                 },
                 isDisabled:!this.app.loginAdministratorReadOnly.isUserLogin,
                 biggerTitle:true,
@@ -121,31 +89,13 @@ export class S_MainMenu
                 }
             },{
                 title:{
-                    Japanese:"通知",
-                    English:"Notification",
-                    icon:"notification"
-                },
-                remarks:{
-                    Japanese:`<strong class="u-redChara">${(runnerInfo === undefined || runnerInfo.numberOfUnreadNotification === 0) ? "":runnerInfo.numberOfUnreadNotification+"件の未読"}</strong>`,
-                    English:`<strong class="u-redChara">${(runnerInfo === undefined || runnerInfo.numberOfUnreadNotification === 0) ? "":runnerInfo.numberOfUnreadNotification+" unread notifications"}</strong>`,
-                    icon:""
-                },
-                description:{
-                    Japanese: "通知を確認することが出来ます。",
-                    English: "You can check notifications from the service here."
-                },
-                isDisabled:!this.app.loginAdministratorReadOnly.isUserLogin,
-                biggerTitle:true,
-                to:() => this.app.transition("notificationList",null)
-            },{
-                title:{
                     Japanese:"記録の閲覧",
                     English:"Search Record",
                     icon:"menu"
                 },
                 description:{
                     Japanese:
-                        (isSetTargetGameMode) ?  `今までの「${targetGameMode.ja}」の記録を検索して閲覧することが出来ます。`:`<strong>閲覧するゲームタイトル/モードを設定してください。</strong>`,
+                        (isSetTargetGameMode) ?  `今まで投稿された「${targetGameMode.ja}」の記録を検索して閲覧することが出来ます。`:`<strong>閲覧するゲームタイトル/モードを設定してください。</strong>`,
                     English:
                         (isSetTargetGameMode) ?  `In this page, you can search records in ${targetGameMode.en}.`:`<strong>You need to set your target gamemode first.</strong>`
                 
@@ -177,48 +127,130 @@ export class S_MainMenu
             }];
         }
 
-        generateDetailMenuInfo():RequiredObjectToGenerateItem[]{
+        generateSettingMenuInfo():RequiredObjectToGenerateItem[]{
+            
+           const asg = this.app.state.gameSystemEnvDisplayed;
+           const isSetTargetGameMode = asg.gameSystem!==null && asg.gameMode!==null
+           const runnerInfo = (this.app.loginAdministratorReadOnly.isUserLogin) ? this.app.loginAdministratorReadOnly.userInformation: undefined;
+            const isLogIn = this.app.loginAdministratorReadOnly.isUserLogin;
+            const userName = (isLogIn) ? this.app.loginAdministratorReadOnly.loginUserName:"";
+            const targetGameMode = {
+                ja:(isSetTargetGameMode) ? `${asg.gameSystem?.Japanese} / ${asg.gameMode?.Japanese}`:`未設定`,
+                en:(isSetTargetGameMode) ? `${asg.gameSystem?.English} / ${asg.gameMode?.English}`:`未設定`
+            }
              return [{
                 title:{
-                    Japanese:"新ゲームタイトル/ゲームモードの制定申請",
-                    English:"Setting New Titles/Gamemodes",
-                    icon:"feather"
+                    Japanese:(isLogIn) ?  "ログアウト":"サインイン / ログイン",
+                    English:(isLogIn) ? "Log out":"Sign In / Log In",
+                    icon:(isLogIn) ? "logout":"login"
                 },
+                remarks:(isLogIn) ? {
+                    ...userName,
+                    icon:"person"
+                } : undefined,
                 description:{
-                    Japanese:"取り扱うゲームタイトルとゲームモードを増やすことができます。",
-                    English:"Setting these enables KSSRs to cover more titles/gamemodes."
-                },
-                isDisabled:!this.app.loginAdministratorReadOnly.isUserLogin,
-                to:() => {this.app.transition("settingNewRegulation_CollectionViewer",null,{ifAppendHistory:false})},
-                biggerTitle:true,
-            },{
-                title:{
-                    Japanese:"クレジット",
-                    English:"Credits",
-                    icon:"writing"
-                },
-                description:{
-                    Japanese:"KSSRsを開発するにあたって、使用したツール、ライブラリなどを記しています。",
-                    English:"Frameworks, tools and etc which I use for developing KSSRs are written in this page."
-                },
-                isDisabled:false,
-                biggerTitle:true,
-                //#TODO ここをクレジット用に設定する。GitHubのリンクにするのもアリか？
-                to:() => {this.app.transition("credits",null)}
-            },{
-                title:{
-                    Japanese:"ローディングスピナーを見る",
-                    English:"See Loading Spinner",
-                    icon:"writing"
-                },
-                description:{
-                    Japanese:"KSSRsのローディングスピナーを閲覧することが出来ます。",
-                    English:"You can see loading-spinners in KSSRs."
+                    Japanese: (isLogIn) ? "サービスからログアウトします。" : "ログインをすると記録の申請ができるようになります。ログインにはGoogleアカウントが必要です。",
+                    English: (isLogIn) ? "Logout from KSSRs" : "It is necessary for users who want to post their records to login. Login requires your google account."
                 },
                 isDisabled:false,
                 biggerTitle:false,
-                to:() => {this.app.transition("spinnerExhibition",null)}
+                to:() => {
+                    (isLogIn) ? this.app.logout():this.app.login()
+                }
+            },{
+                title:{
+                    Japanese:"ゲームタイトル/モードの設定",
+                    English:"Set Watching Title/Mode",
+                    icon:"star"
+                },
+                remarks:{
+                    Japanese:targetGameMode.ja,
+                    English:targetGameMode.en,
+                    icon:"ds"
+                },
+                description:{
+                    Japanese:"ここであなたが閲覧/投稿しようとしている記録が取得されたゲームタイトルとゲームモードを予め設定します。",
+                    English: "Set your <strong>target gamemode</strong> to look records posted to KSSRs."
+                },
+                isDisabled:false,
+                biggerTitle:false,
+                to:() => this.app.transition("gameSystemSelector",null)
+            },{
+                title:{
+                    Japanese:"通知",
+                    English:"Notification",
+                    icon:"notification"
+                },
+                remarks:{
+                    Japanese:`<strong class="u-redChara">${(runnerInfo === undefined || runnerInfo.numberOfUnreadNotification === 0) ? "":runnerInfo.numberOfUnreadNotification+"件の未読"}</strong>`,
+                    English:`<strong class="u-redChara">${(runnerInfo === undefined || runnerInfo.numberOfUnreadNotification === 0) ? "":runnerInfo.numberOfUnreadNotification+" unread notifications"}</strong>`,
+                    icon:""
+                },
+                description:{
+                    Japanese: "通知を確認することが出来ます。",
+                    English: "You can check notifications from the service here."
+                },
+                isDisabled:!this.app.loginAdministratorReadOnly.isUserLogin,
+                biggerTitle:false,
+                to:() => this.app.transition("notificationList",null)
             }]
     }
+    generateDetailMenuInfo():RequiredObjectToGenerateItem[]{
+            
+        const asg = this.app.state.gameSystemEnvDisplayed;
+        const isSetTargetGameMode = asg.gameSystem!==null && asg.gameMode!==null
+
+          return [{
+            title:{
+                Japanese:"未承認の記録",
+                English:"Unverified Records",
+                icon:"notebook"
+            },
+            description:{
+                Japanese:(() => {
+                    if (!isSetTargetGameMode) return "<strong>閲覧するゲームタイトル/モードを設定してください。</strong>"
+                    return "まだ認証されていない記録を見ることが出来ます。"
+                })(),
+                English:(() => {
+                    if (!isSetTargetGameMode) return "<strong>Setting your target gamemode is indispensable to submit your record.</strong>"
+                    return "You can see unverified records here."
+                })()
+            },
+            isDisabled:!(isSetTargetGameMode && this.app.loginAdministratorReadOnly.isUserLogin && this.app.loginAdministratorReadOnly.userInformation_uneditable.isCommitteeMember),
+            biggerTitle:false,
+            to:(this.app.loginAdministratorReadOnly.isUserLogin) ? () => {
+                if (!StateAdministrator.checkGameSystemEnvIsSet(this.app.state.gameSystemEnvDisplayed)) return
+                this.app.transition("unverifiedRecord",this.app.state.gameSystemEnvDisplayed)
+            }:undefined
+
+        },{
+            title:{
+                Japanese:"新ゲームタイトル/ゲームモードの制定申請",
+                English:"Setting New Titles/Gamemodes",
+                icon:"feather"
+            },
+            description:{
+                Japanese:"取り扱うゲームタイトルとゲームモードを増やすことができます。",
+                English:"Setting these enables KSSRs to cover more titles/gamemodes."
+            },
+            isDisabled:!this.app.loginAdministratorReadOnly.isUserLogin,
+            to:() => {this.app.transition("settingNewRegulation_CollectionViewer",null,{ifAppendHistory:false})},
+            biggerTitle:false,
+        },{
+            title:{
+                Japanese:"クレジット",
+                English:"Credits",
+                icon:"writing"
+            },
+            description:{
+                Japanese:"KSSRsを開発するにあたって、使用したツール、ライブラリなどを記しています。",
+                English:"Frameworks, tools and etc which I use for developing KSSRs are written in this page."
+            },
+            isDisabled:false,
+            biggerTitle:false,
+            //#TODO ここをクレジット用に設定する。GitHubのリンクにするのもアリか？
+            to:() => {this.app.transition("credits",null)}
+        }]
+ }
 }
 

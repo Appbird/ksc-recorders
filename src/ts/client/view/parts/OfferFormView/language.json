@@ -44,8 +44,8 @@
     },
     "TargetChoices":{
         "Header":{
-            "Japanese":"計測対象",
-            "English": "Target ( Boss / Stage )"
+            "Japanese":"セグメント",
+            "English": "Segment ( Boss / Stage )"
         },
         "Notice":[{
             "Japanese": "<strong class='u-redChara'>[必須]</strong> どの敵を倒したか / どのステージをクリアしたかを入力します。",

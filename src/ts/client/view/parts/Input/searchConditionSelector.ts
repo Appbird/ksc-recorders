@@ -8,6 +8,7 @@ import { choiceString } from "../../../../utility/aboutLang";
 import { ITargetItem } from "../../../../type/list/ITargetItem";
 import { StateAdministrator } from "../../../Administrator/StateAdminister";
 import { SelectChoicesCapsuled } from "./SelectChoicesCapsuled";
+import { Japanese } from "flatpickr/dist/l10n/ja";
 
 export class SearchConditionSelectorView implements IView{
     private container:HTMLElement;
@@ -46,11 +47,11 @@ export class SearchConditionSelectorView implements IView{
             this.htmlConverter.elementWithoutEscaping`
             <div>
                 <div class="c-title">
-                    <div class = "c-title__sub u-biggerChara">${generateIcooonHTML({icooonName:"difficulty"})}難易度</div> <div class = "c-title__sub">Difficulty</div>
+                    <div class = "c-title__sub u-biggerChara">${generateIcooonHTML({icooonName:"difficulty"})}${{Japanese:"難易度(セグメントパック)",English:"Difficulty(Segment Pack)"}}</div> 
                 </div>
                 <hr noshade class="u-thin">
                 <ul class="u-margin05em">
-                    <li>${{Japanese:"検索したい難易度を指定してください。"}}</li>
+                    <li>${{Japanese:"検索したい難易度を指定してください。",English:"Set the difficulty."}}</li>
                 </ul>
             </div>`
         )
@@ -58,13 +59,13 @@ export class SearchConditionSelectorView implements IView{
             this.htmlConverter.elementWithoutEscaping`
             <div>
                 <div class="c-title">
-                    <div class = "c-title__sub u-biggerChara">${generateIcooonHTML({icooonName:"flag"})}計測対象</div> <div class = "c-title__sub">Target</div>
+                    <div class = "c-title__sub u-biggerChara">${generateIcooonHTML({icooonName:"flag"})}${{Japanese:"セグメント",English:"Segments"}}</div>
                     
                 </div>
                 <hr noshade class="u-thin">
                 <ul class="u-margin05em">
-                        <li>${{Japanese:"検索したい記録の敵を指定してください。それぞれの敵について並列に検索をします。"}}</li>
-                        <li>${{Japanese:"何も指定しなかった場合、難易度の敵を全て列挙して検索します。"}}</li>
+                        <li>${{Japanese:"検索したい記録のセグメントを指定してください。それぞれのセグメントについて並列に検索をします。", English:"Set the segment(s). Records will be picked up for each segment."}}</li>
+                        <li>${{Japanese:"何も指定しなかった場合、上で指定した難易度に含まれるセグメントを全て列挙して検索します。", English: "If you don't set any segment here, records will be picked up for every each segment that the difficulty above includes."}}</li>
                 </ul>
             </div>`
         )
@@ -73,12 +74,12 @@ export class SearchConditionSelectorView implements IView{
             this.htmlConverter.elementWithoutEscaping`
             <div>
                 <div class="c-title">
-                    <div class = "c-title__sub u-biggerChara">${generateIcooonHTML({icooonName:"star"})}能力</div> <div class = "c-title__sub">Ability</div>
+                    <div class = "c-title__sub u-biggerChara">${generateIcooonHTML({icooonName:"star"})}${{Japanese:"能力",English:"Abilities"}}</div>
                 </div>
                 <hr noshade class="u-thin">
                 <ul class="u-margin05em">
-                        <li>${{Japanese:"検索したい記録の自機の能力を検索して下さい。順序を考慮します。"}}</li>
-                        <li>${{Japanese:`このゲームモードは${maxNumberOfPlayer}人プレイにまで対応しています。`}}</li>
+                        <li>${{Japanese:"検索したい記録の自機の能力を設定して下さい。順序を考慮します。", English: "Set the abilities. The order DOES matter."}}</li>
+                        <li>${{Japanese:`このゲームモードは${maxNumberOfPlayer}人プレイにまで対応しています。`, English: `At most 3 players can play this game mode at once.`}}</li>
                 </ul>
             </div>`
         )

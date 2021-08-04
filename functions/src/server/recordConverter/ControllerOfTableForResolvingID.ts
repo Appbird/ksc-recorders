@@ -83,10 +83,12 @@ export class ControllerOfTableForResolvingID{
 
 
     async convertIRecordIntoIRecordInShortWithName(record: IRecord, lang: LanguageInApplication): Promise<IRecordInShortResolved> {
+
         const gr = record.regulation; //#README
         const gse = gr.gameSystemEnvironment; //#README
         return {
-            ...record,
+            id: record.id,
+            score: record.score,
             regulation: {
                 ...gr,
                 gameSystemEnvironment: { ...gse,
@@ -97,6 +99,8 @@ export class ControllerOfTableForResolvingID{
                 targetName: await this.resolveTargetID(gse.gameSystemID, gse.gameModeID, gr.targetID, lang),
                 abilityNames: await Promise.all(gr.abilityIDs.map((id) => this.resolveAbilityID(gse.gameSystemID, gse.gameModeID, id, lang))),
             },
+            runnerID: record.runnerID,
+            isVerified: record.moderatorIDs.length !== 0,
             runnerName: await this.resolveRunnerID(record.runnerID, lang)
         };
     }

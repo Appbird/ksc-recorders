@@ -165,9 +165,10 @@ export class RecordDataBase{
         if (recordsQuerySnapshot.empty) console.info("条件に該当する記録が存在しませんでした。")
 
         //#NOTE abilityIDsでAND検索を行った場合の補填をここでする。
-        if (abilityIDsCondition === "AND") records = records.filter( (record) => 
-                                                            abilityIDs.every( (abilityID) => record.regulation.abilityIDs.includes(abilityID))
-                                                    ) 
+        if (abilityIDsCondition === "AND") records = records.filter( (record) => abilityIDs.every( (abilityID) => record.regulation.abilityIDs.includes(abilityID)) )
+        //#NOTE 未承認の記録は表示しない
+        records = records.filter( (record) => record.moderatorIDs.length !== 0)
+
         return records.sort((a,b) => this.sortFunction(a,b,order));
     }
     private addQueryAboutAbilityIDs(recordQuery:FirebaseFirestore.Query,abilityIDsCondition: "AND" | "OR" | "AllowForOrder", abilityIDs:string[]):FirebaseFirestore.Query<FirebaseFirestore.DocumentData>{

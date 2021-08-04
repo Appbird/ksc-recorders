@@ -8,28 +8,30 @@ export interface IRecordInShort {
     regulation: IRegulation;
     runnerID:string;
     id:string;
+    isVerified:boolean;
 }
 export interface IRecordInShortResolved extends IRecordInShort {
     regulation: IRegulationResolved;
     runnerName:string;
 }
 
-export interface IRecord extends IRecordInShort{
+export interface IRecord{
     id: string;
     //[x] ここの命名をtimeInMiliSecondではなくscoreにしたい…。
     score: number;
     //[x] timestampを追加する
     timestamp_post: number;
-    moderatorIDs: {id:string,date:number}[]; 
     regulation: IRegulation;
     runnerID: string;
     tagName: string[];
     languageOfTagName:LanguageInApplication;
+    
+    moderatorIDs: {id:string,date:number}[]; 
     tagID: string[];
     link: string[];
     note: string;
 }
-export interface IRecordWithoutID{
+export interface IRecordWithoutID {
     //[x] ここの命名をtimeInMiliSecondではなくscoreにしたい…。
     score: number;
     //[x] timestampを追加する

@@ -926,6 +926,14 @@ article h1:not(.u-noUnderline):after {
   color: #ff4d40;
 }
 
+.u-greenChara {
+  color: #6ec44b;
+}
+
+.u-blueChara {
+  color: #4437b6;
+}
+
 .u-bolderChara {
   font-weight: 900;
 }
@@ -978,6 +986,10 @@ article h1:not(.u-noUnderline):after {
 
 .u-clickable {
   cursor: pointer;
+}
+
+.u-unclickable {
+  cursor: auto;
 }
 
 .u-wordbreak {

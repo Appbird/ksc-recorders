@@ -3,7 +3,7 @@ import { IReceivedDataAtServer, IReceivedDataAtServerNeedAuthentication, IReceiv
 
 export interface IReceivedDataAtServer_recordModify extends IReceivedDataAtServer,IReceivedDataAtServerNeedAuthentication,IReceivedDataAtServerNeedOwner {
     recordModified: RecordPropertiesInModifiable
-
+    reason?:string;
     language: LanguageInApplication;
 }
 
@@ -18,6 +18,7 @@ export interface RecordPropertiesInModifiable{
         gameSystemEnvironment:{
             gameDifficultyID:string
         }
-    }
+    },
+    
 
 };

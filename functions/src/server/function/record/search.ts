@@ -18,7 +18,9 @@ export async function search(recordDataBase:RecordDataBase,input:IReceivedData_r
                     (await recordDataBase.getRecordsWithCondition(
                             input.gameSystemEnv.gameSystemID,input.gameSystemEnv.gameModeID,input.orderOfRecordArray,
                             input.abilityIDsCondition,input.abilityIDs,
-                            input.targetIDs,input.runnerIDs))
+                            input.targetIDs,input.runnerIDs,
+                            input.searchTypeForVerifiedRecord
+                    ))
 
                 if (input.startOfRecordArray === undefined) input.startOfRecordArray = 0;
                 if (input.limitOfRecordArray === undefined) input.limitOfRecordArray = 7;

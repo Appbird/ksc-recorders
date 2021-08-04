@@ -1,12 +1,13 @@
 import firebase from "firebase/app";
 import { INotificationItem } from "../../../type/record/IRunner";
-import { selectAppropriateDescription } from "../../../utility/aboutLang";
+import { choiceString, selectAppropriateDescription } from "../../../utility/aboutLang";
 import { IView } from "../IView";
 import { LanguageInApplication } from "../../../type/LanguageInApplication";
 import { HTMLConverter } from "../../../utility/ViewUtility";
+import marked from "marked";
+import { formatDate } from "../../../utility/timeUtility";
 
 export class NotificationList implements IView {
-    private notificationList: [string, INotificationItem][] = [];
     private container: Element;
     private observed: firebase.firestore.CollectionReference;
     private unsubscribe: () => void;
@@ -14,7 +15,7 @@ export class NotificationList implements IView {
     private language: LanguageInApplication;
     private htmlC: HTMLConverter;
     constructor(container: Element, language: LanguageInApplication,observed: firebase.firestore.CollectionReference,{
-            limit = 50,
+            limit = 30,
             readNotification
         }:{limit?:number,readNotification:()=>Promise<void>}) {
         this.container = container;
@@ -22,9 +23,8 @@ export class NotificationList implements IView {
         this.language = language;
         this.observed = observed;
         this.htmlC = new HTMLConverter(language);
-        this.prepare().catch((err) => console.error(err));
         this.readNotification = readNotification;
-        this.unsubscribe = this.observed.limit(limit).onSnapshot((querySnapshots) => {
+        this.unsubscribe = this.observed.orderBy("postedDate","asc").limit(limit).onSnapshot((querySnapshots) => {
             for (const querySnapshot of querySnapshots.docChanges()) {
                 switch (querySnapshot.type) {
                     case "added":
@@ -35,22 +35,22 @@ export class NotificationList implements IView {
             }
         });
     }
-    private async prepare() {
-        for (const notification of (await this.observed.get()).docs.map(doc => doc.data()) as INotificationItem[]) {
-            this.append(notification);
-            this.notificationList.push([notification.id, notification]);
-        }
-    }
     read() {
         
         this.readNotification();
     }
-    append(INotificationItem: INotificationItem) {
+    append(notificationItem: INotificationItem) {
         this.container.prepend(this.htmlC.elementWithoutEscaping`
-            <div class="c-list__item --hoverAnimeDisabled">
-                <div class="u-width90per">
-                    <h2>${INotificationItem}</h2>
-                    <p>${selectAppropriateDescription(INotificationItem, this.language)}<p>
+            <div class="c-list__item u-unclickable">
+                
+                <div class="u-width90per u-margin05em u-marginUpDown05emToChildren">
+                    
+                    <i class="${notificationItem.iconCSSClass} u-inline"></i>
+                    <div class="u-inline"> <strong>${choiceString(notificationItem.from,this.language)}</strong> 
+                            ${formatDate(notificationItem.postedDate,"time")} 
+                    </div>
+                    <hr noshade="" class="u-thin">
+                    ${marked(choiceString(notificationItem,this.language))}
                 </div>
             </div>
         `);

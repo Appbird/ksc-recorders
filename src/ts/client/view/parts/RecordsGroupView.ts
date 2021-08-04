@@ -20,9 +20,11 @@ export class RecordGroupView implements IView{
     constructor(container:HTMLElement,recordGroup:IRecordGroupResolved,scoreType:ScoreType,
         {
             clickOnCardEventListener,
+            verifiedCheck=false,
             displayTags={gameSystemTags:false,targetTags:false,abilityTags:true}
         }:{
-            displayTags?:{gameSystemTags?:boolean,targetTags?:boolean,abilityTags?:boolean}
+            displayTags?:{gameSystemTags?:boolean,targetTags?:boolean,abilityTags?:boolean},
+            verifiedCheck?:boolean,
             clickOnCardEventListener?:(record:IRecordInShortResolved) => void
         } = {})
     {
@@ -32,7 +34,7 @@ export class RecordGroupView implements IView{
 
         this.scoreType = scoreType;
         this.option = {
-            displayTags:displayTags,
+            displayTags:displayTags, verifiedCheck:verifiedCheck
         };
         this.container.appendChild(this.summaryElement)
         this.container.appendChild(this.recordCardsElement)

@@ -1,7 +1,7 @@
 import { ScoreType } from "../../../type/list/IGameModeItem";
 import { IRecordInShortResolved } from "../../../type/record/IRecord";
 import { converseMiliSecondsIntoTime } from "../../../utility/timeUtility";
-import { element } from "../../../utility/ViewUtility";
+import { element, HTMLConverter } from "../../../utility/ViewUtility";
 import { IView } from "../IView";
 import { TagsView } from "./TagsView";
 
@@ -13,15 +13,17 @@ export class RecordCardView implements IView{
         this.record = record;
         this.container = container;
         this.container.classList.add("c-recordCard","u-width95per")
+        const htmlC = new HTMLConverter("English")
         //[x] これをElementとして出力して、TagをDOM操作で後付けしたい
-        this.container.appendChild(element`
+        this.container.appendChild(htmlC.elementWithoutEscaping`
                 <div class = "c-title --withUnderline">
                     <div class = "c-title__main">
                     ${(() => {switch(scoreType){
                         case "time" :return converseMiliSecondsIntoTime(record.score)
-                        case "score" :return record.score;
+                        case "score" :return record.score.toString();
                     }})()}</div>
                     <div class="c-iconWithDescription">
+                        ${option.verifiedCheck ? `<i class="far fa${record.isVerified ? "-check" : ""}-circle"></i>` : ""}
                         <i class="fas fa-user"></i>${record.runnerName}
                     </div>
                 </div>
@@ -54,5 +56,6 @@ export interface OptionObject{
     displayTags?:{gameSystemTags?:boolean,targetTags?:boolean,abilityTags?:boolean}
 }
 export interface OptionObjectSet{
-    displayTags:{gameSystemTags?:boolean,targetTags?:boolean,abilityTags?:boolean}
+    displayTags:{gameSystemTags?:boolean,targetTags?:boolean,abilityTags?:boolean},
+    verifiedCheck:boolean
 }

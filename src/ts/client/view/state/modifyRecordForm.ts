@@ -53,8 +53,8 @@ export class S_ModifyRecordForm
                     IDToken:await this.app.loginAdministratorReadOnly.getIDToken()
                 })
                 this.app.notie.successAlert({
-                    Japanese:"書き換えに成功しました！",
-                    English:"Rewrite Successfully!"
+                    Japanese:"記録の修正に成功しました！(再度承認が必要です。)",
+                    English:"Successed in modifying the record!(The record needs another verification.)"
                 })
                 this.app.transition("detailView",{gameSystemEnv:{gameSystemID:gameSystemID,gameModeID:gameModeID},id:recordID,lang:this.app.state.language})
                 

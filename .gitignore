@@ -5,3 +5,4 @@ node_modules/
 secret/
 build/js
 public/js
+firebase-debug.log

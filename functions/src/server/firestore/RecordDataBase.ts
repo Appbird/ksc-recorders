@@ -10,6 +10,7 @@ import { LanguageInApplication } from "../../../../src/ts/type/LanguageInApplica
 import { IItemOfResolveTableToName } from "../../../../src/ts/type/list/IItemOfResolveTableToName";
 import { firebaseAdmin } from "../function/firebaseAdmin";
 import { createDefaultUserData } from "../utility";
+import { SearchTypeForVerifiedRecord } from "../../../../src/ts/type/record/SearchCondition";
 
 
 //[x] getRecordsWithConditionメソッドの実装
@@ -117,10 +118,17 @@ export class RecordDataBase{
     modifyRunnerInfo = this.writeRunnerInfo
     async readNotificationsOfRunner(uid:string){
         const runnerInfo = await recordDataBase.getRunnerInfo(uid)
-        await recordDataBase.writeRunnerInfo(uid,{...runnerInfo,numberOfUnreadNotification:0},{privateDocWrite:true});
+        await recordDataBase.writeRunnerInfo(uid,{...runnerInfo,numberOfUnreadNotification:0},{privateDocWrite:false});
         return;
     }
-    sendNotification        = (uid:string,item:INotificationItem) => this.writeDoc<INotificationItem>(this.getRunnersRef().doc(uid).collection("notifications"),item)
+    sendNotification = async (uid:string,item:INotificationItem) => {
+        this.writeDoc<INotificationItem>(this.getRunnersRef().doc(uid).collection("notifications"),item)
+        const runnerInfo = await recordDataBase.getRunnerInfo(uid)
+        runnerInfo.numberOfUnreadNotification+=1;
+        await recordDataBase.writeRunnerInfo(uid,runnerInfo,{privateDocWrite:false});
+        return;
+    }
+
 
     async searchHashTag(gameSystemID:string,names:string[],language:LanguageInApplication):Promise<(IHashTagItem|undefined)[]>{
         if (names.length > 10) throw new Error("指定するIDが多すぎます。")
@@ -144,7 +152,8 @@ export class RecordDataBase{
         abilityIDsCondition: "AND" | "OR" | "AllowForOrder" = "AND",
         abilityIDs:string[] = [],
         targetIDs:string[] = [],
-        runnerIDs:string[] = []
+        runnerIDs:string[] = [],
+        searchTypeForVerifiedRecord:SearchTypeForVerifiedRecord = "OnlyVerified"
     ):Promise<IRecord[]>{
         if (abilityIDs.length > 10 || targetIDs.length > 10 || runnerIDs.length > 10) throw Error(`能力(${abilityIDs.length}つ),計測対象(${targetIDs.length}つ),走者(${runnerIDs.length}つ)のうちいずれかの条件指定が10個よりも多いです。`)
         
@@ -166,8 +175,13 @@ export class RecordDataBase{
 
         //#NOTE abilityIDsでAND検索を行った場合の補填をここでする。
         if (abilityIDsCondition === "AND") records = records.filter( (record) => abilityIDs.every( (abilityID) => record.regulation.abilityIDs.includes(abilityID)) )
-        //#NOTE 未承認の記録は表示しない
-        records = records.filter( (record) => record.moderatorIDs.length !== 0)
+        //#NOTE 未承認の記録についての取扱い
+        if (searchTypeForVerifiedRecord !== "All"){
+            const filter = searchTypeForVerifiedRecord === "OnlyVerified" ? 
+                (record:IRecord) => record.moderatorIDs.length !== 0 :
+                (record:IRecord) => record.moderatorIDs.length === 0
+            records = records.filter(filter)
+        }
 
         return records.sort((a,b) => this.sortFunction(a,b,order));
     }
@@ -256,7 +270,8 @@ export class RecordDataBase{
             else userHaveRunThisGameSystem.times += 1;
         if (!userHaveRunThisGameMode) runner.idOfGameModeRunnerHavePlayed.push({id:`${rrg.gameSystemID}/${rrg.gameModeID}`,times:1})
             else userHaveRunThisGameMode.times += 1;
-        
+        runner.theNumberOfPost++;
+
         await this.modifyGameSystemInfo(gameSystem.id,{
             ...gameSystem,
             recordsNumber:gameSystem.recordsNumber + 1,
@@ -331,7 +346,7 @@ export class RecordDataBase{
         if (gameModeInfo !== undefined) gameModeInfo.times--;
         const userHaveRunThisGameSystemOnlyOnce = (gameSystemInfo?.times === 0)
         const userHaveRunThisGameModeOnlyOnce = (gameModeInfo?.times === 0)
-        
+        runner.theNumberOfPost--;
         await this.modifyGameSystemInfo(gameSystem.id,{
             ...gameSystem,
             recordsNumber:gameSystem.recordsNumber - 1,

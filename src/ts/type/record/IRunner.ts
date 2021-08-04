@@ -30,8 +30,9 @@ export interface CollectionOfIRunner{
 
 export interface INotificationItem extends IItemOfResolveTableToName{
     postedDate:number;
+    id:string;
+    iconCSSClass:string;
     from:{
-        id:string,
         Japanese:string,
         English:string  
     };

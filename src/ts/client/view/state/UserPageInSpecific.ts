@@ -38,10 +38,11 @@ export class S_UserPageInSpecific
                 limitOfRecordArray:200,
                 orderOfRecordArray:"LaterFirst",
                 runnerIDs:[this.requiredObj.runnerID],
-                language:this.app.state.language
+                language:this.app.state.language,
+                searchTypeForVerifiedRecord: "All"
             }]
         })).result[0]
-        const recordViewer = new RecordGroupView(appendElement(this.articleDOM,"div"),records,this.app.state.scoreType,{
+        new RecordGroupView(appendElement(this.articleDOM,"div"),records,this.app.state.scoreType,{
             clickOnCardEventListener:(record) => this.app.transition("detailView",{
                 gameSystemEnv:{
                     gameSystemID:this.app.state.gameSystemIDDisplayed,
@@ -49,7 +50,8 @@ export class S_UserPageInSpecific
                 },
                 id:record.id,
                 lang: this.app.state.language
-            })
+            }),
+                verifiedCheck:true
             })
         this.deleteLoadingSpinner();
         }

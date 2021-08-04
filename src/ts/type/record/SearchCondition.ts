@@ -19,5 +19,8 @@ export interface SearchCondition {
     abilityIDsCondition?: "AND" | "OR" | "AllowForOrder";
     runnerIDs?: string[];
     tagIDs?: string[];
+    searchTypeForVerifiedRecord?: SearchTypeForVerifiedRecord;
     language: LanguageInApplication;
 }
+
+export type SearchTypeForVerifiedRecord = "All" | "OnlyVerified" | "OnlyUnverified"

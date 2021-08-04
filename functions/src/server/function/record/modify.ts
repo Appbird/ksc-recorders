@@ -3,7 +3,7 @@ import { IRecordWithoutID } from "../../../../../src/ts/type/record/IRecord";
 import { RecordDataBase } from "../../firestore/RecordDataBase";
 import { ControllerOfTableForResolvingID } from "../../recordConverter/ControllerOfTableForResolvingID";
 import { authentication } from "../foundation/auth";
-import { DiscordWebhookers } from "../webhooks/discord";
+import { Notificator } from "../webhooks/Notificator";
 import { convertTagNameToTagID } from "./convertTagNameToTagID";
 
 export async function modify(recordDataBase:RecordDataBase,input:APIFunctions["record_modify"]["atServer"]):Promise<APIFunctions["record_write"]["atClient"]>{
@@ -32,11 +32,10 @@ export async function modify(recordDataBase:RecordDataBase,input:APIFunctions["r
     const record = await recordDataBase.modifyRecord(input.recordID,modifier,result);
     const cotfr = new ControllerOfTableForResolvingID(recordDataBase);
     
-    const recordBeforeModifiedResolved = await cotfr.convertRecordIntoRecordResolved(recordBeforeModified,input.language);
-    const recordResolved = await cotfr.convertRecordIntoRecordResolved(record,input.language);
+   const recordResolved = await cotfr.convertRecordIntoRecordResolved(record,input.language);
     
-    const discord = new DiscordWebhookers(recordDataBase);
-    await discord.sendRecordModifiedMessage(modifier,recordBeforeModifiedResolved,recordResolved)
+    const discord = new Notificator(recordDataBase);
+    await discord.sendRecordModifiedMessage(recordDataBase,modifier,recordResolved,input.reason)
     return {
         isSucceeded:true,
         result: recordResolved

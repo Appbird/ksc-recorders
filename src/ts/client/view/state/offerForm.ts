@@ -40,9 +40,10 @@ export class S_OfferForm
                 })).result
                 this.deleteLoadingSpinner();
                 
+                this.app.notie.successAlert({Japanese:"記録の登録に成功しました！",English:"Registering Record is Completed Successfully!"})
+                
                 await this.app.transition("detailView",{recordResolved:detailRecord});
                 
-                this.app.notie.successAlert({Japanese:"記録の登録に成功しました！",English:"Registering Record is Completed Successfully!"})
             } catch(error){
                 this.app.errorCatcher(error,"記録の登録に失敗しました。")
             }

@@ -25,11 +25,11 @@ export class S_MainMenu
                     <div class="c-title__main">Welcome to Kirby-Speed/Score-Recorders!</div>
                 </div>
                 <hr noshade class="u-thin">
-                <p class="u-width95per">
+                <div class="u-width95per">
                 ${{
-                    Japanese:"Kirby-Speed/Score-Recorders(KSSRs)へようこそ！<br>KSSRsはカービィシリーズにおけるゲームのタイム/スコアを集積するサイトです。ボスやステージごとの記録集積に特化しています。",
+                    Japanese:"<br>KSSRsはカービィシリーズにおけるゲームのタイム/スコアを集積するサイトです。ボスやステージごとの記録集積に特化しています。",
                     English:"Kirby-Speed/Score-Recorders(KSSRs) is the page that provides scoreboards about the games of the Kirby series, which specializes in recording time/score specific for each Boss and Stage."
-                }}</p>
+                }}</div>
                 
                 <div class="u-space2em"></div>
                 <div class="u-width90per">
@@ -154,7 +154,7 @@ export class S_MainMenu
                 } : undefined,
                 description:{
                     Japanese: (isLogIn) ? "サービスからログアウトします。" : "ログインをすると記録の申請ができるようになります。ログインにはGoogleアカウントが必要です。",
-                    English: (isLogIn) ? "Logout from KSSRs" : "It is necessary for users who want to post their records to login. Login requires your google account."
+                    English: (isLogIn) ? "Logout from KSSRs" : "It is necessary for users to login who want to post their records. Login requires your google account."
                 },
                 isDisabled:false,
                 biggerTitle:false,
@@ -174,7 +174,7 @@ export class S_MainMenu
                 },
                 description:{
                     Japanese:"ここであなたが閲覧/投稿しようとしている記録が取得されたゲームタイトルとゲームモードを予め設定します。",
-                    English: "Set your <strong>target gamemode</strong> to look records posted to KSSRs."
+                    English: "Set your <strong>target gamemode</strong> to look records."
                 },
                 isDisabled:false,
                 biggerTitle:false,

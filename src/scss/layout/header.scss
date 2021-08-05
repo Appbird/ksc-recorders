@@ -3,7 +3,8 @@
 header{
     width:100%;
     height: 10vh;
-    z-index: 2;
+    min-height: 5em;
+    z-index: 3;
     box-shadow: 0px 3px 5px rgba(23, 4, 75, 0.171);
     background-color: #fff;
     border-bottom: 10px solid rgb(235, 235, 235);
@@ -13,7 +14,16 @@ header{
     overflow: hidden;
     transition: 0.3s;
     cursor: pointer;
+    position:fixed;
 }
+
+div.compensateionForHeader{
+    width:100%;
+    height: 10vh;
+    min-height: 5em;
+    border-bottom: 10px solid rgba(0, 0, 0, 0);
+}
+
 
 header:hover{
     background-color: rgb(224, 224, 224);

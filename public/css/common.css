@@ -53,10 +53,20 @@ hr.u-thin {
 }
 
 p {
-  font-size: 1.2em;
+  font-size: 1.1em;
   margin: 0;
 }
 
+@media screen and (max-width: 600px) {
+  h2 {
+    font-size: 1.2em;
+  }
+
+  p {
+    font-size: 1.1em;
+    margin: 0;
+  }
+}
 a {
   color: #0c1d46;
   text-decoration: none;
@@ -65,7 +75,8 @@ a {
 header {
   width: 100%;
   height: 10vh;
-  z-index: 2;
+  min-height: 5em;
+  z-index: 3;
   box-shadow: 0px 3px 5px rgba(23, 4, 75, 0.171);
   background-color: #fff;
   border-bottom: 10px solid #ebebeb;
@@ -75,6 +86,14 @@ header {
   overflow: hidden;
   transition: 0.3s;
   cursor: pointer;
+  position: fixed;
+}
+
+div.compensateionForHeader {
+  width: 100%;
+  height: 10vh;
+  min-height: 5em;
+  border-bottom: 10px solid rgba(0, 0, 0, 0);
 }
 
 header:hover {
@@ -119,18 +138,24 @@ main {
 article {
   position: relative;
   width: 70%;
+  max-width: 50em;
   background-color: #fff;
   box-shadow: 0px 3px 5px rgba(23, 4, 75, 0.329);
   overflow-x: hidden;
   padding-bottom: 4em;
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 600px) {
   article {
     width: 90%;
   }
 }
-@media screen and (min-width: 800px) {
+@media screen and (min-width: 600px) and (max-width: 800px) {
+  article {
+    width: 80%;
+  }
+}
+@media screen and (min-width: 800px) and (max-width: 1000px) {
   article {
     width: 70%;
   }
@@ -162,7 +187,7 @@ article:before {
   content: "";
   width: 100%;
   height: 0;
-  z-index: 50;
+  z-index: 2;
   background-color: white;
   position: absolute;
   box-shadow: 0px 3px 3px rgba(23, 4, 75, 0.329);
@@ -545,6 +570,11 @@ textarea.c-textInput {
   cursor: pointer;
 }
 
+@media screen and (max-width: 600px) {
+  .c-recordCard {
+    font-size: small;
+  }
+}
 .c-recordCardsGroup .c-recordCard {
   margin: 1em auto;
 }
@@ -616,14 +646,9 @@ textarea.c-textInput {
   font-size: xx-large;
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 600px) {
   .c-title__main {
-    font-size: x-large;
-  }
-}
-@media screen and (min-width: 800px) {
-  .c-title__main {
-    font-size: xx-large;
+    font-size: large;
   }
 }
 .c-list {
@@ -706,14 +731,17 @@ article h1:not(.u-noUnderline):after {
   font-size: xx-large;
 }
 
-@media screen and (max-width: 800px) {
-  .p-titlePostHeader__main {
-    font-size: x-large;
+@media screen and (max-width: 600px) {
+  .p-titlePostHeader {
+    max-width: 10em;
   }
-}
-@media screen and (min-width: 800px) {
+
   .p-titlePostHeader__main {
-    font-size: xx-large;
+    font-size: medium;
+  }
+
+  .p-titlePostHeader__sub {
+    font-size: small;
   }
 }
 .u-background--star {
@@ -898,6 +926,10 @@ article h1:not(.u-noUnderline):after {
 }
 
 .u-marginUpDown5em {
+  margin: 5em 0;
+}
+
+.u-marginUpDown5em {
   margin-top: 5em;
   margin-bottom: 5em;
 }
@@ -1024,13 +1056,13 @@ article h1:not(.u-noUnderline):after {
   height: 6em;
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 600px) {
   .u-fixedSpace_menuIconWidth {
     max-width: 3em;
     min-width: 3em;
   }
 }
-@media screen and (min-width: 800px) {
+@media screen and (min-width: 600px) {
   .u-fixedSpace_menuIconWidth {
     max-width: 3.5em;
     min-width: 3.5em;

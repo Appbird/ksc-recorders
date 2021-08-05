@@ -1,4 +1,15 @@
+@use "./variables.scss" as variables;
 p{
-    font-size:1.2em;
+    font-size:1.1em;
     margin: 0;
+}
+
+@media screen and (max-width:variables.$mobileMaxWidth) {
+    h2{
+        font-size: 1.2em;
+    }
+    p{
+        font-size:1.1em;
+        margin: 0;
+    }
 }

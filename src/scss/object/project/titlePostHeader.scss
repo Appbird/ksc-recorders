@@ -4,14 +4,16 @@
     flex-direction:column;
     align-items:flex-start;
     justify-content: left;
+    
 }
 .p-titlePostHeader__main{
     font-weight: 800;
     font-size: xx-large;
 }
 @media screen and (max-width:variables.$mobileMaxWidth) {
-    .p-titlePostHeader__main {font-size: x-large;}
-}
-@media screen and (min-width:variables.$mobileMaxWidth) {
-    .p-titlePostHeader__main {font-size: xx-large;}
+    .p-titlePostHeader{
+        max-width: 10em;
+    }
+    .p-titlePostHeader__main {font-size:medium;}
+    .p-titlePostHeader__sub {font-size:small;}
 }

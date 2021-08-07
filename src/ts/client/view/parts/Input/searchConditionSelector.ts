@@ -8,7 +8,28 @@ import { choiceString } from "../../../../utility/aboutLang";
 import { ITargetItem } from "../../../../type/list/ITargetItem";
 import { StateAdministrator } from "../../../Administrator/StateAdminister";
 import { SelectChoicesCapsuled } from "./SelectChoicesCapsuled";
-import { Japanese } from "flatpickr/dist/l10n/ja";
+
+const contents = {
+    Difficulty : {
+        Japanese:"検索したい難易度を指定してください。",
+        English:"Set the difficulty."
+    },
+    Segments:  [
+        {
+            Japanese:"検索したい記録のセグメントを指定してください。それぞれのセグメントについて並列に検索をします。",
+            English:"Set the segment(s). Records will be picked up for each segment."
+        },
+        {
+            Japanese:"何も指定しなかった場合、上で指定した難易度に含まれるセグメントを全て列挙して検索します。", 
+            English: "If you don't set any segment here, records will be picked up for every each segment that the difficulty above includes."
+        }
+    ],
+    Ability: {
+        Japanese:"検索したい記録の自機の能力を設定して下さい。順序を考慮します。", 
+        English: "Set the abilities. The order DOES matter."
+    }
+
+}
 
 export class SearchConditionSelectorView implements IView{
     private container:HTMLElement;
@@ -29,13 +50,7 @@ export class SearchConditionSelectorView implements IView{
         if (!StateAdministrator.checkGameSystemEnvIsSet(this.app.state.gameSystemEnvDisplayed)) throw new Error("閲覧する記録のゲームタイトルとゲームモードが設定されていません。")
         this.container = container;
         this.container.classList.add("searchConditionSelector","u-marginUpDown2emToChildren");
-        this.container.appendChild(element`
-        <div class="articleTitle">
-            <div class="c-title">
-                <div class = "c-title__main"><i class="fas fa-star"></i>記録検索</div> <div class = "c-title__sub">Set conditions to search records!</div>
-            </div>
-            <hr noshade class="u-bold">
-        </div>`)
+        
         const context = this.container.appendChild(createElementWithIdAndClass({className:"u-width90per u-marginUpDown2emToChildren"}))
         this.htmlConverter = new HTMLConverter(this.app.state.language)
         context.appendChild(this.difficultyColumn)
@@ -51,7 +66,7 @@ export class SearchConditionSelectorView implements IView{
                 </div>
                 <hr noshade class="u-thin">
                 <ul class="u-margin05em">
-                    <li>${{Japanese:"検索したい難易度を指定してください。",English:"Set the difficulty."}}</li>
+                    <li>${contents.Difficulty}</li>
                 </ul>
             </div>`
         )
@@ -64,8 +79,8 @@ export class SearchConditionSelectorView implements IView{
                 </div>
                 <hr noshade class="u-thin">
                 <ul class="u-margin05em">
-                        <li>${{Japanese:"検索したい記録のセグメントを指定してください。それぞれのセグメントについて並列に検索をします。", English:"Set the segment(s). Records will be picked up for each segment."}}</li>
-                        <li>${{Japanese:"何も指定しなかった場合、上で指定した難易度に含まれるセグメントを全て列挙して検索します。", English: "If you don't set any segment here, records will be picked up for every each segment that the difficulty above includes."}}</li>
+                        <li>${contents.Segments[0]}</li>
+                        <li>${contents.Segments[1]}</li>
                 </ul>
             </div>`
         )
@@ -78,8 +93,8 @@ export class SearchConditionSelectorView implements IView{
                 </div>
                 <hr noshade class="u-thin">
                 <ul class="u-margin05em">
-                        <li>${{Japanese:"検索したい記録の自機の能力を設定して下さい。順序を考慮します。", English: "Set the abilities. The order DOES matter."}}</li>
-                        <li>${{Japanese:`このゲームモードは${maxNumberOfPlayer}人プレイにまで対応しています。`, English: `At most 3 players can play this game mode at once.`}}</li>
+                        <li>${contents.Ability}</li>
+                        <li>${{Japanese:`このゲームモードは${maxNumberOfPlayer}人プレイにまで対応しています。`, English: `At most ${maxNumberOfPlayer} players can play this game mode at once.`}}</li>
                 </ul>
             </div>`
         )
@@ -122,7 +137,7 @@ export class SearchConditionSelectorView implements IView{
         
         this.app.transition("searchResultView",{
             condition: this.generateCondition(targetSelected,abilitySelected,this.app.state.gameSystemIDDisplayed,this.app.state.gameModeIDDisplayed)
-        },{title:"検索画面"});
+        },{title:""});
     }
     private generateCondition(targetSelected:string[],abilitySelected:string[],gameSystemID:string,gameModeID:string){
         const difficultySelectedID = this.difficultyChoices.getValueAsValue();
@@ -141,7 +156,7 @@ export class SearchConditionSelectorView implements IView{
             const result = this.targetChoices.data.find((target) => target.id === id);
             return {
                 groupName: (result === undefined) ? "":choiceString(result,this.app.state.language),
-                groupSubName:`${index+1}戦目`,
+                groupSubName:`No. ${index+1}`,
                 gameSystemEnv:{gameSystemID:gameSystemID, gameModeID:gameModeID},
                 language:this.app.state.language, startOfRecordArray:0,limitOfRecordArray:3, orderOfRecordArray:this.app.state.superiorScore,
                 abilityIDs:abilitySelected, targetIDs:[id]

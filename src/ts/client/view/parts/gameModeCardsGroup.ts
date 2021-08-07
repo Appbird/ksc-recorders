@@ -23,15 +23,6 @@ export class GameModeCardsGroup implements IView{
             this.container.classList.add("c-list","u-width90per");
             this.gameSystemInfo = gameSystemInfo;
             this.clickEventListener = clickEventListener;
-            this.container.appendChild(elementWithoutEscaping`
-                <div id="articleTitle">
-                    <div class="c-title">
-                            <div class="c-title__main"> ${generateIcooonHTML(gameSystemInfo)} ${choiceString(gameSystemInfo,this.language)}</div>
-                            <div class="c-title__sub">Select the gamemode of the title.</div>
-                    </div>
-                    <hr noshade class="u-bold">
-                </div>
-        `);
             for (const ele of info) this.appendCard(ele);
         }
         destroy(){

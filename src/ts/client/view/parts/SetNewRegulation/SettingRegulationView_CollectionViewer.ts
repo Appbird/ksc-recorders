@@ -1,4 +1,4 @@
-import { generateIcooonHTML } from "../../../utility/aboutElement";
+import { appendElement, generateIcooonHTML } from "../../../utility/aboutElement";
 import { HTMLConverter } from "../../../../utility/ViewUtility";
 import { IView } from "../../IView";
 import { LanguageInApplication } from "../../../../type/LanguageInApplication";
@@ -7,6 +7,7 @@ import { choiceString, selectAppropriateDescription } from "../../../../utility/
 import { IItemOfResolveTableToName, IItemOfResolveTableToNameLackingOfID } from "../../../../type/list/IItemOfResolveTableToName";
 import { icooonResolvable } from "../../../../type/foundation/icooonResolvable";
 import { MultiLanguageString } from "../../../../type/foundation/MultiLanguageString";
+import { TitleCupsuled } from "../TitleCupsuled";
 
 type Callbacks = {
     whenReady?:()=>void,
@@ -41,15 +42,9 @@ export class SettingRegulationView_CollectionViewer implements IView{
         console.log(`[KSSRs] connecting ${path.path} ...`)
         this.language = language;
         const collectionViewer = this.container.appendChild(document.createElement("div"))
-        const htmlC = new HTMLConverter(language);
-        collectionViewer.appendChild(htmlC.elementWithoutEscaping`
-            <div id="articleTitle">
-                <div class="c-title">
-                    <div class="c-title__main u-smallerChara">${context.header}</div>
-                </div>
-                <hr noshade class="u-bold">
-            </div>
-        `);
+        const title = new TitleCupsuled(appendElement(collectionViewer,"div"))
+        title.refresh(choiceString(context.header,language),"",{chara : "u-smallerChara", hr:"u-bold"}) 
+
         this.callbacks = {whenReady,whenStart}
         this.onClickEventListener = onClickEventListener;
         this.generate();

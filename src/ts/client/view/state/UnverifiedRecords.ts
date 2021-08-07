@@ -1,6 +1,8 @@
 import { choiceString } from "../../../utility/aboutLang";
 import { TargetGameMode } from "../../Administrator/StateAdminister";
 import { IAppUsedToReadAndChangePage } from "../../interface/AppInterfaces";
+import { appendElement } from "../../utility/aboutElement";
+import { PageTitleView } from "../parts/PageTitleView";
 import { RecordGroupView } from "../parts/RecordsGroupView";
 import { TitleCupsuled } from "../parts/TitleCupsuled";
 import { PageStateBaseClass } from "./PageStateClass";
@@ -15,9 +17,14 @@ const context = {
 export class S_UnverifiedRecords extends PageStateBaseClass<TargetGameMode,IAppUsedToReadAndChangePage>{
     async init(){
         const header = this.articleDOM.appendChild(document.createElement("div"))
-        const title = new TitleCupsuled(header)
+        
         const lang = this.app.state.language
-        title.refresh(`<i class="fas fa-pencil-alt"></i>`+choiceString(context.title,lang),`${choiceString(this.requiredObj.gameSystem,lang)} / ${choiceString(this.requiredObj.gameMode,lang)}`)
+        const title = new PageTitleView(
+            appendElement(this.articleDOM,"div"),
+            choiceString(context.title,lang),
+            `${choiceString(this.requiredObj.gameSystem,lang)} / ${choiceString(this.requiredObj.gameMode,lang)}`,
+            "fas fa-pencil-alt"
+        )
         this.generateLoadingSpinner()
         const record = await this.app.accessToAPI("record_search",{
             condition:[

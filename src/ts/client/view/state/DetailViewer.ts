@@ -4,14 +4,19 @@ import { SearchCondition } from "../../../type/record/SearchCondition";
 import { choiceString } from "../../../utility/aboutLang";
 import { StateAdministrator } from "../../Administrator/StateAdminister";
 import { IAppUsedToChangeState, IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
-import { createElementWithIdAndClass } from "../../utility/aboutElement";
+import { appendElement, createElementWithIdAndClass } from "../../utility/aboutElement";
 import { RecordDetailView } from "../parts/RecordDetailView/RecordDetailView";
 import { RecordGroupView } from "../parts/RecordsGroupView";
 import { TagsClickedCallbacks } from "../parts/Interface/TagsClickedCallbacks";
 import { PageStateBaseClass } from "./PageStateClass";
 import { RecordOperation } from "../parts/RecordOperation";
+import { PageTitleView } from "../parts/PageTitleView";
 
 const context = {
+    header:{
+        Japanese:"記録の基本情報",
+        English:"Basic Information of the Record"
+    },
     operation:{
         modify:{
             Japanese:"記録を編集する",
@@ -47,6 +52,9 @@ export class S_DetailViewer
                     record = this.requiredObj.recordResolved;
                 else record = (await this.app.accessToAPI("record_detail",this.requiredObj)).result;
                 
+            
+                
+
                 const rrg = record.regulation.gameSystemEnvironment;
                 const rr = record.regulation;
 
@@ -67,7 +75,14 @@ export class S_DetailViewer
                 })).result[0];
             
             let rank: number | undefined = relatedRecord.records.findIndex(element => element.id === record.id) + 1;
-            const detailView = new RecordDetailView(detailDiv.appendChild(document.createElement("div")),record,{
+            const title = new PageTitleView(
+                appendElement(detailDiv,"div"),
+                choiceString(context.header,this.app.state.language),
+                "",
+                "fas fa-info-circle"
+            );
+            const detailView = new RecordDetailView(
+                detailDiv.appendChild(document.createElement("div")),record,{
                 rankOfTheRecord:rank,
                 language:this.app.state.language,
                 onClickRunnerName:() => {
@@ -77,6 +92,7 @@ export class S_DetailViewer
                 clickedCallBacks:generateClickedTagsCallBacks(this.app,record,condition),
                 verifiedTime: this.app.loginAdministratorReadOnly.userInformation_uneditable.isCommitteeMember ? "time" : "date"
             });
+            
             new RecordGroupView(relatedRecordDiv.appendChild(document.createElement("div")),relatedRecord,this.app.state.scoreType,{
                 clickOnCardEventListener: (recordClicked) => {
                     this.app.transition("detailView",{

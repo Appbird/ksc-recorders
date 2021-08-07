@@ -19,17 +19,26 @@ export class S_MainMenu
             this.generateLoadingSpinner("star")
             if (this.requiredObj !== null) this.app.changeTargetGameMode(this.requiredObj);
 
+            const gsed = this.app.state.gameSystemEnvDisplayed
             const main = this.articleDOM.appendChild(this.htmlConverter.elementWithoutEscaping`
             <div>
-                <div class="c-title u-width95per u-biggerChara">
-                    <div class="c-title__main">Welcome to Kirby-Speed/Score-Recorders!</div>
+                <div class="p-KSSRsHeader">
+                    <i class="__icon c-icooon u-background--kssrs"></i>
+                    <div class="__title">Welcome to ${ (gsed.gameSystem !== null && gsed.gameMode !== null) ? `KSSRs(${gsed.gameSystem.English}/${gsed.gameMode?.English}).`:"Kirby-Speed/Score-Recorders" }!</div>
                 </div>
-                <hr noshade class="u-thin">
-                <div class="u-width95per">
+                <hr noshade class="u-bold">
+                <div class="u-width90per">
                 ${{
-                    Japanese:"<br>KSSRsはカービィシリーズにおけるゲームのタイム/スコアを集積するサイトです。ボスやステージごとの記録集積に特化しています。",
+                    Japanese:"<br>Kirby-Speed/Score-Recorders(KSSRs)はカービィシリーズのゲームのタイム/スコアを集積するサイトです。ボスやステージごとの記録集積に特化しています。",
                     English:"Kirby-Speed/Score-Recorders(KSSRs) is the page that provides scoreboards about the games of the Kirby series, which specializes in recording time/score specific for each Boss and Stage."
                 }}</div>
+                <br>
+                <div class="u-width90per">
+                ${{
+                    Japanese:"このサイトでは、複数のカービィ作品のTA/RTAを取り扱うことが出来ます。<br>下の「<strong>ゲームタイトル/モードの設定</strong>」をクリックして、閲覧したい記録のゲームモードに設定しましょう！",
+                    English:"KSSRs can cover TA/RTAs on multiple gamemodes in Kirby's game. You can change the gamemode you see on KSSRs by clicking the following <strong>Set Target Title/Mode</strong>."
+                }}</div>
+                
                 
                 <div class="u-space2em"></div>
                 <div class="u-width90per">
@@ -86,7 +95,7 @@ export class S_MainMenu
                     English: (isLogIn) ? "clicking here takes you to your personal page." : "You need to login first to see here."
                 },
                 isDisabled:!this.app.loginAdministratorReadOnly.isUserLogin,
-                biggerTitle:true,
+                biggerTitle:false,
                 to:() => {
                     if(StateAdministrator.checkGameSystemEnvIsSet(this.app.state.gameSystemEnvDisplayed)) this.app.transition("userPageInSpecific",{...this.app.state.gameSystemEnvDisplayed,runnerID:this.app.loginAdministratorReadOnly.loginUserID})
                     else  this.app.transition("userPageInWhole",{runnerID:this.app.loginAdministratorReadOnly.loginUserID})
@@ -94,7 +103,7 @@ export class S_MainMenu
             },{
                 title:{
                     Japanese:"記録の閲覧",
-                    English:"Search Record",
+                    English:"Search a Record",
                     icon:"menu"
                 },
                 description:{
@@ -105,12 +114,13 @@ export class S_MainMenu
                 
                 },
                 isDisabled:!isSetTargetGameMode,
-                biggerTitle:true,
+                biggerTitle:false,
                 to:(isSetTargetGameMode) ? () => this.app.transition("searchConditionSelectorView",null) : undefined
             },{
                 title:{
                     Japanese:"記録の申請",
-                    English:"Offer Record",
+                    //#NOTE ここの英訳本当に大丈夫？
+                    English:"Submit a Record",
                     icon:"cloud"
                 },
                 description:{
@@ -126,7 +136,7 @@ export class S_MainMenu
                     })()
                 },
                 isDisabled:!isSetTargetGameMode || !isLogIn,
-                biggerTitle:true,
+                biggerTitle:false,
                 to:(this.app.loginAdministratorReadOnly.isUserLogin) ? () => this.app.transition("offerForm",null):undefined
             }];
         }
@@ -164,7 +174,7 @@ export class S_MainMenu
             },{
                 title:{
                     Japanese:"ゲームタイトル/モードの設定",
-                    English:"Set Watching Title/Mode",
+                    English:"Set Target Title/Mode",
                     icon:"star"
                 },
                 remarks:{

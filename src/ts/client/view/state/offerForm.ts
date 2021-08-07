@@ -1,13 +1,31 @@
 import { ISentRecordOffer } from "../../../type/api/record/changing/IReceivedDataAtServer_recordWrite";
+import { choiceString } from "../../../utility/aboutLang";
 import { TargetGameMode } from "../../Administrator/StateAdminister";
 import { IAppUsedToChangeState } from "../../interface/AppInterfaces";
+import { appendElement } from "../../utility/aboutElement";
 import { OfferFormView } from "../parts/OfferFormView/OfferFormView";
+import { PageTitleView } from "../parts/PageTitleView";
+import { TitleCupsuled } from "../parts/TitleCupsuled";
 import { PageStateBaseClass } from "./PageStateClass";
+
+const context = {
+    title:{
+        Japanese: "記録の申請",
+        English: "Submit a Record"
+    }
+}
 
 export class S_OfferForm
     extends PageStateBaseClass<{targetGameMode:TargetGameMode}|null,IAppUsedToChangeState>{
         async init(){
             this.generateLoadingSpinner();
+            const title = new PageTitleView(
+                appendElement(this.articleDOM,"div"),
+                choiceString(context.title,this.app.state.language),
+                "",
+                "c-icooon u-background--notification"
+            );
+        
             if ( this.app.state.gameSystemEnvDisplayed.gameSystem === null || this.app.state.gameSystemEnvDisplayed.gameMode === null) throw new Error("ターゲットゲームモードが定められていません。")
             if (this.requiredObj === null) this.requiredObj = {
                     targetGameMode:this.app.state.gameSystemEnvDisplayed

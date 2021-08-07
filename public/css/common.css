@@ -744,6 +744,29 @@ article h1:not(.u-noUnderline):after {
     font-size: small;
   }
 }
+.p-KSSRsHeader {
+  display: flex;
+  justify-content: left;
+  flex-wrap: no-wrap;
+  align-items: flex-end;
+  padding: 1em;
+}
+
+.p-KSSRsHeader > .__icon {
+  min-width: 3em;
+  min-height: 3em;
+}
+
+.p-KSSRsHeader > .__title {
+  font-weight: 800;
+  font-size: x-large;
+}
+
+@media screen and (max-width: 600px) {
+  .p-KSSRsHeader > * {
+    font-size: medium;
+  }
+}
 .u-background--star {
   background: url("../icon/IcooonMono/star.svg");
   background-size: cover;
@@ -884,6 +907,11 @@ article h1:not(.u-noUnderline):after {
   background-size: cover;
 }
 
+.u-background--kssrs {
+  background: url("../icon/IcooonMono/icon.png");
+  background-size: cover;
+}
+
 .u-marginUpDown05emToChildren > * {
   margin-top: 0.5em;
   margin-bottom: 0.5em;
@@ -934,6 +962,16 @@ article h1:not(.u-noUnderline):after {
   margin-bottom: 5em;
 }
 
+.u-marginLeftRight2em {
+  margin-left: 2em;
+  margin-right: 2em;
+}
+
+.u-marginLeftRight05em {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
 .u-left-aligined-forFlex {
   display: flex;
   justify-content: flex-end;
@@ -952,6 +990,11 @@ article h1:not(.u-noUnderline):after {
 
 .u-font--ForNumber {
   font-family: "Montserrat", sans-serif;
+}
+
+.u-x-biggerChara {
+  font-size: 2em;
+  font-weight: bolder;
 }
 
 .u-redChara {

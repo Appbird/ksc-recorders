@@ -1,8 +1,18 @@
 import { ISentRecordOffer } from "../../../type/api/record/changing/IReceivedDataAtServer_recordWrite";
+import { choiceString } from "../../../utility/aboutLang";
 import { TargetGameMode } from "../../Administrator/StateAdminister";
 import { IAppUsedToChangeState } from "../../interface/AppInterfaces";
+import { appendElement } from "../../utility/aboutElement";
 import { OfferFormView } from "../parts/OfferFormView/OfferFormView";
+import { PageTitleView } from "../parts/PageTitleView";
 import { PageStateBaseClass } from "./PageStateClass";
+
+const context = {
+    title: {
+        Japanese: "記録の修正",
+        English: "Record Modification"
+    }
+}
 
 export class S_ModifyRecordForm
     extends PageStateBaseClass<{targetGameMode:TargetGameMode,id:string},IAppUsedToChangeState>{
@@ -10,6 +20,13 @@ export class S_ModifyRecordForm
             this.generateLoadingSpinner();
             if ( this.app.state.gameSystemEnvDisplayed.gameSystem === null || this.app.state.gameSystemEnvDisplayed.gameMode === null) throw new Error("ターゲットゲームモードが定められていません。")
             
+            const title = new PageTitleView(
+                appendElement(this.articleDOM,"div"),
+                choiceString(context.title,this.app.state.language),
+                "",
+                "fas fa-highlighter"
+            );
+
             if (this.requiredObj.targetGameMode !== undefined) this.app.changeTargetGameMode(this.requiredObj.targetGameMode)
             const difficulties = (await this.app.accessToAPI("list_difficulties",
                     {gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed}

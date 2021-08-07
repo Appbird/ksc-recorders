@@ -14,8 +14,8 @@ const context = {
         English:"Select item from the collection which you want to edit."
     },
     titleDescription:{
-        Japanese:"一度に複数のアイテムを追加することが出来ます。",
-        English:"You can append multiple items at once here."
+        Japanese:"",
+        English:""
     },
     List:{
         CSVSelectable:{

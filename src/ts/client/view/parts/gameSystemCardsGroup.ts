@@ -14,34 +14,19 @@ export class GameSystemCardGroup implements IView{
             language,
             clickEventListener,
             onReady,
-            title={
-                main:"検索対象とするゲームシステム",
-                sub:"Select the title."
-            }
         }:{
             language:LanguageInApplication,
             clickEventListener?:(selected:IGameSystemInfoWithoutCollections)=>void,
             onReady?:()=>void,
-            title?:{
-                main:string,
-                sub:string
-            }
         }){
             this.container = container;
             this.container.classList.add("c-recordCardGroup","u-width90per")
             this.language = language,
             this.clickEventListener = clickEventListener;
-            this.container.appendChild(element`
-                <div id="articleTitle">
-                    <div class="c-title">
-                            <div class="c-title__main">${title.main}</div>
-                            <div class="c-title__sub">${title.sub}</div>
-                    </div>
-                    <hr noshade class="u-bold">
-                </div>
-        `);
+            
             for (const ele of info) this.appendCard(ele);
             if (onReady) onReady();
+            
         }
         destroy(){
             this.container.innerHTML = "";

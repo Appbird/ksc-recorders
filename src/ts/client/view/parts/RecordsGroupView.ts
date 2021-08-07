@@ -47,7 +47,7 @@ export class RecordGroupView implements IView{
                 ${(recordGroup.groupSubName === undefined) ? "" : `<div class="c-title__sub">${recordGroup.groupSubName}</div>`}
             </div>
             <div class="stateInfo"></div>
-            <hr noshade class="u-bold">
+            <hr noshade class="u-thin">
         </div>
         `)
         const stateInfoDiv = findElementByClassNameWithErrorPossibility(recordGroupHeader,"stateInfo")

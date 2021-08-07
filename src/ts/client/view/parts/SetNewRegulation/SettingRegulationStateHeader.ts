@@ -4,6 +4,7 @@ import { choiceString } from "../../../../utility/aboutLang";
 import { HTMLConverter } from "../../../../utility/ViewUtility";
 import { appendElement, createElementWithIdAndClass, generateIcooonHTML } from "../../../utility/aboutElement";
 import { IView } from "../../IView";
+import { PageTitleView } from "../PageTitleView";
 import { TitleCupsuled } from "../TitleCupsuled";
 
 export class SettingRegulationStateHeader implements IView {
@@ -23,8 +24,9 @@ export class SettingRegulationStateHeader implements IView {
         this.container = container;
         this.language = language
         const htmlConverter = new HTMLConverter(language);
+        
         this.title = new TitleCupsuled(appendElement(this.container,"div"));
-        this.title.refresh(choiceString(mainTitle,language),choiceString(subTitle,language),{hr:"u-bold"});
+        this.title.refresh(`<i class="c-icooon u-background--feather"></i>`+choiceString(mainTitle,language),choiceString(subTitle,language),{hr:"u-bold"});
         const menu = this.container.appendChild(appendElement(this.container,"div"));
         const list = menu.appendChild(createElementWithIdAndClass({ className: "c-list" }));
         for (const item of items) {

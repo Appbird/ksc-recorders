@@ -1,0 +1,21 @@
+@charset "UTF-8";
+@use "../../foundation/variables.scss" as variables;
+
+.p-KSSRsHeader{
+    display: flex;
+    justify-content:left;
+    flex-wrap: no-wrap;
+    align-items: flex-end;
+    padding : 1.0em;
+}
+.p-KSSRsHeader>.__icon{
+    min-width: 3.0em;
+    min-height: 3.0em;
+}
+.p-KSSRsHeader>.__title{
+    font-weight: 800;
+    font-size: x-large;
+}
+@media screen and (max-width:variables.$mobileMaxWidth) {
+    .p-KSSRsHeader>* {font-size: medium;}
+}

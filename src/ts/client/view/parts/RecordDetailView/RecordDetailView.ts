@@ -36,12 +36,6 @@ export class RecordDetailView implements IView{
             htmlC.elementWithoutEscaping`
                 <div class="recordDetail u-marginUpDown05emToChildren">
 
-                        <div class="c-title">
-                            <div class="c-title__main">${context.header}</div>
-                        </div>
-
-                    <hr noshade class="u-bold">
-
                     <div class="u-width95per standardInfo u-marginUpDown05emToChildren">
 
                         <div class = "c-evidenceMovie evidenceMovie">

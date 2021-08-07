@@ -1,0 +1,23 @@
+.u-indent{
+    &--level1{
+        margin-left: 0em;
+    }
+    
+    &--level2{
+        margin-left: 1em;
+    }
+    &--level3{
+        margin-left: 2em;
+    }
+}
+li.u-indent--level1{
+    list-style: none;
+
+}
+ul{
+    padding-left: 1em;
+}
+li.u-indent--level1{
+    list-style: none;
+    padding: 0.5em 0;
+}

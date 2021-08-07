@@ -30,5 +30,10 @@ https://fonts.google.com/specimen/Quicksand
 - M PLUS Rounded 1c
 https://fonts.google.com/specimen/M+PLUS+Rounded+1c
 
+# 参考文献
+- Webサイトの利用規約(ひな形とQ&A)
+https://kiyaku.jp/hinagata/sns.html
+https://kiyaku.jp/faq/index.html
+
 - ファビコン favicon.icoを作ろう!
 https://ao-system.net/favicon/

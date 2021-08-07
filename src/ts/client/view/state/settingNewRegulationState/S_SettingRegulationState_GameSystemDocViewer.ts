@@ -83,7 +83,7 @@ const context = {
             },
             description:[{
                 Japanese:"この作品のリリース日を入力してください。",
-                English:"Press the button below to set the released date of this title <strong>In Japanese</strong>."
+                English:"Press the button below to set the released date of this title <strong>In Japan</strong>."
             }]
         }
     }

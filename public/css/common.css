@@ -767,6 +767,10 @@ article h1:not(.u-noUnderline):after {
     font-size: medium;
   }
 }
+.u-background--gray {
+  background-color: #f1f1f1;
+}
+
 .u-background--star {
   background: url("../icon/IcooonMono/star.svg");
   background-size: cover;
@@ -1147,6 +1151,29 @@ article h1:not(.u-noUnderline):after {
 
 .u-height15em {
   height: 15em;
+}
+
+.u-indent--level1 {
+  margin-left: 0em;
+}
+.u-indent--level2 {
+  margin-left: 1em;
+}
+.u-indent--level3 {
+  margin-left: 2em;
+}
+
+li.u-indent--level1 {
+  list-style: none;
+}
+
+ul {
+  padding-left: 1em;
+}
+
+li.u-indent--level1 {
+  list-style: none;
+  padding: 0.5em 0;
 }
 
 /*# sourceMappingURL=common.css.map */

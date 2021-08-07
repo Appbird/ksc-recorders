@@ -6,7 +6,8 @@ import { PageStateBaseClass } from "./PageStateClass";
 import { MenuView, RequiredObjectToGenerateItem } from "../parts/MenuView";
 import { appendElement } from "../../utility/aboutElement";
 import { StateAdministrator } from "../../Administrator/StateAdminister";
-
+import { MultiLanguageString } from "../../../type/foundation/MultiLanguageString";
+import context from "./mainMenu.json"
 export class S_MainMenu
     extends PageStateBaseClass<null|{gameSystem:IGameSystemInfoWithoutCollections, gameMode:IGameModeItemWithoutCollections},IAppUsedToReadAndChangePage>{
         private htmlConverter:HTMLConverter;
@@ -28,16 +29,10 @@ export class S_MainMenu
                 </div>
                 <hr noshade class="u-bold">
                 <div class="u-width90per">
-                ${{
-                    Japanese:"<br>Kirby-Speed/Score-Recorders(KSSRs)はカービィシリーズのゲームのタイム/スコアを集積するサイトです。ボスやステージごとの記録集積に特化しています。",
-                    English:"Kirby-Speed/Score-Recorders(KSSRs) is the page that provides scoreboards about the games of the Kirby series, which specializes in recording time/score specific for each Boss and Stage."
-                }}</div>
+                ${context.description[0]}</div>
                 <br>
                 <div class="u-width90per">
-                ${{
-                    Japanese:"このサイトでは、複数のカービィ作品のTA/RTAを取り扱うことが出来ます。<br>下の「<strong>ゲームタイトル/モードの設定</strong>」をクリックして、閲覧したい記録のゲームモードに設定しましょう！",
-                    English:"KSSRs can cover TA/RTAs on multiple gamemodes in Kirby's game. You can change the gamemode you see on KSSRs by clicking the following <strong>Set Target Title/Mode</strong>."
-                }}</div>
+                ${context.description[1]}</div>
                 
                 
                 <div class="u-space2em"></div>
@@ -45,31 +40,32 @@ export class S_MainMenu
             </div>
             `) as HTMLElement;
 
-            
-            const mainMenu = new MenuView(appendElement(main,"div"),this.app.state.language,{
-                Japanese:"メインメニュー",
-                English:"Main menu"
-            })
-            
-            this.generateMainMenuInfo().map((info) => mainMenu.generateMenuItem(info));
-            main.appendChild(element`<div class="u-space3em"></div>`)
+            const menuGenerators:[MultiLanguageString,()=>RequiredObjectToGenerateItem[]][] = [
+                [{
+                    Japanese:"メインメニュー",
+                    English:"Main menu"
+                }, () => this.generateMainMenuInfo()],
+                [{
+                    Japanese:"設定",
+                    English:"Settings"
+                },() => this.generateSettingMenuInfo()],
+                [{
+                    Japanese:"その他",
+                    English:"etc"
+                },() => this.generateDetailMenuInfo()]
+            ]
+            for(const generator of menuGenerators){
+                const mainMenu = new MenuView(appendElement(main,"div"),this.app.state.language,generator[0])
+                
+                generator[1]().map((info) => mainMenu.generateMenuItem(info));
+                main.appendChild(element`<div class="u-space3em"></div>`)
+            }
 
-            const settingMenu = new MenuView(appendElement(main,"div"),this.app.state.language,{
-                Japanese:"設定",
-                English:"Settings"
-            })
-            this.generateSettingMenuInfo().map(info => settingMenu.generateMenuItem(info));
-            main.appendChild(element`<div class="u-space3em"></div>`)
-
-            const etcMenu = new MenuView(appendElement(main,"div"),this.app.state.language,{
-                Japanese:"その他",
-                English:"etc"
-            })
-            this.generateDetailMenuInfo().map(info => etcMenu.generateMenuItem(info));
-            main.appendChild(element`<div class="u-space3em"></div>`)
+            
             
             this.deleteLoadingSpinner();
         }
+
 
 
         generateMainMenuInfo():RequiredObjectToGenerateItem[]{
@@ -252,8 +248,22 @@ export class S_MainMenu
             biggerTitle:false,
         },{
             title:{
-                Japanese:"利用規約/クレジット",
-                English:"Term Of Use / Credits",
+                Japanese:"利用規約",
+                English:"Term of Use",
+                icon:" fas fa-file-signature"
+            },
+            description:{
+                Japanese:"KSSRsを利用する際に意識すべきことをまとめました。",
+                English:"All the things you should check about using KSSRs are written here."
+            },
+            isDisabled:false,
+            biggerTitle:false,
+            //#TODO ここをクレジット用に設定する。GitHubのリンクにするのもアリか？
+            to:() => {this.app.transition("termOfUse",null)}
+        },{
+            title:{
+                Japanese:"クレジット",
+                English:"Credits",
                 icon:"writing"
             },
             description:{

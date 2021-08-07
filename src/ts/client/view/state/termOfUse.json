@@ -1,0 +1,201 @@
+{
+    "termOfUse":{
+        "title": {
+            "Japanese":"利用規約",
+            "English":"Term of Use"
+        },
+        "abstruct":{
+            "header":{
+                "Japanese":"要約すると",
+                "English":"In a Nutshell"
+            },
+            "description":[{
+                    "Japanese":"本利用規約の概要を以下に示します。詳細は本文をご確認ください。",
+                    "English":"The abstract of the term of use is below. If you want to know details, please read the letter body.",
+                    "items":[{
+                        "Japanese":"この作品Kirby-Speed/Score-Recordersは、星のカービィシリーズの非公式の二次創作であり、HAL研究所,任天堂とは一切関係ありません。",
+                        "English":"This site is a fan-made website that has no relation with HAL Laboratory and Nintendo Co."
+                    },{
+                        "Japanese":"当作品Kirby-Speed/Score-Recordersが提供するサービスにおいては一切の責任を負いません。",
+                        "English":"We don't have any responsibility for the service of KSSRs."
+                    },{
+                        "Japanese":"不正(チートプレイなど)を含んだもの, 他者が不快に思うもの, 法律に違反するもの, 営利目的のものの投稿をしないでください。",
+                        "English":"Don't submit records with cheating, disgusting others, violating laws, or for-profit contents."
+                    },
+                    {
+                        "Japanese":"禁止行為を行うアカウントが確認された場合、運営はその記録を事前の通知なしに削除することが出来、そのアカウントからの投稿を制限する場合があります。",
+                        "English":"If we detect an account violating this term of use, we can delete the submissions and restrict the account without informing."
+                    },
+                    {
+                        "Japanese":"利用規約は変更される可能性があります。",
+                        "English":"This term of use has the possibility of being modified."
+                    }]
+            }
+            ]
+        },
+        "contents":[
+            {
+                "header":{
+                    "Japanese":"<strong>本文</strong>",
+                    "English":"<strong>The body</strong>"
+                },
+                "description":[
+                    {
+                        "Japanese":"この利用規約は英語版と日本語版が存在しますが、英語版と日本語版に齟齬が生じていた場合、日本語版の方が適用されます。",
+                        "English":"There are two versions of the term of use: the Japanese one and the English one. If there are contradict between both,  the Japanese one has priority."
+                    },{
+                        "Japanese":"目次は以下の通りです。",
+                        "English":"The following is the table of contents.",
+                        
+                        "items":[
+                            {
+                                "Japanese":"<strong class=\"u-redChara\">【重要】</strong>このページの立ち位置",
+                                "English":"<strong class=\"u-redChara\">[Important]</strong>The position of this service"
+                            },{
+                                "Japanese":"免責事項",
+                                "English":"Disclaimer"
+                            },{
+                                "Japanese":"禁止事項",
+                                "English":"Prohibited matters"
+                            },{
+                                "Japanese":"情報の取り扱いについて",
+                                "English":"Privacy Policy"
+                            },{
+                                "Japanese":"利用規約の変更",
+                                "English":"Modifying the term of use"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "header":{
+                    "Japanese":"<strong class=\"u-redChara\">【重要】</strong>このページの立ち位置",
+                    "English":"<strong class=\"u-redChara\">[Important]</strong>The position of this service"
+                },
+                "description":[
+                    {
+                        "Japanese":"<strong>この作品Kirby-Speed/Score-Recordersは、星のカービィシリーズの非公式の二次創作であり、HAL研究所,任天堂とは一切関係ありません。</strong>",
+                        "English":"<strong>This site is a fan-made website that has no relation with HAL Laboratory and Nintendo Co.</strong>"
+                    },{
+                        "Japanese":"不明点や疑問点等ありましたら、お手数ですが、Discordのサーバーにまでご連絡お願い致します。",
+                        "English": "If you have any problems with using KSSRs, please contact us on Discord Server."
+                    },{
+                        "Japanese":"<strong>Discord: </strong><a href=\"\" class=\"u-underline u-bolderChara\">なんかのURL</a>",
+                        "English": "<strong>Discord: </strong><a href=\"\" class=\"u-underline u-bolderChara\">なんかのURL</a>"
+                    }
+                ]
+            },{
+                "header":{
+                    "Japanese":"免責事項",
+                    "English":"Disclaimer"
+                    },
+                "description":[{
+                    "Japanese":"<strong>当作品Kirby-Speed/Score-Recordersが提供するサービスにおいては一切の責任を負いません。</strong>当作品を使用することによって発生した損害も一切負いかねます。",
+                    "English":"<strong>We don't have any responsibility for neither the service of KSSRs</strong> nor damages coming from using KSSRs."
+                },{
+                    "Japanese":"また、当作品の提供するサービスにおいて、出来る限り正確でコンテンツを提供するように試みますが、これは安全性及び信頼性を保証するものではありません。ご了承ください。",
+                    "English":"We will make an effort to keep the contents as accurate as possible. However, please note that we can't guarantee the safety and reliability of KSSRs."
+                }]
+            },{
+                "header":{
+                    "Japanese":"禁止事項",
+                    "English":"Prohibited matters"
+                },
+                "description":[{
+                    "Japanese":"以下の事項は禁止されます。",
+                    "English":"The following things are banned. DON'T do these things."
+                },{
+                    "Japanese":"<strong>これらの行為を行うアカウントが確認された場合、運営はその記録を事前の通知なしに削除することが出来、そのアカウントからの投稿を制限する場合があります。</strong>",
+                    "English":"<strong> If we detect an account violating this, we can delete the submissions and restrict the account without informing.</strong>",
+                    "items":[
+                    
+                        {
+                            "Japanese":"不正(チートプレイや外部ツール使用,またはそれに準ずる行為)を含んだものの投稿",
+                            "English":"Submitting records including the use of CHEAT or external applications"
+                        },
+                        {
+                            "Japanese":"サーバーに対して異常な負荷をかけるなどの、運営に妨害するような行為",
+                            "English":"Disturb the management, such as Applying huge loads to the server"
+                        },
+                        {
+                            "Japanese": "以下の内容を含む投稿。なお、投稿内容についてはその投稿者が全て責任を負うものとし、KSSRsの運営は一切その責任を負いません。",
+                            "English": "Submitting Records including the following things: The record's author has all the responsibility for your submission, and we don't have any responsibility for that.",
+                            "items":[{
+                                "Japanese": "公序良俗に反する内容",
+                                "English": "Contents that are contrary to public order and morality"
+                            },{
+                                "Japanese": "犯罪行為に関連付けられる内容",
+                                "English": "Contents that can be associated with crime"
+                            },{
+                                "Japanese": "他人の個人情報",
+                                "English":"Personal information of another person"
+                            },{
+                                "Japanese": "過度に暴力的あるいは性的な表現",
+                                "English": "Expressions that are aggressive or sexual too much"
+                            },{
+                                "Japanese": "人種, 国籍, 信条, 性別, 社会的身分, 門地の差別に繋がる表現",
+                                "English":"Expressions that can be associated with discrimination on race, nationality, beliefs, gender, social status, and family."
+                            },{
+                                "Japanese": "反社会的な内容",
+                                "English": "Antisocial expression"
+                            },{
+                                "Japanese": "営業, 宣伝, 広告及び勧誘などの営利を目的とする内容",
+                                "English": "Contents that are for-profit, such as sales, promotion, advertising, and solicitation"
+                            },{
+                                "Japanese": "他のユーザーに対して嫌がらせや誹謗中傷を目的とする行為",
+                                "English":"For-profit content, such as sales, promotion, advertising, and solicitation."
+                            },{
+                                "Japanese": "自殺, 自傷行為や薬物使用を助長するような内容",
+                                "English": "Contents that encourage suicide, self-harm, and drug use."
+                            },{
+                                "Japanese": "その他当作品の想定している目的から大きく外れた内容, 不適切な内容",
+                                "English":"Other contents that are inappropriate or too far off the goal of KSSRs"
+                            }]
+                        }
+                    ]
+                }]
+                
+
+            },{
+                "header":{
+                    "Japanese":"情報の取り扱いについて",
+                    "English":"Privacy Policy"
+                },
+                "description":[
+                    {
+                        "Japanese":"<strong>このサイトではログインするにあたって、Googleアカウントとの連携を必要とします。</strong>",
+                        "English":"<strong>Your Google account is required when you log in to this service.</strong> "
+                    },{
+                        "Japanese":"この連携にあたって使用する情報は以下のとおりであり、これら以外の目的に使用することはありません。",
+                        "English":"All the information from the Google account which will be used is written in the following items, and we don't use any other information from your Google account. ",
+                        "items":[
+                            {
+                                "Japanese":"Googleアカウントの名前 : ユーザーを識別するためのデフォルトネームとして使用します。",
+                                "English":"The name Of the linked Google account: Used as the default name of your account."
+                            },{
+                                "Japanese":"Googleアカウントのアイコン : ユーザーを識別するためのアイコンとして使用します。",
+                                "English":"The icon of the linked Google account: Used as the icon of your account."
+                            }
+                        ]
+                    },{
+                        "Japanese":"また、ユーザーのプロフィールとして提供されたURLの情報,自己紹介文は、そのユーザーページでの掲示にのみ使用されます。",
+                        "English":"Also, The provided information (such as URL information and self-introduction) as your user profile is only used in the display on your user page."
+                        
+                    }
+                ]
+            },{
+                "header":{
+                    "Japanese":"利用規約の変更",
+                    "English":"Modifying the term of use"
+                },
+                "description":[
+                    {
+                        "Japanese":"この利用規約に不備があったと判断された場合、修正される可能性があります。",
+                        "English":"This term of use has the possibility of being modified."
+                    }
+                ]
+            }
+        ]
+    }
+}

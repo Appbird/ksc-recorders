@@ -5,7 +5,6 @@ import { IAppUsedToChangeState } from "../../interface/AppInterfaces";
 import { appendElement } from "../../utility/aboutElement";
 import { OfferFormView } from "../parts/OfferFormView/OfferFormView";
 import { PageTitleView } from "../parts/PageTitleView";
-import { TitleCupsuled } from "../parts/TitleCupsuled";
 import { PageStateBaseClass } from "./PageStateClass";
 
 const context = {

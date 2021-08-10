@@ -21,10 +21,10 @@ export function convertScoreIntoNumber(score:string):number{
     return Number(score);
 }
 export function convertTimeIntoNumber(score:string):number{
-    if (/^([0-9]+:[0-9]{2}.[0-9]{2})$/.test(score)) return converseTimeIntoMiliSeconds(score);
-    if (/^([0-9]+.[0-9]{2})$/.test(score)) return (() => {const array = score.split("."); return Number(array[0]) * 100 + Number(array[1])})();
+    if (/^([0-9]{1,}\:[0-9]{2}\.[0-9]{2})$/.test(score)) return converseTimeIntoMiliSeconds(score);
+    if (/^([0-9]{1,}\.[0-9]{2})$/.test(score)) return (() => {const array = score.split("."); return Number(array[0]) * 100 + Number(array[1])})();
     const timePoints = score.replace(/\s/g,"").split("-");
-    if (timePoints.every(ele => /^([0-9]{1,}:[0-9]{2}.[0-9]{2})$/.test(ele)))
+    if (timePoints.every(ele => /^([0-9]{1,}\:[0-9]{2}\.[0-9]{2})$/.test(ele)))
             return Math.abs(converseTimeIntoMiliSeconds(timePoints[0]) - converseTimeIntoMiliSeconds(timePoints[1]))
     throw new Error("タイムは00:00.00, 00.00, 00:00.00 - 00:00.00といった形式で入力されなければなりません。")
 }

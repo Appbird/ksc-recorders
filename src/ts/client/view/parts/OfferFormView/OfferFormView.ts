@@ -171,6 +171,7 @@ export class OfferFormView implements IView {
         this.scoreInput.addEventListener("change", () => {
             try {
                 this.modifyScoreInput();
+                this.scoreInput.setError("");
             } catch (error) {
                 const errorBaseMsg = choiceString(context.ScoreInput.Error, this.app.state.language);
                 if (!(error instanceof Error)) {
@@ -216,7 +217,6 @@ export class OfferFormView implements IView {
                 });
                 
                 this.targetChoices.setChoices(result.result);
-
             } catch (error) {
                 console.error(error);
                 if (!(error instanceof Error)) return;

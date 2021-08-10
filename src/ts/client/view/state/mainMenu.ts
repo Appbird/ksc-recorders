@@ -324,18 +324,18 @@ export class S_MainMenu
             to:() => {this.app.transition("termOfUse",null)}
         },{
             title:{
-                Japanese:"クレジット",
-                English:"Credits",
+                Japanese:"Source",
+                English:"Source",
                 icon:"writing"
             },
             description:{
-                Japanese:"KSSRsを開発するにあたって、使用したツール、ライブラリなどを記しています。",
-                English:"Frameworks, tools and etc which I use for developing KSSRs are written in this page."
+                Japanese:"KSSRsを開発するにあたって、使用したツール、ライブラリやソースコードをGitHubにリポジトリとして示しています。",
+                English:"Frameworks which I use for developing KSSRs and the source code are written in this GitHub page."
             },
             isDisabled:false,
             biggerTitle:false,
             //#TODO ここをクレジット用に設定する。GitHubのリンクにするのもアリか？
-            to:() => {this.app.transition("credits",null)}
+            to:() => window.open("")
         }]
  }
 }

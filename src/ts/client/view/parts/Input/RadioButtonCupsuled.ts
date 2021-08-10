@@ -14,7 +14,7 @@ export class RadioButtonCupsuled<T> implements IView {
         container: HTMLElement,
         name: string,
         language: LanguageInApplication,
-        options: { optionLabel: MultiLanguageString; value: T; }[]
+        options: { optionLabel: MultiLanguageString|string; value: T; }[]
     ) {
         this.container = container;
         const htmlConverter = new HTMLConverter(language);

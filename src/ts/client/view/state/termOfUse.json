@@ -91,10 +91,10 @@
                     "English":"Disclaimer"
                     },
                 "description":[{
-                    "Japanese":"<strong>当作品Kirby-Speed/Score-Recordersが提供するサービスにおいては一切の責任を負いません。</strong>当作品を使用することによって発生した損害も一切負いかねます。",
+                    "Japanese":"<strong>KSSRsが提供するサービスにおいて、トラブルが発生した際、いかなる場合においてもこちらは一切の責任を負いかねます。</strong>",
                     "English":"<strong>We don't have any responsibility for neither the service of KSSRs</strong> nor damages coming from using KSSRs."
                 },{
-                    "Japanese":"また、当作品の提供するサービスにおいて、出来る限り正確でコンテンツを提供するように試みますが、これは安全性及び信頼性を保証するものではありません。ご了承ください。",
+                    "Japanese":"また、KSSRs運営は同サービスの安全性や正確性が高くなるよう注力致しますが、これは安全性及び信頼性を保証するものではありません。ご了承ください。",
                     "English":"We will make an effort to keep the contents as accurate as possible. However, please note that we can't guarantee the safety and reliability of KSSRs."
                 }]
             },{
@@ -106,21 +106,21 @@
                     "Japanese":"以下の事項は禁止されます。",
                     "English":"The following things are banned. DON'T do these things."
                 },{
-                    "Japanese":"<strong>これらの行為を行うアカウントが確認された場合、運営はその記録を事前の通知なしに削除することが出来、そのアカウントからの投稿を制限する場合があります。</strong>",
+                    "Japanese":"<strong>これらの行為を行うアカウントが確認された場合、運営はその記録を事前の通知なしに削除したり、そのアカウントからの投稿を制限する場合があります。</strong>",
                     "English":"<strong> If we detect an account violating this, we can delete the submissions and restrict the account without informing.</strong>",
                     "items":[
                     
                         {
-                            "Japanese":"不正(チートプレイや外部ツール使用,またはそれに準ずる行為)を含んだものの投稿",
+                            "Japanese":"不正(チートプレイや外部ツール使用・またはそれに準ずる行為)を含んだものの投稿",
                             "English":"Submitting records including the use of CHEAT or external applications"
                         },
                         {
-                            "Japanese":"サーバーに対して異常な負荷をかけるなどの、運営に妨害するような行為",
+                            "Japanese":"サーバーに対して異常な負荷をかける等、運営に妨害するような行為",
                             "English":"Disturb the management, such as Applying huge loads to the server"
                         },
                         {
-                            "Japanese": "以下の内容を含む投稿。なお、投稿内容についてはその投稿者が全て責任を負うものとし、KSSRsの運営は一切その責任を負いません。",
-                            "English": "Submitting Records including the following things: The record's author has all the responsibility for your submission, and we don't have any responsibility for that.",
+                            "Japanese": "以下の内容を含む投稿",
+                            "English": "Submitting Records including the following things",
                             "items":[{
                                 "Japanese": "公序良俗に反する内容",
                                 "English": "Contents that are contrary to public order and morality"
@@ -148,12 +148,16 @@
                             },{
                                 "Japanese": "自殺, 自傷行為や薬物使用を助長するような内容",
                                 "English": "Contents that encourage suicide, self-harm, and drug use."
-                            },{
-                                "Japanese": "その他当作品の想定している目的から大きく外れた内容, 不適切な内容",
-                                "English":"Other contents that are inappropriate or too far off the goal of KSSRs"
                             }]
+                        },{
+                                "Japanese": "その他運営が不適切と判断した投稿や行為",
+                                "English":"Other contents that would be regarded as inappropriate."
                         }
+                        
                     ]
+                },{
+                    "Japanese":"なお、投稿内容についてはその投稿者が全て責任を負うものとし、KSSRsの運営は一切その責任を負いません。",
+                    "English":"The record's author has all the responsibility for your submission, and we don't have any responsibility for that."
                 }]
                 
 
@@ -164,11 +168,11 @@
                 },
                 "description":[
                     {
-                        "Japanese":"<strong>このサイトではログインするにあたって、Googleアカウントとの連携を必要とします。</strong>",
+                        "Japanese":"<strong>このサイトではログインするにあたり、Googleアカウントとの連携を必要とします。</strong>",
                         "English":"<strong>Your Google account is required when you log in to this service.</strong> "
                     },{
-                        "Japanese":"この連携にあたって使用する情報は以下のとおりであり、これら以外の目的に使用することはありません。",
-                        "English":"All the information from the Google account which will be used is written in the following items, and we don't use any other information from your Google account. ",
+                        "Japanese":"この連携にあたって使用する情報は以下のとおりであり、これら以外の目的に使用することは一切ありません。",
+                        "English":"All the information used from your Google account is written in the following items, and we don't use any other information from your Google account. ",
                         "items":[
                             {
                                 "Japanese":"Googleアカウントの名前 : ユーザーを識別するためのデフォルトネームとして使用します。",
@@ -179,7 +183,7 @@
                             }
                         ]
                     },{
-                        "Japanese":"また、ユーザーのプロフィールとして提供されたURLの情報,自己紹介文は、そのユーザーページでの掲示にのみ使用されます。",
+                        "Japanese":"また、ユーザーのプロフィールとして提供されたURLの情報,自己紹介文は、ユーザーページでの掲示にのみ使用されます。",
                         "English":"Also, The provided information (such as URL information and self-introduction) as your user profile is only used in the display on your user page."
                         
                     }

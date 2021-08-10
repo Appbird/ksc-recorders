@@ -30,7 +30,7 @@ apiList.forEach( (value,key) => {
                 const uid = await authentication(req.body.IDToken);
                 if (!checkPrivilege(value.privilege,req.body,uid)) throw new Error(`[rejected] このユーザー(uid: ${uid} )には操作 /api${key} を行う権限${value.privilege}がありません。`)
             }
-        }catch(error){res.status(403).json(errorCatcher(key,"rejected",error));}
+        }catch(error){res.status(403).json(errorCatcher(key,"rejected",error)); return;}
 
         
         try {
@@ -46,6 +46,8 @@ apiList.forEach( (value,key) => {
 })
 
 exports.app = functions.https.onRequest(app);
+
+console.log(`[${new Date().toLocaleString()}] Loading API ends.`)
 
 function errorCatcher(key:string,type:"failed"|"rejected"|"",error:any){
     console.log(`\u001b[31m[${new Date().toLocaleString()} / ${type}] failed to execute /api${key}\u001b[0m\n`)

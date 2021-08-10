@@ -35,7 +35,7 @@ li::marker {
 body {
   font-family: "Quicksand", "M PLUS Rounded 1c", sans-serif;
   color: #0c1d46;
-  background-color: #f0f0f0;
+  background-color: #e7e7e7;
   height: 100vh;
   margin: 0;
 }
@@ -775,8 +775,17 @@ article h1:not(.u-noUnderline):after {
   background-color: #f1f1f1;
 }
 
+.u-background--blue {
+  background-color: #e7e6fd;
+}
+
 .u-background--star {
   background: url("../icon/IcooonMono/star.svg");
+  background-size: cover;
+}
+
+.u-background--earth {
+  background: url("../icon/IcooonMono/earth.svg");
   background-size: cover;
 }
 
@@ -822,6 +831,11 @@ article h1:not(.u-noUnderline):after {
 
 .u-background--ramen {
   background: url("../icon/IcooonMono/ramen.svg");
+  background-size: cover;
+}
+
+.u-background--contract {
+  background: url("../icon/IcooonMono/contract.svg");
   background-size: cover;
 }
 
@@ -949,20 +963,27 @@ article h1:not(.u-noUnderline):after {
   margin: 0.5em;
 }
 
+.u-margin1em {
+  margin: 1em;
+}
+
 .u-margin2em {
   margin: 2em;
 }
 
 .u-marginUpDown05em {
-  margin: 0.5em 0;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.u-marginUpDown1em {
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
 
 .u-marginUpDown2em {
-  margin: 2em 0;
-}
-
-.u-marginUpDown5em {
-  margin: 5em 0;
+  margin-top: 2em;
+  margin-bottom: 2em;
 }
 
 .u-marginUpDown5em {
@@ -1100,6 +1121,16 @@ article h1:not(.u-noUnderline):after {
 .u-space3em {
   width: 100%;
   height: 3em;
+}
+
+.u-space1em {
+  width: 100%;
+  height: 1em;
+}
+
+.u-space2em {
+  width: 100%;
+  height: 2em;
 }
 
 .u-space6em {

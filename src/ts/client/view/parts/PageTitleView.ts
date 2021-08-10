@@ -6,7 +6,7 @@ export class PageTitleView implements IView{
     
     constructor(container:HTMLElement,title:string,subtitle:string,iconCSS:string){
         this.title = new TitleCupsuled(container)
-        this.title.refresh(`<i class="${iconCSS}"></i>`+title,subtitle, {hr:"u-bold"})
+        this.title.refresh(`<i class="${iconCSS} u-margin05em"></i>`+title,subtitle, {hr:"u-bold"})
         
     }
     destroy(){

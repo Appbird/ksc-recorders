@@ -13,6 +13,7 @@ const marked = require("marked")
 
 export class RecordDetailView implements IView{
     private container:HTMLElement
+    private rankElement:HTMLElement;
     /**
      * @param rankOfTheRecord 0を指定すると順位表記を消すことが出来る。
      */
@@ -22,7 +23,7 @@ export class RecordDetailView implements IView{
         { 
             rankOfTheRecord, clickedCallBacks = {},onClickRunnerName,language,verifiedTime
         }:{
-            rankOfTheRecord:number,
+            rankOfTheRecord?:number,
             language:LanguageInApplication
             clickedCallBacks:TagsClickedCallbacks,
             onClickRunnerName:()=>void,
@@ -46,7 +47,7 @@ export class RecordDetailView implements IView{
                         
                         <div class="c-title">
                             <div class="c-title__main u-biggerChara">${converseMiliSecondsIntoTime(recordDetail.score)}</div>
-                            <div class="c-title__sub u-biggerChara onClickEvent_RunnerName">${(rankOfTheRecord === 0) ? "" : `${convertNumberToRank(rankOfTheRecord)}:`} <i class="fas fa-user u-marginLeftRight05em"></i><p class="u-inline u-underline u-clickable">${recordDetail.runnerName}</p></div>
+                            <div class="c-title__sub u-biggerChara onClickEvent_RunnerName"><p class="u-inline Rank"></p> <i class="fas fa-user u-marginLeftRight05em"></i><p class="u-inline u-underline u-clickable">${recordDetail.runnerName}</p></div>
                         </div>
                         <hr noshade class="u-thin">
                         <div class="verificationBoard u-left-align"></div>
@@ -70,7 +71,8 @@ export class RecordDetailView implements IView{
                 </div>
             `)
             
-            
+            this.rankElement = findElementByClassNameWithErrorPossibility(recordDetailElement,"Rank")
+            this.setRank(rankOfTheRecord)
             //#CTODO クリックすると走者ページに飛ぶようにしたい
             findElementByClassNameWithErrorPossibility(recordDetailElement,"onClickEvent_RunnerName").addEventListener("click",() => onClickRunnerName())
             const verificationBoard = findElementByClassNameWithErrorPossibility(recordDetailElement,"verificationBoard")
@@ -90,6 +92,10 @@ export class RecordDetailView implements IView{
             const evidenceMovieDiv = findElementByClassNameWithErrorPossibility(recordDetailElement,"evidenceMovie")
             new MovieWidgetCreator(evidenceMovieDiv,recordDetail.link[0]).setWidget()
             this.generateTagViewsForRecord(tagInfoDiv,recordDetail,clickedCallBacks)
+    }
+
+    setRank(rankOfTheRecord?:number){
+        this.rankElement.innerHTML = (rankOfTheRecord === 0 || rankOfTheRecord === undefined) ? "" : `${convertNumberToRank(rankOfTheRecord)}:`
     }
 
     destroy(){

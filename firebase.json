@@ -17,9 +17,8 @@
     "rewrites": [
       {
         "source": "/api/**",
-        "function": "/app"
+        "function": "app"
       }
-    ],
-    "cleanURLs": true
+    ]
   }
 }

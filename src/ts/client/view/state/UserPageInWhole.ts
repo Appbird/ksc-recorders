@@ -15,7 +15,6 @@ export class S_UserPageInWhole
     private listCache:Map<string,IGameSystemInfoWithoutCollections> = new Map<string,IGameSystemInfoWithoutCollections>();
     async init(){
         this.generateLoadingSpinner("people")
-        
         const runnerInfo = (await this.app.accessToAPI("list_runner",{id:this.requiredObj.runnerID})).result
         new UserInformationBoard(appendElement(this.articleDOM,"div"),this.app.state.language,runnerInfo)
         

@@ -1,9 +1,16 @@
 .u-background--gray{
   background-color: rgb(241, 241, 241);
 }
+.u-background--blue{
+  background-color: rgb(231, 230, 253);
+}
 
 .u-background--star{
     background: url("../icon/IcooonMono/star.svg");
+    background-size: cover;
+  }
+  .u-background--earth{
+    background: url("../icon/IcooonMono/earth.svg");
     background-size: cover;
   }
 .u-background--shortcake{
@@ -42,7 +49,10 @@
     background: url("../icon/IcooonMono/ramen.svg");
     background-size: cover;
   }
-
+.u-background--contract{
+  background: url("../icon/IcooonMono/contract.svg");
+  background-size: cover;
+}
 .u-background--notebook{
     background: url("../icon/IcooonMono/notebook.svg");
     background-size: cover;

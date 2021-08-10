@@ -8,38 +8,18 @@ import { appendElement } from "../../utility/aboutElement";
 import { StateAdministrator } from "../../Administrator/StateAdminister";
 import { MultiLanguageString } from "../../../type/foundation/MultiLanguageString";
 import context from "./mainMenu.json"
+import { NoticeView } from "../parts/notice";
 export class S_MainMenu
     extends PageStateBaseClass<null|{gameSystem:IGameSystemInfoWithoutCollections, gameMode:IGameModeItemWithoutCollections},IAppUsedToReadAndChangePage>{
-        private htmlConverter:HTMLConverter;
-        constructor(app:IAppUsedToReadAndChangePage,articleDOM:HTMLElement,required:null|{gameSystem:IGameSystemInfoWithoutCollections, gameMode:IGameModeItemWithoutCollections}) {
-            super(app,articleDOM,required)
-            this.htmlConverter = new HTMLConverter(this.app.state.language)
-        }
+        private htmlConverter:HTMLConverter = new HTMLConverter(this.app.state.language);
+        
         async init(){
             //#CTODO ここに機能へつながるリンクを列挙する。ヘッダをクリックするとこのページに遷移する。
             this.generateLoadingSpinner("star")
+            
             if (this.requiredObj !== null) this.app.changeTargetGameMode(this.requiredObj);
-
+            if (!this.app.checkIfIntroductionIsOver()) this.app.transition("introduction",null)
             const gsed = this.app.state.gameSystemEnvDisplayed
-            const main = this.articleDOM.appendChild(this.htmlConverter.elementWithoutEscaping`
-            <div>
-                <div class="p-KSSRsHeader">
-                    <i class="__icon c-icooon u-background--kssrs"></i>
-                    <div class="__title">${ (gsed.gameSystem !== null && gsed.gameMode !== null) ? `${gsed.gameSystem.English}/${gsed.gameMode?.English}:Top Menu`:"Welcome to Kirby-Speed/Score-Recorders!" }</div>
-                </div>
-                <hr noshade class="u-bold">
-                <div class="u-width90per">
-                ${context.description[0]}</div>
-                <br>
-                <div class="u-width90per">
-                ${context.description[1]}</div>
-                
-                
-                <div class="u-space2em"></div>
-                <div class="u-width90per">
-            </div>
-            `) as HTMLElement;
-
             const menuGenerators:[MultiLanguageString,RequiredObjectToGenerateItem[]][] = [
                 [
                     {Japanese:"",English:""},
@@ -58,7 +38,9 @@ export class S_MainMenu
                     English:"etc"
                 },this.generateDetailMenuInfo()]
             ]
-            for(const generator of menuGenerators){
+            const notice = new NoticeView(appendElement(this.articleDOM,"div"),"mainMenu","headerDescription",context.mainManu,this.app.state.language)
+            const main = (gsed.gameSystem !== null && gsed.gameMode !== null) ? this.generateMainMenuDescriptionWithTargetMode():this.generateMainMenuDescription()
+            for (const generator of menuGenerators){
                 const mainMenu = new MenuView(appendElement(main,"div"),this.app.state.language,generator[0])
                 
                 generator[1].map((info) => mainMenu.generateMenuItem(info));
@@ -69,13 +51,62 @@ export class S_MainMenu
             
             this.deleteLoadingSpinner();
         }
-
+        generateMainMenuDescription(){
+            return this.articleDOM.appendChild(this.htmlConverter.elementWithoutEscaping`
+            <div>
+                
+                <div class="p-KSSRsHeader">
+                    <i class="__icon c-icooon u-background--kssrs u-margin1em"></i>
+                    <div class="__title">Welcome to <br>Kirby-Speed/Score-Recorders!</div>
+                </div>
+                <hr noshade class="u-bold">
+                
+                <div class="u-space2em"></div>
+                
+                <br>
+                <div class="u-width90per">
+                ${context.description[0]}
+                </div>
+                <br>
+                <div class="u-width90per">
+                ${context.description[1]}
+                </div>
+            </div>
+            `) as HTMLElement;
+        }
+        generateMainMenuDescriptionWithTargetMode(){
+            const gsed = this.app.state.gameSystemEnvDisplayed
+            return this.articleDOM.appendChild(this.htmlConverter.elementWithoutEscaping`
+            <div>
+                <div class="p-KSSRsHeader">
+                    <i class="__icon c-icooon u-background--kssrs u-margin1em"></i>
+                    <div class="__title">${ `${gsed.gameSystem?.English}/${gsed.gameMode?.English}<br>Top Menu`}</div>
+                </div>
+                <hr noshade class="u-bold">
+                 
+                <div class="u-space2em"></div>
+                <div class="u-width90per">
+                ${{
+                    Japanese:`ここでは、${gsed.gameSystem?.Japanese}/${gsed.gameMode?.Japanese}の記録を閲覧することが出来ます。`,
+                    English:`You can check the record of ${gsed.gameSystem?.English}/${gsed.gameMode?.English} here.`
+                }}
+                </div>
+                <br>
+                <div class="u-width90per">
+                ${{
+                    Japanese:`閲覧したいゲームモードを変更したければ、下の<strong>KSSRs全体に戻る</strong>を選択し、もう一度選択することで変更できます。`,
+                    English:`If you want to change the target gamemode, select the <strong>"return to the Whole of KSSRs"</strong> below, then select the gamemode again.`
+                }}
+                </div>
+                
+            `) as HTMLElement;
+        }
         generateModeChangeInfo(){
             const asg = this.app.state.gameSystemEnvDisplayed;
             const isSetTargetGameMode = asg.gameSystem!==null && asg.gameMode!==null
             const targetGameMode = {
                 ja:(isSetTargetGameMode) ? `${asg.gameSystem?.Japanese} / ${asg.gameMode?.Japanese}`:`未設定`,
-                en:(isSetTargetGameMode) ? `${asg.gameSystem?.English} / ${asg.gameMode?.English}`:`未設定`
+                en:(isSetTargetGameMode) ? `${asg.gameSystem?.English} / ${asg.gameMode?.English}`:`unset`
             }
             return [(isSetTargetGameMode) ? {
                 title:{
@@ -111,7 +142,7 @@ export class S_MainMenu
                 },
                 description:{
                     Japanese:"ここで閲覧したいゲームタイトルとゲームモードを予め設定します。",
-                    English: "Set your <strong>target gamemode</strong> to look records."
+                    English: "Set the target gamemode to look records."
                 },
                 isDisabled:false,
                 biggerTitle:false,
@@ -122,7 +153,8 @@ export class S_MainMenu
         generateMainMenuInfo():RequiredObjectToGenerateItem[]{
            const asg = this.app.state.gameSystemEnvDisplayed;
            const isSetTargetGameMode = asg.gameSystem!==null && asg.gameMode!==null
-
+           const runnerInfo = (this.app.loginAdministratorReadOnly.isUserLogin) ? {...this.app.loginAdministratorReadOnly.userInformation,...this.app.loginAdministratorReadOnly.userInformation_uneditable}: undefined;
+            
            const isLogIn = this.app.loginAdministratorReadOnly.isUserLogin;
            const targetGameMode = {
                ja:(isSetTargetGameMode) ? `${asg.gameSystem?.Japanese} / ${asg.gameMode?.Japanese}`:`未設定`,
@@ -147,6 +179,24 @@ export class S_MainMenu
                     if(StateAdministrator.checkGameSystemEnvIsSet(this.app.state.gameSystemEnvDisplayed)) this.app.transition("userPageInSpecific",{...this.app.state.gameSystemEnvDisplayed,runnerID:this.app.loginAdministratorReadOnly.loginUserID})
                     else  this.app.transition("userPageInWhole",{runnerID:this.app.loginAdministratorReadOnly.loginUserID})
                 }
+            },{
+                title:{
+                    Japanese:"通知",
+                    English:"Notification",
+                    icon:"notification"
+                },
+                remarks:{
+                    Japanese:`<strong class="u-redChara">${(runnerInfo === undefined || runnerInfo.numberOfUnreadNotification === 0) ? "":runnerInfo.numberOfUnreadNotification+"件の未読"}</strong>`,
+                    English:`<strong class="u-redChara">${(runnerInfo === undefined || runnerInfo.numberOfUnreadNotification === 0) ? "":runnerInfo.numberOfUnreadNotification+" unread notifications"}</strong>`,
+                    icon:""
+                },
+                description:{
+                    Japanese: "通知を確認することが出来ます。",
+                    English: "You can check notifications from the service here."
+                },
+                isDisabled:!this.app.loginAdministratorReadOnly.isUserLogin,
+                biggerTitle:false,
+                to:() => this.app.transition("notificationList",null)
             },{
                 title:{
                     Japanese:"記録の閲覧",
@@ -190,12 +240,8 @@ export class S_MainMenu
 
         generateSettingMenuInfo():RequiredObjectToGenerateItem[]{
             
-           const asg = this.app.state.gameSystemEnvDisplayed;
-           const isSetTargetGameMode = asg.gameSystem!==null && asg.gameMode!==null
-           const runnerInfo = (this.app.loginAdministratorReadOnly.isUserLogin) ? {...this.app.loginAdministratorReadOnly.userInformation,...this.app.loginAdministratorReadOnly.userInformation_uneditable}: undefined;
-            const isLogIn = this.app.loginAdministratorReadOnly.isUserLogin;
+           const isLogIn = this.app.loginAdministratorReadOnly.isUserLogin;
             const userName = (isLogIn) ? this.app.loginAdministratorReadOnly.loginUserName:"";
-            
              return [{
                 title:{
                     Japanese:(isLogIn) ?  "ログアウト":"サインイン / ログイン",
@@ -229,30 +275,24 @@ export class S_MainMenu
                 isDisabled: !this.app.loginAdministratorReadOnly.isUserLogin,
                 biggerTitle:false,
                 to:async () =>this.app.transition("settingUserInfo",null)
-            },{
+            },
+            {
                 title:{
-                    Japanese:"通知",
-                    English:"Notification",
-                    icon:"notification"
-                },
-                remarks:{
-                    Japanese:`<strong class="u-redChara">${(runnerInfo === undefined || runnerInfo.numberOfUnreadNotification === 0) ? "":runnerInfo.numberOfUnreadNotification+"件の未読"}</strong>`,
-                    English:`<strong class="u-redChara">${(runnerInfo === undefined || runnerInfo.numberOfUnreadNotification === 0) ? "":runnerInfo.numberOfUnreadNotification+" unread notifications"}</strong>`,
-                    icon:""
+                    Japanese:"言語設定",
+                    English:"Language",
+                    icon:"earth"
                 },
                 description:{
-                    Japanese: "通知を確認することが出来ます。",
-                    English: "You can check notifications from the service here."
+                    Japanese: "ここで、KSSRsの表示言語を設定することが出来ます。",
+                    English: "You can change the language of the display here."
                 },
-                isDisabled:!this.app.loginAdministratorReadOnly.isUserLogin,
+                isDisabled: !this.app.loginAdministratorReadOnly.isUserLogin,
                 biggerTitle:false,
-                to:() => this.app.transition("notificationList",null)
+                to:async () =>this.app.transition("language",null)
             }]
     }
     generateDetailMenuInfo():RequiredObjectToGenerateItem[]{
             
-        const asg = this.app.state.gameSystemEnvDisplayed;
-        const isSetTargetGameMode = asg.gameSystem!==null && asg.gameMode!==null
 
           return [{
             title:{
@@ -272,7 +312,7 @@ export class S_MainMenu
             title:{
                 Japanese:"利用規約",
                 English:"Term of Use",
-                icon:" fas fa-file-signature"
+                icon:"contract"
             },
             description:{
                 Japanese:"KSSRsを利用する際に意識すべきことをまとめました。",

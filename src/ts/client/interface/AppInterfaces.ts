@@ -11,6 +11,7 @@ import { PageStates, RequiredObjectType } from "../view/state/PageStates";
 export interface IAppUsedToRead{
     state:StateAdministerReadOnly;
     loginAdministratorReadOnly:LoginAdministratorReadOnly;
+    checkIfIntroductionIsOver:()=>boolean;
     accessToAPI:<T extends keyof APIFunctions_noChanging>(functionName: T, requiredObj: APIFunctions[T]["atServer"]) => Promise<APIFunctions[T]["atClient"]>
 }
 export interface IAppUsedToReadAndChangeOnlyPageState/*IAppUsedToReadAndChangeOnlyPageState*/ extends IAppUsedToRead{
@@ -25,6 +26,7 @@ export interface IAppUsedToReadAndChangePage extends IAppUsedToReadAndChangeOnly
     login():Promise<void>
     logout():Promise<void>
     changeTargetGameMode:(gameSystemEnv:{gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections}|null) =>  Promise<void> | undefined
+    acceptTheTerms:()=>void
     setLanguage(lang:LanguageInApplication):void;
 }
 export interface IAppUsedToChangeState extends IAppUsedToReadAndChangePage{

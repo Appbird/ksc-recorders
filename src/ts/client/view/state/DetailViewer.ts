@@ -13,11 +13,16 @@ import { RecordOperation } from "../parts/RecordOperation";
 import { PageTitleView } from "../parts/PageTitleView";
 import { IGameSystemInfoWithoutCollections } from "../../../type/list/IGameSystemInfo";
 import { IGameModeItemWithoutCollections } from "../../../type/list/IGameModeItem";
+import { NoticeView } from "../parts/notice";
 
 const context = {
     header:{
         Japanese:"記録の基本情報",
         English:"Basic Information of the Record"
+    },
+    notice:{
+        Japanese:"URLをコピーすれば、他の人とこの記録を共有できます！",
+        English:"You can share this record by copying the URL!"
     },
     operation:{
         modify:{
@@ -46,50 +51,31 @@ export class S_DetailViewer
     extends PageStateBaseClass<APIFunctions["record_detail"]["atServer"]|{recordResolved:IRecordResolved},IAppUsedToChangeState>{
         async init(){
             this.generateLoadingSpinner()
-                const operationDiv = this.articleDOM.appendChild(createElementWithIdAndClass({ id: "operation" }));
-                const detailDiv = this.articleDOM.appendChild(createElementWithIdAndClass({ id: "detail" }));
-                const relatedRecordDiv = this.articleDOM.appendChild(createElementWithIdAndClass({ id: "related" }));
-                let record:IRecordResolved;
-                if (((value:unknown):value is {recordResolved:IRecordResolved} => this.requiredObj.hasOwnProperty("recordResolved"))(this.requiredObj))
-                    record = this.requiredObj.recordResolved;
-                else record = (await this.app.accessToAPI("record_detail",this.requiredObj)).result;
-                
+            const notice = new NoticeView(appendElement(this.articleDOM,"div"),"detailView","portableURL",context.notice,this.app.state.language) 
+            const operationDiv = this.articleDOM.appendChild(createElementWithIdAndClass({ id: "operation" }));
+            const detailDiv = this.articleDOM.appendChild(createElementWithIdAndClass({ id: "detail" }));
+            const relatedRecordDiv = this.articleDOM.appendChild(createElementWithIdAndClass({ id: "related" }));
+            let record:IRecordResolved;
+            if (((value:unknown):value is {recordResolved:IRecordResolved} => this.requiredObj.hasOwnProperty("recordResolved"))(this.requiredObj))
+                record = this.requiredObj.recordResolved;
+            else record = (await this.app.accessToAPI("record_detail",this.requiredObj)).result;
             
-                
-
-                const rrg = record.regulation.gameSystemEnvironment;
-                const rr = record.regulation;
-
-            const condition:SearchCondition = {
-                groupName: "", gameSystemEnv: { gameSystemID: rrg.gameSystemID, gameModeID: rrg.gameModeID }, 
-                orderOfRecordArray:  "LowerFirst", startOfRecordArray: 0, limitOfRecordArray: 100,
-                targetIDs: [rr.targetID], abilityIDs: rr.abilityIDs, abilityIDsCondition: "AllowForOrder", language: this.app.state.language
-            }
-            
-                const relatedRecord = (await this.app.accessToAPI(
-                    "record_search", {
-                        condition: [{
-                            ...condition,
-                            groupName:choiceString({
-                                Japanese:"同条件の記録", English:"Records which are in the same conditions."
-                            },this.app.state.language)
-                        }]
-                })).result[0];
-            
-            let rank: number | undefined = relatedRecord.records.findIndex(element => element.id === record.id) + 1;
+            const rrg = record.regulation.gameSystemEnvironment;
+            const rr = record.regulation;
             const title = new PageTitleView(
                 appendElement(detailDiv,"div"),
                 choiceString(context.header,this.app.state.language),
                 "",
                 "fas fa-info-circle"
             );
-            
-            const gameSystem = (await this.app.accessToAPI("list_gameSystem",{id:rrg.gameSystemID})).result
-            const gameMode = (await this.app.accessToAPI("list_gameMode",{gameSystemEnv:{gameSystemID:rrg.gameSystemID},id:rrg.gameModeID})).result
+            const condition:SearchCondition = {
+                groupName: "", gameSystemEnv: { gameSystemID: rrg.gameSystemID, gameModeID: rrg.gameModeID }, 
+                orderOfRecordArray:  "LowerFirst", startOfRecordArray: 0, limitOfRecordArray: 100,
+                targetIDs: [rr.targetID], abilityIDs: rr.abilityIDs, abilityIDsCondition: "AllowForOrder", language: this.app.state.language
+            }
 
             const detailView = new RecordDetailView(
                 detailDiv.appendChild(document.createElement("div")),record,{
-                rankOfTheRecord:rank,
                 language:this.app.state.language,
                 onClickRunnerName:() => {
                     this.app.transition("userPageInSpecific",{gameSystem,gameMode,runnerID:record.runnerID})
@@ -97,7 +83,24 @@ export class S_DetailViewer
                 clickedCallBacks:generateClickedTagsCallBacks(this.app,record,condition),
                 verifiedTime: this.app.loginAdministratorReadOnly.userInformation_uneditable?.isCommitteeMember ? "time" : "date"
             });
-            
+
+            const gameSystem = (await this.app.accessToAPI("list_gameSystem",{id:rrg.gameSystemID})).result
+            const gameMode = (await this.app.accessToAPI("list_gameMode",{gameSystemEnv:{gameSystemID:rrg.gameSystemID},id:rrg.gameModeID})).result
+
+            if (this.app.loginAdministratorReadOnly.isUserLogin) this.prepareOperation(operationDiv,record,gameSystem,gameMode)
+
+            const relatedRecord = (await this.app.accessToAPI(
+                "record_search", {
+                    condition: [{
+                        ...condition,
+                        groupName:choiceString({
+                            Japanese:"同条件の記録", English:"Records in the same conditions"
+                        },this.app.state.language)
+                    }]
+            })).result[0];
+        
+            let rank: number | undefined = relatedRecord.records.findIndex(element => element.id === record.id) + 1;
+           
             new RecordGroupView(relatedRecordDiv.appendChild(document.createElement("div")),relatedRecord,gameMode.scoreType,{
                 clickOnCardEventListener: (recordClicked) => {
                     this.app.transition("detailView",{
@@ -110,8 +113,8 @@ export class S_DetailViewer
                     })
                 } 
             });
+            detailView.setRank(rank)
             this.deleteLoadingSpinner();
-            if (this.app.loginAdministratorReadOnly.isUserLogin) this.prepareOperation(operationDiv,record,gameSystem,gameMode)
             
            
         }
@@ -232,7 +235,7 @@ export function generateClickedTagsCallBacks(app:IAppUsedToReadAndChangeOnlyPage
         target: () => app.transition("searchResultView",{
             condition:[{
                 ...baseCondition,
-                groupName:choiceString({Japanese:"同じ計測対象の記録",English:"Records which have a same target"},app.state.language),
+                groupName:choiceString({Japanese:"同セグメントの記録",English:"Records in the same segment."},app.state.language),
                 limitOfRecordArray: 3,
                 abilityIDs:[],
             }]
@@ -240,7 +243,7 @@ export function generateClickedTagsCallBacks(app:IAppUsedToReadAndChangeOnlyPage
         ability: () => app.transition("searchResultView",{
             condition:[{
                 ...baseCondition,
-                groupName:choiceString({Japanese:"同じ能力を使った記録",English:"Records which use same abilities"},app.state.language),
+                groupName:choiceString({Japanese:"同じ能力を使った記録",English:"Records which use the same abilities"},app.state.language),
                 limitOfRecordArray: 3,
                 targetIDs:[]
             }]
@@ -248,7 +251,7 @@ export function generateClickedTagsCallBacks(app:IAppUsedToReadAndChangeOnlyPage
         hashTag: () => app.transition("searchResultView",{
             condition:[{
                 ...baseCondition,
-                groupName:choiceString({Japanese:"同じハッシュタグをもつ記録",English:"Records which have same hashTag"},app.state.language),
+                groupName:choiceString({Japanese:"同じハッシュタグをもつ記録",English:"Records which have the same hashTag"},app.state.language),
                 limitOfRecordArray: 3,
                 tagIDs:detail.tagID
             }]

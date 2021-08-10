@@ -27,6 +27,8 @@ import { S_Credits } from "./credits/credits";
 import { S_SettingRegulationState_CollectionAppender } from "./settingNewRegulationState/S_InsertingNewCollection";
 import { S_UnverifiedRecords } from "./UnverifiedRecords";
 import { S_TermOfUse } from "./termOfUse";
+import { S_introduction } from "./introduction";
+import { S_SetLanguage } from "./setLanguage";
 
 export type RequiredObjectType<StateClass> = StateClass extends PageStateBaseClass<infer U,IAppUsedToRead>? U : never;
 export type UsedIAppLimited<IAppLimited> = IAppLimited extends PageStateBaseClass<any,infer U>? U:never;
@@ -65,6 +67,8 @@ export interface PageStateWithoutRequiredObject{
     settingNewRegulation_CollectionViewer:S_SettingNewRegulationState_CollectionViewer,
     credits:S_Credits,
     termOfUse:S_TermOfUse
+    introduction:S_introduction,
+    language:S_SetLanguage
 }
 export const pageStates:PageStatesConstructorObj= {
     NowLoading:S_NowLoading,
@@ -97,5 +101,7 @@ export const pageStates:PageStatesConstructorObj= {
     modifyRecordForm:S_ModifyRecordForm,
     credits:S_Credits,
     unverifiedRecord:S_UnverifiedRecords,
-    termOfUse:S_TermOfUse
+    termOfUse:S_TermOfUse,
+    introduction:S_introduction,
+    language:S_SetLanguage
 }

@@ -14,8 +14,8 @@ const context = {
     List:{
         backSelectable:{
             title:{
-                Japanese:"走者ページに戻る",
-                English:"return to GameMode"
+                Japanese:"トップページに戻る",
+                English:"return to the Top Page"
             },
             explain:{
                 Japanese:"",
@@ -101,12 +101,7 @@ export class S_SettingUserInfo
                 },[
                 {
                     id:"back",title:context.List.backSelectable.title,description:context.List.backSelectable.explain,unused:false,
-                    onClickCallBack: () => {
-                        if (StateAdministrator.checkGameSystemEnvIsSet(this.app.state.gameSystemEnvDisplayed))
-                            this.app.transition("userPageInSpecific",{runnerID:runnerID,...this.app.state.gameSystemEnvDisplayed})
-                        else
-                            this.app.transition("userPageInWhole",{runnerID:runnerID})
-                    }
+                    onClickCallBack: () => this.app.transition("mainMenu",null)
                 }])
             const lang = this.app.state.language;
             const editorHeader:HTMLElement = appendElement(this.articleDOM,"div");

@@ -20,11 +20,17 @@ export class MenuView implements IView {
     private mainMenu: HTMLElement;
     private language:LanguageInApplication
     private displayDisabled:boolean;
-    constructor(container: HTMLElement, language: LanguageInApplication, title: MultiLanguageString,{
+    constructor(container: HTMLElement, language: LanguageInApplication, title: MultiLanguageString|null,{
         displayDisabled = true
     }:{displayDisabled?:boolean} = {}) {
         this.displayDisabled = displayDisabled;
         this.htmlConverter = new HTMLConverter(language);
+        this.container = container;
+        this.language = language;
+        if (title === null){
+            this.mainMenu = container.appendChild(this.htmlConverter.elementWithoutEscaping`<div class="c-list u-marginUpDown05emToChildren u-width90per"></div>`) as HTMLElement
+            return
+        }
         this.mainMenu = container.appendChild(this.htmlConverter.elementWithoutEscaping`
                 <div class="c-list u-marginUpDown05emToChildren u-width90per">
                     <div class="c-title">
@@ -34,8 +40,6 @@ export class MenuView implements IView {
                     
                 </div>
             ` as HTMLElement);
-        this.container = container;
-        this.language = language;
     }
     destroy(): void {
         this.container.innerHTML = "";

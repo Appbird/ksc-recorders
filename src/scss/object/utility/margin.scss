@@ -22,20 +22,26 @@
 .u-margin05em{
     margin:0.5em;
 }
+.u-margin1em{
+    margin:1em;
+}
 .u-margin2em{
     margin:2em;
 }
 
+
 .u-marginUpDown05em{
-    margin:0.5em 0;
+    margin-top:.5em;
+    margin-bottom: .5em;
+}
+.u-marginUpDown1em{
+    margin-top:1em;
+    margin-bottom: 1em;
 }
 .u-marginUpDown2em{
-    margin:2em 0;
+    margin-top:2em;
+    margin-bottom: 2em;
 }
-.u-marginUpDown5em{
-    margin:5em 0;
-}
-
 .u-marginUpDown5em{
     margin-top:5em;
     margin-bottom: 5em;

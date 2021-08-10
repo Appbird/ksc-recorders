@@ -1,5 +1,5 @@
 import { PageStates, RequiredObjectType } from "./view/state/PageStates";
-import { LanguageInApplication } from "../type/LanguageInApplication";
+import { LanguageInApplication, LanguageList } from "../type/LanguageInApplication";
 import { TransitionAdministrator } from "./Administrator/TransitionAdminister";
 import { StateAdministrator, StateAdministerReadOnly } from "./Administrator/StateAdminister";
 import { APIAdministrator } from "./Administrator/APICaller";
@@ -30,12 +30,12 @@ export default class App implements IAppUsedToChangeState{
         document.getElementById("header")?.addEventListener("click",() => {
             this.transition("mainMenu",null)
         })
-        this.transition("NowLoading",null,{ifAppendHistory:false});
     }
     async init(){
-
         try{
             const response = await fetch('/__/firebase/init.json');
+            const settingLanguage = this.historyAd.getLanguageSettings()
+            if (settingLanguage !== null && LanguageList.includes(settingLanguage)) this._state.setLanguage(settingLanguage as LanguageInApplication)
             if (response.status !== 200) {console.log("Failed"); return;}
             firebase.initializeApp(await response.json());
 
@@ -111,6 +111,7 @@ export default class App implements IAppUsedToChangeState{
         return this._state
     }
     setLanguage(lang:LanguageInApplication){
+        this.historyAd.setLanguageSettings(lang)
         this._state.setLanguage(lang);
     }
     changeTargetGameMode(gameSystemEnv:{gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections}|null){
@@ -140,6 +141,12 @@ export default class App implements IAppUsedToChangeState{
     get notie(){
         return this._notie;
 
+    }
+    checkIfIntroductionIsOver(){
+        return this.historyAd.checkIfIntroductionIsOver()
+    }
+    acceptTheTerms(){
+        this.historyAd.clearIntroduction()
     }
     goToTop(){
         var scrolled = ( window.pageYOffset !== undefined ) ? window.pageYOffset: document.documentElement.scrollTop;

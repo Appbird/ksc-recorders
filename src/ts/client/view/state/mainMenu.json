@@ -1,10 +1,13 @@
 {
+    "mainManu":{
+        "Japanese":"上のヘッダーをクリックすることで、いつでもこのメニューを開くことが出来ます。",
+        "English":"You can open this menu by clicking the above header."
+    },
     "description": [{
-        "Japanese":"Kirby-Speed/Score-Recorders(KSSRs)はカービィシリーズのゲームのタイム/スコアを集積するTA/RTAプラットフォームです。ボスやステージごとの記録集積に特化しています。",
+        "Japanese":"Kirby-Speed/Score-Recorders(KSSRs)は、カービィシリーズのゲームのタイム/スコアを集積するTA/RTAプラットフォームです。ボスやステージごとの記録集積に特化しています。",
         "English":"Kirby-Speed/Score-Recorders(KSSRs) is the page that provides scoreboards about the games of the Kirby series, which specializes in recording time/score specific for each Boss and Stage."
     },{
-        "Japanese":"このサイトでは、複数のカービィ作品のTA/RTAを取り扱うことが出来ます。<br>下の「<strong>ゲームタイトル/モードの設定</strong>」をクリックして、閲覧したい記録のゲームモードに設定しましょう！",
-        "English":"KSSRs can cover TA/RTAs on multiple gamemodes in Kirby's game. You can change the gamemode you see on KSSRs by clicking the following <strong>Set Target Title/Mode</strong>."
+        "Japanese":"このサイトでは、複数のカービィ作品のTA/RTAを取り扱うことが出来ます。<br>下の「<strong>ゲームタイトル/モードの設定</strong>」をクリックして、見たい記録へアクセスしましょう！",
+        "English":"KSSRs can cover speedruns on multiple gamemodes in Kirby's game. You can change <strong>the target gamemode</strong>(, which means the gamemode you look on KSSRs) by clicking the following <strong>Set Target Title/Mode</strong>."
     }]
-    
 }

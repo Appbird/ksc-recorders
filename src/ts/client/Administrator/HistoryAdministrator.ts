@@ -2,6 +2,8 @@ import { PageStates, RequiredObjectType } from "../view/state/PageStates";
 import {  IAppUsedToReadAndChangePage } from "../interface/AppInterfaces";
 import { TargetGameMode } from "./StateAdminister";
 import { URLAdministrator } from "./URLAdministrator";
+import { APIFunctions } from "../../type/api/relation";
+import { LanguageInApplication } from "../../type/LanguageInApplication";
 export class HistoryAdministrator{
     private app:IAppUsedToReadAndChangePage;
     private urlAd:URLAdministrator
@@ -20,14 +22,39 @@ export class HistoryAdministrator{
         })
         
     }
+    clearIntroduction(){
+        localStorage.setItem("KSSRs::HistoryAdministrator::clearIntroduction_v1","true")
 
+    }
+    checkIfIntroductionIsOver(){
+        return localStorage.getItem("KSSRs::HistoryAdministrator::clearIntroduction_v1") === "true"
+    }
     registerCurrentPage(){
         localStorage.setItem("KSSRs::HistoryAdministrator::PreviousPage",JSON.stringify({
             pageState:this.app.state.state,
             requiredObject:this.app.state.requiredObj
         }))
-        
-        history.pushState(null,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/`)
+        switch(this.app.state.state){
+            case "detailView":{
+                const obj = this.app.state.requiredObj as APIFunctions["record_detail"]["atServer"]
+                history.pushState(null,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/?state=detailView&gs=${obj.gameSystemEnv.gameSystemID}&gm=${obj.gameSystemEnv.gameModeID}&id=${obj.id}`)
+                break;
+            }
+            case "userPageInWhole":{
+                const obj = this.app.state.requiredObj as {runnerID:string}
+                history.pushState(null,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/?state=userPageInWhole&id=${obj.runnerID}`)
+                break;
+            }
+            case "userPageInSpecific":{
+                const obj = this.app.state.requiredObj as TargetGameMode&{runnerID:string}
+                history.pushState(null,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/?state=userPageInWhole&id=${obj.runnerID}`)
+                break;
+            }
+            default:
+                history.pushState(null,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/`)
+                break;
+
+        } 
         
         console.info(`[KSSRs::HistoryAdministrator::PreviousPage] register current page: ${this.app.state.state} page.`)
     }
@@ -76,6 +103,12 @@ export class HistoryAdministrator{
     }
     removeTargetGamemode(){
         localStorage.removeItem("KSSRs::HistoryAdministrator::TargetMode");
+    }
+    setLanguageSettings(lang:LanguageInApplication){
+        localStorage.setItem("KSSRs::HistoryAdministrator::Language",lang);
+    }
+    getLanguageSettings(){
+        return localStorage.getItem("KSSRs::HistoryAdministrator::Language");
     }
 
 }

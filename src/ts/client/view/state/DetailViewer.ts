@@ -11,6 +11,8 @@ import { TagsClickedCallbacks } from "../parts/Interface/TagsClickedCallbacks";
 import { PageStateBaseClass } from "./PageStateClass";
 import { RecordOperation } from "../parts/RecordOperation";
 import { PageTitleView } from "../parts/PageTitleView";
+import { IGameSystemInfoWithoutCollections } from "../../../type/list/IGameSystemInfo";
+import { IGameModeItemWithoutCollections } from "../../../type/list/IGameModeItem";
 
 const context = {
     header:{
@@ -81,19 +83,22 @@ export class S_DetailViewer
                 "",
                 "fas fa-info-circle"
             );
+            
+            const gameSystem = (await this.app.accessToAPI("list_gameSystem",{id:rrg.gameSystemID})).result
+            const gameMode = (await this.app.accessToAPI("list_gameMode",{gameSystemEnv:{gameSystemID:rrg.gameSystemID},id:rrg.gameModeID})).result
+
             const detailView = new RecordDetailView(
                 detailDiv.appendChild(document.createElement("div")),record,{
                 rankOfTheRecord:rank,
                 language:this.app.state.language,
                 onClickRunnerName:() => {
-                    if (!StateAdministrator.checkGameSystemEnvIsSet(this.app.state.gameSystemEnvDisplayed)) return;
-                    this.app.transition("userPageInSpecific",{...this.app.state.gameSystemEnvDisplayed,runnerID:record.runnerID})
+                    this.app.transition("userPageInSpecific",{gameSystem,gameMode,runnerID:record.runnerID})
                 },
                 clickedCallBacks:generateClickedTagsCallBacks(this.app,record,condition),
-                verifiedTime: this.app.loginAdministratorReadOnly.userInformation_uneditable.isCommitteeMember ? "time" : "date"
+                verifiedTime: this.app.loginAdministratorReadOnly.userInformation_uneditable?.isCommitteeMember ? "time" : "date"
             });
             
-            new RecordGroupView(relatedRecordDiv.appendChild(document.createElement("div")),relatedRecord,this.app.state.scoreType,{
+            new RecordGroupView(relatedRecordDiv.appendChild(document.createElement("div")),relatedRecord,gameMode.scoreType,{
                 clickOnCardEventListener: (recordClicked) => {
                     this.app.transition("detailView",{
                         gameSystemEnv:{
@@ -106,51 +111,51 @@ export class S_DetailViewer
                 } 
             });
             this.deleteLoadingSpinner();
-            if (this.app.loginAdministratorReadOnly.isUserLogin) this.prepareOperation(operationDiv,record)
+            if (this.app.loginAdministratorReadOnly.isUserLogin) this.prepareOperation(operationDiv,record,gameSystem,gameMode)
             
            
         }
-        private prepareOperation(operationDiv:HTMLElement,record:IRecord){
+        private prepareOperation(operationDiv:HTMLElement,record:IRecord,gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections){
             
             const privilege:Privilege[] = []
             if (this.app.loginAdministratorReadOnly.loginUserID === record.runnerID) privilege.push("Owner")
-            if (this.app.loginAdministratorReadOnly.userInformation_uneditable.isCommitteeMember) privilege.push("ComitteeMember")
+            if (this.app.loginAdministratorReadOnly.userInformation_uneditable?.isCommitteeMember) privilege.push("ComitteeMember")
             if (privilege === undefined) return;
             new RecordOperation(operationDiv,this.app.state.language,privilege,(err)=>this.app.errorCatcher(err),[
             {
                 text: context.operation.verify,
                 iconClass: "fas fa-check",
                 color: "blue",
-                callback: () => this.confirmWhenVerify(record,operationDiv),
+                callback: () => this.confirmWhenVerify(record,operationDiv,gameSystem,gameMode),
                 enable: privilege.includes("ComitteeMember") && ( record.moderatorIDs === undefined || record.moderatorIDs.length === 0)
             },{
                 text:context.operation.modify,
                 iconClass:"fas fa-star",
                 color:"green",
-                callback: () => this.moveToModifyRecord(record),
+                callback: () => this.moveToModifyRecord(record,gameSystem,gameMode),
                 enable: privilege.includes("Owner") || privilege.includes("ComitteeMember")
             },{
                 text:context.operation.delete,
                 iconClass:"fas fa-trash-alt",
                 color:"red",
                 //#CTODO notieに確認ウィンドウを付け、その後modify_recordとremove_recordを実装する。
-                callback: () => this.confirmWhenDelete(record,operationDiv),
+                callback: () => this.confirmWhenDelete(record,operationDiv,gameSystem,gameMode),
                 enable: privilege.includes("Owner") || privilege.includes("ComitteeMember")
             }])
         }
-        private moveToModifyRecord(record:IRecord){
-            if(!StateAdministrator.checkGameSystemEnvIsSet(this.app.state.gameSystemEnvDisplayed)) return;
-            this.app.transition("modifyRecordForm",{targetGameMode:this.app.state.gameSystemEnvDisplayed,id:record.id})
+        private moveToModifyRecord(record:IRecord,gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections){
+            if(!StateAdministrator.checkGameSystemEnvIsSet({gameMode,gameSystem})) return;
+            this.app.transition("modifyRecordForm",{targetGameMode:{gameMode,gameSystem},id:record.id})
 
         }
         
-        private confirmWhenDelete(record:IRecord,operationDiv:HTMLElement){
+        private confirmWhenDelete(record:IRecord,operationDiv:HTMLElement,gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections){
             this.app.notie.reasonInputerAleart({
                 text:context.operation.confirm_delete, 
                 okCallback:async (reason:string)=>{
                     this.generateLoadingSpinner()
                     operationDiv.classList.add("u-unused")
-                    await this.deleteRecord(record,reason)
+                    await this.deleteRecord(record,reason,gameSystem,gameMode)
                     this.deleteLoadingSpinner()
                 },
                 placeholder:{
@@ -160,11 +165,11 @@ export class S_DetailViewer
             }
             )
         }
-        private async deleteRecord(record:IRecord,reason:string){
-            if(!StateAdministrator.checkGameSystemEnvIsSet(this.app.state.gameSystemEnvDisplayed)) return;
+        private async deleteRecord(record:IRecord,reason:string,gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections){
+            if(!StateAdministrator.checkGameSystemEnvIsSet({gameMode,gameSystem})) return;
             await this.app.accessToAPI("record_delete",{
                 gameSystemEnv: {
-                    gameModeID:this.app.state.gameModeIDDisplayed, gameSystemID:this.app.state.gameSystemIDDisplayed
+                    gameModeID:gameMode.id, gameSystemID:gameSystem.id
                 },
                 recordID:record.id,
                 IDToken: await this.app.loginAdministratorReadOnly.getIDToken(),
@@ -177,21 +182,21 @@ export class S_DetailViewer
             })
             this.app.transition("mainMenu",null)
         }
-        private confirmWhenVerify(record:IRecord,operationDiv:HTMLElement){
+        private confirmWhenVerify(record:IRecord,operationDiv:HTMLElement,gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections){
             this.app.notie.confirmAlert({
                 text:context.operation.confirm_verify, 
                 okCallback:async ()=>{
                     this.generateLoadingSpinner()
                     operationDiv.classList.add("u-unused")
-                    await this.verifyRecord(record).catch((err) => this.app.errorCatcher(err))
+                    await this.verifyRecord(record,gameSystem,gameMode).catch((err) => this.app.errorCatcher(err))
                     this.deleteLoadingSpinner()
                 }
                 })
         }
-        private async verifyRecord(record:IRecord){
+        private async verifyRecord(record:IRecord,gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections){
             await this.app.accessToAPI("record_moderate",{
                 gameSystemEnv: {
-                    gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed
+                    gameModeID:gameMode.id, gameSystemID:gameSystem.id
                 },
                 recordId:record.id,
                 IDToken: await this.app.loginAdministratorReadOnly.getIDToken()

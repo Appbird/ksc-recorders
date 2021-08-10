@@ -61,14 +61,18 @@ export default class App implements IAppUsedToChangeState{
     }
     private goPrevious(){
         const previousPage = this.historyAd.getPreviousPageData()
+        
+        const previousTargetGamemode = this.historyAd.getPreviousTargetGamemode();
+        if (previousTargetGamemode !== null){
+            console.info(`[KSSRs] KSSRs detected you had set the targetGamemode ${previousTargetGamemode.gameSystem.English} / ${previousTargetGamemode.gameMode.English}, so KSSRs set that again.`)
+            this.changeTargetGameMode(previousTargetGamemode)
+        }
+        if (previousPage === "redirect") return;
         if (previousPage === null) {this.transition("mainMenu",null); return;}
         console.info(`[KSSRs] KSSRs detected you had visited ${previousPage.pageState} page most recently, so KSSRs takes you to that page.`)
         this.transition(previousPage.pageState,previousPage.requiredObject)
 
-        const previousTargetGamemode = this.historyAd.getPreviousTargetGamemode();
-        if (previousTargetGamemode === null) return;
-        console.info(`[KSSRs] KSSRs detected you had set the targetGamemode ${previousTargetGamemode.gameSystem.English} / ${previousTargetGamemode.gameMode.English}, so KSSRs set that again.`)
-        this.changeTargetGameMode(previousTargetGamemode)
+        
     }
     async login(){
         if (this.loginAd === null) throw new Error("firebaseが初期化されていません。")
@@ -111,7 +115,12 @@ export default class App implements IAppUsedToChangeState{
     }
     changeTargetGameMode(gameSystemEnv:{gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections}|null){
         
-        if (gameSystemEnv === null) return this.header.changeHeaderRightLeft("Kirby-Speed/Score-Recorders","KSSRs");
+        if (gameSystemEnv === null){
+            this._state.setGameSystemEnv({gameMode:null,gameSystem:null})
+            
+        this.historyAd.registerCurrentTargetGamemode()
+          return this.header.changeHeaderRightLeft("Kirby-Speed/Score-Recorders","KSSRs");
+        }
         if (this.state.gameSystemEnvDisplayed.gameSystem?.id === gameSystemEnv.gameSystem.id && this.state.gameSystemEnvDisplayed.gameMode?.id === gameSystemEnv.gameMode.id) return;
         this._state.setGameSystemEnv(gameSystemEnv)
         this.historyAd.registerCurrentTargetGamemode()

@@ -10,6 +10,7 @@ export type RequiredObjectToGenerateItem = {
     remarks?:MultiLanguageStringWithICon,
     description:MultiLanguageString,
     isDisabled:boolean,
+    isUnused?:boolean,
     biggerTitle:boolean,
     to?:()=>void
 }
@@ -39,8 +40,8 @@ export class MenuView implements IView {
     destroy(): void {
         this.container.innerHTML = "";
     }
-    generateMenuItem({ title, remarks, description, to, isDisabled, biggerTitle }: RequiredObjectToGenerateItem) {
-        if(!this.displayDisabled && isDisabled) return;
+    generateMenuItem({ title, remarks, description, to, isDisabled, biggerTitle, isUnused = false }: RequiredObjectToGenerateItem) {
+        if(!this.displayDisabled && isDisabled || isUnused) return;
         const item = this.htmlConverter.elementWithoutEscaping`
             <div class="c-recordCard ${(isDisabled) ? "is-disable" : ""}">
                     <div class = "c-title">

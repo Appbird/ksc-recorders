@@ -39,7 +39,7 @@ export class EditorIDPart implements EditorPart<string[]> {
             <h1 class="u-noUnderline">${generateIcooonHTML({icooonName:icooon})}${title}</h1>
         `);
         
-        this.selectInput = new SelectChoicesCapsuled(this.container.appendChild(document.createElement("select")), options, { language: language,needMultipleSelect:true });
+        this.selectInput = new SelectChoicesCapsuled(this.container.appendChild(document.createElement("select")), options, { language: language,needMultipleSelect:true,maxItemCount:1000 });
         this.ulist = new UListCupsuled(appendElement(this.container,"ul"),language,description)
         if (observed === undefined) return;
 

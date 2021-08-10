@@ -16,6 +16,10 @@
   font-size: 1.5em;
 }
 
+.notie-container {
+  z-index: 3;
+}
+
 .notie-textbox.notie-background-info {
   background-color: #0c0429;
 }

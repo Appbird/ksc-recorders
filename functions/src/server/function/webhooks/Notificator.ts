@@ -7,7 +7,7 @@ import { ScoreType } from "../../../../../src/ts/type/list/IGameModeItem";
 //#NOTE これの実行には{webhookURL:string}型のオブジェクトが記述されたjsonファイルを書き込んでおく必要がある。
 //#CTODO こいつがちゃんと投稿されるか確認する。
 export class Notificator{
-    private readonly host:string = "https://localhost:5000"
+    private readonly host:string = "http://localhost:5000"
     private readonly recordDatabase:RecordDataBase
     constructor(recordDatabase:RecordDataBase){
         this.recordDatabase = recordDatabase;
@@ -79,15 +79,15 @@ export class Notificator{
         const userIconURL = (await this.recordDatabase.getRunnerInfo(recordResolved.runnerID)).photoURL;
         const deletedBy = (await this.recordDatabase.getRunnerInfo(uid)).English;
         const scoreInText =  gameMode.scoreType === "time" ? converseMiliSecondsIntoTime(recordResolved.score) : recordResolved.score.toString();
-        //#TODO これらのメッセージが送信されるかを確かめる
-        //#TODO ユーザーの通知数が更新されているかを確認
+        //#CTODO これらのメッセージが送信されるかを確かめる
+        //#CTODO ユーザーの通知数が更新されているかを確認
         if (uid === recordResolved.runnerID) {
             await recordDataBase.sendNotification(recordResolved.runnerID,{
                 postedDate:Date.now(),
                 iconCSSClass:"fas fa-eraser u-redChara",
                 id:"",
-                Japanese:`<u>[**記録**](${this.host}/record/${rrg.gameSystemID}/${rrg.gameModeID}/${recordResolved.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} )が<u>[**${deletedBy}**](${this.host}/runner/${uid})</u>によって削除されました。削除されたデータはDiscordにて通知されています。` + ((reason.length !== 0) ? `\n\n[理由]\n\n${reason}` : ""),
-                English:`<u>[**Record**](${this.host}/record/${rrg.gameSystemID}/${rrg.gameModeID}/${recordResolved.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} ) is modified by <u>[**${deletedBy}**](${this.host}/runner/${uid})</u>. Reverification is required.` + ((reason.length !== 0) ? `\n\n[reason]\n\n${reason}` : ""),
+                Japanese:`<u>[**記録**](${this.host}/?state=detailView&gs=${rrg.gameSystemID}&gm=${rrg.gameModeID}&id=${recordResolved.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} )が<u>[**${deletedBy}**](${this.host}/?state=userPageInWhole&id=${uid})</u>によって削除されました。削除されたデータはDiscordにて通知されています。` + ((reason.length !== 0) ? `\n\n[理由]\n\n${reason}` : ""),
+                English:`<u>[**Record**](${this.host}/?state=detailView&gs=${rrg.gameSystemID}&gm=${rrg.gameModeID}&id=${recordResolved.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} ) is modified by <u>[**${deletedBy}**](${this.host}/?state=userPageInWhole&id=${uid})</u>. Reverification is required.` + ((reason.length !== 0) ? `\n\n[reason]\n\n${reason}` : ""),
                 from:{
                     Japanese:`KSSRs(${rrg.gameSystemName}/${rrg.gameModeName})`,
                     English:`KSSRs(${rrg.gameSystemName}/${rrg.gameModeName})`
@@ -116,8 +116,8 @@ export class Notificator{
                 postedDate:Date.now(),
                 iconCSSClass:"fas fa-user-edit u-greenChara",
                 id:"",
-                Japanese:`<u>[**記録**](${this.host}/record/${rrg.gameSystemID}/${rrg.gameModeID}/${recordResolved.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} )が<u>[**${modifiedBy}**](${this.host}/runner/${uid})</u>によって修正されました。再認証が必要です。` + ((reason.length !== 0) ? `\n\n[理由]\n\n${reason}` : ""),
-                English:`<u>[**Record**](${this.host}/record/${rrg.gameSystemID}/${rrg.gameModeID}/${recordResolved.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} ) is modified by <u>[**${modifiedBy}**](${this.host}/runner/${uid})</u>. Reverification is required.` + ((reason.length !== 0) ? `\n\n[reason]\n\n${reason}` : ""),
+                Japanese:`<u>[**記録**](${this.host}/?state=detailView&gs=${rrg.gameSystemID}&gm=${rrg.gameModeID}&id=${recordResolved.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} )が<u>[**${modifiedBy}**](${this.host}/?state=userPageInWhole&id=${uid})</u>によって修正されました。再認証が必要です。` + ((reason.length !== 0) ? `\n\n[理由]\n\n${reason}` : ""),
+                English:`<u>[**Record**](${this.host}/?state=detailView&gs=${rrg.gameSystemID}&gm=${rrg.gameModeID}&id=${recordResolved.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} ) is modified by <u>[**${modifiedBy}**](${this.host}/?state=userPageInWhole&id=${uid})</u>. Reverification is required.` + ((reason.length !== 0) ? `\n\n[reason]\n\n${reason}` : ""),
                 from:{
                     Japanese:`KSSRs(${rrg.gameSystemName}/${rrg.gameModeName})`,
                     English:`KSSRs(${rrg.gameSystemName}/${rrg.gameModeName})`
@@ -146,8 +146,8 @@ export class Notificator{
                 postedDate:Date.now(),
                 iconCSSClass:"fas fa-user-check u-blueChara",
                 id:"",
-                Japanese:`<u>[**記録**](${this.host}/record/${rrg.gameSystemID}/${rrg.gameModeID}/${record.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} )が<u>[**${moderatorName}**](${this.host}/runner/${moderatorID})</u>によって承認されました！`,
-                English:`<u>[**Record**](${this.host}/record/${rrg.gameSystemID}/${rrg.gameModeID}/${record.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} ) is verified by <u>[**${moderatorName}**](${this.host}/runner/${moderatorID})</u>!`,
+                Japanese:`<u>[**記録**](${this.host}/?state=detailView&gs=${rrg.gameSystemID}&gm=${rrg.gameModeID}&id=${record.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} )が<u>[**${moderatorName}**](${this.host}/?state=userPageInWhole&id=${moderatorID})</u>によって承認されました！`,
+                English:`<u>[**Record**](${this.host}/?state=detailView&gs=${rrg.gameSystemID}&gm=${rrg.gameModeID}&id=${record.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} ) is verified by <u>[**${moderatorName}**](${this.host}/?state=userPageInWhole&id=${moderatorID})</u>!`,
                 from:{
                     Japanese:`KSSRs(${rrg.gameSystemName}/${rrg.gameModeName})`,
                     English:`KSSRs(${rrg.gameSystemName}/${rrg.gameModeName})`

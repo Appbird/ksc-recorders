@@ -2,7 +2,7 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import { MultiLanguageString } from "../../type/foundation/MultiLanguageString";
-import { IRunner, IRunnerEditable, IRunnerUneditable } from "../../type/record/IRunner";
+import { IRunnerEditable, IRunnerUneditable } from "../../type/record/IRunner";
 import { IAppUsedToRead } from "../interface/AppInterfaces";
 
 export interface LoginAdministratorReadOnly{
@@ -11,7 +11,7 @@ export interface LoginAdministratorReadOnly{
     loginUserIconPicture:string|null|undefined;
     loginUserID:string;
     userInformation:IRunnerEditable;
-    userInformation_uneditable:IRunnerUneditable
+    userInformation_uneditable:IRunnerUneditable|null
     getIDToken():Promise<string>
 }
 export class LoginAdministrator implements LoginAdministratorReadOnly{
@@ -103,8 +103,7 @@ export class LoginAdministrator implements LoginAdministratorReadOnly{
         }
         return this.userInfo;
     }
-    get userInformation_uneditable():IRunnerUneditable{
-        if (this.userInfo_uneditable === null) throw new Error("ユーザー情報のうち編集不可能なものが読み込まれていません。")
+    get userInformation_uneditable():IRunnerUneditable|null{
         return this.userInfo_uneditable
     }
     /**@throw */

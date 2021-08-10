@@ -1,7 +1,6 @@
 import { IAppUsedToChangeState } from "../../../interface/AppInterfaces";
 import { PageStateBaseClass } from "../PageStateClass";
 import { EditorFormManager, InputFormObject } from "../../parts/SetNewRegulation/EditorFormManager";
-import { EditorTextPart } from "../../parts/SetNewRegulation/Editor/EditorTextPart";
 import { appendElement } from "../../../utility/aboutElement";
 import { DocViewerRequired } from "./Types";
 import { SettingRegulationStateHeader } from "../../parts/SetNewRegulation/SettingRegulationStateHeader";

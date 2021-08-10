@@ -1,100 +1,80 @@
-import { IRunner } from "../../../type/record/IRunner";
 import { IAppUsedToReadAndChangePage } from "../../interface/AppInterfaces";
-import { appendElement } from "../../utility/aboutElement";
-import { MenuView, RequiredObjectToGenerateItem } from "../parts/MenuView";
+import { appendElement, generateIcooonHTML, writeElement } from "../../utility/aboutElement";
 import { PageStateBaseClass } from "./PageStateClass";
 import { UserInformationBoard } from "../parts/UserInformationBoard";
+import { IGameModeItemWithoutCollections } from "../../../type/list/IGameModeItem";
+import { IGameSystemInfoWithoutCollections } from "../../../type/list/IGameSystemInfo";
+import { choiceString, selectAppropriateDescription } from "../../../utility/aboutLang";
+import { convertNumberIntoDateString } from "../../../utility/timeUtility";
+import { elementWithoutEscaping } from "../../../utility/ViewUtility";
 
-const context = {
-    menuHeader:{
-        Japanese:"メニュー",
-        English:"Menu"
-    }
-}
 
 export class S_UserPageInWhole
     extends PageStateBaseClass<{runnerID:string},IAppUsedToReadAndChangePage>{
+        
+    private listCache:Map<string,IGameSystemInfoWithoutCollections> = new Map<string,IGameSystemInfoWithoutCollections>();
     async init(){
         this.generateLoadingSpinner("people")
         
         const runnerInfo = (await this.app.accessToAPI("list_runner",{id:this.requiredObj.runnerID})).result
         new UserInformationBoard(appendElement(this.articleDOM,"div"),this.app.state.language,runnerInfo)
         
-        const menuDiv = new MenuView(appendElement(this.articleDOM,"div"),this.app.state.language,context.menuHeader,{displayDisabled:false});
-        for(const item of this.generateMenuItem(runnerInfo)) menuDiv.generateMenuItem(item);
         this.deleteLoadingSpinner();
-    }   
-    generateMenuItem(runnerInfo:IRunner):RequiredObjectToGenerateItem[]{
-        return [
-            {
-            title:{
-                Japanese:"ログアウト",
-                English:"Log out",
-                icon:"logout"
-            },
-            remarks:{
-                Japanese:runnerInfo.Japanese,
-                English:runnerInfo.English,
-                icon:"person"
-            },
-            description:{
-                Japanese: "サービスからログアウトします。",
-                English: "Click here to logout from this service."
-            },
-            isDisabled:(this.app.loginAdministratorReadOnly.loginUserID !== runnerInfo.id),
-            biggerTitle:true,
-            to:async () => { 
-                try{await this.app.logout();}catch(err){this.app.errorCatcher(err)}
-                this.app.transition("mainMenu",null)
-            }
-        },
-        {
-            title:{
-                Japanese:"ユーザー情報の設定",
-                English:"Setting user information",
-                icon:"gear"
-            },
-            description:{
-                Japanese: "ここで、自身の情報を設定することが出来ます。",
-                English: "You can edit your user information here."
-            },
-            isDisabled:(this.app.loginAdministratorReadOnly.loginUserID !== runnerInfo.id),
-            biggerTitle:true,
-            to:async () =>this.app.transition("settingUserInfo",null)
-        },{
-            
-                title:{
-                    Japanese:"ゲームモードリスト",
-                    English:"Gamemode List",
-                    icon:"list"
-                },
-                description:{
-                    Japanese: "ここで、走者が今まで活動してきたゲームモードを確認することが出来ます。",
-                    English: "You can see the list of gamemodes you have post records here."
-                },
-                isDisabled:false,
-                biggerTitle:true,
-                to:async () =>this.app.transition("gamemodeListOfPlayersPlayed",{runnersInfo:runnerInfo})
-            },{
-            title:{
-                Japanese:"通知",
-                English:"Notification",
-                icon:"notification"
-            },
-            remarks:{
-                Japanese:`<strong class="u-redChara">${(runnerInfo.numberOfUnreadNotification === 0) ? "":runnerInfo.numberOfUnreadNotification+"件の未読"}</strong>`,
-                English:`<strong class="u-redChara">${(runnerInfo.numberOfUnreadNotification === 0) ? "":runnerInfo.numberOfUnreadNotification+" unread notifications"}</strong>`,
-                icon:""
-            },
-            description:{
-                Japanese: "通知を確認することが出来ます。",
-                English: "You can check notifications from the service here."
-            },
-            isDisabled:(this.app.loginAdministratorReadOnly.loginUserID !== runnerInfo.id),
-            biggerTitle:true,
-            to:() => this.app.transition("notificationList",null)
+        this.generateLoadingSpinner("people")
+        const list = runnerInfo.idOfGameModeRunnerHavePlayed;
+        const gameModeListTitle = {
+            Japanese:`今まで記録を投稿したゲームモードの一覧`,
+            English:`The list of gamemodes where the runner has submit records`
         }
-        ]
+        const listElement = this.articleDOM.appendChild(elementWithoutEscaping`
+                <div id="articleTitle" class="u-width90per">
+                    <div class="c-title">
+                            <div class="c-title__main u-smallerChara">${choiceString(gameModeListTitle,this.app.state.language)}</div>
+                    </div>
+                    <hr noshade class="u-thin">
+                </div>
+        `) as HTMLElement;
+        for(const item of list){
+            const [gameSystem,gameMode] = item.id.split("/")
+            this.appendCard(listElement,await this.fetchGameSystemData(gameSystem),(await this.app.accessToAPI("list_gameMode",{gameSystemEnv:{gameSystemID:gameSystem},id:gameMode})).result);
+        }
+        this.deleteLoadingSpinner();
+    }  
+    private async fetchGameSystemData(id:string){
+        if (!this.listCache.has(id)) this.listCache.set(id,(await this.app.accessToAPI("list_gameSystem",{id:id})).result)
+        const result = this.listCache.get(id) 
+        if (result === undefined) throw new Error();
+        return result;
+    }
+    appendCard(container:HTMLElement,gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections){
+        const card = container.appendChild(elementWithoutEscaping`
+        <div class="c-list__item">
+            <div class = "c-title">
+                <div class = "c-title__main u-smallerChara">
+                    ${generateIcooonHTML(gameSystem)}${choiceString(gameSystem,this.app.state.language)}/${generateIcooonHTML(gameMode)}${choiceString(gameMode,this.app.state.language)}
+                </div>
+                
+            </div>
+            ${writeElement(selectAppropriateDescription(gameMode,this.app.state.language),"p")}
+            
+            <div class="c-stateInfo u-left-aligined-forFlex">
+                <div class = "c-stateInfo__unit">
+                    <div class ="c-iconWithDescription"> <i class="fas fa-list"></i> ${gameMode.recordsNumber} Records</div>
+                </div>
+                <div class = "c-stateInfo__unit">
+                    <div class ="c-iconWithDescription"> <i class="fas fa-running"></i> ${gameMode.runnersNumber} Runners</div>
+                </div>
+                <div class = "c-stateInfo__unit">
+                    <div class ="c-iconWithDescription"> <i class="fas fa-history"></i> ${convertNumberIntoDateString(gameMode.dateOfLatestPost)} </div>
+                </div>
+            </div>
+        </div>`) as HTMLElement
+
+        card.addEventListener("click",() =>{
+            this.app.changeTargetGameMode({gameSystem,gameMode})
+            this.app.transition("userPageInSpecific",{gameMode,gameSystem,runnerID:this.requiredObj.runnerID})
+        })
+        
     }
 }
 

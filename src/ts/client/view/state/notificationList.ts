@@ -21,7 +21,7 @@ export class S_NotificationList
             appendElement(this.articleDOM,"div"),
             choiceString(context.title,this.app.state.language),
             "",
-            "c-icooon u-background--cloud"
+            "c-icooon u-background--notification"
         )
         const ref = firebase.firestore().collection("runners").doc(this.app.loginAdministratorReadOnly.loginUserID).collection("notifications")
         this.notificationList = new NotificationList(appendElement(this.articleDOM,"div"),this.app.state.language,ref,{

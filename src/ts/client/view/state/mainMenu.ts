@@ -25,7 +25,7 @@ export class S_MainMenu
             <div>
                 <div class="p-KSSRsHeader">
                     <i class="__icon c-icooon u-background--kssrs"></i>
-                    <div class="__title">Welcome to ${ (gsed.gameSystem !== null && gsed.gameMode !== null) ? `KSSRs(${gsed.gameSystem.English}/${gsed.gameMode?.English}).`:"Kirby-Speed/Score-Recorders" }!</div>
+                    <div class="__title">${ (gsed.gameSystem !== null && gsed.gameMode !== null) ? `${gsed.gameSystem.English}/${gsed.gameMode?.English}:Top Menu`:"Welcome to Kirby-Speed/Score-Recorders!" }</div>
                 </div>
                 <hr noshade class="u-bold">
                 <div class="u-width90per">
@@ -40,24 +40,28 @@ export class S_MainMenu
             </div>
             `) as HTMLElement;
 
-            const menuGenerators:[MultiLanguageString,()=>RequiredObjectToGenerateItem[]][] = [
+            const menuGenerators:[MultiLanguageString,RequiredObjectToGenerateItem[]][] = [
+                [
+                    {Japanese:"",English:""},
+                    this.generateModeChangeInfo()
+                ],
                 [{
                     Japanese:"メインメニュー",
                     English:"Main menu"
-                }, () => this.generateMainMenuInfo()],
+                }, this.generateMainMenuInfo()],
                 [{
                     Japanese:"設定",
                     English:"Settings"
-                },() => this.generateSettingMenuInfo()],
+                },this.generateSettingMenuInfo()],
                 [{
                     Japanese:"その他",
                     English:"etc"
-                },() => this.generateDetailMenuInfo()]
+                },this.generateDetailMenuInfo()]
             ]
             for(const generator of menuGenerators){
                 const mainMenu = new MenuView(appendElement(main,"div"),this.app.state.language,generator[0])
                 
-                generator[1]().map((info) => mainMenu.generateMenuItem(info));
+                generator[1].map((info) => mainMenu.generateMenuItem(info));
                 main.appendChild(element`<div class="u-space3em"></div>`)
             }
 
@@ -66,7 +70,54 @@ export class S_MainMenu
             this.deleteLoadingSpinner();
         }
 
-
+        generateModeChangeInfo(){
+            const asg = this.app.state.gameSystemEnvDisplayed;
+            const isSetTargetGameMode = asg.gameSystem!==null && asg.gameMode!==null
+            const targetGameMode = {
+                ja:(isSetTargetGameMode) ? `${asg.gameSystem?.Japanese} / ${asg.gameMode?.Japanese}`:`未設定`,
+                en:(isSetTargetGameMode) ? `${asg.gameSystem?.English} / ${asg.gameMode?.English}`:`未設定`
+            }
+            return [(isSetTargetGameMode) ? {
+                title:{
+                    Japanese:"KSSRs全体に戻る",
+                    English:"return to the Whole of KSSRs",
+                    icon:"star"
+                },
+                remarks:{
+                    Japanese:targetGameMode.ja,
+                    English:targetGameMode.en,
+                    icon:"ds"
+                },
+                description:{
+                    Japanese:"閲覧するゲームタイトルとゲームモードの設定を外します。",
+                    English: "Unset the target gamemode."
+                },
+                isDisabled:false,
+                biggerTitle:false,
+                to:() => {
+                    this.app.changeTargetGameMode(null)
+                    this.app.transition("mainMenu",null)
+                }
+            } : {
+                title:{
+                    Japanese:"ゲームタイトル/モードの設定",
+                    English:"Set Target Title/Mode",
+                    icon:"star"
+                },
+                remarks:{
+                    Japanese:targetGameMode.ja,
+                    English:targetGameMode.en,
+                    icon:"ds"
+                },
+                description:{
+                    Japanese:"ここで閲覧したいゲームタイトルとゲームモードを予め設定します。",
+                    English: "Set your <strong>target gamemode</strong> to look records."
+                },
+                isDisabled:false,
+                biggerTitle:false,
+                to:() => this.app.transition("gameSystemSelector",null)
+            }]
+        }
 
         generateMainMenuInfo():RequiredObjectToGenerateItem[]{
            const asg = this.app.state.gameSystemEnvDisplayed;
@@ -141,13 +192,10 @@ export class S_MainMenu
             
            const asg = this.app.state.gameSystemEnvDisplayed;
            const isSetTargetGameMode = asg.gameSystem!==null && asg.gameMode!==null
-           const runnerInfo = (this.app.loginAdministratorReadOnly.isUserLogin) ? this.app.loginAdministratorReadOnly.userInformation: undefined;
+           const runnerInfo = (this.app.loginAdministratorReadOnly.isUserLogin) ? {...this.app.loginAdministratorReadOnly.userInformation,...this.app.loginAdministratorReadOnly.userInformation_uneditable}: undefined;
             const isLogIn = this.app.loginAdministratorReadOnly.isUserLogin;
             const userName = (isLogIn) ? this.app.loginAdministratorReadOnly.loginUserName:"";
-            const targetGameMode = {
-                ja:(isSetTargetGameMode) ? `${asg.gameSystem?.Japanese} / ${asg.gameMode?.Japanese}`:`未設定`,
-                en:(isSetTargetGameMode) ? `${asg.gameSystem?.English} / ${asg.gameMode?.English}`:`未設定`
-            }
+            
              return [{
                 title:{
                     Japanese:(isLogIn) ?  "ログアウト":"サインイン / ログイン",
@@ -167,24 +215,20 @@ export class S_MainMenu
                 to:() => {
                     (isLogIn) ? this.app.logout():this.app.login()
                 }
-            },{
+            },
+            {
                 title:{
-                    Japanese:"ゲームタイトル/モードの設定",
-                    English:"Set Target Title/Mode",
-                    icon:"star"
-                },
-                remarks:{
-                    Japanese:targetGameMode.ja,
-                    English:targetGameMode.en,
-                    icon:"ds"
+                    Japanese:"ユーザー情報の設定",
+                    English:"Setting user information",
+                    icon:"list"
                 },
                 description:{
-                    Japanese:"ここであなたが閲覧/投稿しようとしている記録が取得されたゲームタイトルとゲームモードを予め設定します。",
-                    English: "Set your <strong>target gamemode</strong> to look records."
+                    Japanese: "ここで、自身の情報を設定することが出来ます。",
+                    English: "You can edit your user information here."
                 },
-                isDisabled:false,
+                isDisabled: !this.app.loginAdministratorReadOnly.isUserLogin,
                 biggerTitle:false,
-                to:() => this.app.transition("gameSystemSelector",null)
+                to:async () =>this.app.transition("settingUserInfo",null)
             },{
                 title:{
                     Japanese:"通知",
@@ -212,29 +256,6 @@ export class S_MainMenu
 
           return [{
             title:{
-                Japanese:"未承認の記録",
-                English:"Unverified Records",
-                icon:"notebook"
-            },
-            description:{
-                Japanese:(() => {
-                    if (!isSetTargetGameMode) return "<strong>閲覧するゲームタイトル/モードを設定してください。</strong>"
-                    return "まだ認証されていない記録を見ることが出来ます。"
-                })(),
-                English:(() => {
-                    if (!isSetTargetGameMode) return "<strong>Setting your target gamemode is indispensable to submit your record.</strong>"
-                    return "You can see unverified records here."
-                })()
-            },
-            isDisabled:!(isSetTargetGameMode && this.app.loginAdministratorReadOnly.isUserLogin && this.app.loginAdministratorReadOnly.userInformation_uneditable.isCommitteeMember),
-            biggerTitle:false,
-            to:(this.app.loginAdministratorReadOnly.isUserLogin) ? () => {
-                if (!StateAdministrator.checkGameSystemEnvIsSet(this.app.state.gameSystemEnvDisplayed)) return
-                this.app.transition("unverifiedRecord",this.app.state.gameSystemEnvDisplayed)
-            }:undefined
-
-        },{
-            title:{
                 Japanese:"新ゲームタイトル/ゲームモードの制定申請",
                 English:"Setting New Titles/Gamemodes",
                 icon:"feather"
@@ -243,9 +264,10 @@ export class S_MainMenu
                 Japanese:"取り扱うゲームタイトルとゲームモードを増やすことができます。",
                 English:"Setting these enables KSSRs to cover more titles/gamemodes."
             },
-            isDisabled:!this.app.loginAdministratorReadOnly.isUserLogin,
+            isDisabled:!this.app.loginAdministratorReadOnly.isUserLogin || !this.app.loginAdministratorReadOnly.userInformation_uneditable?.isCommitteeMember,
             to:() => {this.app.transition("settingNewRegulation_CollectionViewer",null,{ifAppendHistory:false})},
             biggerTitle:false,
+            isUnused: !this.app.loginAdministratorReadOnly.userInformation_uneditable?.isCommitteeMember
         },{
             title:{
                 Japanese:"利用規約",

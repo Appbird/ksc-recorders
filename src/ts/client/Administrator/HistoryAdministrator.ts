@@ -1,11 +1,14 @@
 import { PageStates, RequiredObjectType } from "../view/state/PageStates";
-import {  IAppUsedToReadAndChangeOnlyPageState } from "../interface/AppInterfaces";
+import {  IAppUsedToReadAndChangePage } from "../interface/AppInterfaces";
 import { TargetGameMode } from "./StateAdminister";
+import { URLAdministrator } from "./URLAdministrator";
 export class HistoryAdministrator{
-    private app:IAppUsedToReadAndChangeOnlyPageState;
+    private app:IAppUsedToReadAndChangePage;
+    private urlAd:URLAdministrator
     private transitionPile:TransitionItem<keyof PageStates>[] = [];
-    constructor(app:IAppUsedToReadAndChangeOnlyPageState){
+    constructor(app:IAppUsedToReadAndChangePage){
         this.app = app;
+        this.urlAd = new URLAdministrator(app)
         window.addEventListener('popstate', (e) => {
             this.back();
         });
@@ -15,6 +18,7 @@ export class HistoryAdministrator{
             pageState:this.app.state.state,
             requiredObject:this.app.state.requiredObj
         })
+        
     }
 
     registerCurrentPage(){
@@ -23,7 +27,8 @@ export class HistoryAdministrator{
             requiredObject:this.app.state.requiredObj
         }))
         
-        history.pushState(null,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/app?state=${this.app.state.state}`)
+        history.pushState(null,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/`)
+        
         console.info(`[KSSRs::HistoryAdministrator::PreviousPage] register current page: ${this.app.state.state} page.`)
     }
     registerCurrentTargetGamemode(){
@@ -36,11 +41,15 @@ export class HistoryAdministrator{
         if (past === undefined) return;
         this.app.transition(past.pageState,past.requiredObject,{ifAppendHistory:false})
     }
-    getPreviousPageData():TransitionItem<keyof PageStates>|null{
+    getPreviousPageData():TransitionItem<keyof PageStates>|"redirect"|null{
         const str = localStorage.getItem("KSSRs::HistoryAdministrator::PreviousPage")
         if (str === null) return null;
         try {
             const result = JSON.parse(str)
+            if (this.urlAd.redirect()){
+                console.info(`[KSSRs::HistoryAdministrator::PreviousPage] Redirect`)
+                return "redirect";
+            }
             if (!(result.hasOwnProperty("pageState") && typeof result.pageState === "string" && result.hasOwnProperty("requiredObject"))) throw new Error()
             return result;
         } catch(err) {
@@ -54,6 +63,7 @@ export class HistoryAdministrator{
         if (str === null) return null;
         try {
             const result = JSON.parse(str)
+            if (result.gameSystem === null || result.gameMode === null) return null
             return result;
         } catch(err) {
             localStorage.removeItem("KSSRs::HistoryAdministrator::TargetMode");

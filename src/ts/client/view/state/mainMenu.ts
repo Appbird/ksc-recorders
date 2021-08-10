@@ -320,22 +320,21 @@ export class S_MainMenu
             },
             isDisabled:false,
             biggerTitle:false,
-            //#TODO ここをクレジット用に設定する。GitHubのリンクにするのもアリか？
             to:() => {this.app.transition("termOfUse",null)}
         },{
             title:{
-                Japanese:"Source",
+                Japanese: "GitHub",
                 English:"Source",
                 icon:"writing"
             },
             description:{
-                Japanese:"KSSRsを開発するにあたって、使用したツール、ライブラリやソースコードをGitHubにリポジトリとして示しています。",
-                English:"Frameworks which I use for developing KSSRs and the source code are written in this GitHub page."
+                Japanese:"KSSRsを開発するにあたって、使用したツール、ライブラリやソースコードをGitHubにリポジトリとしてまとめています。",
+                English:"this GitHub repository of KSSRs (Japanese)"
             },
             isDisabled:false,
             biggerTitle:false,
-            //#TODO ここをクレジット用に設定する。GitHubのリンクにするのもアリか？
-            to:() => window.open("")
+            //#CTODO ここをクレジット用に設定する。GitHubのリンクにするのもアリか？
+            to:() => window.open("https://github.com/Appbird/kss-recorders")
         }]
  }
 }

@@ -49,6 +49,7 @@ exports.app = functions.https.onRequest(app);
 
 console.log(`[${new Date().toLocaleString()}] Loading API ends.`)
 
+
 function errorCatcher(key:string,type:"failed"|"rejected"|"",error:any){
     console.log(`\u001b[31m[${new Date().toLocaleString()} / ${type}] failed to execute /api${key}\u001b[0m\n`)
     if (!(error instanceof Error)){

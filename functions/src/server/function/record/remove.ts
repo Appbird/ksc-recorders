@@ -2,7 +2,7 @@ import { APIFunctions } from "../../../../../src/ts/type/api/relation";
 import { RecordDataBase } from "../../firestore/RecordDataBase";
 import { ControllerOfTableForResolvingID } from "../../recordConverter/ControllerOfTableForResolvingID";
 import { authentication } from "../foundation/auth";
-import { Notificator } from "../webhooks/Notificator";
+import { Notifier } from "../webhooks/Notificator";
 
 //#CH ユーザーの権限認証をこの関数から分離したい、APIList側にそういうチェック関数を持たせられないか？
 export async function remove(recordDataBase:RecordDataBase,input:APIFunctions["record_delete"]["atServer"]):Promise<APIFunctions["record_delete"]["atClient"]>{
@@ -17,7 +17,7 @@ export async function remove(recordDataBase:RecordDataBase,input:APIFunctions["r
         input.gameSystemEnv.gameModeID,
         input.recordID
     );
-    const discord = new Notificator(recordDataBase);
+    const discord = new Notifier(recordDataBase);
     
     await discord.sendRecordRemovedMessage(recordDataBase,uid,deleted,resolvedRecord,input.reason);
     return {

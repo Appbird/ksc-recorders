@@ -71,8 +71,10 @@ export class S_MainMenu
                 <div class="u-width90per">
                 ${context.description[1]}
                 </div>
+                
             </div>
             `) as HTMLElement;
+            
         }
         generateMainMenuDescriptionWithTargetMode(){
             const gsed = this.app.state.gameSystemEnvDisplayed
@@ -295,6 +297,20 @@ export class S_MainMenu
             
 
           return [{
+            title:{
+                Japanese:"Discordサーバー",
+                English:"Discord Server",
+                icon:"game"
+            },
+            description:{
+                Japanese:"Discordサーバーで質問したり、新しい記録を確認したりすることが出来ます。",
+                English: "You can ask your question and check a new record on this Discord server."
+            },
+            isDisabled:false,
+            to:() => window.open("https://discord.gg/S7u9Cc5vnR"),
+            biggerTitle:false,
+            isUnused:false,
+        },{
             title:{
                 Japanese:"新ゲームタイトル/ゲームモードの制定申請",
                 English:"Setting New Titles/Gamemodes",

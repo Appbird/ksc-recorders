@@ -1,18 +1,18 @@
 import { IRecord, IRecordResolved } from "../../../../../src/ts/type/record/IRecord";
 import { converseMiliSecondsIntoTime } from "../../../../../src/ts/utility/timeUtility";
 import { RecordDataBase } from "../../firestore/RecordDataBase";
-import {webhookURL} from "./secret.json"
+import {webhookURL} from "../../secret.json"
 import fetch from "node-fetch";
 import { ScoreType } from "../../../../../src/ts/type/list/IGameModeItem";
 //#NOTE これの実行には{webhookURL:string}型のオブジェクトが記述されたjsonファイルを書き込んでおく必要がある。
 //#CTODO こいつがちゃんと投稿されるか確認する。
-export class Notificator{
+export class Notifier{
     private readonly host:string = "http://localhost:5000"
     private readonly recordDatabase:RecordDataBase
     constructor(recordDatabase:RecordDataBase){
         this.recordDatabase = recordDatabase;
     }
-    private async sendMesssageToDiscord({content,record,colorcode,userIconURL,scoreType}
+    private async sendMesssageToDiscord(type:"submit"|"verify"|"add"|"delete",{content,record,colorcode,userIconURL,scoreType}
         :{  content:string,
             record:IRecordResolved,
             userIconURL:string, scoreType:ScoreType,
@@ -20,7 +20,7 @@ export class Notificator{
         }){
             const rr = record.regulation
             const rrg = rr.gameSystemEnvironment
-            await fetch(webhookURL,{
+            await fetch(webhookURL[type],{
                 method:"POST",
                 headers:{
                     "Content-Type":"application/json"
@@ -63,8 +63,8 @@ export class Notificator{
         const gameSystem = await this.recordDatabase.getGameSystemInfo(rrg.gameSystemID)
         const userIconURL = (await this.recordDatabase.getRunnerInfo(record.runnerID)).photoURL;
         const gameMode = await this.recordDatabase.getGameModeInfo(rrg.gameSystemID,rrg.gameModeID)
-        this.sendMesssageToDiscord({
-            content: `:mailbox_with_mail: New Submission! @${gameSystem.English}/${gameMode.English}`,
+        this.sendMesssageToDiscord("submit",{
+            content: `:mailbox_with_mail: New Submission! @[${gameSystem.English}/${gameMode.English}]`,
             colorcode: 5620992,
             record: record,
             userIconURL: userIconURL,
@@ -94,8 +94,8 @@ export class Notificator{
                 }
             })
         }
-        await this.sendMesssageToDiscord({
-            content: `:closed_book: ${(recordResolved.moderatorIDs.length === 0) ? "Offer" : "Record"} is Deleted By ${deletedBy} @${gameSystem.English}/${gameMode.English}\n\nThe following JSON string is the data of the deleted Record.\`\`\`${JSON.stringify(record)}\`\`\`` + ((reason.length !== 0) ? `\n\n**reason:**\n\n ${reason}\n\n` : ""),
+        await this.sendMesssageToDiscord("delete",{
+            content: `:closed_book: ${(recordResolved.moderatorIDs.length === 0) ? "Offer" : "Record"} is Deleted By ${deletedBy} @[${gameSystem.English}/${gameMode.English}]\n\nThe following JSON string is the data of the deleted Record.\`\`\`${JSON.stringify(record)}\`\`\`` + ((reason.length !== 0) ? `\n\n**reason:**\n\n ${reason}\n\n` : ""),
             colorcode: 5620992,
             record: recordResolved,
             scoreType: gameMode.scoreType,userIconURL:userIconURL
@@ -125,8 +125,8 @@ export class Notificator{
             })
         }
 
-        await this.sendMesssageToDiscord({
-            content: `:closed_book: Record is Modified By ${modifiedBy} @${gameSystem.English}/${gameMode.English}`+ (reason.length !== 0) ? `\n\n**Reason:**\n\n ${reason}\n\n` : "",
+        await this.sendMesssageToDiscord("submit",{
+            content: `:closed_book: Record is Modified By ${modifiedBy} @[${gameSystem.English}/${gameMode.English}]`+ (reason.length !== 0) ? `\n\n**Reason:**\n\n ${reason}\n\n` : "",
             colorcode: 5620992,
             record: recordResolved,
             scoreType: gameMode.scoreType,userIconURL:userIconURL
@@ -154,8 +154,8 @@ export class Notificator{
                 }
             })
         }
-        await this.sendMesssageToDiscord({
-            content: `:mailbox_with_mail: Record ${record.id} (from ${record.runnerName}) in @${gameSystem.English}/${gameMode.English} is verified by ${moderatorName}.`,
+        await this.sendMesssageToDiscord("verify",{
+            content: `:mailbox_with_mail: Record ${record.id} (from ${record.runnerName}) in @[${gameSystem.English}/${gameMode.English}] is verified by ${moderatorName}.`,
             colorcode: 5620992,
             record: record,
             scoreType: gameMode.scoreType,userIconURL:userIconURL

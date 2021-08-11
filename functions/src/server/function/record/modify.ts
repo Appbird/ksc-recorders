@@ -3,7 +3,7 @@ import { IRecordWithoutID } from "../../../../../src/ts/type/record/IRecord";
 import { RecordDataBase } from "../../firestore/RecordDataBase";
 import { ControllerOfTableForResolvingID } from "../../recordConverter/ControllerOfTableForResolvingID";
 import { authentication } from "../foundation/auth";
-import { Notificator } from "../webhooks/Notificator";
+import { Notifier } from "../webhooks/Notificator";
 import { convertTagNameToTagID } from "./convertTagNameToTagID";
 
 export async function modify(recordDataBase:RecordDataBase,input:APIFunctions["record_modify"]["atServer"]):Promise<APIFunctions["record_write"]["atClient"]>{
@@ -34,7 +34,7 @@ export async function modify(recordDataBase:RecordDataBase,input:APIFunctions["r
     
     const recordResolved = await cotfr.convertRecordIntoRecordResolved(record,input.language);
     
-    const discord = new Notificator(recordDataBase);
+    const discord = new Notifier(recordDataBase);
     await discord.sendRecordModifiedMessage(recordDataBase,modifier,(input.language === "English") ? recordResolved:await cotfr.convertRecordIntoRecordResolved(record,"English"),input.reason)
     return {
         isSucceeded:true,

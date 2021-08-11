@@ -78,11 +78,14 @@
                         "Japanese":"<strong>この作品Kirby-Speed/Score-Recordersは、星のカービィシリーズの非公式の二次創作であり、HAL研究所,任天堂とは一切関係ありません。</strong>",
                         "English":"<strong>This site is a fan-made website that has no relation with HAL Laboratory and Nintendo Co.</strong>"
                     },{
-                        "Japanese":"不明点や疑問点等ありましたら、お手数ですが、Discordのサーバーにまでご連絡お願い致します。",
+                        "Japanese":"不明点や疑問点等ありましたら、お手数ですが、Discordのサーバー,Twitterにまでご連絡お願い致します。",
                         "English": "If you have any problems with using KSSRs, please contact us on Discord Server."
                     },{
-                        "Japanese":"<strong>Discord: </strong><a href=\"\" class=\"u-underline u-bolderChara\">なんかのURL</a>",
-                        "English": "<strong>Discord: </strong><a href=\"\" class=\"u-underline u-bolderChara\">なんかのURL</a>"
+                        "Japanese":"<strong>[Discord] </strong><a href=\"https://discord.gg/S7u9Cc5vnR\" class=\"u-underline u-bolderChara\">https://discord.gg/S7u9Cc5vnR</a>",
+                        "English": "<strong>[Discord] </strong><a href=\"https://discord.gg/S7u9Cc5vnR\" class=\"u-underline u-bolderChara\">https://discord.gg/S7u9Cc5vnR</a>"
+                    },{
+                        "Japanese":"<strong>[Twitter] </strong><a href=\"https://twitter.com/projectappbird\" class=\"u-underline u-bolderChara\">https://twitter.com/projectappbird</a> @projectappbird",
+                        "English": "<strong>[Twitter] </strong><a href=\"https://twitter.com/projectappbird\" class=\"u-underline u-bolderChara\">https://twitter.com/projectappbird</a> @projectappbird"
                     }
                 ]
             },{

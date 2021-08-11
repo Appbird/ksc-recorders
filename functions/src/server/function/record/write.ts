@@ -3,7 +3,7 @@ import { IRecordWithoutID } from "../../../../../src/ts/type/record/IRecord";
 import { RecordDataBase } from "../../firestore/RecordDataBase";
 import { ControllerOfTableForResolvingID } from "../../recordConverter/ControllerOfTableForResolvingID";
 import { authentication } from "../foundation/auth";
-import { Notificator } from "../webhooks/Notificator";
+import { Notifier } from "../webhooks/Notificator";
 import { convertTagNameToTagID } from "./convertTagNameToTagID";
 
 export async function write(recordDataBase:RecordDataBase,input:APIFunctions["record_write"]["atServer"]):Promise<APIFunctions["record_write"]["atClient"]>{
@@ -22,7 +22,7 @@ export async function write(recordDataBase:RecordDataBase,input:APIFunctions["re
     const cotfr = new ControllerOfTableForResolvingID(recordDataBase);
     const resolvedRecord = await cotfr.convertRecordIntoRecordResolved(record,input.language)
 
-    const discord = new Notificator(recordDataBase);
+    const discord = new Notifier(recordDataBase);
     await discord.sendRecordRegisteredMessage(resolvedRecord);
     return {
         isSucceeded:true,

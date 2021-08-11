@@ -929,6 +929,11 @@ article h1:not(.u-noUnderline):after {
   background-size: cover;
 }
 
+.u-background--game {
+  background: url("../icon/IcooonMono/game.svg");
+  background-size: cover;
+}
+
 .u-background--kssrs {
   background: url("../icon/icon.png");
   background-size: cover;

@@ -1,14 +1,20 @@
 # Kirby-Speed/Score-Recorders
+
 Kirby-Speed/Score-Recorders(KSSRs)はカービィシリーズのゲームのタイム/スコアを集積するTA/RTAプラットフォームです。ボスやステージごとの記録集積に特化しています。
+
 **当サイト『Kirby-Speed/Score-Recorders』(以後KSSRsと呼称)は、星のカービィシリーズ非公式の二次創作であり、HAL研究所・任天堂とは一切関係ありません。**
-**不明点や疑問点等ありましたら、お手数ですがDiscordのサーバーまでご連絡お願い致します。**
+
+**不明点や疑問点等ありましたら、お手数ですがDiscordのサーバーやTwitterまでご連絡お願い致します。**
 
 Kirby-Speed/Score-Recorders(KSSRs) is the page that provides scoreboards about the games of the Kirby series, which specializes in recording time/score specific for each Boss and Stage.
-**This site is a fan-made website that has no relation with HAL Laboratory and Nintendo Co.**
-**If you have any problems about using KSSRs, please contact us on Discord Server.**
 
-[ Discord Server ]
-[ 作成者 / Creators ] Appbird (Twitter:@projectappbird)
+**This site is a fan-made website that has no relation with HAL Laboratory and Nintendo Co.**
+
+**If you have any problems about using KSSRs, please contact us(me) on the Discord Server or Twitter.**
+
+[ Discord Server ] https://discord.gg/S7u9Cc5vnR
+
+[ 作成者 / Creators ] Appbird (Twitter: @projectappbird)
 
 # 利用したもの Library / Frameworks
 - Twitter widget.js

@@ -58,8 +58,9 @@ export class S_OfferForm
                 this.deleteLoadingSpinner();
                 
                 this.app.notie.successAlert({Japanese:"記録の登録に成功しました！",English:"Registering Record is Completed Successfully!"})
+                const rrg = detailRecord.regulation.gameSystemEnvironment
                 
-                await this.app.transition("detailView",{recordResolved:detailRecord});
+                await this.app.transition("detailView",{gameSystemEnv:{gameSystemID:rrg.gameSystemID,gameModeID:rrg.gameModeID},id:detailRecord.id,lang:this.app.state.language});
                 
             } catch(error){
                 this.app.errorCatcher(error,"記録の登録に失敗しました。")

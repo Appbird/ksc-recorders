@@ -3,7 +3,7 @@
 import {inspect} from 'util';
 import Ajv = require('ajv');
 import {IReceivedDataAtServer_getlist_UseSIdMIdId} from './IReceivedDataAtServer_getlist_UseSIdMIdId';
-export const ajv = new Ajv({"allErrors":true,"coerceTypes":false,"format":"fast","nullable":true,"unicode":true,"uniqueItems":true,"useDefaults":false});
+export const ajv = new Ajv({"allErrors":true,"coerceTypes":false,"useDefaults":false});
 
 ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'));
 

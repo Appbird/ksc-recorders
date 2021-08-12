@@ -18,6 +18,9 @@
       {
         "source": "/api/**",
         "function": "app"
+      },{
+        "source": "/ogpDetailView",
+        "function": "ogp"
       }
     ]
   }

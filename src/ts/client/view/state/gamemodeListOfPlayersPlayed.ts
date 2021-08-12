@@ -47,7 +47,7 @@ export class S_GamemodeListOfPlayersPlayed extends PageStateBaseClass<{runnersIn
                 </div>
                 
             </div>
-            ${writeElement(selectAppropriateDescription(gameMode,this.app.state.language),"p")}
+            ${writeElement(selectAppropriateDescription(gameMode,this.app.state.language),"p","u-marginLeftRight2em")}
             
             <div class="c-stateInfo u-left-aligined-forFlex">
                 <div class = "c-stateInfo__unit">

@@ -48,17 +48,14 @@ const context = {
     }
 }
 export class S_DetailViewer
-    extends PageStateBaseClass<APIFunctions["record_detail"]["atServer"]|{recordResolved:IRecordResolved},IAppUsedToChangeState>{
+    extends PageStateBaseClass<APIFunctions["record_detail"]["atServer"],IAppUsedToChangeState>{
         async init(){
             this.generateLoadingSpinner()
             const notice = new NoticeView(appendElement(this.articleDOM,"div"),"detailView","portableURL",context.notice,this.app.state.language) 
             const operationDiv = this.articleDOM.appendChild(createElementWithIdAndClass({ id: "operation" }));
             const detailDiv = this.articleDOM.appendChild(createElementWithIdAndClass({ id: "detail" }));
             const relatedRecordDiv = this.articleDOM.appendChild(createElementWithIdAndClass({ id: "related" }));
-            let record:IRecordResolved;
-            if (((value:unknown):value is {recordResolved:IRecordResolved} => this.requiredObj.hasOwnProperty("recordResolved"))(this.requiredObj))
-                record = this.requiredObj.recordResolved;
-            else record = (await this.app.accessToAPI("record_detail",this.requiredObj)).result;
+            const record:IRecordResolved = (await this.app.accessToAPI("record_detail",this.requiredObj)).result;
             
             const rrg = record.regulation.gameSystemEnvironment;
             const rr = record.regulation;
@@ -147,7 +144,7 @@ export class S_DetailViewer
             }])
         }
         private moveToModifyRecord(record:IRecord,gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections){
-            if(!StateAdministrator.checkGameSystemEnvIsSet({gameMode,gameSystem})) return;
+            this.app.changeTargetGameMode({gameMode,gameSystem})
             this.app.transition("modifyRecordForm",{targetGameMode:{gameMode,gameSystem},id:record.id})
 
         }

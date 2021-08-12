@@ -103,17 +103,19 @@ export class OfferFormView implements IView {
         this.container.appendChild(createElementWithIdAndClass({className:"u-space3em"}))
         
         this.setTargetChoices().then( () => {
-            if (defaultRecord !== undefined) this.loadDefaultRecord(defaultRecord);
+            if (defaultRecord !== undefined) return this.loadDefaultRecord(defaultRecord);
         })
         
     }
-    private loadDefaultRecord(record:IRecord){
+    private async loadDefaultRecord(record:IRecord){
         const rr = record.regulation;
         const rrg = rr.gameSystemEnvironment;
         this.URLInput.value = record.link[0];
         this.scoreInput.value = (this.app.state.scoreType === "time") ? converseMiliSecondsIntoTime(record.score):record.score.toString();
         this.difficultyChoices.setSelected(rrg.gameDifficultyID)
         this.abilityChoices.setSelected(rr.abilityIDs)
+
+        await this.setTargetChoices()
         this.targetChoices.setSelected(rr.targetID)
         this.tagInput.valueAsArray = record.tagName,
         this.simpleMDE.value(record.note)

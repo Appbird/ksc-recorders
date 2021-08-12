@@ -7,6 +7,7 @@ import { authentication } from "./server/function/foundation/auth";
 import { IReceivedDataAtServerNeedAuthentication } from "../../src/ts/type/api/transmissionBase";
 import { checkPrivilege } from "./checkPrivilege";
 import { errorCatcher } from "./errorCatcher";
+import { generateOGP } from "./ogp";
 
 const app = express();
 app.use(express.json())
@@ -46,4 +47,20 @@ apiList.forEach( (value,key) => {
 
 exports.app = functions.https.onRequest(app);
 
-
+exports.ogp = functions.https.onRequest(async (request,response) => {
+    response.set("Cache-Control", "public, max-age=600, s-maxage=600");
+    const url = new URL(request.url, `http://${request.headers.host}`);
+    const gs = url.searchParams.get("gs")
+    const gm = url.searchParams.get("gm")
+    const id = url.searchParams.get("id")
+    if (gs === null||gm=== null||id===null) {
+        response.status(404).send(`404 Not Found`)
+        return;
+    }
+    try {
+        const result = await generateOGP(recordDataBase,gs,gm,id)
+        response.status(200).send(result)
+    } catch(err){
+        response.status(500).send(`500 ${err.message}`)
+    }
+})

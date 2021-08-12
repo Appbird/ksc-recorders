@@ -7,7 +7,7 @@ import { ScoreType } from "../../../../../src/ts/type/list/IGameModeItem";
 //#NOTE これの実行には{webhookURL:string}型のオブジェクトが記述されたjsonファイルを書き込んでおく必要がある。
 //#CTODO こいつがちゃんと投稿されるか確認する。
 export class Notifier{
-    private readonly host:string = "http://localhost:5000"
+    private readonly host:string = "https://kss-recorders.web.app"
     private readonly recordDatabase:RecordDataBase
     constructor(recordDatabase:RecordDataBase){
         this.recordDatabase = recordDatabase;
@@ -20,42 +20,17 @@ export class Notifier{
         }){
             const rr = record.regulation
             const rrg = rr.gameSystemEnvironment
-            await fetch(webhookURL[type],{
+            await fetch(webhookURL[type],
+                {
                 method:"POST",
                 headers:{
                     "Content-Type":"application/json"
                 },
                 body:JSON.stringify({
-                    color: colorcode,
-                    content: content,
-                    embeds:{
-                        title: `KSSRs/${rrg.gameSystemName}/${rrg.gameModeName}/${rr.targetName}`,
-                        url: `${this.host}/record/${rrg.gameSystemID}/${rrg.gameModeID}/${record.id}`,
-                        author:{
-                            name:record.runnerName,
-                            url:`${this.host}/user/${record.runnerID}`,
-                            icon_url:userIconURL
-                        },
-                        footer:{
-                            text:"Kirby-Speed/Score-Recorders",
-                            url:this.host
-                        },
-                        field:[{
-                            name:`:star: Ability`,
-                            value:rr.abilityNames.join(`,`)
-                        },
-                        {
-                            name:`:flag_white: Target`,
-                            value: rr.targetName
-                            
-                        },{
-                            name:`:clock3: ${scoreType === "time" ? "Time" : "Score"}`,
-                            value: scoreType === "time" ? converseMiliSecondsIntoTime(record.score) : record.score
-                        }]
-                    },
-                    
-                })
+                    "content": `${content}\n\n> ${
+                        (scoreType === "time") ? converseMiliSecondsIntoTime(record.score):record.score} : ${record.regulation.abilityNames.join(",")} vs. ${record.regulation.targetName}\n${this.host}/?state=detailView&gs=${rrg.gameSystemID}&gm=${rrg.gameModeID}&id=${record.id}`
             })
+        })
     }
     async sendRecordRegisteredMessage(record:IRecordResolved){
         const rr = record.regulation
@@ -64,7 +39,7 @@ export class Notifier{
         const userIconURL = (await this.recordDatabase.getRunnerInfo(record.runnerID)).photoURL;
         const gameMode = await this.recordDatabase.getGameModeInfo(rrg.gameSystemID,rrg.gameModeID)
         this.sendMesssageToDiscord("submit",{
-            content: `:mailbox_with_mail: New Submission! @[${gameSystem.English}/${gameMode.English}]`,
+            content: `:mailbox_with_mail: **New Submission(${record.id}) by ${record.runnerName}!** \n@${gameSystem.English}/${gameMode.English}`,
             colorcode: 5620992,
             record: record,
             userIconURL: userIconURL,
@@ -95,7 +70,7 @@ export class Notifier{
             })
         }
         await this.sendMesssageToDiscord("delete",{
-            content: `:closed_book: ${(recordResolved.moderatorIDs.length === 0) ? "Offer" : "Record"} is Deleted By ${deletedBy} @[${gameSystem.English}/${gameMode.English}]\n\nThe following JSON string is the data of the deleted Record.\`\`\`${JSON.stringify(record)}\`\`\`` + ((reason.length !== 0) ? `\n\n**reason:**\n\n ${reason}\n\n` : ""),
+            content: `:closed_book: ${(recordResolved.moderatorIDs.length === 0) ? "Offer" : "Record"}(**${record.id}**) is **Deleted By ${deletedBy}** \n@${gameSystem.English}/${gameMode.English}\n\nThe following JSON string is the data of the deleted Record.\`\`\`${JSON.stringify(record)}\`\`\`` + ((reason.length !== 0) ? `\n**reason:**\n ${reason}` : ""),
             colorcode: 5620992,
             record: recordResolved,
             scoreType: gameMode.scoreType,userIconURL:userIconURL
@@ -126,7 +101,7 @@ export class Notifier{
         }
 
         await this.sendMesssageToDiscord("submit",{
-            content: `:closed_book: Record is Modified By ${modifiedBy} @[${gameSystem.English}/${gameMode.English}]`+ (reason.length !== 0) ? `\n\n**Reason:**\n\n ${reason}\n\n` : "",
+            content: `:closed_book: Record(**${recordResolved.id}**) is **Modified By ${modifiedBy}** \n@${gameSystem.English}/${gameMode.English}`+ ((reason.length !== 0) ? `\n\n**Reason:**\n ${reason}` : ""),
             colorcode: 5620992,
             record: recordResolved,
             scoreType: gameMode.scoreType,userIconURL:userIconURL
@@ -155,7 +130,7 @@ export class Notifier{
             })
         }
         await this.sendMesssageToDiscord("verify",{
-            content: `:mailbox_with_mail: Record ${record.id} (from ${record.runnerName}) in @[${gameSystem.English}/${gameMode.English}] is verified by ${moderatorName}.`,
+            content: `:mailbox_with_mail: Record(**${record.id}**) (from **${record.runnerName}**) is **verified by ${moderatorName}**.\n@${gameSystem.English}/${gameMode.English}`,
             colorcode: 5620992,
             record: record,
             scoreType: gameMode.scoreType,userIconURL:userIconURL

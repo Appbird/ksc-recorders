@@ -1,0 +1,4 @@
+TypeScript-json-validatorのバージョンが古く、Ajvから大量の警告が発せられるためこの様に設定するオブジェクトを置換しなくてはならない
+{"allErrors":true,"coerceTypes":false,"format":"fast","nullable":true,"unicode":true,"uniqueItems":true,"useDefaults":false}
+->
+{"allErrors":true,"coerceTypes":false,"useDefaults":false}

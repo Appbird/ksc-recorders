@@ -264,12 +264,17 @@ export class RecordDataBase{
         const runner = await this.getRunnerInfo(record.runnerID)
         const gameSystem  = await this.getGameSystemInfo(rrg.gameSystemID);
         const gameMode = await this.getGameModeInfo(rrg.gameSystemID,rrg.gameModeID);
-        const userHaveRunThisGameSystem = runner.idOfGameSystemRunnerHavePlayed.find((info) => info.id === rrg.gameSystemID)
-        const userHaveRunThisGameMode = runner.idOfGameModeRunnerHavePlayed.find((info) => info.id === `${rrg.gameSystemID}/${rrg.gameModeID}`)
-        if (!userHaveRunThisGameSystem) runner.idOfGameSystemRunnerHavePlayed.push({id:rrg.gameSystemID,times:1})
-            else userHaveRunThisGameSystem.times += 1;
-        if (!userHaveRunThisGameMode) runner.idOfGameModeRunnerHavePlayed.push({id:`${rrg.gameSystemID}/${rrg.gameModeID}`,times:1})
-            else userHaveRunThisGameMode.times += 1;
+        let userHaveRunThisGameSystem = runner.idOfGameSystemRunnerHavePlayed.find((info) => info.id === rrg.gameSystemID)
+        let userHaveRunThisGameMode = runner.idOfGameModeRunnerHavePlayed.find((info) => info.id === `${rrg.gameSystemID}/${rrg.gameModeID}`)
+        if (!userHaveRunThisGameSystem){
+            userHaveRunThisGameSystem = {id:rrg.gameSystemID,times:1}
+            runner.idOfGameSystemRunnerHavePlayed.push({id:rrg.gameSystemID,times:1})
+        }   else userHaveRunThisGameSystem.times += 1;
+
+        if (!userHaveRunThisGameMode){
+            userHaveRunThisGameMode = {id:rrg.gameModeID,times:1}
+            runner.idOfGameModeRunnerHavePlayed.push({id:`${rrg.gameSystemID}/${rrg.gameModeID}`,times:1})
+        } else userHaveRunThisGameMode.times += 1;
         runner.theNumberOfPost++;
 
         await this.modifyGameSystemInfo(gameSystem.id,{

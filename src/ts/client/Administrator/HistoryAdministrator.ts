@@ -37,7 +37,7 @@ export class HistoryAdministrator{
         switch(this.app.state.state){
             case "detailView":{
                 const obj = this.app.state.requiredObj as APIFunctions["record_detail"]["atServer"]
-                history.pushState(null,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/?state=detailView&gs=${obj.gameSystemEnv.gameSystemID}&gm=${obj.gameSystemEnv.gameModeID}&id=${obj.id}`)
+                history.pushState(null,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/ogpDetailView/?state=detailView&gs=${obj.gameSystemEnv.gameSystemID}&gm=${obj.gameSystemEnv.gameModeID}&id=${obj.id}`)
                 break;
             }
             case "userPageInWhole":{

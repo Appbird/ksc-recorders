@@ -3,22 +3,18 @@
 import {inspect} from 'util';
 import Ajv = require('ajv');
 import {IReceivedDataAtServer_recordModerate} from './IReceivedDataAtServer_recordModerate';
-export const ajv = new Ajv({"allErrors":true,"coerceTypes":false,"format":"fast","nullable":true,"unicode":true,"uniqueItems":true,"useDefaults":true});
+export const ajv = new Ajv({"allErrors":true,"coerceTypes":false,"format":"fast","nullable":true,"unicode":true,"uniqueItems":true,"useDefaults":false});
 
 ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'));
 
 export {IReceivedDataAtServer_recordModerate};
 export const IReceivedDataAtServer_recordModerateSchema = {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "defaultProperties": [
-  ],
   "properties": {
     "IDToken": {
       "type": "string"
     },
     "gameSystemEnv": {
-      "defaultProperties": [
-      ],
       "properties": {
         "gameModeID": {
           "type": "string"

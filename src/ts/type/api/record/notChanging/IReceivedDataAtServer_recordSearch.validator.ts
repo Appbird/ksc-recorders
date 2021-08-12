@@ -3,19 +3,15 @@
 import {inspect} from 'util';
 import Ajv = require('ajv');
 import {IReceivedDataAtServer_recordSearch} from './IReceivedDataAtServer_recordSearch';
-export const ajv = new Ajv({"allErrors":true,"coerceTypes":false,"format":"fast","nullable":true,"unicode":true,"uniqueItems":true,"useDefaults":true});
+export const ajv = new Ajv({"allErrors":true,"coerceTypes":false,"format":"fast","nullable":true,"unicode":true,"uniqueItems":true,"useDefaults":false});
 
 ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'));
 
 export {IReceivedDataAtServer_recordSearch};
 export const IReceivedDataAtServer_recordSearchSchema = {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "defaultProperties": [
-  ],
   "definitions": {
     "IGameSystemEnvironment": {
-      "defaultProperties": [
-      ],
       "properties": {
         "gameDifficultyID": {
           "type": "string"
@@ -35,8 +31,6 @@ export const IReceivedDataAtServer_recordSearchSchema = {
       "type": "object"
     },
     "IRegulation": {
-      "defaultProperties": [
-      ],
       "properties": {
         "abilityIDs": {
           "items": {
@@ -59,8 +53,6 @@ export const IReceivedDataAtServer_recordSearchSchema = {
       "type": "object"
     },
     "ISentRecordOffer": {
-      "defaultProperties": [
-      ],
       "properties": {
         "languageOfTagName": {
           "$ref": "#/definitions/LanguageInApplication"
@@ -114,8 +106,6 @@ export const IReceivedDataAtServer_recordSearchSchema = {
       "type": "string"
     },
     "RecordPropertiesInModifiable": {
-      "defaultProperties": [
-      ],
       "properties": {
         "link": {
           "items": {
@@ -127,8 +117,6 @@ export const IReceivedDataAtServer_recordSearchSchema = {
           "type": "string"
         },
         "regulation": {
-          "defaultProperties": [
-          ],
           "properties": {
             "abilityIDs": {
               "items": {
@@ -137,8 +125,6 @@ export const IReceivedDataAtServer_recordSearchSchema = {
               "type": "array"
             },
             "gameSystemEnvironment": {
-              "defaultProperties": [
-              ],
               "properties": {
                 "gameDifficultyID": {
                   "type": "string"
@@ -180,8 +166,6 @@ export const IReceivedDataAtServer_recordSearchSchema = {
       "type": "object"
     },
     "SearchCondition": {
-      "defaultProperties": [
-      ],
       "properties": {
         "abilityIDs": {
           "items": {
@@ -199,8 +183,6 @@ export const IReceivedDataAtServer_recordSearchSchema = {
           "type": "string"
         },
         "gameSystemEnv": {
-          "defaultProperties": [
-          ],
           "properties": {
             "gameDifficultyID": {
               "description": "//#NOTE これによる指定は、targetIDsによるものよりも強い指定となる",
@@ -239,6 +221,14 @@ export const IReceivedDataAtServer_recordSearchSchema = {
             "type": "string"
           },
           "type": "array"
+        },
+        "searchTypeForVerifiedRecord": {
+          "enum": [
+            "All",
+            "OnlyUnverified",
+            "OnlyVerified"
+          ],
+          "type": "string"
         },
         "startOfRecordArray": {
           "type": "number"

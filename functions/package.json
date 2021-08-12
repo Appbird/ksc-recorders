@@ -16,7 +16,8 @@
     "clone-deep": "^4.0.1",
     "express": "^4.17.1",
     "firebase-admin": "^9.7.0",
-    "firebase-functions": "^3.13.2"
+    "firebase-functions": "^3.15.1",
+    "typescript-json-validator": "^2.4.2"
   },
   "devDependencies": {
     "@types/clone-deep": "^4.0.1",

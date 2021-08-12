@@ -1,12 +1,12 @@
 import * as functions from "firebase-functions"
 import express from "express"
-import { apiList, PrivilegeType } from "./server/function/apiDefinition";
+import { apiList } from "./server/function/apiDefinition";
 import { recordDataBase } from "./server/firestore/RecordDataBase";
 import { deleteUserEventListener, setUserEventListener } from "./server/function/listener/user";
 import { authentication } from "./server/function/foundation/auth";
 import { IReceivedDataAtServerNeedAuthentication } from "../../src/ts/type/api/transmissionBase";
-import { isCommiteeMember } from "./server/function/privilegeChecker/isCommiteeMember";
-import { isRecordOwner } from "./server/function/privilegeChecker/isRecordOwner";
+import { checkPrivilege } from "./checkPrivilege";
+import { errorCatcher } from "./errorCatcher";
 
 const app = express();
 app.use(express.json())
@@ -14,7 +14,6 @@ app.use(express.json())
 exports.createNewUser = functions.auth.user().onCreate((user) => setUserEventListener(user,recordDataBase));
 exports.deleteNewUser = functions.auth.user().onDelete((user) => deleteUserEventListener(user,recordDataBase));
 
-console.log(`[${new Date().toLocaleString()}] Loading API starts.`)
 apiList.forEach( (value,key) => {
     app.post(`/api${key}`,async (req,res) => {
 
@@ -47,25 +46,4 @@ apiList.forEach( (value,key) => {
 
 exports.app = functions.https.onRequest(app);
 
-console.log(`[${new Date().toLocaleString()}] Loading API ends.`)
 
-
-function errorCatcher(key:string,type:"failed"|"rejected"|"",error:any){
-    console.log(`\u001b[31m[${new Date().toLocaleString()} / ${type}] failed to execute /api${key}\u001b[0m\n`)
-    if (!(error instanceof Error)){
-        
-        console.error(`予期せぬエラーです。`); 
-        return {isSuccess:false,message:String(error)};
-    }
-    const errorInString = error.message;
-    console.error(`${errorInString}\n${error.stack}`);
-    return {isSuccess:false,message:errorInString};
-}
-
-async function checkPrivilege(privilege:PrivilegeType,request:IReceivedDataAtServerNeedAuthentication,uid:string){
-    switch (privilege){
-        case "comiteeMemberOrOwner": return await isRecordOwner(request,uid) || await isCommiteeMember(uid);
-        case "onlyCommiteeMember": return isCommiteeMember(uid)
-        case "everyone": return true;
-    }
-}

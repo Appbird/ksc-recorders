@@ -118,11 +118,12 @@ export default class App implements IAppUsedToChangeState{
         
         if (gameSystemEnv === null){
             this._state.setGameSystemEnv({gameMode:null,gameSystem:null})
-            
+            document.title = "Kirby-Speed/Score-Recorders"
         this.historyAd.registerCurrentTargetGamemode()
           return this.header.changeHeaderRightLeft("Kirby-Speed/Score-Recorders","KSSRs");
         }
         if (this.state.gameSystemEnvDisplayed.gameSystem?.id === gameSystemEnv.gameSystem.id && this.state.gameSystemEnvDisplayed.gameMode?.id === gameSystemEnv.gameMode.id) return;
+        document.title = `KSSRs - ${gameSystemEnv.gameSystem.English}/${gameSystemEnv.gameMode.English}`
         this._state.setGameSystemEnv(gameSystemEnv)
         this.historyAd.registerCurrentTargetGamemode()
         return this.header.changeHeaderRightLeft(gameSystemEnv.gameSystem.English,gameSystemEnv.gameMode.English);    

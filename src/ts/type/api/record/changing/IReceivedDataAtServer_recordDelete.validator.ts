@@ -3,22 +3,18 @@
 import {inspect} from 'util';
 import Ajv = require('ajv');
 import {IReceivedDataAtServer_recordDelete} from './IReceivedDataAtServer_recordDelete';
-export const ajv = new Ajv({"allErrors":true,"coerceTypes":false,"format":"fast","nullable":true,"unicode":true,"uniqueItems":true,"useDefaults":true});
+export const ajv = new Ajv({"allErrors":true,"coerceTypes":false,"format":"fast","nullable":true,"unicode":true,"uniqueItems":true,"useDefaults":false});
 
 ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'));
 
 export {IReceivedDataAtServer_recordDelete};
 export const IReceivedDataAtServer_recordDeleteSchema = {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "defaultProperties": [
-  ],
   "properties": {
     "IDToken": {
       "type": "string"
     },
     "gameSystemEnv": {
-      "defaultProperties": [
-      ],
       "properties": {
         "gameModeID": {
           "type": "string"
@@ -32,6 +28,9 @@ export const IReceivedDataAtServer_recordDeleteSchema = {
         "gameSystemID"
       ],
       "type": "object"
+    },
+    "reason": {
+      "type": "string"
     },
     "recordID": {
       "type": "string"

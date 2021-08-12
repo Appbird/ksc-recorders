@@ -3,19 +3,15 @@
 import {inspect} from 'util';
 import Ajv = require('ajv');
 import {IReceivedDataAtServer_recordWrite} from './IReceivedDataAtServer_recordWrite';
-export const ajv = new Ajv({"allErrors":true,"coerceTypes":false,"format":"fast","nullable":true,"unicode":true,"uniqueItems":true,"useDefaults":true});
+export const ajv = new Ajv({"allErrors":true,"coerceTypes":false,"format":"fast","nullable":true,"unicode":true,"uniqueItems":true,"useDefaults":false});
 
 ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'));
 
 export {IReceivedDataAtServer_recordWrite};
 export const IReceivedDataAtServer_recordWriteSchema = {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "defaultProperties": [
-  ],
   "definitions": {
     "IGameSystemEnvironment": {
-      "defaultProperties": [
-      ],
       "properties": {
         "gameDifficultyID": {
           "type": "string"
@@ -35,8 +31,6 @@ export const IReceivedDataAtServer_recordWriteSchema = {
       "type": "object"
     },
     "IRegulation": {
-      "defaultProperties": [
-      ],
       "properties": {
         "abilityIDs": {
           "items": {
@@ -59,8 +53,6 @@ export const IReceivedDataAtServer_recordWriteSchema = {
       "type": "object"
     },
     "ISentRecordOffer": {
-      "defaultProperties": [
-      ],
       "properties": {
         "languageOfTagName": {
           "$ref": "#/definitions/LanguageInApplication"
@@ -105,8 +97,6 @@ export const IReceivedDataAtServer_recordWriteSchema = {
       "type": "string"
     },
     "RecordPropertiesInModifiable": {
-      "defaultProperties": [
-      ],
       "properties": {
         "link": {
           "items": {
@@ -118,8 +108,6 @@ export const IReceivedDataAtServer_recordWriteSchema = {
           "type": "string"
         },
         "regulation": {
-          "defaultProperties": [
-          ],
           "properties": {
             "abilityIDs": {
               "items": {
@@ -128,8 +116,6 @@ export const IReceivedDataAtServer_recordWriteSchema = {
               "type": "array"
             },
             "gameSystemEnvironment": {
-              "defaultProperties": [
-              ],
               "properties": {
                 "gameDifficultyID": {
                   "type": "string"

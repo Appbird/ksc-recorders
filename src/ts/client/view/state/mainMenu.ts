@@ -60,6 +60,7 @@ export class S_MainMenu
                     <div class="__title">Welcome to <br>Kirby-Speed/Score-Recorders!</div>
                 </div>
                 <hr noshade class="u-bold">
+                <div class="u-width90per u-bolderChara">ver 0.1</div>
                 <br>
                 <div class="u-width90per">
                 ${context.description[0]}
@@ -82,8 +83,8 @@ export class S_MainMenu
                     <div class="__title">${ `${gsed.gameSystem?.English}/${gsed.gameMode?.English}<br>Top Menu`}</div>
                 </div>
                 <hr noshade class="u-bold">
-                 
-                <div class="u-space2em"></div>
+                <div class="u-width90per u-bolderChara">ver 0.1</div>
+                <br>
                 <div class="u-width90per">
                 ${{
                     Japanese:`ここでは、${gsed.gameSystem?.Japanese}/${gsed.gameMode?.Japanese}の記録を閲覧することが出来ます。`,

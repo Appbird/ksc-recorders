@@ -3,15 +3,13 @@
 import {inspect} from 'util';
 import Ajv = require('ajv');
 import {IReceivedDataAtServer_recordModify} from './IReceivedDataAtServer_recordModify';
-export const ajv = new Ajv({"allErrors":true,"coerceTypes":false,"format":"fast","nullable":true,"unicode":true,"uniqueItems":true,"useDefaults":true});
+export const ajv = new Ajv({"allErrors":true,"coerceTypes":false,"format":"fast","nullable":true,"unicode":true,"uniqueItems":true,"useDefaults":false});
 
 ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'));
 
 export {IReceivedDataAtServer_recordModify};
 export const IReceivedDataAtServer_recordModifySchema = {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "defaultProperties": [
-  ],
   "definitions": {
     "LanguageInApplication": {
       "enum": [
@@ -21,8 +19,6 @@ export const IReceivedDataAtServer_recordModifySchema = {
       "type": "string"
     },
     "RecordPropertiesInModifiable": {
-      "defaultProperties": [
-      ],
       "properties": {
         "link": {
           "items": {
@@ -34,8 +30,6 @@ export const IReceivedDataAtServer_recordModifySchema = {
           "type": "string"
         },
         "regulation": {
-          "defaultProperties": [
-          ],
           "properties": {
             "abilityIDs": {
               "items": {
@@ -44,8 +38,6 @@ export const IReceivedDataAtServer_recordModifySchema = {
               "type": "array"
             },
             "gameSystemEnvironment": {
-              "defaultProperties": [
-              ],
               "properties": {
                 "gameDifficultyID": {
                   "type": "string"
@@ -92,8 +84,6 @@ export const IReceivedDataAtServer_recordModifySchema = {
       "type": "string"
     },
     "gameSystemEnv": {
-      "defaultProperties": [
-      ],
       "properties": {
         "gameModeID": {
           "type": "string"
@@ -110,6 +100,9 @@ export const IReceivedDataAtServer_recordModifySchema = {
     },
     "language": {
       "$ref": "#/definitions/LanguageInApplication"
+    },
+    "reason": {
+      "type": "string"
     },
     "recordID": {
       "type": "string"

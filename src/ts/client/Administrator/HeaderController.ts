@@ -26,7 +26,7 @@ export class HeaderController{
     }
     deleteUserIcon(){
         this.logInState.innerText = `Log out`
-        this.icon.src = "./icon/icooonMono/person.svg";
+        this.icon.src = "./icon/IcooonMono/person.svg";
     }
     async changeHeaderRightLeft(str:string,sub:string){
         await new Promise((resolve) => setTimeout(()=>resolve(undefined),500));

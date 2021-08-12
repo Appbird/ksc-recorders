@@ -7,3 +7,4 @@ build/js
 public/js
 public/icon/IcooonMono
 firebase-debug.log
+.firebase

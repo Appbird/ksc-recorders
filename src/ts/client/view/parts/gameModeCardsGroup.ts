@@ -35,7 +35,7 @@ export class GameModeCardsGroup implements IView{
                     <div class = "c-title__main u-smallerChara">${generateIcooonHTML(info)} ${choiceString(info,this.language)}</div>
                     
                 </div>
-                ${writeElement(selectAppropriateDescription(info,this.language),"p")}
+                ${writeElement(selectAppropriateDescription(info,this.language),"p",`class="u-marginLeftRight2em"`)}
                 
                 <div class="c-stateInfo u-left-aligined-forFlex">
                     <div class = "c-stateInfo__unit">

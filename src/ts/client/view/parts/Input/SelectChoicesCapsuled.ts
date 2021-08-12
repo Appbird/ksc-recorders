@@ -33,7 +33,7 @@ export class SelectChoicesCapsuled<T extends IItemOfResolveTableToName> implemen
                 maxItemCount: maxItemCount,
                 maxItemText: choiceDescription(maxItemText, language),
                 removeItemButton: removeItemButton,
-                shouldSort: true,
+                shouldSort: false,
                 noChoicesText: choiceDescription(noChoiceText, language),
                 noResultsText: choiceDescription(noResultText, language),
             });
@@ -75,6 +75,7 @@ export class SelectChoicesCapsuled<T extends IItemOfResolveTableToName> implemen
         this._choices.setChoiceByValue(IDs)
     }
     setChoices(item: T[]) {
+        
         this._choices.setChoices(item.map(ele => {
             return { value: ele.id, label: choiceString(ele, this._language) };
         }));

@@ -86,8 +86,9 @@ function convertCSVToData(input:string):IItemOfResolveTableToNameLackingOfID[]{
     const header = lines.shift()?.split(",");
     if (header === undefined) throw new Error("CSVで表される表のカラムが未定義です。")
     if (!checkIfColumnsAreCorrect(header,["Japanese","English"]) && !checkIfColumnsAreCorrect(header,["Japanese","English","JDescription","EDescription"])) throw new Error("CSVで表される表のカラムが未定義です。")
-    const dataInLines = lines.map(line => line.replace(/\s/g,"").split(","))
-    if (!dataInLines.every(dataInLine => dataInLine.length === header.length)) throw new Error("CSVで表されるの行ごとの要素数が不揃いです。")
+    const dataInLines = lines.map(line => line.replace(/,\s+/g,",").split(","))
+    const errorLineNum = dataInLines.findIndex(dataInLine => dataInLine.length !== header.length)
+    if (errorLineNum !== -1) throw new Error(`CSVで表されるの行ごとの要素数が不揃いです。(${errorLineNum+1}行目)`)
     return dataInLines.map( dataInLine => { 
         return (header.length === 2) ?
             {

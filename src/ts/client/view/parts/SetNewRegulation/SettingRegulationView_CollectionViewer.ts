@@ -54,7 +54,7 @@ export class SettingRegulationView_CollectionViewer implements IView{
         if (this.callbacks.whenStart !== undefined) this.callbacks.whenStart();
         const items = [
             {...context.appendNewItem,id:undefined},
-            ...(await this.path.get()).docs.map( doc => {return {...(doc.data()),id:doc.id} as (IItemOfResolveTableToNameLackingOfID&icooonResolvable)})
+            ...(await this.path.orderBy(this.language,"asc").get()).docs.map( doc => {return {...(doc.data()),id:doc.id} as (IItemOfResolveTableToNameLackingOfID&icooonResolvable)})
         ];
 
         for (const [,listItem] of this.cardObj) listItem.destroy()
@@ -62,7 +62,7 @@ export class SettingRegulationView_CollectionViewer implements IView{
 
         for (const item of items) this.setItem(item.id,item)
 
-        this.unsubscribe = this.path.onSnapshot(querySnapshot => {
+        this.unsubscribe = this.path.orderBy(this.language,"asc").onSnapshot(querySnapshot => {
             console.info(`[KSSRs-InfoEditor] change from the server detected.`)
             for(const docChange of querySnapshot.docChanges()){
                 switch(docChange.type){

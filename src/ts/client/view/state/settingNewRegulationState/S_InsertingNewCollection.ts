@@ -42,7 +42,7 @@ const context = {
                 English:"Enter CSV to append multiple items."
             },
             {
-                Japanese:"CSVのカラムは<strong>Japanese,English</strong>か<strong>Japanese,English,JDescription,EDescription</strong>のいずれかである必要があります。",
+                Japanese:"CSVのカラムは<strong>Japanese.English</strong>か<strong>Japanese.English.JDescription.EDescription</strong>のいずれかである必要があります。",
                 English:"The CSV's Columns must be either <strong>Japanese,English</strong> or <strong>Japanese,English,JDescription,EDescription</strong>."
             },{
                 Japanese:"CSVを入力するにあたってExcelを使うことが出来ます。",
@@ -90,13 +90,14 @@ export class S_SettingRegulationState_CollectionAppender
 
         const button = editorSegment.appendChild(element`<div class="u-width50per u-margin2em"><div class="c-button">${choiceString(context.Decide,lang)}</div></div>`) as HTMLElement
         button.addEventListener("click",async () => {
+            
             let input;
             try {
                 input = editor.value;
-                
+                button.classList.add("u-unused")
             } catch(error) {
                 editor.displayError({Japanese:"入力が不正です。",English:"Invalid Input"})
-                
+                console.error(error)
                 return;
             }
             try {

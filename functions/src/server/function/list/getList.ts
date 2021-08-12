@@ -7,12 +7,10 @@ import { IReceivedDataAtClient_getlist } from "../../../../../src/ts/type/api/li
 import { APIFunctions } from "../../../../../src/ts/type/api/relation";
  
 function searchBasedOnIDList<T extends IItemOfResolveTableToName>(inputIdList:string[],data:T[]):T[]{
-    const idList = inputIdList.concat();
-    return data.filter(item => {
-        const search = idList.findIndex((id) => item.id === id)
-        if (search === -1) return false;
-        idList.splice(search,1)
-        return true;
+    return inputIdList.map((id) => {
+        const found = data.find( item => item.id === id)
+        if (found === undefined) throw new Error(`番号${id}に対応するアイテムが存在しません。`)
+        return found
     })
 }
 async function getList_UseId<T extends IItemOfResolveTableToName>(

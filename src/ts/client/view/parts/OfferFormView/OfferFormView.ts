@@ -220,7 +220,7 @@ export class OfferFormView implements IView {
             } catch (error) {
                 console.error(error);
                 if (!(error instanceof Error)) return;
-                this.app.transition("errorView", { title: "難易度に対応する計測対象の取得に失敗しました。", message: `${error.message}` });
+                this.app.transition("errorView", { title: "難易度に対応する計測対象の取得に失敗しました。", message: error.message });
             }
         }
         //#CH ここあたりのコードを分離したいけどするべきか迷う

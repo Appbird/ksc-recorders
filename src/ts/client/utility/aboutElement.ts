@@ -15,8 +15,8 @@ export function createElementWithIdTagClass<T extends keyof HTMLElementTagNameMa
     return element
 }
 /** valueがundefinedであるとき、空文字列を渡す。 */
-export function writeElement(value:string|undefined,tag:string){
-    return (value === undefined) ? "" : `<${tag}>${value}</${tag}>`
+export function writeElement(value:string|undefined,tag:string,attribute?:string){
+    return (value === undefined) ? "" : `<${tag} ${attribute ? attribute:undefined}>${value}</${tag}>`
 }
 
 export function findElementByClassNameWithErrorPossibility(findPlace:Element,className:string):HTMLElement{

@@ -1,0 +1,287 @@
+{
+    "Artist":{
+      "ja": "アーティスト",
+      "en": "Artist",
+      "BG":"#ffc8ed",
+      "C":"#ff00a7",
+      "FriAb":"Rock Painter",
+      "DreamFriends": false
+
+  },
+    "Beam":{
+      "ja": "ビーム",
+      "en": "Beam",
+      "BG":"#ffcc9f",
+      "C":"#ff700b",
+      "FriAb":"Zap",
+      "DreamFriends": false
+
+  },
+    "Beetle":{
+      "ja": "ビートル",
+      "en": "Beetle",
+      "BG":"#a2a9f2",
+      "C":"#00236e",
+      "FriAb":"Normal",
+      "DreamFriends": false
+
+  },
+    "Bomb":{
+      "ja": "ボム",
+      "en": "Bomb",
+      "BG":"#acaeba",
+      "C":"#343439",
+      "FriAb":"Bomb",
+      "DreamFriends": false
+
+  },
+    "Cleaning":{
+      "ja": "クリーン",
+      "en": "Cleaning",
+      "BG":"#a2fff2",
+      "C":"#03a091",
+      "FriAb":"Bluster",
+      "DreamFriends": false
+
+  },
+    "Cook":{
+      "ja": "コック",
+      "en": "Cook",
+      "BG":"#fef6bb",
+      "C":"#fd831f",
+      "FriAb":"Normal",
+      "DreamFriends": false
+
+  },
+    "Cutter":{
+      "ja": "カッター",
+      "en": "Cutter",
+      "BG":"#ffeca6",
+      "C":"#ff9504",
+      "FriAb":"Normal",
+      "DreamFriends": false
+
+  },
+    "ESP":{
+      "ja": "エスパー",
+      "en": "ESP",
+      "BG":"#c1aafe",
+      "C":"#7d33ca",
+      "FriAb":"Zap",
+      "DreamFriends": false
+
+  },
+    "Fighter":{
+      "ja": "ファイター",
+      "en": "Fighter",
+      "BG":"#f59e85",
+      "C":"#890909",
+      "FriAb":"Normal",
+      "DreamFriends": false
+
+  },
+    "Fire":{
+      "ja": "ファイア",
+      "en": "Fire",
+      "BG":"#ffaca4",
+      "C":"#d11818",
+      "FriAb":"Sizzle",
+      "DreamFriends": false
+
+  },
+    "Hammer":{
+      "ja": "ハンマー",
+      "en": "Hammer",
+      "BG":"#d1a27e",
+      "C":"#521300",
+      "FriAb":"Normal",
+      "DreamFriends": false
+
+  },
+    "Ice":{
+      "ja": "アイス",
+      "en": "Ice",
+      "BG":"#d3faff",
+      "C":"#00aaf0",
+      "FriAb":"Blizzard",
+      "DreamFriends": false
+
+  },
+    "Kirby":{
+      "ja": "カービィ",
+      "en": "Kirby",
+      "BG":"#ffc8ed",
+      "C":"#ff00a7",
+      "FriAb":"Kirby",
+      "DreamFriends": false
+
+  },
+    "Ninja":{
+      "ja": "ニンジャ",
+      "en": "Ninja",
+      "BG":"#dcadf2",
+      "C":"#7c1685",
+      "FriAb":"Normal",
+      "DreamFriends": false
+
+  },
+    "Parasol":{
+      "ja": "パラソル",
+      "en": "Parasol",
+      "BG":"#ffadad",
+      "C":"#e80101",
+      "FriAb":"Normal",
+      "DreamFriends": false
+  },
+    "Plasma":{
+      "ja": "プラズマ",
+      "en": "Plasma",
+      "BG":"#e9ffd2",
+      "C":"#01c31e",
+      "FriAb":"Zap",
+      "DreamFriends": false
+  },
+    "Spider":{
+      "ja": "スパイダー",
+      "en": "Spider",
+      "BG":"#d6c6ec",
+      "C":"#23005f",
+      "FriAb":"Normal",
+      "DreamFriends": false
+  },
+    "Staff":{
+      "ja": "スティック",
+      "en": "Staff",
+      "BG":"#ffd3bf",
+      "C":"#ff2200",
+      "FriAb":"Normal",
+      "DreamFriends": false
+  },
+    "Stone":{
+      "ja": "ストーン",
+      "en": "Stone",
+      "BG":"#c9af8c",
+      "C":"#744429",
+      "FriAb":"Normal",
+      "DreamFriends": false
+  },
+    "Suplex":{
+      "ja": "スープレックス",
+      "en": "Suplex",
+      "BG":"#ced5fe",
+      "C":"#2035a1",
+      "FriAb":"Normal",
+      "DreamFriends": false
+  },
+    "Sword":{
+      "ja": "ソード",
+      "en": "Sword",
+      "BG":"#88ff92",
+      "C":"#037a1c",
+      "FriAb":"Normal",
+      "DreamFriends": false
+  },
+    "Water":{
+      "ja": "ウォーター",
+      "en": "Water",
+      "BG":"#d3faff",
+      "C":"#002eff",
+      "FriAb":"Splash",
+      "DreamFriends": false
+  },
+    "Whip":{
+      "ja": "ウィップ",
+      "en": "Whip",
+      "BG":"#ffb192",
+      "C":"#c42300",
+      "FriAb":"Normal",
+      "DreamFriends": false
+  },
+    "Wing":{
+      "ja": "ウィング",
+      "BG":"#abe7f0",
+      "C":"#0079dd",
+      "FriAb":"Bluster",
+      "DreamFriends": false
+  },
+    "Yoyo":{
+      "ja": "ヨーヨー",
+      "en": "Yoyo",
+      "BG":"#b8e5ff",
+      "C":"#0d89d9",
+      "FriAb":"Normal",
+      "DreamFriends": false
+  },
+    "King Dedede":{
+      "ja": "デデデ大王",
+      "en": "King Dedede",
+      "BG":"#ffe2af",
+      "C":"#f10d0e",
+      "FriAb":"Normal",
+      "DreamFriends": true
+  },
+    "Meta Knight":{
+      "ja": "メタナイト",
+      "en": "Meta Knight",
+      "BG":"#a09cff",
+      "C":"#410cb0",
+      "FriAb":"Normal",
+      "DreamFriends": true
+  },
+    "Bandana Waddle Dee":{
+      "ja": "バンダナワドルディ",
+      "en": "Bandana Waddle Dee",
+      "BG":"#fbfdbd",
+      "C":"#f97620",
+      "FriAb":"Normal",
+      "DreamFriends": true
+  },
+    "Rick Kine Coo":{
+      "ja": "リック＆カイン＆クー",
+      "en": "Rick & Kine & Coo",
+      "BG":"#fde1c4",
+      "C":"#ca4a23",
+      "FriAb":"Sizzle",
+      "DreamFriends": true
+  },
+    "Marx":{
+      "ja": "マルク",
+      "en": "Marx",
+      "BG":"#fce3f6",
+      "C":"#dd10eb",
+      "FriAb":"Normal",
+      "DreamFriends": true
+  },
+    "Gooey":{
+      "ja": "グーイ",
+      "en": "Gooey",
+      "BG":"#e9ebfc",
+      "C":"#0e0ec6",
+      "FriAb":"Splash",
+      "DreamFriends": true
+  },
+    "Dark Meta Knight":{
+      "ja": "ダークメタナイト",
+      "en": "Dark Meta Knight",
+      "BG":"#c7b0ba",
+      "C":"#2c2a2c",
+      "FriAb":"Normal",
+      "DreamFriends": true
+  },
+    "Daroach":{
+      "ja": "ドロッチェ",
+      "en": "Daroach",
+      "BG":"#feedf2",
+      "C":"Red",
+      "FriAb":"Sizzle",
+      "DreamFriends": true
+  },
+    "Adeleine Ribbon":{
+      "ja": "アドレーヌ＆リボン",
+      "en": "Adlaine & Ribbon",
+      "BG":"#ffd9e3",
+      "C":"#bb1800",
+      "FriAb":"Rock Painter",
+      "DreamFriends": true
+  }
+}

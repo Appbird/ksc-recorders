@@ -24,15 +24,7 @@
     height: 6em;
 }
 
-@media screen and (max-width:variables.$mobileMaxWidth) {
-    .u-fixedSpace_menuIconWidth{
-        max-width:3.0em;
-        min-width:3.0em;
-    }
-}
-@media screen and (min-width:variables.$mobileMaxWidth) {
-    .u-fixedSpace_menuIconWidth{
-        max-width:3.5em;
-        min-width:3.5em;
-    }
+.u-fixedSpace_menuIconWidth{
+    max-width:2.6em;
+    min-width:2.6em;
 }

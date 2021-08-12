@@ -1060,7 +1060,7 @@ article h1:not(.u-noUnderline):after {
 }
 
 .u-smallerChara.c-title__main {
-  font-size: large;
+  font-size: 1.2em;
 }
 
 .u-biggerChara.c-title__main {
@@ -1072,12 +1072,12 @@ article h1:not(.u-noUnderline):after {
 }
 
 .u-x-biggerChara.c-title__sub {
-  font-size: xx-large;
+  font-size: 4em;
   font-weight: bolder;
 }
 
 .u-biggerChara.c-title__sub {
-  font-size: x-large;
+  font-size: 4em;
   font-weight: bolder;
 }
 
@@ -1143,18 +1143,11 @@ article h1:not(.u-noUnderline):after {
   height: 6em;
 }
 
-@media screen and (max-width: 600px) {
-  .u-fixedSpace_menuIconWidth {
-    max-width: 3em;
-    min-width: 3em;
-  }
+.u-fixedSpace_menuIconWidth {
+  max-width: 2.6em;
+  min-width: 2.6em;
 }
-@media screen and (min-width: 600px) {
-  .u-fixedSpace_menuIconWidth {
-    max-width: 3.5em;
-    min-width: 3.5em;
-  }
-}
+
 .u-width90per {
   width: 90%;
   margin-left: 5%;
@@ -1187,6 +1180,12 @@ article h1:not(.u-noUnderline):after {
 
 .u-width30perWithoutMargin {
   width: 30%;
+}
+
+.u-width-1em {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  width: auto;
 }
 
 .u-height15em {

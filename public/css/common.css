@@ -771,6 +771,21 @@ article h1:not(.u-noUnderline):after {
     font-size: medium;
   }
 }
+.p-gamemodeOverView {
+  width: 90%;
+  padding-left: 5%;
+  padding-right: 5%;
+}
+.p-gamemodeOverView > .__text {
+  font-weight: bolder;
+  text-align: center;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+.p-gamemodeOverView > .c-stateInfo {
+  justify-content: center;
+}
+
 .u-background--gray {
   background-color: #f1f1f1;
 }

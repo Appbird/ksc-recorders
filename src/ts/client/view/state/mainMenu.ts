@@ -1,6 +1,6 @@
 import { IGameModeItemWithoutCollections } from "../../../type/list/IGameModeItem";
 import { IGameSystemInfoWithoutCollections } from "../../../type/list/IGameSystemInfo";
-import { element, HTMLConverter } from "../../../utility/ViewUtility";
+import { element, HTMLConverter, setSpanForCorrectLineBreak } from "../../../utility/ViewUtility";
 import { IAppUsedToReadAndChangePage } from "../../interface/AppInterfaces";
 import { PageStateBaseClass } from "./PageStateClass";
 import { MenuView, RequiredObjectToGenerateItem } from "../parts/MenuView";
@@ -10,8 +10,9 @@ import { MultiLanguageString } from "../../../type/foundation/MultiLanguageStrin
 import context from "./mainMenu.json"
 import { NoticeView } from "../parts/notice";
 import { choiceDescription } from "../../../utility/aboutLang";
+import { formatDate } from "../../../utility/timeUtility";
 
-const version = "0.2"
+const version = "0.3"
 export class S_MainMenu
     extends PageStateBaseClass<null|{gameSystem:IGameSystemInfoWithoutCollections, gameMode:IGameModeItemWithoutCollections},IAppUsedToReadAndChangePage>{
         private htmlConverter:HTMLConverter = new HTMLConverter(this.app.state.language);
@@ -79,19 +80,32 @@ export class S_MainMenu
         }
         generateMainMenuDescriptionWithTargetMode(){
             const gsed = this.app.state.gameSystemEnvDisplayed
+            const gameModeDescription = choiceDescription(gsed.gameMode,this.app.state.language)
+            if (gsed.gameSystem === null || gsed.gameMode === null) throw new Error(`ゲームモードが設定されていません。`)
             return this.articleDOM.appendChild(this.htmlConverter.elementWithoutEscaping`
             <div>
                 <div class="p-KSSRsHeader">
                     <i class="__icon c-icooon u-background--kssrs u-margin1em"></i>
-                    <div class="__title">${ `${gsed.gameSystem?.English}/${gsed.gameMode?.English}<br>Top Menu`}</div>
+                    <div class="__title">${ `${gsed.gameSystem.English}/${gsed.gameMode.English}<br>Top Menu`}</div>
                 </div>
                 <hr noshade class="u-bold">
                 <div class="u-width90per u-bolderChara">ver ${version}</div>
                 <br>
                 <div class="u-background--gray"> 
                     <br>
-                    <div class="u-background--gray u-width90per">
-                    <strong>${gsed.gameMode ? choiceDescription(gsed.gameMode,this.app.state.language) : (gsed.gameSystem ? choiceDescription(gsed.gameSystem,this.app.state.language) : "")}</strong>
+                    <div class="p-gamemodeOverView">
+                        <div class="__text">${
+                            setSpanForCorrectLineBreak(choiceDescription((gameModeDescription.length !== 0) ? gsed.gameMode:gsed.gameSystem,this.app.state.language))
+                        }</div>
+                        <br>
+                        <hr noshade class="u-thin">
+                        <div class="c-stateInfo">
+                            <div class = "c-stateInfo__unit">
+                                <div class ="c-iconWithDescription"> <i class="fas fa-list"></i> ${gsed.gameMode.recordsNumber.toString()}</div>
+                                <div class ="c-iconWithDescription"> <i class="fas fa-running"></i> ${gsed.gameMode.runnersNumber.toString()}</div>
+                                <div class ="c-iconWithDescription"> <i class="fas fa-history"></i>${formatDate(gsed.gameMode.dateOfLatestPost,"time",false)}</div>
+                            </div>
+                        </div>
                     </div>
                     <br>
                 </div>

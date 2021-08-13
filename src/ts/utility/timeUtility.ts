@@ -29,14 +29,14 @@ export function convertTimeIntoNumber(score:string):number{
     throw new Error("タイムは00:00.00, 00.00, 00:00.00 - 00:00.00といった形式で入力されなければなりません。")
 }
 
-export function formatDate(datenum:number, mode:"date"|"time"):string{
+export function formatDate(datenum:number, mode:"date"|"time", preposition:boolean = true):string{
     const date = new Date(datenum)
     return (()=>{
         switch(mode) {
             case "date":
-                return `on ${date.getFullYear()}-${WriteNumberIn2Digits(date.getMonth() + 1)}-${WriteNumberIn2Digits(date.getDate())}`
+                return `${preposition ? "on" : ""} ${date.getFullYear()}-${WriteNumberIn2Digits(date.getMonth() + 1)}-${WriteNumberIn2Digits(date.getDate())}`
             case "time":
-                return `at ${date.getFullYear()}-${WriteNumberIn2Digits(date.getMonth() + 1)}-${WriteNumberIn2Digits(date.getDate())}  ${WriteNumberIn2Digits(date.getHours())}:${WriteNumberIn2Digits(date.getMinutes())}`
+                return `${preposition ? "at" : ""} ${date.getFullYear()}-${WriteNumberIn2Digits(date.getMonth() + 1)}-${WriteNumberIn2Digits(date.getDate())}  ${WriteNumberIn2Digits(date.getHours())}:${WriteNumberIn2Digits(date.getMinutes())}`
         }
     })().replace(/\//g,"-")
     

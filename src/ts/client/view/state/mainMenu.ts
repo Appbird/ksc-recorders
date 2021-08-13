@@ -9,6 +9,9 @@ import { StateAdministrator } from "../../Administrator/StateAdminister";
 import { MultiLanguageString } from "../../../type/foundation/MultiLanguageString";
 import context from "./mainMenu.json"
 import { NoticeView } from "../parts/notice";
+import { choiceDescription } from "../../../utility/aboutLang";
+
+const version = "0.2"
 export class S_MainMenu
     extends PageStateBaseClass<null|{gameSystem:IGameSystemInfoWithoutCollections, gameMode:IGameModeItemWithoutCollections},IAppUsedToReadAndChangePage>{
         private htmlConverter:HTMLConverter = new HTMLConverter(this.app.state.language);
@@ -60,7 +63,7 @@ export class S_MainMenu
                     <div class="__title">Welcome to <br>Kirby-Speed/Score-Recorders!</div>
                 </div>
                 <hr noshade class="u-bold">
-                <div class="u-width90per u-bolderChara">ver 0.1</div>
+                <div class="u-width90per u-bolderChara">ver ${version}</div>
                 <br>
                 <div class="u-width90per">
                 ${context.description[0]}
@@ -83,7 +86,15 @@ export class S_MainMenu
                     <div class="__title">${ `${gsed.gameSystem?.English}/${gsed.gameMode?.English}<br>Top Menu`}</div>
                 </div>
                 <hr noshade class="u-bold">
-                <div class="u-width90per u-bolderChara">ver 0.1</div>
+                <div class="u-width90per u-bolderChara">ver ${version}</div>
+                <br>
+                <div class="u-background--gray"> 
+                    <br>
+                    <div class="u-background--gray u-width90per">
+                    <strong>${gsed.gameMode ? choiceDescription(gsed.gameMode,this.app.state.language) : (gsed.gameSystem ? choiceDescription(gsed.gameSystem,this.app.state.language) : "")}</strong>
+                    </div>
+                    <br>
+                </div>
                 <br>
                 <div class="u-width90per">
                 ${{
@@ -163,7 +174,31 @@ export class S_MainMenu
            
            //#CTODO まともに日本語訳をする
             return [
-            {
+                {
+                    title:{
+                        Japanese:"未承認の記録",
+                        English:"Unverified Records",
+                        icon:"notebook"
+                    },
+                    description:{
+                        Japanese:(() => {
+                            if (!isSetTargetGameMode) return "<strong>閲覧するゲームタイトル/モードを設定してください。</strong>"
+                            return "まだ認証されていない記録を見ることが出来ます。"
+                        })(),
+                        English:(() => {
+                            if (!isSetTargetGameMode) return "<strong>Setting your target gamemode is indispensable to submit your record.</strong>"
+                            return "You can see unverified records here."
+                        })()
+                    },
+                    isDisabled:!(isSetTargetGameMode && this.app.loginAdministratorReadOnly.isUserLogin && this.app.loginAdministratorReadOnly.userInformation_uneditable?.isCommitteeMember),
+                    biggerTitle:false,
+                    to:(this.app.loginAdministratorReadOnly.isUserLogin) ? () => {
+                        if (!StateAdministrator.checkGameSystemEnvIsSet(this.app.state.gameSystemEnvDisplayed)) return
+                        this.app.transition("unverifiedRecord",this.app.state.gameSystemEnvDisplayed)
+                    }:undefined
+        
+                }
+                ,{
                 title:{
                     Japanese:"ユーザーページ",
                     English:"User Page",

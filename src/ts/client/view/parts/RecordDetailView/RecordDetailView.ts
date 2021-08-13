@@ -111,6 +111,7 @@ export class RecordDetailView implements IView{
             new TagsView(container.appendChild(document.createElement("div"))),
             new TagsView(container.appendChild(document.createElement("div")))
         ];
+        
         const rrg = record.regulation.gameSystemEnvironment;
 
         tagsViews[0].appendTag(`${rrg.gameSystemName}/${rrg.gameModeName}/${rrg.gameDifficultyName}`,"gameSystem",{callBackOnClick:clickedCallBacks.gameSystem})

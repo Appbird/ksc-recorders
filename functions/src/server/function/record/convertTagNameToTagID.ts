@@ -1,5 +1,4 @@
 import { LanguageInApplication } from "../../../../../src/ts/type/LanguageInApplication";
-import { selectAppropriateProperty } from "../../../../../src/ts/utility/aboutLang";
 import { RecordDataBase } from "../../firestore/RecordDataBase";
 
 export async function convertTagNameToTagID(gameSystemID: string, recordDataBase: RecordDataBase, tagNames: string[], language: LanguageInApplication):Promise<string[]>{
@@ -10,7 +9,7 @@ export async function convertTagNameToTagID(gameSystemID: string, recordDataBase
     return await Promise.all(result.map((ele, index) => {
         if (ele === undefined) {
             const hashTagItem: any = { id: "" };
-            hashTagItem[selectAppropriateProperty(language)] = tagNames[index];
+            hashTagItem[language] = tagNames[index];
             return recordDataBase.writeHashTagInfo(gameSystemID, hashTagItem);
         }
         return ele.id;

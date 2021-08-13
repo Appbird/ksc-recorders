@@ -21,6 +21,7 @@ export default class App implements IAppUsedToChangeState{
     private apiCaller:APIAdministrator = new APIAdministrator();
     private _notie:PageNotificationAdministrator;
 
+    public readonly version:string = "0.4"
     constructor(articleDOM:HTMLElement,language:LanguageInApplication){
         this._state = new StateAdministrator(language);
         this._notie = new PageNotificationAdministrator(this);

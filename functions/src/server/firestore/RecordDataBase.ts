@@ -135,7 +135,7 @@ export class RecordDataBase{
         const result = await this.getGameSystemRef(gameSystemID).collection("tags")
                                 .where(language,"in",names)    
                                 .get();
-        const tags = result.docs as unknown as IHashTagItem[]
+        const tags = result.docs.map(doc => doc.data()) as IHashTagItem[]
         return names.map( (name) => tags.find((tag) => tag[language] === name))
     }
     

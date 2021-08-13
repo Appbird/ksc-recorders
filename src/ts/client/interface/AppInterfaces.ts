@@ -9,6 +9,7 @@ import { PageStates, RequiredObjectType } from "../view/state/PageStates";
 
 
 export interface IAppUsedToRead{
+    readonly version:string;
     state:StateAdministerReadOnly;
     loginAdministratorReadOnly:LoginAdministratorReadOnly;
     checkIfIntroductionIsOver:()=>boolean;

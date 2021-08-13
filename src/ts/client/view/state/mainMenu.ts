@@ -12,7 +12,7 @@ import { NoticeView } from "../parts/notice";
 import { choiceDescription } from "../../../utility/aboutLang";
 import { formatDate } from "../../../utility/timeUtility";
 
-const version = "0.3"
+
 export class S_MainMenu
     extends PageStateBaseClass<null|{gameSystem:IGameSystemInfoWithoutCollections, gameMode:IGameModeItemWithoutCollections},IAppUsedToReadAndChangePage>{
         private htmlConverter:HTMLConverter = new HTMLConverter(this.app.state.language);
@@ -64,7 +64,7 @@ export class S_MainMenu
                     <div class="__title">Welcome to <br>Kirby-Speed/Score-Recorders!</div>
                 </div>
                 <hr noshade class="u-bold">
-                <div class="u-width90per u-bolderChara">ver ${version}</div>
+                <div class="u-width90per u-bolderChara">ver ${this.app.version}</div>
                 <br>
                 <div class="u-width90per">
                 ${context.description[0]}
@@ -89,7 +89,7 @@ export class S_MainMenu
                     <div class="__title">${ `${gsed.gameSystem.English}/${gsed.gameMode.English}<br>Top Menu`}</div>
                 </div>
                 <hr noshade class="u-bold">
-                <div class="u-width90per u-bolderChara">ver ${version}</div>
+                <div class="u-width90per u-bolderChara">ver ${this.app.version}</div>
                 <br>
                 <div class="u-background--gray"> 
                     <br>

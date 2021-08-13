@@ -3,34 +3,82 @@ import { converseMiliSecondsIntoTime } from "../../../../../src/ts/utility/timeU
 import { RecordDataBase } from "../../firestore/RecordDataBase";
 import {webhookURL} from "../../secret.json"
 import fetch from "node-fetch";
-import { ScoreType } from "../../../../../src/ts/type/list/IGameModeItem";
+import { IGameModeItemWithoutCollections, ScoreType } from "../../../../../src/ts/type/list/IGameModeItem";
+import { IGameSystemInfoWithoutCollections } from "../../../../../src/ts/type/list/IGameSystemInfo";
 //#NOTE これの実行には{webhookURL:string}型のオブジェクトが記述されたjsonファイルを書き込んでおく必要がある。
 //#CTODO こいつがちゃんと投稿されるか確認する。
+//#NOTE 
+//*> https://discohook.org/ を使用しました。
+
 export class Notifier{
     private readonly host:string = "https://kss-recorders.web.app"
     private readonly recordDatabase:RecordDataBase
     constructor(recordDatabase:RecordDataBase){
         this.recordDatabase = recordDatabase;
     }
-    private async sendMesssageToDiscord(type:"submit"|"verify"|"add"|"delete",{content,record,colorcode,userIconURL,scoreType}
-        :{  content:string,
-            record:IRecordResolved,
+    private async sendMesssageToDiscord(type:"submit"|"verify"|"add"|"delete",{attached=null,content,record,gameMode,gameSystem,colorcode,userIconURL,scoreType,reason = ""}
+        :{  content:string,attached?:string|null,
+            record:IRecordResolved,gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections
             userIconURL:string, scoreType:ScoreType,
-            colorcode:number
+            colorcode:number,reason?:string
         }){
-            const rr = record.regulation
-            const rrg = rr.gameSystemEnvironment
+            if (attached !== null) attached = `"${attached}"`
             await fetch(webhookURL[type],
                 {
                 method:"POST",
                 headers:{
                     "Content-Type":"application/json"
                 },
-                body:JSON.stringify({
-                    "content": `${content}\n\n> ${
-                        (scoreType === "time") ? converseMiliSecondsIntoTime(record.score):record.score} : ${record.regulation.abilityNames.join(",")} vs. ${record.regulation.targetName}\n${this.host}/?state=detailView&gs=${rrg.gameSystemID}&gm=${rrg.gameModeID}&id=${record.id}`
-            })
+                body:`{
+                    "content": ${attached},
+                    "embeds": [
+                      {
+                        "title": "${content}",
+                        "color": ${colorcode},
+                        "url": "${this.host}/?state=detailView&gs=${gameSystem.id}&gm=${gameMode.id}&id=${record.id}",
+                        "fields": [
+                          {
+                            "name": "${gameSystem.English}/${gameMode.English}",
+                            "value":"ID : ${record.id}",
+                            "inline": true
+                          },
+                          {
+                            "name": "Runner",
+                            "value": "${record.runnerName}",
+                            "inline": true
+                          },
+                          {
+                            "name": "${(scoreType === "time") ?  "Time":"Score"}",
+                            "value": "${ (scoreType === "time") ? converseMiliSecondsIntoTime(record.score):record.score}",
+                            "inline": true
+                          },
+                          {
+                            "name": "Ability",
+                            "value": "${record.regulation.abilityNames.join("\n")}",
+                            "inline": true
+                          },
+                          {
+                            "name": "Segment",
+                            "value": "${record.regulation.targetName}",
+                            "inline": true
+                          }${
+                              reason.length !== 0 ? `,{ "name": "Reason","value": "${reason.replace(/\"/g,`\"`)}","inline": false}`:""
+                            }
+                        ],
+                        "author": {
+                          "name": "By ${record.runnerName}",
+                          "icon_url" : "${userIconURL}",
+                          "url": "${this.host}/?state=userPageInWhole&id=${record.runnerID}"
+                        },
+                        "footer": {
+                          "text": "Kirby-Speed/Score-Recorders",
+                          "icon_url": "https://firebasestorage.googleapis.com/v0/b/kss-recorders.appspot.com/o/icon.png?alt=media&token=bcb35206-fc4c-4d04-b6cd-45bbab213cc9"
+                        }
+                      }
+                    ]
+                  }`
         })
+        
     }
     async sendRecordRegisteredMessage(record:IRecordResolved){
         const rr = record.regulation
@@ -39,8 +87,9 @@ export class Notifier{
         const userIconURL = (await this.recordDatabase.getRunnerInfo(record.runnerID)).photoURL;
         const gameMode = await this.recordDatabase.getGameModeInfo(rrg.gameSystemID,rrg.gameModeID)
         this.sendMesssageToDiscord("submit",{
-            content: `:mailbox_with_mail: **New Submission(${record.id}) by ${record.runnerName}!** \n@${gameSystem.English}/${gameMode.English}`,
-            colorcode: 5620992,
+            content: `:mailbox_with_mail: **New Submission!** (${record.id})`,
+            gameSystem,gameMode,
+            colorcode: 0xe4a112,
             record: record,
             userIconURL: userIconURL,
             scoreType: gameMode.scoreType
@@ -70,10 +119,10 @@ export class Notifier{
             })
         }
         await this.sendMesssageToDiscord("delete",{
-            content: `:closed_book: ${(recordResolved.moderatorIDs.length === 0) ? "Offer" : "Record"}(**${record.id}**) is **Deleted By ${deletedBy}** \n@${gameSystem.English}/${gameMode.English}\n\nThe following JSON string is the data of the deleted Record.\`\`\`${JSON.stringify(record)}\`\`\`` + ((reason.length !== 0) ? `\n**reason:**\n ${reason}` : ""),
-            colorcode: 5620992,
-            record: recordResolved,
-            scoreType: gameMode.scoreType,userIconURL:userIconURL
+            content: `:closed_book: ${(recordResolved.moderatorIDs.length === 0) ? "Offer" : "Record"} ${record.id} is **Deleted.**`,
+            colorcode: 0x3b00d1,gameSystem,gameMode,
+            record: recordResolved,reason,attached:`The following JSON string is the data of the deleted Record.\`\`\`${JSON.stringify(record)}\`\`\``,
+            scoreType: gameMode.scoreType,userIconURL
         })
         
     }
@@ -101,10 +150,10 @@ export class Notifier{
         }
 
         await this.sendMesssageToDiscord("submit",{
-            content: `:closed_book: Record(**${recordResolved.id}**) is **Modified By ${modifiedBy}** \n@${gameSystem.English}/${gameMode.English}`+ ((reason.length !== 0) ? `\n\n**Reason:**\n ${reason}` : ""),
-            colorcode: 5620992,
-            record: recordResolved,
-            scoreType: gameMode.scoreType,userIconURL:userIconURL
+            content: `:closed_book: Record ${recordResolved.id} is **Modified.**`,
+            colorcode: 0xe4a112,gameSystem,gameMode,
+            record: recordResolved,reason,
+            scoreType: gameMode.scoreType,userIconURL
         })
     }
 
@@ -130,10 +179,10 @@ export class Notifier{
             })
         }
         await this.sendMesssageToDiscord("verify",{
-            content: `:mailbox_with_mail: Record(**${record.id}**) (from **${record.runnerName}**) is **verified by ${moderatorName}**.\n@${gameSystem.English}/${gameMode.English}`,
-            colorcode: 5620992,
+            content: `:mailbox_with_mail: Record ${record.id} is **Verified.**`,
+            colorcode: 0x5ad100,gameSystem,gameMode,
             record: record,
-            scoreType: gameMode.scoreType,userIconURL:userIconURL
+            scoreType: gameMode.scoreType,userIconURL
         })
         
     }

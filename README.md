@@ -98,10 +98,17 @@ https://fonts.google.com/specimen/Quicksand
 - M PLUS Rounded 1c
 https://fonts.google.com/specimen/M+PLUS+Rounded+1c
 
+
+- ファビコン favicon.icoを作ろう!
+https://ao-system.net/favicon/
+
 # 参考文献
 - Webサイトの利用規約(ひな形とQ&A)
 https://kiyaku.jp/hinagata/sns.html
 https://kiyaku.jp/faq/index.html
 
-- ファビコン favicon.icoを作ろう!
-https://ao-system.net/favicon/
+- カービィWiki
+https://kirby.fandom.com/ja/wiki/%E3%83%A1%E3%82%A4%E3%83%B3%E3%83%9A%E3%83%BC%E3%82%B8
+
+- Kirby Wiki
+https://kirby.fandom.com/wiki/Mid-Boss_All_Stars 

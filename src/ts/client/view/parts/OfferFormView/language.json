@@ -21,14 +21,14 @@
     },
     "URLInput":{
         "Notice":[{ 
-            "Japanese": "<strong class='u-redChara'>[必須]</strong> 登録する記録の証拠となる動画へのリンクを貼ります。", 
-            "English": "<strong class='u-redChara'>[Required]</strong> Enter a link of video proof." 
+            "Japanese": "<strong class='u-redChara'>[必須]</strong> 登録する記録の証拠となる画像/動画へのリンクを貼ります。", 
+            "English": "<strong class='u-redChara'>[Required]</strong> Enter a link of image / video proof." 
         },{ 
-            "Japanese": "TwitterかYoutubeのいずれかのリンクのみを受け付けます。",
-            "English": "This field only accepts a link from Twitter and Youtube." 
+            "Japanese": "基本的には、Twitter, Youtube, Imgur(直リンクあり) のリンクを受け付けます。",
+            "English": "Basically, This field only accepts a link from Twitter, YouTube and Imgur(Direct links are accepted.)." 
         },{ 
             "Japanese": "Youtubeへのリンクの場合、動画の開始秒数を指定することが出来ます。",
-            "English" : "When it is from Youtube, you can set the start of the movie by using URL parameter `t`."
+            "English" : "When it is from YouTube, you can set the start of the movie by using URL parameter `t`."
         }],
         "Error":{ "Japanese": "入力されたURLが不正です。", "English": "invalid link." }
     },

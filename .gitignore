@@ -8,3 +8,4 @@ public/js
 public/icon/IcooonMono
 firebase-debug.log
 .firebase
+secret.json

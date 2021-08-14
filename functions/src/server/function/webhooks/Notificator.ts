@@ -16,67 +16,72 @@ export class Notifier{
     constructor(recordDatabase:RecordDataBase){
         this.recordDatabase = recordDatabase;
     }
-    private async sendMesssageToDiscord(type:"submit"|"verify"|"add"|"delete",{attached=null,content,record,gameMode,gameSystem,colorcode,userIconURL,scoreType,reason = ""}
-        :{  content:string,attached?:string|null,
+    private async sendMesssageToDiscord(type:"submit"|"verify"|"add"|"delete",{By,attached=null,msgIcon,Verb_ed,record,gameMode,gameSystem,colorcode,userIconURL,scoreType,reason = ""}
+        :{  Verb_ed:string,attached?:string|null,By:{id:string,name:string,iconURL:string}
             record:IRecordResolved,gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections
-            userIconURL:string, scoreType:ScoreType,
+            userIconURL:string, scoreType:ScoreType,msgIcon:string,
             colorcode:number,reason?:string
         }){
             if (attached !== null) attached = `"${attached}"`
+            const body = `{
+                "content": ${attached},
+                "embeds": [
+                  {
+                    "title": "Record is **${Verb_ed}.**",
+                    "color": ${colorcode},
+                    "url": "${this.host}/?state=detailView&gs=${gameSystem.id}&gm=${gameMode.id}&id=${record.id}",
+                    "fields": [
+                      {
+                        "name": "**__${gameSystem.English} / ${gameMode.English}__**",
+                        "value":"ID : ${record.id}",
+                        "inline": false
+                      },
+                      {
+                        "name": "**__[ Runner ]__**",
+                        "value": "${record.runnerName}",
+                        "inline": true
+                      },
+                      {
+                        "name": "**__[ ${(scoreType === "time") ?  "Time":"Score"} ]__**",
+                        "value": "${ (scoreType === "time") ? converseMiliSecondsIntoTime(record.score):record.score}",
+                        "inline": true
+                      },
+                      {
+                        "name": "**__[ Ability ]__**",
+                        "value": "${record.regulation.abilityNames.join("\n")}",
+                        "inline": true
+                      },
+                      {
+                        "name": "**__[ Segment ]__**",
+                        "value": "${record.regulation.targetName}",
+                        "inline": true
+                      }${
+                          reason.length !== 0 ? `,{ "name": "**__[ Reason ]__**","value": "${reason.replace(/\"/g,`\"`)}","inline": false}`:""
+                        }
+                    ],
+                    "thumbnail":{
+                        "url":"https://firebasestorage.googleapis.com/v0/b/kss-recorders.appspot.com/o/icon.png?alt=media&token=bcb35206-fc4c-4d04-b6cd-45bbab213cc9"
+                    },
+                    "author": {
+                      "name": "Runner: ${record.runnerName}",
+                      "url": "${this.host}/?state=userPageInWhole&id=${record.runnerID}",
+                      "icon_url" : "${userIconURL}"
+                    },
+                    "timestamp": "${(new Date()).toISOString()}",
+                    "footer": {
+                      "text": "${Verb_ed} by ${By.name}",
+                      "icon_url": "${By.iconURL}"
+                    }
+                  }
+                ]
+              }`
             await fetch(webhookURL[type],
                 {
                 method:"POST",
                 headers:{
                     "Content-Type":"application/json"
                 },
-                body:`{
-                    "content": ${attached},
-                    "embeds": [
-                      {
-                        "title": "${content}",
-                        "color": ${colorcode},
-                        "url": "${this.host}/?state=detailView&gs=${gameSystem.id}&gm=${gameMode.id}&id=${record.id}",
-                        "fields": [
-                          {
-                            "name": "${gameSystem.English}/${gameMode.English}",
-                            "value":"ID : ${record.id}",
-                            "inline": true
-                          },
-                          {
-                            "name": "Runner",
-                            "value": "${record.runnerName}",
-                            "inline": true
-                          },
-                          {
-                            "name": "${(scoreType === "time") ?  "Time":"Score"}",
-                            "value": "${ (scoreType === "time") ? converseMiliSecondsIntoTime(record.score):record.score}",
-                            "inline": true
-                          },
-                          {
-                            "name": "Ability",
-                            "value": "${record.regulation.abilityNames.join("\n")}",
-                            "inline": true
-                          },
-                          {
-                            "name": "Segment",
-                            "value": "${record.regulation.targetName}",
-                            "inline": true
-                          }${
-                              reason.length !== 0 ? `,{ "name": "Reason","value": "${reason.replace(/\"/g,`\"`)}","inline": false}`:""
-                            }
-                        ],
-                        "author": {
-                          "name": "By ${record.runnerName}",
-                          "icon_url" : "${userIconURL}",
-                          "url": "${this.host}/?state=userPageInWhole&id=${record.runnerID}"
-                        },
-                        "footer": {
-                          "text": "Kirby-Speed/Score-Recorders",
-                          "icon_url": "https://firebasestorage.googleapis.com/v0/b/kss-recorders.appspot.com/o/icon.png?alt=media&token=bcb35206-fc4c-4d04-b6cd-45bbab213cc9"
-                        }
-                      }
-                    ]
-                  }`
+                body
         })
         
     }
@@ -84,11 +89,12 @@ export class Notifier{
         const rr = record.regulation
         const rrg = rr.gameSystemEnvironment
         const gameSystem = await this.recordDatabase.getGameSystemInfo(rrg.gameSystemID)
-        const userIconURL = (await this.recordDatabase.getRunnerInfo(record.runnerID)).photoURL;
+        const user = await this.recordDatabase.getRunnerInfo(record.runnerID)
+        const userIconURL = user.photoURL;
         const gameMode = await this.recordDatabase.getGameModeInfo(rrg.gameSystemID,rrg.gameModeID)
         this.sendMesssageToDiscord("submit",{
-            content: `:mailbox_with_mail: **New Submission!** (${record.id})`,
-            gameSystem,gameMode,
+            msgIcon: `:mailbox_with_mail:`, Verb_ed:`Submitted`,
+            gameSystem,gameMode,By:{id:record.runnerID,iconURL:userIconURL,name:user.English},
             colorcode: 0xe4a112,
             record: record,
             userIconURL: userIconURL,
@@ -101,7 +107,7 @@ export class Notifier{
         const gameSystem = await this.recordDatabase.getGameSystemInfo(rrg.gameSystemID)
         const gameMode = await this.recordDatabase.getGameModeInfo(rrg.gameSystemID,rrg.gameModeID)
         const userIconURL = (await this.recordDatabase.getRunnerInfo(recordResolved.runnerID)).photoURL;
-        const deletedBy = (await this.recordDatabase.getRunnerInfo(uid)).English;
+        const deletedBy = (await this.recordDatabase.getRunnerInfo(uid));
         const scoreInText =  gameMode.scoreType === "time" ? converseMiliSecondsIntoTime(recordResolved.score) : recordResolved.score.toString();
         //#CTODO これらのメッセージが送信されるかを確かめる
         //#CTODO ユーザーの通知数が更新されているかを確認
@@ -110,8 +116,8 @@ export class Notifier{
                 postedDate:Date.now(),
                 iconCSSClass:"fas fa-eraser u-redChara",
                 id:"",
-                Japanese:`<u>[**記録**](${this.host}/?state=detailView&gs=${rrg.gameSystemID}&gm=${rrg.gameModeID}&id=${recordResolved.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} )が<u>[**${deletedBy}**](${this.host}/?state=userPageInWhole&id=${uid})</u>によって削除されました。削除されたデータはDiscordにて通知されています。` + ((reason.length !== 0) ? `\n\n[理由]\n\n${reason}` : ""),
-                English:`<u>[**Record**](${this.host}/?state=detailView&gs=${rrg.gameSystemID}&gm=${rrg.gameModeID}&id=${recordResolved.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} ) is modified by <u>[**${deletedBy}**](${this.host}/?state=userPageInWhole&id=${uid})</u>. Reverification is required.` + ((reason.length !== 0) ? `\n\n[reason]\n\n${reason}` : ""),
+                Japanese:`<u>[**記録**](${this.host}/?state=detailView&gs=${rrg.gameSystemID}&gm=${rrg.gameModeID}&id=${recordResolved.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} )が<u>[**${deletedBy.Japanese}**](${this.host}/?state=userPageInWhole&id=${uid})</u>によって削除されました。削除されたデータはDiscordにて通知されています。` + ((reason.length !== 0) ? `\n\n[理由]\n\n${reason}` : ""),
+                English:`<u>[**Record**](${this.host}/?state=detailView&gs=${rrg.gameSystemID}&gm=${rrg.gameModeID}&id=${recordResolved.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} ) is modified by <u>[**${deletedBy.English}**](${this.host}/?state=userPageInWhole&id=${uid})</u>. Reverification is required.` + ((reason.length !== 0) ? `\n\n[reason]\n\n${reason}` : ""),
                 from:{
                     Japanese:`KSSRs(${rrg.gameSystemName}/${rrg.gameModeName})`,
                     English:`KSSRs(${rrg.gameSystemName}/${rrg.gameModeName})`
@@ -119,8 +125,9 @@ export class Notifier{
             })
         }
         await this.sendMesssageToDiscord("delete",{
-            content: `:closed_book: ${(recordResolved.moderatorIDs.length === 0) ? "Offer" : "Record"} ${record.id} is **Deleted.**`,
+            msgIcon: `:closed_book:`, Verb_ed:`Deleted`,
             colorcode: 0x3b00d1,gameSystem,gameMode,
+            By:{id:uid,iconURL:deletedBy.photoURL,name:deletedBy.English},
             record: recordResolved,reason,attached:`The following JSON string is the data of the deleted Record.\`\`\`${JSON.stringify(record)}\`\`\``,
             scoreType: gameMode.scoreType,userIconURL
         })
@@ -132,7 +139,7 @@ export class Notifier{
         const gameSystem = await this.recordDatabase.getGameSystemInfo(rrg.gameSystemID)
         const gameMode = await this.recordDatabase.getGameModeInfo(rrg.gameSystemID,rrg.gameModeID)
         const userIconURL = (await this.recordDatabase.getRunnerInfo(recordResolved.runnerID)).photoURL;
-        const modifiedBy = (await this.recordDatabase.getRunnerInfo(uid)).English;
+        const modifiedBy = (await this.recordDatabase.getRunnerInfo(uid));
         const scoreInText = gameMode.scoreType === "time" ? converseMiliSecondsIntoTime(recordResolved.score) : recordResolved.score.toString()
         
         if (uid !== recordResolved.runnerID || true) {
@@ -140,8 +147,8 @@ export class Notifier{
                 postedDate:Date.now(),
                 iconCSSClass:"fas fa-user-edit u-greenChara",
                 id:"",
-                Japanese:`<u>[**記録**](${this.host}/?state=detailView&gs=${rrg.gameSystemID}&gm=${rrg.gameModeID}&id=${recordResolved.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} )が<u>[**${modifiedBy}**](${this.host}/?state=userPageInWhole&id=${uid})</u>によって修正されました。再認証が必要です。` + ((reason.length !== 0) ? `\n\n[理由]\n\n${reason}` : ""),
-                English:`<u>[**Record**](${this.host}/?state=detailView&gs=${rrg.gameSystemID}&gm=${rrg.gameModeID}&id=${recordResolved.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} ) is modified by <u>[**${modifiedBy}**](${this.host}/?state=userPageInWhole&id=${uid})</u>. Reverification is required.` + ((reason.length !== 0) ? `\n\n[reason]\n\n${reason}` : ""),
+                Japanese:`<u>[**記録**](${this.host}/?state=detailView&gs=${rrg.gameSystemID}&gm=${rrg.gameModeID}&id=${recordResolved.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} )が<u>[**${modifiedBy.Japanese}**](${this.host}/?state=userPageInWhole&id=${uid})</u>によって修正されました。再認証が必要です。` + ((reason.length !== 0) ? `\n\n[理由]\n\n${reason}` : ""),
+                English:`<u>[**Record**](${this.host}/?state=detailView&gs=${rrg.gameSystemID}&gm=${rrg.gameModeID}&id=${recordResolved.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} ) is modified by <u>[**${modifiedBy.English}**](${this.host}/?state=userPageInWhole&id=${uid})</u>. Reverification is required.` + ((reason.length !== 0) ? `\n\n[reason]\n\n${reason}` : ""),
                 from:{
                     Japanese:`KSSRs(${rrg.gameSystemName}/${rrg.gameModeName})`,
                     English:`KSSRs(${rrg.gameSystemName}/${rrg.gameModeName})`
@@ -150,8 +157,8 @@ export class Notifier{
         }
 
         await this.sendMesssageToDiscord("submit",{
-            content: `:closed_book: Record ${recordResolved.id} is **Modified.**`,
-            colorcode: 0xe4a112,gameSystem,gameMode,
+            msgIcon: `:closed_book:`, Verb_ed:`Modified`,
+            colorcode: 0xe4a112,gameSystem,gameMode,By:{id:uid,iconURL:modifiedBy.photoURL,name:modifiedBy.English},
             record: recordResolved,reason,
             scoreType: gameMode.scoreType,userIconURL
         })
@@ -163,15 +170,15 @@ export class Notifier{
         const gameSystem = await this.recordDatabase.getGameSystemInfo(rrg.gameSystemID)
         const gameMode = await this.recordDatabase.getGameModeInfo(rrg.gameSystemID,rrg.gameModeID)
         const userIconURL = (await this.recordDatabase.getRunnerInfo(record.runnerID)).photoURL;
-        const moderatorName = (await this.recordDatabase.getRunnerInfo(moderatorID)).English
+        const moderator = (await this.recordDatabase.getRunnerInfo(moderatorID))
         const scoreInText = gameMode.scoreType === "time" ? converseMiliSecondsIntoTime(record.score) : record.score
         if (moderatorID !== record.runnerID || true) {
             await recordDataBase.sendNotification(record.runnerID,{
                 postedDate:Date.now(),
                 iconCSSClass:"fas fa-user-check u-blueChara",
                 id:"",
-                Japanese:`<u>[**記録**](${this.host}/?state=detailView&gs=${rrg.gameSystemID}&gm=${rrg.gameModeID}&id=${record.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} )が<u>[**${moderatorName}**](${this.host}/?state=userPageInWhole&id=${moderatorID})</u>によって承認されました！`,
-                English:`<u>[**Record**](${this.host}/?state=detailView&gs=${rrg.gameSystemID}&gm=${rrg.gameModeID}&id=${record.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} ) is verified by <u>[**${moderatorName}**](${this.host}/?state=userPageInWhole&id=${moderatorID})</u>!`,
+                Japanese:`<u>[**記録**](${this.host}/?state=detailView&gs=${rrg.gameSystemID}&gm=${rrg.gameModeID}&id=${record.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} )が<u>[**${moderator.Japanese}**](${this.host}/?state=userPageInWhole&id=${moderatorID})</u>によって承認されました！`,
+                English:`<u>[**Record**](${this.host}/?state=detailView&gs=${rrg.gameSystemID}&gm=${rrg.gameModeID}&id=${record.id})</u>(${scoreInText} : ${rr.abilityNames.join(", ")} - ${rr.targetName} ) is verified by <u>[**${moderator.English}**](${this.host}/?state=userPageInWhole&id=${moderatorID})</u>!`,
                 from:{
                     Japanese:`KSSRs(${rrg.gameSystemName}/${rrg.gameModeName})`,
                     English:`KSSRs(${rrg.gameSystemName}/${rrg.gameModeName})`
@@ -179,8 +186,8 @@ export class Notifier{
             })
         }
         await this.sendMesssageToDiscord("verify",{
-            content: `:mailbox_with_mail: Record ${record.id} is **Verified.**`,
-            colorcode: 0x5ad100,gameSystem,gameMode,
+            msgIcon: `:mailbox_with_mail:`, Verb_ed:`Verified`,
+            colorcode: 0x5ad100,gameSystem,gameMode,By:{id:moderatorID,iconURL:moderator.photoURL,name:moderator.English},
             record: record,
             scoreType: gameMode.scoreType,userIconURL
         })

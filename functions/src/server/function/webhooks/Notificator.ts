@@ -27,7 +27,7 @@ export class Notifier{
                 "content": ${attached},
                 "embeds": [
                   {
-                    "title": "Record is **${Verb_ed}.**",
+                    "title": "${msgIcon} Record is **${Verb_ed}.**",
                     "color": ${colorcode},
                     "url": "${this.host}/?state=detailView&gs=${gameSystem.id}&gm=${gameMode.id}&id=${record.id}",
                     "fields": [

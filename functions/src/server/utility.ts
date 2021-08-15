@@ -16,6 +16,5 @@ export function createDefaultUserData(user:firebase.auth.UserRecord):IRunner{
     }
 }
 export function isProducedVersion(){
-    if (firebaseConfig === undefined) throw new Error("実行環境がFirebase上のものではありません。")
     return !firebaseConfig.projectId.endsWith("-dev")
 }

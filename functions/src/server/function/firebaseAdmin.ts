@@ -1,4 +1,5 @@
 import firebase from "firebase-admin"
+import { checkInputObjectWithErrorPossibility } from "../../../../src/ts/utility/InputCheckerUtility"
 
 firebase.initializeApp()
 export const firebaseAdmin = {
@@ -7,9 +8,8 @@ export const firebaseAdmin = {
 }
 export const firebaseConfig = 
 (() => {
-        const result = JSON.parse(process.env.FIREBASE_CONFIG ?? "{}")
-        if (Object.entries(result).length === 3) return undefined
-        return result as {
-            databaseURL:string, storageBucket:string,projectId:string
-        }
+        if (process.env.FIREBASE_CONFIG === undefined) throw new Error("実行環境がFirebase上のものではありません。")
+        const result = JSON.parse(process.env.FIREBASE_CONFIG)
+        if (!checkInputObjectWithErrorPossibility<{storageBucket:string, projectId:string}>(result,{storageBucket:"string", projectId:"string"},"object")) throw new Error()
+        return result
 })()

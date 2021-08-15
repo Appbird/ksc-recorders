@@ -8,7 +8,7 @@ export async function convertTagNameToTagID(gameSystemID: string, recordDataBase
 
     return await Promise.all(result.map((ele, index) => {
         if (ele === undefined) {
-            const hashTagItem: any = { id: "" };
+            const hashTagItem:any = { id: "", isApproved:false };
             hashTagItem[language] = tagNames[index];
             return recordDataBase.writeHashTagInfo(gameSystemID, hashTagItem);
         }

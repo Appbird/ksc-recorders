@@ -34,6 +34,9 @@ export class S_ModifyRecordForm
             const abilities = (await this.app.accessToAPI("list_abilities",{
                     gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed}
                 })).result
+            const tags = (await this.app.accessToAPI("list_hashTags_onlyApproved",{
+                gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed}
+            })).result
             const record = (await this.app.accessToAPI("record_rawdata",{
                                 gameSystemEnv:{
                                     gameSystemID:this.requiredObj.targetGameMode.gameSystem.id,
@@ -42,9 +45,10 @@ export class S_ModifyRecordForm
                                 id:this.requiredObj.id,
                                 lang:this.app.state.language
                             })).result
+            
             const view = new OfferFormView(
                 this.articleDOM.appendChild(document.createElement("div")),
-                this.app,difficulties,abilities,{
+                this.app,difficulties,abilities,tags,{
                     onDecideEventListener:async (input) => {
                         this.app.goToTop();
                         this.sendInputInfo(this.app.state.gameSystemIDDisplayed,this.app.state.gameModeIDDisplayed,this.requiredObj.id,input)
@@ -71,7 +75,7 @@ export class S_ModifyRecordForm
                 })
                 this.app.notie.successAlert({
                     Japanese:"記録の修正に成功しました！(再度承認が必要です。)",
-                    English:"Successed in modifying the record!(The record needs another verification.)"
+                    English:"Success in modifying the record! (The record needs another verification.)"
                 })
                 this.app.transition("detailView",{gameSystemEnv:{gameSystemID:gameSystemID,gameModeID:gameModeID},id:recordID,lang:this.app.state.language})
                 

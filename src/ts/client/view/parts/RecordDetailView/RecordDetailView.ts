@@ -26,7 +26,7 @@ export class RecordDetailView implements IView{
             rankOfTheRecord?:number,
             language:LanguageInApplication
             clickedCallBacks:TagsClickedCallbacks,
-            onClickRunnerName:()=>void,
+            onClickRunnerName:(runnerID:string)=>void,
             verifiedTime:"time"|"date"
         }
     ){
@@ -74,7 +74,7 @@ export class RecordDetailView implements IView{
             this.rankElement = findElementByClassNameWithErrorPossibility(recordDetailElement,"Rank")
             this.setRank(rankOfTheRecord)
             //#CTODO クリックすると走者ページに飛ぶようにしたい
-            findElementByClassNameWithErrorPossibility(recordDetailElement,"onClickEvent_RunnerName").addEventListener("click",() => onClickRunnerName())
+            findElementByClassNameWithErrorPossibility(recordDetailElement,"onClickEvent_RunnerName").addEventListener("click",() => onClickRunnerName(recordDetail.runnerID))
             const verificationBoard = findElementByClassNameWithErrorPossibility(recordDetailElement,"verificationBoard")
             
             if (recordDetail.moderatorIDs !== undefined && recordDetail.moderatorIDs.length !== 0) {
@@ -82,7 +82,7 @@ export class RecordDetailView implements IView{
                 for ( let i = 0; i < recordDetail.moderatorIDsResolved.length; i++){
                     const nameElement = board.appendChild(htmlC.elementWithoutEscaping`<div class="u-inline"><p class="u-clickable u-underline u-inline">${recordDetail.moderatorIDsResolved[i]}</p> <p class="u-inline u-smallerChara"> ${
                         formatDate(recordDetail.moderatorIDs[i].date,verifiedTime )} </p></div>` as HTMLElement)
-                    nameElement.addEventListener("click", onClickRunnerName)
+                    nameElement.addEventListener("click", () => onClickRunnerName(recordDetail.runnerID))
                 }
             } else {
                 verificationBoard.appendChild(htmlC.elementWithoutEscaping`<div class="u-redChara u-bolderChara"> Unverified </div>`)

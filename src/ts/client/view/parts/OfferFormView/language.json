@@ -72,6 +72,9 @@
         "Notice":[{
             "Japanese": "[任意] 使ったTAにおけるテクニックの名前などをタグとして登録します。",
             "English": "[Optional] You can tag the record here. (such as techniques in your record)"
+        },{
+            "Japanese": "サジェストとして承認された記録に使われたタグが提示されます。",
+            "English": "Tags used in the approved record will be suggested when you start to enter something in this textbox."
         }]
     },
     "RunnersNote":{

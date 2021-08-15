@@ -5,6 +5,7 @@ import {webhookURL} from "../../secret.json"
 import fetch from "node-fetch";
 import { IGameModeItemWithoutCollections, ScoreType } from "../../../../../src/ts/type/list/IGameModeItem";
 import { IGameSystemInfoWithoutCollections } from "../../../../../src/ts/type/list/IGameSystemInfo";
+import { isProducedVersion } from "../../utility";
 //#NOTE これの実行には{webhookURL:string}型のオブジェクトが記述されたjsonファイルを書き込んでおく必要がある。
 //#CTODO こいつがちゃんと投稿されるか確認する。
 //#NOTE 
@@ -22,7 +23,7 @@ export class Notifier{
             userIconURL:string, scoreType:ScoreType,msgIcon:string,
             colorcode:number,reason?:string
         }){
-            if (attached !== null) attached = `"${attached}"`
+            if (attached !== null) attached = `"${attached.replace(/\"/g,`'`)}"`
             const body = `{
                 "content": ${attached},
                 "embeds": [
@@ -75,7 +76,7 @@ export class Notifier{
                   }
                 ]
               }`
-            await fetch(webhookURL[type],
+            await fetch( isProducedVersion() ? webhookURL[type] : webhookURL["test"],
                 {
                 method:"POST",
                 headers:{
@@ -111,7 +112,7 @@ export class Notifier{
         const scoreInText =  gameMode.scoreType === "time" ? converseMiliSecondsIntoTime(recordResolved.score) : recordResolved.score.toString();
         //#CTODO これらのメッセージが送信されるかを確かめる
         //#CTODO ユーザーの通知数が更新されているかを確認
-        if (uid === recordResolved.runnerID) {
+        if (uid !== recordResolved.runnerID) {
             await recordDataBase.sendNotification(recordResolved.runnerID,{
                 postedDate:Date.now(),
                 iconCSSClass:"fas fa-eraser u-redChara",
@@ -126,7 +127,7 @@ export class Notifier{
         }
         await this.sendMesssageToDiscord("delete",{
             msgIcon: `:closed_book:`, Verb_ed:`Deleted`,
-            colorcode: 0x3b00d1,gameSystem,gameMode,
+            colorcode: 0x3b00d1, gameSystem, gameMode,
             By:{id:uid,iconURL:deletedBy.photoURL,name:deletedBy.English},
             record: recordResolved,reason,attached:`The following JSON string is the data of the deleted Record.\`\`\`${JSON.stringify(record)}\`\`\``,
             scoreType: gameMode.scoreType,userIconURL
@@ -142,7 +143,7 @@ export class Notifier{
         const modifiedBy = (await this.recordDatabase.getRunnerInfo(uid));
         const scoreInText = gameMode.scoreType === "time" ? converseMiliSecondsIntoTime(recordResolved.score) : recordResolved.score.toString()
         
-        if (uid !== recordResolved.runnerID || true) {
+        if (uid !== recordResolved.runnerID) {
             await recordDataBase.sendNotification(recordResolved.runnerID,{
                 postedDate:Date.now(),
                 iconCSSClass:"fas fa-user-edit u-greenChara",
@@ -172,7 +173,7 @@ export class Notifier{
         const userIconURL = (await this.recordDatabase.getRunnerInfo(record.runnerID)).photoURL;
         const moderator = (await this.recordDatabase.getRunnerInfo(moderatorID))
         const scoreInText = gameMode.scoreType === "time" ? converseMiliSecondsIntoTime(record.score) : record.score
-        if (moderatorID !== record.runnerID || true) {
+        if (moderatorID !== record.runnerID) {
             await recordDataBase.sendNotification(record.runnerID,{
                 postedDate:Date.now(),
                 iconCSSClass:"fas fa-user-check u-blueChara",

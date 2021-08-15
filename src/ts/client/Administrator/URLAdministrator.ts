@@ -11,6 +11,10 @@ export class URLAdministrator{
     redirect():boolean{
         const url = this.getURL()
         switch(url.searchParams.get("state")) {
+            case "termOfUse":{
+                this.app.transition("termOfUse",null)
+                return true;
+            }
             case "userPageInWhole":{
                 const id = url.searchParams.get("id")
                 if (id === null) return false;

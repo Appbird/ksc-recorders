@@ -30,9 +30,9 @@ export class RecordDataBase{
     
     
 
-    private async getCollection<T extends IItemOfResolveTableToName>(ref:FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>):Promise<T[]>{
+    private async getCollection<T extends IItemOfResolveTableToName>(ref:FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>|FirebaseFirestore.Query<FirebaseFirestore.DocumentData>):Promise<T[]>{
         const result = await ref.get()
-        if (result.empty) throw new Error(`[Not Found] コレクション ${ref.path} が存在しません。`);
+        if (result.empty) return []
         return result.docs.map(doc => doc.data()) as T[];
     }
     private async getDoc<T extends IItemOfResolveTableToName>(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>):Promise<T>{
@@ -48,6 +48,9 @@ export class RecordDataBase{
     private async modifyDoc<T extends IItemOfResolveTableToName>(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>,object:T):Promise<void>{
         object.id = ref.id;
         await ref.set(object);
+    }
+    private async updateDoc(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>,object:any):Promise<void>{
+        await ref.update(object);
     }
     private async deleteDoc(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>):Promise<void>{
         ref.delete();
@@ -87,8 +90,10 @@ export class RecordDataBase{
     deleteRunnerInfo        = (uid:string) => this.deleteDoc(this.getRunnersRef().doc(uid))
     
     getHashTagCollection    = (gameSystemID:string) => this.getCollection<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("tags"))
+    getHashTagCollection_onlyApproved    = (gameSystemID:string) => this.getCollection<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("tags").where("isApproved","==",true))
     getHashTagInfo          = (gameSystemID:string,id:string) => this.getDoc<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("tags").doc(id))
     writeHashTagInfo        = (gameSystemID:string,obj:IHashTagItem) => this.writeDoc<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("tags"),obj)
+    updateHashTagInfo        = (gameSystemID:string,id:string,obj:any) => this.updateDoc(this.getGameSystemRef(gameSystemID).collection("tags").doc(id),obj)
     modifyHashTagInfo       = (gameSystemID:string,id:string,obj:IHashTagItem) => this.modifyDoc<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("tags").doc(id),obj)
     deleteHashTagInfo       = (gameSystemID:string,id:string) => this.deleteDoc(this.getGameSystemRef(gameSystemID).collection("tags").doc(id))
     
@@ -210,6 +215,9 @@ export class RecordDataBase{
         const record = await this.getRecord(gameSystemID,gameModeID,recordID)
         record.moderatorIDs.push({id:moderatorID,date:Date.now()})
         console.log(`[${new Date().toUTCString()}:Verified] Record ${gameSystemID}/${gameModeID}/${recordID} is verified.`)
+        for (const tagID of record.tagID){
+            await this.updateHashTagInfo(gameSystemID,tagID,{isApproved:true})
+        }
         await this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(recordID).set(record)
         return record;
     }

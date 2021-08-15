@@ -1,38 +1,36 @@
 import Choices from "choices.js";
-import { choiceDescription, choiceString, MultiLanguageDescription, selectAppropriateName } from "../../../../utility/aboutLang";
-import { IItemOfResolveTableToName } from "../../../../type/list/IItemOfResolveTableToName";
+import { choiceDescription, choiceString, MultiLanguageDescription } from "../../../../utility/aboutLang";
 import { LanguageInApplication } from "../../../../type/LanguageInApplication";
 import { IView } from "../../IView";
 
-export class SelectChoicesCapsuled<T extends IItemOfResolveTableToName> implements IView {
-    private _data: T[];
+export class SelectTagChoicesCapsuled implements IView {
+    private _data: string[];
     private readonly _language: LanguageInApplication;
     private _choices: Choices;
     private container: HTMLSelectElement;
     constructor(
-        container: HTMLSelectElement, data: T[],
+        container: HTMLSelectElement, data: string[],
         {
-            needMultipleSelect = false, maxItemCount = 1, needDuplicatedSelect = false, language,
+            language,
             removeItemButton = true, disable = false, 
-            maxItemText, placeholderValue = undefined, noChoiceText = { JDescription: "選べるものがありません", EDescription: "There are no item to select." },
-            noResultText = { JDescription: "検索に合致するものがありませんでした。", EDescription: "No item were found." }, shouldSort=false
+            maxItemText, placeholderValue = undefined, noChoiceText = { JDescription: "このゲームモードの中で今まで使われたタグはありません。", EDescription: "There isn't any tag used before in this gamemode." },
+            noResultText = { JDescription: "Enterを押すとタグが追加されます。", EDescription: "Press Enter to add new tag." }, shouldSort=false
         }: {
-            needMultipleSelect?: boolean; placeholderValue?: string; language: LanguageInApplication;
-            needDuplicatedSelect?: boolean; maxItemCount?: number; 
+            placeholderValue?: string; language: LanguageInApplication;
             removeItemButton?: boolean; disable?: boolean; maxItemText?: MultiLanguageDescription;
             noChoiceText?: MultiLanguageDescription; noResultText?: MultiLanguageDescription; shouldSort?:boolean;
         }
     ) {
-        container.multiple = needMultipleSelect;
+        container.multiple = true;
         container.disabled = disable;
         const result = new Choices(
             container,
             {
-                choices: data.map((ele) => { return { value: ele.id, label: choiceString(ele, language) }; }),
+                choices: data.map((ele) => { return {label:ele,value:ele} }),
                 placeholderValue,
-                maxItemCount,
                 maxItemText: choiceDescription(maxItemText, language),
                 removeItemButton,
+                maxItemCount:10,
                 shouldSort,
                 noChoicesText: choiceDescription(noChoiceText, language),
                 noResultsText: choiceDescription(noResultText, language),
@@ -42,30 +40,25 @@ export class SelectChoicesCapsuled<T extends IItemOfResolveTableToName> implemen
         this._data = data;
         this._choices = result;
         this.container = container;
+        const input = this.container.parentElement?.getElementsByTagName("input")[0]
+        if (input === undefined) throw new Error("Choices要素の中にあるinput要素を発見できませんでした。")
+            
+        input.addEventListener("keydown",(event) => {
+            if (event.key !== "Enter" || input.value.replace(/\s/g,"").length === 0 || this.data.includes(input.value)) return;
+            this.appendChoices(input.value.replace(/^\s+/,"").replace(/(\s+)$/,""))
+            input.value = ""
+        })
 
-        
-        
-        if (!needDuplicatedSelect)
-            return;
-
-        this.container.addEventListener("addItem", (event: any) => {
-            result.setChoices([{ label: event.detail.label, value: event.detail.value }]);
-        });
-        this.container.addEventListener("removeItem", () => {
+        this.container.addEventListener("removeItem", (event:any) => {
             result.clearStore();
-            result.setChoices(data.map((ele) => { return { value: ele.id, label: choiceString(ele, language) }; }));
+            this._data = this.data.filter(choiceText => choiceText !== event.detail.value)
+            result.setChoices(this.data.map((ele) => { return { value: ele, label: choiceString(ele, language) }; }));
         });
     }
     addEventListener(eventType: "addItem" | "click" | "hideDropdown" | "change" | "choice", callback: (event: any) => void) {
+
         this.container.addEventListener(eventType, callback);
-    }
-    getValue(valueOnly: boolean = true) {
-        return this._choices.getValue(valueOnly);
-    }
-    getValueAsValue(valueOnly: boolean = true): string {
-        let choiced = this._choices.getValue(valueOnly);
-        if (Array.isArray(choiced)) return choiced[0];
-        return choiced;
+        
     }
     getValueAsArray(valueOnly: boolean = true): string[] {
         let choiced = this._choices.getValue(valueOnly);
@@ -76,12 +69,21 @@ export class SelectChoicesCapsuled<T extends IItemOfResolveTableToName> implemen
     setSelected(IDs:string|string[]){
         this._choices.setChoiceByValue(IDs)
     }
-    setChoices(item: T[]) {
+    setChoices(item: string[]) {
         
         this._choices.setChoices(item.map(ele => {
-            return { value: ele.id, label: choiceString(ele, this._language) };
+            return { value: ele, label: ele };
         }));
         this._data = item;
+    }
+    appendChoices(item: string) {
+        const values = this.getValueAsArray()
+        values.push(item)
+        this.data.push(item)
+        this._choices.setChoices(this.data.map(ele => {
+            return { value: ele, label: ele };
+        }));
+        this.setSelected(values)
     }
     clearChoices() {
         this._choices.clearChoices();

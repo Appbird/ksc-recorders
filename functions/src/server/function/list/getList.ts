@@ -44,7 +44,8 @@ export const gameSystems    = async (database:RecordDataBase,input:APIFunctions[
 export const runners        = async (database:RecordDataBase,input:APIFunctions["list_runners"]["atServer"]) =>  getList_UseId(input,() => database.getRunnerCollection())
 
 export const gameModes    = async (database:RecordDataBase,input:APIFunctions["list_gameModes"]["atServer"]) =>  getList_UseSIdId(input,(s) => database.getGameModeCollection(s))
-export const hashTags       = async (database:RecordDataBase,input:APIFunctions["list_hashTags"]["atServer"]) =>  getList_UseSIdId(input,(s) => database.getHashTagCollection(s))
+export const hashTags     = async (database:RecordDataBase,input:APIFunctions["list_hashTags"]["atServer"]) =>  getList_UseSIdId(input,(s) => database.getHashTagCollection(s))
+export const hashTags_onlyApproved = async (database:RecordDataBase,input:APIFunctions["list_hashTags_onlyApproved"]["atServer"]) =>  getList_UseSIdId(input,(s) => database.getHashTagCollection_onlyApproved(s))
 
 export const targets        = async (database:RecordDataBase,input:APIFunctions["list_targets"]["atServer"]) =>  getList_UseSIdMIdId(input,(s,m) => database.getTargetCollection(s,m))
 export const abilities      = async (database:RecordDataBase,input:APIFunctions["list_abilities"]["atServer"]) =>  getList_UseSIdMIdId(input,(s,m) => database.getAbilityCollection(s,m))

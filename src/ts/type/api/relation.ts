@@ -16,6 +16,7 @@ export interface APIFunctions_noChanging{
     list_abilities:IReceivedData_listAbilities;
     list_targets:IReceivedData_listTargets;
     list_hashTags:IReceivedData_listHashTags;
+    list_hashTags_onlyApproved:IReceivedData_listHashTags;
 
     list_gameSystem:IReceivedData_listGameSystem;
     list_gameMode:IReceivedData_listGameMode;

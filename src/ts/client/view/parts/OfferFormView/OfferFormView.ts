@@ -15,6 +15,8 @@ import { TextChoicesCapsuled } from "../Input/TextChoicesCapsuled";
 import { ISentRecordOffer } from "../../../../type/api/record/changing/IReceivedDataAtServer_recordWrite";
 import { IRecord } from "../../../../type/record/IRecord";
 import context from "./language.json"
+import { SelectTagChoicesCapsuled } from "../Input/SelectTagChoicesCapsuled";
+import { IHashTagItem } from "../../../../type/list/IGameSystemInfo";
 export class OfferFormView implements IView {
     private container: HTMLElement;
     private app: IAppUsedToReadAndChangeOnlyPageState;
@@ -31,7 +33,7 @@ export class OfferFormView implements IView {
     private abilityChoices: SelectChoicesCapsuled<IAbilityItem>;
     private targetChoices: SelectChoicesCapsuled<ITargetItem>;
     
-    private tagInput:TextChoicesCapsuled;
+    private tagInput:SelectTagChoicesCapsuled;
 
     private simpleMDE:SimpleMDE;
     private errorDisplay:HTMLElement;
@@ -45,7 +47,7 @@ export class OfferFormView implements IView {
         this.container.innerHTML = "";
     }
     //#CH  appへの依存を解消する。具体的にappを利用する処理を全てPage側で定義させ、それをコールバックでこちらに渡す。
-    constructor(container:HTMLElement,app: IAppUsedToReadAndChangeOnlyPageState, difficulties: IGameDifficultyItem[], abilities: IAbilityItem[],{
+    constructor(container:HTMLElement,app: IAppUsedToReadAndChangeOnlyPageState, difficulties: IGameDifficultyItem[], abilities: IAbilityItem[],tags:IHashTagItem[],{
         onDecideEventListener,
         defaultRecord
     }:{
@@ -69,7 +71,7 @@ export class OfferFormView implements IView {
         this.difficultyChoices = this.createDifficultyChoices(difficulties);
         this.targetChoices = this.createTargetChoices([]);
         this.abilityChoices = this.createAbilityChoices(abilities);
-        this.tagInput = this.createTagInputChoices();
+        this.tagInput = this.createTagInputChoices(tags);
         //#CH 追加されるタグの色を対応させる。
         
         this.setTargetDropdownEventListener();
@@ -117,7 +119,7 @@ export class OfferFormView implements IView {
 
         await this.setTargetChoices()
         this.targetChoices.setSelected(rr.targetID)
-        this.tagInput.valueAsArray = record.tagName,
+        this.tagInput.setSelected(record.tagName),
         this.simpleMDE.value(record.note)
     }
     private async whenDecide(){
@@ -134,6 +136,7 @@ export class OfferFormView implements IView {
         const abilityIDs = this.abilityChoices.getValueAsArray();
         const targetID = this.targetChoices.getValueAsValue()
         const difficultyID = this.difficultyChoices.getValueAsValue();
+        
         if (difficultyID === undefined || targetID === undefined || abilityIDs.length === 0 ){
                 this.errorDisplay.textContent = choiceString(context.ErrorText.lack,this.app.state.language)
                 this.button.classList.remove("u-unused")
@@ -147,7 +150,7 @@ export class OfferFormView implements IView {
                     case "time": return convertTimeIntoNumber(score);
                 }
             })(),
-            tagName:this.tagInput.valueAsArray,
+            tagName:this.tagInput.getValueAsArray(),
             languageOfTagName:this.app.state.language,
             link:[this.URLInput.value],
             note:this.simpleMDE.value(),
@@ -161,6 +164,8 @@ export class OfferFormView implements IView {
             }
         
         })
+        this.simpleMDE.value("")
+        this.simpleMDE.clearAutosavedValue()
     }
     private modifyScoreInput() {
         const score = this.scoreInput.value;
@@ -280,7 +285,7 @@ export class OfferFormView implements IView {
         </div>`);
         return new SelectChoicesCapsuled(
             findElementByClassNameWithErrorPossibility(difficultySelector, "offerForm__difficultySelector__Choices").appendChild(document.createElement("select")),
-            difficulties, { language: this.app.state.language,needMultipleSelect:false });
+            difficulties, { language: this.app.state.language,needMultipleSelect:false,shouldSort:true });
     }
 
     private createTargetChoices(targets: ITargetItem[]) {
@@ -315,7 +320,7 @@ export class OfferFormView implements IView {
             findElementByClassNameWithErrorPossibility(abilitySelector, "offerForm__abilitySelector__Choices").appendChild(document.createElement("select")),
             abilities, { language: this.app.state.language, 
                 maxItemCount:this.app.state.gameSystemEnvDisplayed.gameMode?.maxNumberOfPlayer,
-                needMultipleSelect: true, needDuplicatedSelect: true ,
+                needMultipleSelect: true, needDuplicatedSelect: true , shouldSort:true,
                 maxItemText:
                     {
                         JDescription:`このゲームモードは最大${maxNumberOfPlayer}人プレイまで対応しています。`,
@@ -324,7 +329,7 @@ export class OfferFormView implements IView {
             });
     }
 
-    private createTagInputChoices() {
+    private createTagInputChoices(tags:IHashTagItem[]) {
         const tagSegment = this.container.appendChild(this.htmlConverter.elementWithoutEscaping`
         <div class="offerForm__tagInput">
         <h1>${generateIcooonHTML({icooonName:"tag"})}${context.TagInput.Header}</h1>
@@ -332,10 +337,14 @@ export class OfferFormView implements IView {
             </div>
             <ul class="u-margin05em">
                     <li>${context.TagInput.Notice[0]}</li>
+                    <li>${context.TagInput.Notice[1]}</li>
             </ul>
         </div>`);
-        return new TextChoicesCapsuled(
-            findElementByClassNameWithErrorPossibility(tagSegment,"offerForm__tagInput__Choices").appendChild(document.createElement("input"))
+        return new SelectTagChoicesCapsuled(
+            findElementByClassNameWithErrorPossibility(tagSegment,"offerForm__tagInput__Choices").appendChild(document.createElement("select")),
+            tags.map(tag => choiceString(tag,this.app.state.language)),{
+                language:this.app.state.language,shouldSort:true
+            }
         )
     }
 

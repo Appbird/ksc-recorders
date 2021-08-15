@@ -17,7 +17,7 @@ import { APIFunctions } from "../../../../src/ts/type/api/relation";
 import { IReceivedData, IReceivedDataAtClient, IReceivedDataAtServer } from "../../../../src/ts/type/api/transmissionBase";
 import { ValidateFunction } from '../../../../src/ts/type/api/ValidateFunction';
 import { RecordDataBase } from "../firestore/RecordDataBase";
-import { abilities, difficulties, gameModes, gameSystems, hashTags, runners, targets } from "./list/getList";
+import { abilities, difficulties, gameModes, gameSystems, hashTags, hashTags_onlyApproved, runners, targets } from "./list/getList";
 import { ability, difficulty, gameMode, gameSystem, hashTag, runner, target } from "./list/pickUp";
 import { detail } from "./record/detail";
 import { search } from "./record/search";
@@ -61,6 +61,7 @@ apiList.set<APIFunctions["list_gameSystems"]>  ("/list/gameSystems", isIReceived
 apiList.set<APIFunctions["list_runners"]>      ("/list/runners", isIReceivedDataAtServer_getlist_UseId, runners)
 apiList.set<APIFunctions["list_gameModes"]>    ("/list/gameModes", isIReceivedDataAtServer_getlist_UseSIdId, gameModes)
 apiList.set<APIFunctions["list_hashTags"]>     ("/list/hashTags",isIReceivedDataAtServer_getlist_UseSIdId,hashTags)
+apiList.set<APIFunctions["list_hashTags_onlyApproved"]>("/list/hashTags/onlyApproved",isIReceivedDataAtServer_getlist_UseSIdId,hashTags_onlyApproved)
 apiList.set<APIFunctions["list_difficulties"]> ("/list/difficulties", isIReceivedDataAtServer_getlist_UseSIdMIdId, difficulties)
 apiList.set<APIFunctions["list_abilities"]>    ("/list/abilities", isIReceivedDataAtServer_getlist_UseSIdMIdId, abilities)
 apiList.set<APIFunctions["list_targets"]>      ("/list/targets", isIReceivedDataAtServer_getlist_UseSIdMIdId, targets)

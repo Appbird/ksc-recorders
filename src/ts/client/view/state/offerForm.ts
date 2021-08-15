@@ -37,9 +37,12 @@ export class S_OfferForm
             const abilities = (await this.app.accessToAPI("list_abilities",{
                 gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed}
             })).result
+            const tags = (await this.app.accessToAPI("list_hashTags_onlyApproved",{
+                gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed}
+            })).result
             const view = new OfferFormView(
                 this.articleDOM.appendChild(document.createElement("div")),
-                this.app,difficulties,abilities,{
+                this.app,difficulties,abilities,tags,{
                     onDecideEventListener:async (input) => this.decide(input)
                 }
             )

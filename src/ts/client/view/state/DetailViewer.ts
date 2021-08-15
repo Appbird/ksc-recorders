@@ -74,9 +74,7 @@ export class S_DetailViewer
             const detailView = new RecordDetailView(
                 detailDiv.appendChild(document.createElement("div")),record,{
                 language:this.app.state.language,
-                onClickRunnerName:() => {
-                    this.app.transition("userPageInSpecific",{gameSystem,gameMode,runnerID:record.runnerID})
-                },
+                onClickRunnerName:(runnerID) => this.app.transition("userPageInSpecific",{gameSystem,gameMode,runnerID}),
                 clickedCallBacks:generateClickedTagsCallBacks(this.app,record,condition),
                 verifiedTime: this.app.loginAdministratorReadOnly.userInformation_uneditable?.isCommitteeMember ? "time" : "date"
             });

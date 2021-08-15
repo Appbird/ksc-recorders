@@ -22,4 +22,5 @@ export interface CollectionInIGameSystemInfo {
 
 export interface IHashTagItem extends IItemOfResolveTableToName{
     description?:string;
+    isApproved:boolean;
 }

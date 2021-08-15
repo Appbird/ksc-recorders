@@ -1,5 +1,6 @@
 import { LanguageInApplication } from "../../../type/LanguageInApplication";
-import { element } from "../../../utility/ViewUtility";
+import { choiceString } from "../../../utility/aboutLang";
+import { element, elementWithoutEscaping } from "../../../utility/ViewUtility";
 import { IAppUsedToReadAndChangePage } from "../../interface/AppInterfaces";
 import { appendElement, createElementWithIdAndClass } from "../../utility/aboutElement";
 import { RadioButtonCupsuled } from "../parts/Input/RadioButtonCupsuled";
@@ -11,7 +12,7 @@ import { PageStateBaseClass } from "./PageStateClass";
 export class S_introduction
     extends PageStateBaseClass<null,IAppUsedToReadAndChangePage>{
     async init():Promise<void> {
-        new PageTitleView(this.articleDOM,"Introduction","イントロダクション","fas fa-star")
+        const pageTitle = new PageTitleView(this.articleDOM,"Introduction","最初の設定","fas fa-star")
         const article = this.articleDOM.appendChild(createElementWithIdAndClass({className:"u-width90per"}))
         
         const selectLanguageSegment = appendElement(article,"div")
@@ -34,6 +35,14 @@ export class S_introduction
             termOfUseSegment.innerHTML = ""
             this.generateTermOfUseSegment(termOfUseSegment)
         })
+        const button = this.articleDOM.appendChild(elementWithoutEscaping`<div class="u-width50per u-margin2em"><div class="c-button">${choiceString({
+            Japanese:"進む",
+            English: "go next"
+        },this.app.state.language)}</div></div>`) as HTMLElement
+        button.addEventListener("click",() => {
+            this.app.acceptTheTerms()
+            this.app.transition("mainMenu",null)
+        })
     }
     async generateTermOfUseSegment(termOfUseSegment:HTMLElement){
         
@@ -46,8 +55,8 @@ export class S_introduction
                 icon:"contract"
             },
             description:{
-                Japanese:"次に進むためにはここをクリックしてください。",
-                English:"Click here to go to the next page."
+                Japanese:"KSSRsを利用する際に意識すべきことをまとめました。",
+                English:"All the things you should check about using KSSRs are written here."
             },
             isDisabled:false,
             biggerTitle:false,

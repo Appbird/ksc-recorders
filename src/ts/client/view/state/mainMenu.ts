@@ -12,7 +12,6 @@ import { NoticeView } from "../parts/notice";
 import { choiceDescription } from "../../../utility/aboutLang";
 import { formatDate } from "../../../utility/timeUtility";
 
-
 export class S_MainMenu
     extends PageStateBaseClass<null|{gameSystem:IGameSystemInfoWithoutCollections, gameMode:IGameModeItemWithoutCollections},IAppUsedToReadAndChangePage>{
         private htmlConverter:HTMLConverter = new HTMLConverter(this.app.state.language);
@@ -39,7 +38,7 @@ export class S_MainMenu
                 },this.generateSettingMenuInfo()],
                 [{
                     Japanese:"その他",
-                    English:"etc"
+                    English:"etc."
                 },this.generateDetailMenuInfo()]
             ]
             const notice = new NoticeView(appendElement(this.articleDOM,"div"),"mainMenu","headerDescription",context.mainManu,this.app.state.language)
@@ -200,10 +199,11 @@ export class S_MainMenu
                             return "まだ認証されていない記録を見ることが出来ます。"
                         })(),
                         English:(() => {
-                            if (!isSetTargetGameMode) return "<strong>Setting your target gamemode is indispensable to submit your record.</strong>"
+                            if (!isSetTargetGameMode) return "<strong>You need to set your Target Gamemode first to see here.</strong>"
                             return "You can see unverified records here."
                         })()
                     },
+                    isUnused:!this.app.loginAdministratorReadOnly.userInformation_uneditable?.isCommitteeMember,
                     isDisabled:!(isSetTargetGameMode && this.app.loginAdministratorReadOnly.isUserLogin && this.app.loginAdministratorReadOnly.userInformation_uneditable?.isCommitteeMember),
                     biggerTitle:false,
                     to:(this.app.loginAdministratorReadOnly.isUserLogin) ? () => {
@@ -220,7 +220,7 @@ export class S_MainMenu
                 },
                 description:{
                     Japanese: (isLogIn) ? "あなたのユーザーページを見ることが出来ます。" : "ログインしてください。",
-                    English: (isLogIn) ? "clicking here takes you to your personal page." : "You need to login first to see here."
+                    English: (isLogIn) ? "clicking here takes you to your personal page." : "You need to log in first to see here."
                 },
                 isDisabled:!this.app.loginAdministratorReadOnly.isUserLogin,
                 biggerTitle:false,
@@ -276,8 +276,8 @@ export class S_MainMenu
                         return "自分の取った記録を、このページに掲示するために申請することができます。"
                     })(),
                     English:(() => {
-                        if (!isLogIn) return "<strong>Login is indispensable to submit your record.</strong>"
-                        if (!isSetTargetGameMode) return "<strong>Setting your target gamemode is indispensable to submit your record.</strong>"
+                        if (!isLogIn) return "<strong>You need to log in first to see here.</strong>"
+                        if (!isSetTargetGameMode) return "<strong>You need to set your Target Gamemode first to see here.</strong>"
                         return "You can submit your record to KSSRs here."
                     })()
                 },
@@ -302,14 +302,27 @@ export class S_MainMenu
                     icon:"person"
                 } : undefined,
                 description:{
-                    Japanese: (isLogIn) ? "サービスからログアウトします。" : "ログインをすると記録の申請ができるようになります。ログインにはGoogleアカウントが必要です。",
-                    English: (isLogIn) ? "Logout from KSSRs" : "It is necessary for users to login who want to post their records. Login requires your google account."
+                    Japanese: (isLogIn) ? "サービスからログアウトします。" : "<p>ログインにはGoogleアカウントが必要です。<strong>ログインすることで、あなたは利用規約に同意したことになります。</strong></p>",
+                    English: (isLogIn) ? "Logout from KSSRs" : "<p>Login requires your google account. <strong>By logging in KSSRs, you are indicating that you accept the Term of Use below.</strong></p>"
                 },
                 isDisabled:false,
                 biggerTitle:false,
                 to:() => {
                     (isLogIn) ? this.app.logout():this.app.login()
                 }
+            },{
+                title:{
+                    Japanese:"利用規約",
+                    English:"Term of Use",
+                    icon:"contract"
+                },
+                description:{
+                    Japanese:"KSSRsを利用する際に意識すべきことをまとめました。",
+                    English:"All the things you should check about using KSSRs are written here."
+                },
+                isDisabled:false,
+                biggerTitle:false,
+                to:() => {this.app.transition("termOfUse",null)}
             },
             {
                 title:{
@@ -373,26 +386,13 @@ export class S_MainMenu
             isUnused: !this.app.loginAdministratorReadOnly.userInformation_uneditable?.isCommitteeMember
         },{
             title:{
-                Japanese:"利用規約",
-                English:"Term of Use",
-                icon:"contract"
-            },
-            description:{
-                Japanese:"KSSRsを利用する際に意識すべきことをまとめました。",
-                English:"All the things you should check about using KSSRs are written here."
-            },
-            isDisabled:false,
-            biggerTitle:false,
-            to:() => {this.app.transition("termOfUse",null)}
-        },{
-            title:{
                 Japanese: "GitHub",
                 English:"Source",
                 icon:"writing"
             },
             description:{
                 Japanese:"KSSRsを開発するにあたって、使用したツール、ライブラリやソースコードをGitHubにリポジトリとしてまとめています。",
-                English:"this GitHub repository of KSSRs (Japanese)"
+                English:"The GitHub repository of KSSRs (Japanese)"
             },
             isDisabled:false,
             biggerTitle:false,

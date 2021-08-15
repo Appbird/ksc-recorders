@@ -28,8 +28,10 @@ export class LoginAdministrator implements LoginAdministratorReadOnly{
     async subscribe(){
         const user = firebase.auth().currentUser;
         if ( user === null ) throw new Error("ログインしていません。")
+
         const ref = firebase.firestore().collection("runners").doc(user.uid);
         this.userInfo = (await this.app.accessToAPI("list_runner",{id: user.uid})).result;
+
         if (this.unsubscribe_main !== null) return;
         this.unsubscribe_main = ref.onSnapshot(async snapshot => {
             console.log("[KSSRs] User information change detected.")
@@ -53,6 +55,7 @@ export class LoginAdministrator implements LoginAdministratorReadOnly{
              }
              this.userInfo_uneditable = data as IRunnerUneditable;
         })
+        
         console.log("[KSSRs] User information is loaded completely.")
     }
     setChangedEventListener(callback:(userdata:IRunnerEditable)=>void){

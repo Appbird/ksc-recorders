@@ -21,7 +21,7 @@ export default class App implements IAppUsedToChangeState{
     private apiCaller:APIAdministrator = new APIAdministrator();
     private _notie:PageNotificationAdministrator;
 
-    public readonly version:string = "0.5"
+    public readonly version:string = "0.7"
     constructor(articleDOM:HTMLElement,language:LanguageInApplication){
         this._state = new StateAdministrator(language);
         this._notie = new PageNotificationAdministrator(this);
@@ -64,9 +64,15 @@ export default class App implements IAppUsedToChangeState{
         const previousPage = this.historyAd.getPreviousPageData()
         
         const previousTargetGamemode = this.historyAd.getPreviousTargetGamemode();
-        if (previousTargetGamemode !== null){
-            console.info(`[KSSRs] KSSRs detected you had set the targetGamemode ${previousTargetGamemode.gameSystem.English} / ${previousTargetGamemode.gameMode.English}, so KSSRs set that again.`)
-            this.changeTargetGameMode(previousTargetGamemode)
+        if (previousTargetGamemode !== null && previousTargetGamemode.gameSystem !== null && previousTargetGamemode.gameMode !== null){
+            this.changeTargetGameMode(previousTargetGamemode);
+            (async () => {
+                const gameSystem = (await this.accessToAPI("list_gameSystem",{id:previousTargetGamemode.gameSystem.id})).result
+                const gameMode = (await this.accessToAPI("list_gameMode",{gameSystemEnv:{gameSystemID:previousTargetGamemode.gameSystem.id },id:previousTargetGamemode.gameMode.id})).result
+                console.info(`[KSSRs] KSSRs detected you had set the targetGamemode ${previousTargetGamemode.gameSystem.English} / ${previousTargetGamemode.gameMode.English}, so KSSRs set that again.`)
+                this.changeTargetGameMode({gameSystem,gameMode})
+            })()
+            
         }
         if (previousPage === "redirect") return;
         if (previousPage === null) {this.transition("mainMenu",null); return;}
@@ -120,7 +126,7 @@ export default class App implements IAppUsedToChangeState{
         if (gameSystemEnv === null){
             this._state.setGameSystemEnv({gameMode:null,gameSystem:null})
             document.title = "Kirby-Speed/Score-Recorders"
-        this.historyAd.registerCurrentTargetGamemode()
+            this.historyAd.registerCurrentTargetGamemode()
           return this.header.changeHeaderRightLeft("Kirby-Speed/Score-Recorders","KSSRs");
         }
         if (this.state.gameSystemEnvDisplayed.gameSystem?.id === gameSystemEnv.gameSystem.id && this.state.gameSystemEnvDisplayed.gameMode?.id === gameSystemEnv.gameMode.id) return;

@@ -66,15 +66,17 @@ export function elementWithoutEscaping(strings:TemplateStringsArray,...values:an
     if (ele === null) throw new Error("与HTMLを要素に変換できませんでした。")
     return ele;
 }
+
+const separators = ["、","。",",",".","？","！","?","!"," "]
 export function setSpanForCorrectLineBreak(str:string){
     let parts = str.split("")
-    if (!(["、","。","？","！","?","!"," "].some(separator => str.includes(separator)))) return str;
+    if (!(separators.some(separator => str.includes(separator)))) return str;
     const result = []
     let start = 0;
     for (let i = 0; i < str.length; i++){
-        if (!["、","。","？","！","?","!"," "].includes(parts[i])) continue
+        if (!separators.includes(parts[i])) continue
         result.push(str.slice(start,i + 1))
         start = i + 1;
     }
-    return result.map(part => `<span class="u-inline">${part}</span>`).join("")
+    return result.map(part => `<span class="u-inline">${part.replace(/\s/g,"")}</span>`).join(" ")
 }

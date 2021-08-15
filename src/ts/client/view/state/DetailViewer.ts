@@ -48,7 +48,7 @@ const context = {
     }
 }
 export class S_DetailViewer
-    extends PageStateBaseClass<APIFunctions["record_detail"]["atServer"],IAppUsedToChangeState>{
+    extends PageStateBaseClass<APIFunctions["record_detail"]["atServer"]&{needRedirectToUnverifiedRecordList?:boolean},IAppUsedToChangeState>{
         async init(){
             this.generateLoadingSpinner()
             const notice = new NoticeView(appendElement(this.articleDOM,"div"),"detailView","portableURL",context.notice,this.app.state.language) 
@@ -204,6 +204,10 @@ export class S_DetailViewer
                 English:"The record is now verified!"
             })
             const rrg = record.regulation.gameSystemEnvironment
+            if (this.requiredObj.needRedirectToUnverifiedRecordList){
+                this.app.transition("unverifiedRecord",{gameSystem, gameMode})
+                return
+            }
             this.app.transition("detailView",{id:record.id,gameSystemEnv:{gameSystemID:rrg.gameSystemID, gameModeID:rrg.gameModeID},lang:this.app.state.language})
         }
         

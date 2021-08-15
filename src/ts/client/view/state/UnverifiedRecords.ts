@@ -26,6 +26,7 @@ export class S_UnverifiedRecords extends PageStateBaseClass<TargetGameMode,IAppU
             "fas fa-pencil-alt"
         )
         this.generateLoadingSpinner()
+        this.app.changeTargetGameMode(this.requiredObj)
         const record = await this.app.accessToAPI("record_search",{
             condition:[
                 {
@@ -50,7 +51,7 @@ export class S_UnverifiedRecords extends PageStateBaseClass<TargetGameMode,IAppU
                                             this.app.transition("detailView",{
                                                 id: record.id,
                                                 gameSystemEnv: record.regulation.gameSystemEnvironment,
-                                                lang
+                                                lang,needRedirectToUnverifiedRecordList:true
                                             })
                                         }}
                             )

@@ -14,14 +14,16 @@ export async function search(recordDataBase:RecordDataBase,input:IReceivedData_r
 
     const result = await Promise.all(
         input.condition.map( async input => {
-                 const records = 
+                 let records = 
                     (await recordDataBase.getRecordsWithCondition(
                             input.gameSystemEnv.gameSystemID,input.gameSystemEnv.gameModeID,input.orderOfRecordArray,
                             input.abilityIDsCondition,input.abilityIDs,
                             input.targetIDs,input.runnerIDs,
                             input.searchTypeForVerifiedRecord
                     ))
-
+                if (input.tagIDs !== undefined) {
+                    records = records.filter(record => input.tagIDs?.every(tagID => record.tagID.includes(tagID)))
+                }
                 if (input.startOfRecordArray === undefined) input.startOfRecordArray = 0;
                 if (input.limitOfRecordArray === undefined) input.limitOfRecordArray = 7;
                 

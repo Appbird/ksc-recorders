@@ -19,8 +19,13 @@ export class S_MainMenu
         async init(){
             //#CTODO ここに機能へつながるリンクを列挙する。ヘッダをクリックするとこのページに遷移する。
             this.generateLoadingSpinner("star")
-            
             if (this.requiredObj !== null) this.app.changeTargetGameMode(this.requiredObj);
+            if (this.requiredObj === null && (this.app.state.gameSystemEnvDisplayed.gameSystem !== null && this.app.state.gameSystemEnvDisplayed.gameMode !== null)){
+                
+                const gameSystem = (await this.app.accessToAPI("list_gameSystem",{id:this.app.state.gameSystemIDDisplayed})).result
+                const gameMode = (await this.app.accessToAPI("list_gameMode",{gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed},id:this.app.state.gameModeIDDisplayed})).result
+                this.app.changeTargetGameMode({gameSystem,gameMode})
+            }
             if (!this.app.checkIfIntroductionIsOver()) this.app.transition("introduction",null)
             const gsed = this.app.state.gameSystemEnvDisplayed
             const menuGenerators:[MultiLanguageString,RequiredObjectToGenerateItem[]][] = [
@@ -43,6 +48,8 @@ export class S_MainMenu
             ]
             const notice = new NoticeView(appendElement(this.articleDOM,"div"),"mainMenu","headerDescription",context.mainManu,this.app.state.language)
             const main = (gsed.gameSystem !== null && gsed.gameMode !== null) ? this.generateMainMenuDescriptionWithTargetMode():this.generateMainMenuDescription()
+            
+            
             for (const generator of menuGenerators){
                 const mainMenu = new MenuView(appendElement(main,"div"),this.app.state.language,generator[0])
                 
@@ -193,6 +200,11 @@ export class S_MainMenu
                         English:"Unverified Records",
                         icon:"notebook"
                     },
+                    remarks:{
+                        Japanese: (asg.gameMode?.UnverifiedRecordNumber !== undefined && asg.gameMode?.UnverifiedRecordNumber !== 0) ? `<strong class="u-redChara">${asg.gameMode.UnverifiedRecordNumber+"件"}</strong>` : "",
+                        English:(asg.gameMode?.UnverifiedRecordNumber !== undefined && asg.gameMode?.UnverifiedRecordNumber !== 0) ?`<strong class="u-redChara">${asg.gameMode.UnverifiedRecordNumber+" item"+(asg.gameMode.UnverifiedRecordNumber===1)?"":"s"}</strong>`:"",
+                        icon:""
+                    },
                     description:{
                         Japanese:(() => {
                             if (!isSetTargetGameMode) return "<strong>閲覧するゲームタイトル/モードを設定してください。</strong>"
@@ -236,7 +248,7 @@ export class S_MainMenu
                 },
                 remarks:{
                     Japanese:`<strong class="u-redChara">${(runnerInfo === undefined || runnerInfo.numberOfUnreadNotification === 0) ? "":runnerInfo.numberOfUnreadNotification+"件の未読"}</strong>`,
-                    English:`<strong class="u-redChara">${(runnerInfo === undefined || runnerInfo.numberOfUnreadNotification === 0) ? "":runnerInfo.numberOfUnreadNotification+" unread notifications"}</strong>`,
+                    English:`<strong class="u-redChara">${(runnerInfo === undefined || runnerInfo.numberOfUnreadNotification === 0) ? "":runnerInfo.numberOfUnreadNotification+" item"+(runnerInfo.numberOfUnreadNotification===1)?"":"s"}</strong>`,
                     icon:""
                 },
                 description:{

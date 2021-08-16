@@ -13,7 +13,7 @@ export class SelectChoicesCapsuled<T extends IItemOfResolveTableToName> implemen
         container: HTMLSelectElement, data: T[],
         {
             needMultipleSelect = false, maxItemCount = 1, needDuplicatedSelect = false, language,
-            removeItemButton = true, disable = false, 
+            removeItemButton = true, disable = false,
             maxItemText, placeholderValue = undefined, noChoiceText = { JDescription: "選べるものがありません", EDescription: "There are no item to select." },
             noResultText = { JDescription: "検索に合致するものがありませんでした。", EDescription: "No item were found." }, shouldSort=false
         }: {
@@ -37,14 +37,13 @@ export class SelectChoicesCapsuled<T extends IItemOfResolveTableToName> implemen
                 noChoicesText: choiceDescription(noChoiceText, language),
                 noResultsText: choiceDescription(noResultText, language),
             });
-            
+        
         this._language = language;
         this._data = data;
         this._choices = result;
         this.container = container;
-
         
-        
+        if (data.length === 1 && (!needMultipleSelect || maxItemCount === 1)) this.setSelected(data[0].id)
         if (!needDuplicatedSelect)
             return;
 
@@ -82,6 +81,7 @@ export class SelectChoicesCapsuled<T extends IItemOfResolveTableToName> implemen
             return { value: ele.id, label: choiceString(ele, this._language) };
         }));
         this._data = item;
+        if (item.length === 1 && (!this.container.multiple || this._choices.config.maxItemCount === 1)) this.setSelected(item[0].id)
     }
     clearChoices() {
         this._choices.clearChoices();

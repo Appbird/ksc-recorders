@@ -60,7 +60,7 @@ export class RecordDataBase{
     getGameSystemInfo       = (gameSystemID:string) => this.getDoc<IGameSystemInfoWithoutCollections>(this.getGameSystemCollectionRef().doc(gameSystemID))
     writeGameSystemInfo     = (obj:IGameSystemInfoWithoutCollections) => this.writeDoc<IGameSystemInfoWithoutCollections>(this.getGameSystemCollectionRef(),obj)
     modifyGameSystemInfo    = (gameSystemID:string,obj:IGameSystemInfoWithoutCollections) => this.updateDoc(this.getGameSystemCollectionRef().doc(gameSystemID),obj)
-    updateGameSystemInfo    = (gameSystemID:string,obj:any) => this.modifyDoc<IGameSystemInfoWithoutCollections>(this.getGameSystemCollectionRef().doc(gameSystemID),obj)
+    updateGameSystemInfo    = (gameSystemID:string,obj:any) => this.updateDoc(this.getGameSystemCollectionRef().doc(gameSystemID),obj)
     deleteGameSystemInfo    = (gameSystemID:string) => this.deleteDoc(this.getGameSystemCollectionRef().doc(gameSystemID))
 
     getGameModeCollection   = (gameSystemID:string) => this.getCollection<IGameModeItemWithoutCollections>(this.getGameSystemRef(gameSystemID).collection("modes"))
@@ -222,6 +222,15 @@ export class RecordDataBase{
         for (const tagID of record.tagID){
             await this.updateHashTagInfo(gameSystemID,tagID,{isApproved:true})
         }
+        const rrg = record.regulation.gameSystemEnvironment
+        const gameSystem = await this.getGameSystemInfo(rrg.gameSystemID);
+        const gameMode = await this.getGameModeInfo(rrg.gameSystemID,rrg.gameModeID);    
+        await this.updateGameSystemInfo(gameSystem.id,{
+            UnverifiedRecordNumber:(gameSystem.UnverifiedRecordNumber === undefined) ? 0:gameSystem.UnverifiedRecordNumber-1
+        })
+        await this.updateGameModeInfo(gameSystem.id,gameMode.id,{
+            UnverifiedRecordNumber:(gameMode.UnverifiedRecordNumber === undefined) ? 0:gameMode.UnverifiedRecordNumber-1
+        })
         await this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(recordID).set(record)
         return record;
     }
@@ -260,7 +269,7 @@ export class RecordDataBase{
             ...record,id:recordID,moderatorIDs:[]
         }
         await ref.set(modifiedOffer)
-        await this.refreshInfoWhenEditing(modifiedOffer)
+        await this.refreshInfoWhenEditing(modifiedOffer,(recordBeforeModified.moderatorIDs.length !== 0))
         return modifiedOffer;
     }
     async getModifiedHistoryStack(gameSystemID:string,gameModeID:string,recordID:string){
@@ -293,12 +302,14 @@ export class RecordDataBase{
             ...gameSystem,
             recordsNumber:gameSystem.recordsNumber + 1,
             dateOfLatestPost:record.timestamp_post,
+            UnverifiedRecordNumber:(gameSystem.UnverifiedRecordNumber === undefined) ? 1:gameSystem.UnverifiedRecordNumber+1,
             runnersNumber: gameSystem.runnersNumber + ( userHaveRunThisGameSystem?.times === 1 ? 1 : 0 )
         })
         await this.modifyGameModeInfo(rrg.gameSystemID,rrg.gameModeID,{
             ...gameMode,
             dateOfLatestPost:record.timestamp_post,
             recordsNumber:gameMode.recordsNumber + 1,
+            UnverifiedRecordNumber:(gameSystem.UnverifiedRecordNumber === undefined) ? 1:gameSystem.UnverifiedRecordNumber+1,
             runnersNumber: gameMode.runnersNumber + ( userHaveRunThisGameMode?.times === 1 ? 1 : 0)
         })
         await this.writeRunnerInfo(record.runnerID,{
@@ -306,7 +317,7 @@ export class RecordDataBase{
             theDateOfLastPost:record.timestamp_post
         },{privateDocWrite:true})
        
-        this.refreshFastestTableWhenWriting(record,runner,gameMode);
+        await this.refreshFastestTableWhenWriting(record,runner,gameMode);
     }
     private async refreshFastestTableWhenWriting(record:IRecord,runner:IRunner,gameMode:IGameModeItemWithoutCollections){
         const rr = record.regulation;
@@ -333,20 +344,31 @@ export class RecordDataBase{
     }
 
     //#NOTE 修正時
-    private async refreshInfoWhenEditing(record:IRecord){
+    private async refreshInfoWhenEditing(record:IRecord,isVerifiedEliminated:boolean){
         const rr = record.regulation;
         if (rr.abilityIDs.length !== 1) return;
         const rrg = rr.gameSystemEnvironment;
+        
         const gameMode = await this.getGameModeInfo(rrg.gameSystemID,rrg.gameModeID);      
 
         const collectionRef = this.getGameModeRef(rrg.gameSystemID,rrg.gameModeID).collection("table");
         const itemRefOfFastestTable = collectionRef.where("target__ability","==",`${rr.targetID}__${rr.abilityIDs[0]}`);
         const fastestRecordIDResponse = (await itemRefOfFastestTable.get())
 
-        if (fastestRecordIDResponse.empty || record.id !== fastestRecordIDResponse.docs[0].data().recordID) return;
+        if (isVerifiedEliminated){
+            const gameSystem = await this.getGameSystemInfo(rrg.gameSystemID);
+            await this.updateGameSystemInfo(gameSystem.id,{
+                UnverifiedRecordNumber:(gameSystem.UnverifiedRecordNumber === undefined) ? 1:gameSystem.UnverifiedRecordNumber+1
+            })
+            await this.updateGameModeInfo(gameSystem.id,gameMode.id,{
+                UnverifiedRecordNumber:(gameMode.UnverifiedRecordNumber === undefined) ? 1:gameMode.UnverifiedRecordNumber+1
+            })
+        }
 
+        if (fastestRecordIDResponse.empty || record.id !== fastestRecordIDResponse.docs[0].data().recordID) return;
         const tableID = fastestRecordIDResponse.docs[0].id
         this.refindFastestRecord(record,collectionRef.doc(tableID),gameMode.scoreType)
+
     }
     //#NOTE 削除時
     private async refreshInfoWhenRemoving(record:IRecord){
@@ -361,6 +383,8 @@ export class RecordDataBase{
 
         if (gameSystemInfo !== undefined) gameSystemInfo.times--;
         if (gameModeInfo !== undefined) gameModeInfo.times--;
+        if (gameSystem.UnverifiedRecordNumber !== undefined && record.moderatorIDs.length === 0) gameSystem.UnverifiedRecordNumber -= 1;
+        if (gameMode.UnverifiedRecordNumber !== undefined && record.moderatorIDs.length === 0) gameMode.UnverifiedRecordNumber -= 1;
         const userHaveRunThisGameSystemOnlyOnce = (gameSystemInfo?.times === 0)
         const userHaveRunThisGameModeOnlyOnce = (gameModeInfo?.times === 0)
         runner.theNumberOfPost--;

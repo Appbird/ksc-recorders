@@ -11,6 +11,7 @@ export interface IGameSystemInfoWithoutCollections extends IItemOfResolveTableTo
     runnersNumber:number;
     dateOfLatestPost:number;
     releasedDate:number;
+    UnverifiedRecordNumber?:number;
     JDescription?: string;
     EDescription?: string;
 }

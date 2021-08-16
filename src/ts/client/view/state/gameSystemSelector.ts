@@ -3,7 +3,6 @@ import { IAppUsedToReadAndChangePage } from "../../interface/AppInterfaces";
 import { appendElement } from "../../utility/aboutElement";
 import { GameSystemCardGroup } from "../parts/gameSystemCardsGroup";
 import { PageTitleView } from "../parts/PageTitleView";
-import { TitleCupsuled } from "../parts/TitleCupsuled";
 import { PageStateBaseClass } from "./PageStateClass";
 
 
@@ -29,7 +28,7 @@ export class S_GameSystemSelector
             );
 
             new GameSystemCardGroup(this.articleDOM.appendChild(document.createElement("div")),result,{
-                language:this.app.state.language,
+                language:this.app.state.language,isUserManager:this.app.loginAdministratorReadOnly.userInformation_uneditable?.isCommitteeMember,
                 clickEventListener: (selected) => this.app.transition("gameModeSeletor",selected),
             })
         

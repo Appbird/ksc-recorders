@@ -247,14 +247,14 @@ export function generateClickedTagsCallBacks(app:IAppUsedToReadAndChangeOnlyPage
                 targetIDs:[]
             }]
         }),
-        hashTag: () => app.transition("searchResultView",{
+        hashTag: (tagIndex) => (() => app.transition("searchResultView",{
             condition:[{
                 ...baseCondition,
-                groupName:choiceString({Japanese:"同じハッシュタグをもつ記録",English:"Records which have the same hashTag"},app.state.language),
+                groupName:choiceString({Japanese:`タグ「${detail.tagName[tagIndex]}」をもつ記録`,English:`Records which have the hashTag "${detail.tagName[tagIndex]}"`},app.state.language),
                 limitOfRecordArray: 3,
-                tagIDs:detail.tagID
+                tagIDs:[detail.tagID[tagIndex]]
             }]
-        })
+        }))
 }
 }
 

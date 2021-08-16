@@ -8,6 +8,7 @@ import { choiceString } from "../../../../utility/aboutLang";
 import { ITargetItem } from "../../../../type/list/ITargetItem";
 import { StateAdministrator } from "../../../Administrator/StateAdminister";
 import { SelectChoicesCapsuled } from "./SelectChoicesCapsuled";
+import { IHashTagItem } from "../../../../type/list/IGameSystemInfo";
 
 const contents = {
     Difficulty : {
@@ -37,15 +38,18 @@ export class SearchConditionSelectorView implements IView{
     private difficultyColumn = createElementWithIdAndClass({id:"selector_difficulty",className:"u-width90per"});
     private targetColumn = createElementWithIdAndClass({id:"selector_target",className:"u-width90per"});
     private abilityColumn = createElementWithIdAndClass({id:"selector_difficulty",className:"u-width90per"});
+    private tagColumn = createElementWithIdAndClass({id:"selector_hashTag",className:"u-width90per"});
+
 
     private difficultyChoices:SelectChoicesCapsuled<IGameDifficultyItem>;
     private targetChoices:SelectChoicesCapsuled<ITargetItem>;
     private abilityChoices:SelectChoicesCapsuled<IAbilityItem>;
+    private tagChoices:SelectChoicesCapsuled<IHashTagItem>;
     private htmlConverter:HTMLConverter;
 
     private app:IAppUsedToReadAndChangeOnlyPageState
     //#CH  appへの依存を解消する。具体的にappを利用する処理を全てPage側で定義させ、それをコールバックでこちらに渡す。
-    constructor(container:HTMLElement,app:IAppUsedToReadAndChangeOnlyPageState, difficulties:IGameDifficultyItem[], abilities:IAbilityItem[]){
+    constructor(container:HTMLElement,app:IAppUsedToReadAndChangeOnlyPageState, difficulties:IGameDifficultyItem[], abilities:IAbilityItem[],hashTags:IHashTagItem[]){
         this.app = app;
         if (!StateAdministrator.checkGameSystemEnvIsSet(this.app.state.gameSystemEnvDisplayed)) throw new Error("閲覧する記録のゲームタイトルとゲームモードが設定されていません。")
         this.container = container;
@@ -56,6 +60,7 @@ export class SearchConditionSelectorView implements IView{
         context.appendChild(this.difficultyColumn)
         context.appendChild(this.targetColumn)
         context.appendChild(this.abilityColumn)
+        context.appendChild(this.tagColumn)
         
         //#CTODO ヘッダの下にp要素を加えて説明を書く。
         this.difficultyColumn.appendChild(
@@ -98,6 +103,19 @@ export class SearchConditionSelectorView implements IView{
                 </ul>
             </div>`
         )
+
+        this.tagColumn.appendChild(
+            this.htmlConverter.elementWithoutEscaping`
+            <div>
+                <div class="c-title">
+                    <div class = "c-title__sub u-biggerChara">${generateIcooonHTML({icooonName:"tag"})}${{Japanese:"タグ",English:"Hashtag"}}</div>
+                </div>
+                <hr noshade class="u-thin">
+                <ul class="u-margin05em">
+                        <li>${{Japanese:`タグが使用された記録を検索できます。`, English: `Set hashtags.`}}</li>
+                </ul>
+            </div>`
+        )
         this.difficultyChoices = new SelectChoicesCapsuled(this.difficultyColumn.appendChild( document.createElement("select") ),difficulties,{language:this.app.state.language})
 
         this.targetChoices = new SelectChoicesCapsuled(this.targetColumn.appendChild( document.createElement("select")),[],{language:this.app.state.language,maxItemCount:10,needMultipleSelect:true})
@@ -112,6 +130,9 @@ export class SearchConditionSelectorView implements IView{
                         EDescription:`This mode can be played with at most ${maxNumberOfPlayer} kirbys (friends)!`
                     }
             })
+        this.tagChoices = new SelectChoicesCapsuled(this.tagColumn.appendChild( document.createElement("select") ),hashTags,{
+            maxItemCount:10,language:this.app.state.language,needMultipleSelect:true
+        })
         this.setTargetChoices()
         this.difficultyChoices.addEventListener("change",() => {
             this.targetChoices.enable();
@@ -119,7 +140,6 @@ export class SearchConditionSelectorView implements IView{
             this.setTargetChoices()
         })
 
-        //#CTODO いいボタンのデザインを探してくる。
         this.container.appendChild(element`<div class="u-width50per u-margin2em"><div class="c-button">決定</div></div>`)
         .addEventListener("click",() => this.whenDecideCondition())
     }
@@ -134,12 +154,13 @@ export class SearchConditionSelectorView implements IView{
     private whenDecideCondition(){
         const abilitySelected = this.abilityChoices.getValueAsArray(true);
         const targetSelected = this.targetChoices.getValueAsArray(true);
+        const hashtagSelected = this.tagChoices.getValueAsArray(true);
         
         this.app.transition("searchResultView",{
-            condition: this.generateCondition(targetSelected,abilitySelected,this.app.state.gameSystemIDDisplayed,this.app.state.gameModeIDDisplayed)
+            condition: this.generateCondition(targetSelected,abilitySelected,hashtagSelected,this.app.state.gameSystemIDDisplayed,this.app.state.gameModeIDDisplayed)
         },{title:""});
     }
-    private generateCondition(targetSelected:string[],abilitySelected:string[],gameSystemID:string,gameModeID:string){
+    private generateCondition(targetSelected:string[],abilitySelected:string[],hashTagSelected:string[],gameSystemID:string,gameModeID:string){
         const difficultySelectedID = this.difficultyChoices.getValueAsValue();
         if (targetSelected.length === 0){
             return [{
@@ -149,7 +170,7 @@ export class SearchConditionSelectorView implements IView{
                     gameDifficultyID:(difficultySelectedID === null) ? "whole": difficultySelectedID
                 },
                 language:this.app.state.language, startOfRecordArray:0,limitOfRecordArray:3,
-                orderOfRecordArray:this.app.state.superiorScore, abilityIDs:abilitySelected
+                orderOfRecordArray:this.app.state.superiorScore, abilityIDs:abilitySelected,tagIDs:hashTagSelected
             }]
         }
         return targetSelected.map( (id,index) => {
@@ -159,7 +180,7 @@ export class SearchConditionSelectorView implements IView{
                 groupSubName:`No. ${index+1}`,
                 gameSystemEnv:{gameSystemID:gameSystemID, gameModeID:gameModeID},
                 language:this.app.state.language, startOfRecordArray:0,limitOfRecordArray:3, orderOfRecordArray:this.app.state.superiorScore,
-                abilityIDs:abilitySelected, targetIDs:[id]
+                abilityIDs:abilitySelected, targetIDs:[id], tagIDs:hashTagSelected
             }
         })
     }

@@ -18,7 +18,7 @@ export interface IGameModeItemWithoutCollections extends IItemOfResolveTableToNa
     maxNumberOfPlayer:number;
     scoreType:ScoreType;
     gameSystemID:string;
-    
+    UnverifiedRecordNumber?:number;
     DiscordRoleID?:string;
 }
 export interface CollectionsInIGameModeItem{

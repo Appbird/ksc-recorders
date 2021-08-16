@@ -120,8 +120,8 @@ export class RecordDetailView implements IView{
         record.regulation.abilityNames.forEach( ele => 
             tagsViews[1].appendTag(ele,"ability",{callBackOnClick:clickedCallBacks.target})
         )
-        record.tagName.forEach( ele => 
-            tagsViews[2].appendTag(ele,"hashTag",{callBackOnClick:clickedCallBacks.gameSystem})
+        record.tagName.forEach( (ele,index) => 
+            tagsViews[2].appendTag(ele,"hashTag",{callBackOnClick: (clickedCallBacks.hashTag === undefined) ? undefined : clickedCallBacks.hashTag(index)})
         )
 
     }

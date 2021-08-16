@@ -21,7 +21,7 @@ export default class App implements IAppUsedToChangeState{
     private apiCaller:APIAdministrator = new APIAdministrator();
     private _notie:PageNotificationAdministrator;
 
-    public readonly version:string = "0.10"
+    public readonly version:string = "0.11"
     constructor(articleDOM:HTMLElement,language:LanguageInApplication){
         this._state = new StateAdministrator(language);
         this._notie = new PageNotificationAdministrator(this);
@@ -129,10 +129,14 @@ export default class App implements IAppUsedToChangeState{
             this.historyAd.registerCurrentTargetGamemode()
           return this.header.changeHeaderRightLeft("Kirby-Speed/Score-Recorders","KSSRs");
         }
-        if (this.state.gameSystemEnvDisplayed.gameSystem?.id === gameSystemEnv.gameSystem.id && this.state.gameSystemEnvDisplayed.gameMode?.id === gameSystemEnv.gameMode.id) return;
-        document.title = `KSSRs - ${gameSystemEnv.gameSystem.English}/${gameSystemEnv.gameMode.English}`
+        
+        if (this.state.gameSystemEnvDisplayed.gameSystem?.id === gameSystemEnv.gameSystem.id && this.state.gameSystemEnvDisplayed.gameMode?.id === gameSystemEnv.gameMode.id){
+            this._state.setGameSystemEnv(gameSystemEnv)
+            return;
+        }
         this._state.setGameSystemEnv(gameSystemEnv)
         this.historyAd.registerCurrentTargetGamemode()
+        document.title = `KSSRs - ${gameSystemEnv.gameSystem.English}/${gameSystemEnv.gameMode.English}`
         return this.header.changeHeaderRightLeft(gameSystemEnv.gameSystem.English,gameSystemEnv.gameMode.English);    
     }
     accessToAPI<T extends keyof APIFunctions>(functionName: T, requiredObj: APIFunctions[T]["atServer"]): Promise<APIFunctions[T]["atClient"]>{

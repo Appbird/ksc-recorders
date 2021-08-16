@@ -27,7 +27,7 @@ export class S_GameModeSelector
             );
         
             new GameModeCardsGroup(this.articleDOM.appendChild(document.createElement("div")),this.requiredObj,result,{
-                language:this.app.state.language,
+                language:this.app.state.language,isUserManager:this.app.loginAdministratorReadOnly.userInformation_uneditable?.isCommitteeMember,
                 clickEventListener: (selected) => this.app.transition("mainMenu",selected)
             })
         

@@ -36,8 +36,11 @@ export class S_SearchConditionSelector
         const abilities = (await this.app.accessToAPI("list_abilities",{
             gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed}
         })).result
+        const hashTags = (await this.app.accessToAPI("list_hashTags_onlyApproved",{
+            gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed}
+        })).result
         
-        new SearchConditionSelectorView(this.articleDOM.appendChild(document.createElement("div")),this.app,difficulties,abilities)
+        new SearchConditionSelectorView(this.articleDOM.appendChild(document.createElement("div")),this.app,difficulties,abilities,hashTags)
         this.deleteLoadingSpinner();
     }
 }

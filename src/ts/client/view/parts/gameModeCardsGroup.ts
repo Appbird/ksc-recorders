@@ -11,13 +11,15 @@ export class GameModeCardsGroup implements IView{
         private gameSystemInfo:IGameSystemInfoWithoutCollections;
         private container:HTMLElement;
         private language:LanguageInApplication;
+        private isUserManager:boolean;
         private clickEventListener:((clicked:{gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections})=>void)|undefined;
         constructor(container:HTMLElement,gameSystemInfo:IGameSystemInfoWithoutCollections,info:IGameModeItemWithoutCollections[],{
-            clickEventListener,language
+            clickEventListener,language,isUserManager = false
         }:{
             clickEventListener?:(clicked:{gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections})=>void,
-            language:LanguageInApplication
+            language:LanguageInApplication,isUserManager?:boolean
         }){
+            this.isUserManager = isUserManager
             this.language = language
             this.container = container;
             this.container.classList.add("c-list","u-width90per");
@@ -38,6 +40,12 @@ export class GameModeCardsGroup implements IView{
                 ${writeElement(selectAppropriateDescription(info,this.language),"p",`class="u-marginLeftRight2em"`)}
                 
                 <div class="c-stateInfo u-left-aligined-forFlex">
+                ${
+                    (this.isUserManager && info.UnverifiedRecordNumber !== 0 && info.UnverifiedRecordNumber !== undefined) ? 
+                    `<div class = "c-stateInfo__unit">
+                        <div class ="c-iconWithDescription u-redChara"> <i class="fas fa-envelope"></i> ${info.UnverifiedRecordNumber} Unverified Records</div>
+                    </div>` : ``
+                }
                     <div class = "c-stateInfo__unit">
                         <div class ="c-iconWithDescription"> <i class="fas fa-list"></i> ${info.recordsNumber} Records</div>
                     </div>

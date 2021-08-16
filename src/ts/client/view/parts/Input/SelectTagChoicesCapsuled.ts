@@ -45,15 +45,11 @@ export class SelectTagChoicesCapsuled implements IView {
             
         input.addEventListener("keydown",(event) => {
             if (event.key !== "Enter" || input.value.replace(/\s/g,"").length === 0 || this.data.includes(input.value)) return;
+            console.log(`${this.data.join(",")} ${input.value}`)
             this.appendChoices(input.value.replace(/^\s+/,"").replace(/(\s+)$/,""))
             input.value = ""
         })
 
-        this.container.addEventListener("removeItem", (event:any) => {
-            result.clearStore();
-            this._data = this.data.filter(choiceText => choiceText !== event.detail.value)
-            result.setChoices(this.data.map((ele) => { return { value: ele, label: choiceString(ele, language) }; }));
-        });
     }
     addEventListener(eventType: "addItem" | "click" | "hideDropdown" | "change" | "choice", callback: (event: any) => void) {
 
@@ -80,6 +76,7 @@ export class SelectTagChoicesCapsuled implements IView {
         const values = this.getValueAsArray()
         values.push(item)
         this.data.push(item)
+        this.clearStore()
         this._choices.setChoices(this.data.map(ele => {
             return { value: ele, label: ele };
         }));

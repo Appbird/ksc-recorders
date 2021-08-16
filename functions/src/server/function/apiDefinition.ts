@@ -12,6 +12,7 @@ import { isIReceivedDataAtServer_recordWrite } from "../../../../src/ts/type/api
 import { isIReceivedDataAtServer_recordDelete } from "../../../../src/ts/type/api/record/changing/IReceivedDataAtServer_recordDelete.validator";
 import { isIReceivedDataAtServer_recordModify } from "../../../../src/ts/type/api/record/changing/IReceivedDataAtServer_recordModify.validator";
 import { isIReceivedDataAtServer_recordModerate } from "../../../../src/ts/type/api/record/changing/IReceivedDataAtServer_recordModerate.validator";
+import { isIReceivedDataAtServer_addDiscordRoleID }from "../../../../src/ts/type/api/DiscordRole/IReceivedDataAtServer_addDiscordRoleID.validator"
 //#CH 出来ることならTypeScript_json_validatorの出力結果を一つにまとめたい。--collection trueオプションをどう使えばいいのだろうか…。
 import { APIFunctions } from "../../../../src/ts/type/api/relation";
 import { IReceivedData, IReceivedDataAtClient, IReceivedDataAtServer } from "../../../../src/ts/type/api/transmissionBase";
@@ -27,6 +28,7 @@ import { remove } from "./record/remove";
 import { modify } from "./record/modify";
 import { rawdata } from "./record/rawdata";
 import { moderate } from "./record/moderate";
+import { addDiscordRoleID } from "./webhooks/addDiscordRoleID";
 
 class APIList{
     private apiDefinition = new Map<string,apiInterface<IReceivedData>>()
@@ -75,3 +77,5 @@ apiList.set<APIFunctions["list_ability"]>    ("/list/ability", isIReceivedDataAt
 apiList.set<APIFunctions["list_target"]>     ("/list/target", isIReceivedDataAtServer_pickUp_UseSIdMIdId, target)
 
 apiList.set<APIFunctions["notification_read"]>  ("/notification/read", isIReceivedDataAtServer_notificationRead, readNotification)
+
+apiList.set<APIFunctions["addDiscordRoleID"]>  ("/addDiscordRoleID", isIReceivedDataAtServer_addDiscordRoleID, addDiscordRoleID)

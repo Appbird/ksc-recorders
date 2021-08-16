@@ -16,6 +16,9 @@
     ],
     "rewrites": [
       {
+      "source": "/api/",
+      "function": "app"
+      },{
         "source": "/api/**",
         "function": "app"
       },{

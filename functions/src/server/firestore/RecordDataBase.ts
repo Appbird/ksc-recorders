@@ -59,13 +59,15 @@ export class RecordDataBase{
     getGameSystemCollection = () => this.getCollection<IGameSystemInfoWithoutCollections>(this.getGameSystemCollectionRef())
     getGameSystemInfo       = (gameSystemID:string) => this.getDoc<IGameSystemInfoWithoutCollections>(this.getGameSystemCollectionRef().doc(gameSystemID))
     writeGameSystemInfo     = (obj:IGameSystemInfoWithoutCollections) => this.writeDoc<IGameSystemInfoWithoutCollections>(this.getGameSystemCollectionRef(),obj)
-    modifyGameSystemInfo    = (gameSystemID:string,obj:IGameSystemInfoWithoutCollections) => this.modifyDoc<IGameSystemInfoWithoutCollections>(this.getGameSystemCollectionRef().doc(gameSystemID),obj)
+    modifyGameSystemInfo    = (gameSystemID:string,obj:IGameSystemInfoWithoutCollections) => this.updateDoc(this.getGameSystemCollectionRef().doc(gameSystemID),obj)
+    updateGameSystemInfo    = (gameSystemID:string,obj:any) => this.modifyDoc<IGameSystemInfoWithoutCollections>(this.getGameSystemCollectionRef().doc(gameSystemID),obj)
     deleteGameSystemInfo    = (gameSystemID:string) => this.deleteDoc(this.getGameSystemCollectionRef().doc(gameSystemID))
 
     getGameModeCollection   = (gameSystemID:string) => this.getCollection<IGameModeItemWithoutCollections>(this.getGameSystemRef(gameSystemID).collection("modes"))
     getGameModeInfo         = (gameSystemID:string,gameModeID:string) => this.getDoc<IGameModeItemWithoutCollections>(this.getGameModeRef(gameSystemID,gameModeID))
     writeGameModeInfo       = (gameSystemID:string,obj:IGameModeItemWithoutCollections) => this.writeDoc<IGameModeItemWithoutCollections>(this.getGameSystemRef(gameSystemID).collection("modes"),obj)
     modifyGameModeInfo      = (gameSystemID:string,gameModeID:string,obj:IGameModeItemWithoutCollections) => this.modifyDoc<IGameModeItemWithoutCollections>(this.getGameModeRef(gameSystemID,gameModeID),obj)
+    updateGameModeInfo      = (gameSystemID:string,gameModeID:string,obj:any) => this.updateDoc(this.getGameModeRef(gameSystemID,gameModeID),obj)
     deleteGameModeInfo      = (gameSystemID:string,gameModeID:string) => this.deleteDoc(this.getGameModeRef(gameSystemID,gameModeID))
 
     getGameDifficultyCollection     = (gameSystemID:string,gameModeID:string) => this.getCollection<IGameDifficultyItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("difficulties"))
@@ -97,6 +99,8 @@ export class RecordDataBase{
     modifyHashTagInfo       = (gameSystemID:string,id:string,obj:IHashTagItem) => this.modifyDoc<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("tags").doc(id),obj)
     deleteHashTagInfo       = (gameSystemID:string,id:string) => this.deleteDoc(this.getGameSystemRef(gameSystemID).collection("tags").doc(id))
     
+    
+
     getRunnerInfo           = async (uid:string):Promise<IRunner> => {
         const info = await this.getRunnersRef().doc(uid).get()
         const infoLimitedWrite = await this.getRunnersRef().doc(uid).collection("limitedWrite").doc("onlyServerOperation").get()

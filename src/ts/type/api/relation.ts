@@ -1,3 +1,4 @@
+import { IReceivedData_addDiscordRoleID } from "./DiscordRole/relation";
 import { IReceivedData_listAbilities, IReceivedData_listAbility, IReceivedData_listDifficulties, IReceivedData_listDifficulty, IReceivedData_listGameMode, IReceivedData_listGameModes, IReceivedData_listGameSystem, IReceivedData_listGameSystems, IReceivedData_listHashTag, IReceivedData_listHashTags, IReceivedData_listRunner, IReceivedData_listRunners, IReceivedData_listTarget, IReceivedData_listTargets } from "./list/relation";
 import { IReceivedData_notificationRead } from "./notification/relation";
 import { IReceivedData_recordDelete, IReceivedData_recordDetail, IReceivedData_recordModerate, IReceivedData_recordModify, IReceivedData_recordRawdata, IReceivedData_recordSearch, IReceivedData_recordWrite } from "./record/relation";
@@ -33,4 +34,5 @@ export interface APIFunctions_changing{
     record_delete:IReceivedData_recordDelete,
     record_modify:IReceivedData_recordModify,
     notification_read:IReceivedData_notificationRead,
+    addDiscordRoleID:IReceivedData_addDiscordRoleID
 }

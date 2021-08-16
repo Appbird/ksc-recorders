@@ -17,13 +17,16 @@ export class Notifier{
     constructor(recordDatabase:RecordDataBase){
         this.recordDatabase = recordDatabase;
     }
-    private async sendMesssageToDiscord(type:"submit"|"verify"|"add"|"delete",{By,attached=null,msgIcon,Verb_ed,record,gameMode,gameSystem,colorcode,userIconURL,scoreType,reason = ""}
+    private async sendMesssageToDiscord(type:"submit"|"verify"|"add"|"delete",{By,attached="",msgIcon,Verb_ed,record,gameMode,gameSystem,colorcode,userIconURL,scoreType,reason = ""}
         :{  Verb_ed:string,attached?:string|null,By:{id:string,name:string,iconURL:string}
             record:IRecordResolved,gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections
             userIconURL:string, scoreType:ScoreType,msgIcon:string,
             colorcode:number,reason?:string
         }){
-            if (attached !== null) attached = `"${attached.replace(/\"/g,`'`)}"`
+            
+            if (gameMode.DiscordRoleID !== undefined) attached += `<@&${gameMode.DiscordRoleID}>`
+            if (attached !== null) attached += `${attached.replace(/\"/g,`'`)}`
+            attached = (attached?.length === 0) ? null:`"${attached}"`;
             const body = `{
                 "content": ${attached},
                 "embeds": [

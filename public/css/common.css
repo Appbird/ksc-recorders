@@ -869,6 +869,11 @@ article h1:not(.u-noUnderline):after {
   background-size: cover;
 }
 
+.u-background--diamond {
+  background: url("../icon/IcooonMono/diamond.svg");
+  background-size: cover;
+}
+
 .u-background--tag {
   background: url("../icon/IcooonMono/tag.svg");
   background-size: cover;

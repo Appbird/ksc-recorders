@@ -26,7 +26,7 @@ export function goBackFromDocToCollection(app:IAppUsedToReadAndChangeOnlyPageSta
     },{ifAppendHistory:false})
 }
 
-export function createEditorSegmentBaseElement(container:HTMLElement,):HTMLElement{
+export function createEditorSegmentBaseElement(container:HTMLElement):HTMLElement{
     const result = appendElement(container,"div")
     container.appendChild(element`<hr noshade class="u-thin">`);
     return result;

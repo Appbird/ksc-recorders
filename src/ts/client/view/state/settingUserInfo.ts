@@ -6,7 +6,7 @@ import { EditorTextPart } from "../parts/SetNewRegulation/Editor/EditorTextPart"
 import { EditorFormManager, InputFormObject } from "../parts/SetNewRegulation/EditorFormManager";
 import { SettingRegulationStateHeader } from "../parts/SetNewRegulation/SettingRegulationStateHeader";
 import { PageStateBaseClass } from "./PageStateClass";
-import { generateBaseEditors, generateDescriptionEditors, titleContext } from "./settingNewRegulationState/utility";
+import { createEditorSegmentBaseElement, generateBaseEditors, generateDescriptionEditors, titleContext } from "./settingNewRegulationState/utility";
 import firebase from "firebase/app";
 import "firebase/firestore";
 const context = {
@@ -64,13 +64,23 @@ const context = {
                 English:"Enter this segment's short description in English."
             }]
         },
+        PhotoURL:{
+            title:{
+                Japanese:"アイコンへのリンク",
+                English:"Icon link"
+            },
+            description:[{
+                Japanese:"アイコン画像へのURLをここにコピペで入力してください。",
+                English:"Enter your icon image's link by using copy and paste."
+            }]
+        },
         TwitterLink:{
             title:{
                 Japanese:"Twitterへのリンク",
                 English:"Twitter link"
             },
             description:[{
-                Japanese:"Twitterのアカウントのページへのリンクをコピペで入力してください。。",
+                Japanese:"Twitterのアカウントのページへのリンクをコピペで入力してください。",
                 English:"Enter your Twitter account page's link by using copy and paste."
             }]
         },
@@ -109,16 +119,24 @@ export class S_SettingUserInfo
             const inputForms:InputFormObject<HandledType>= {
                 ...generateBaseEditors(editorSegment,lang,context),
                 ...generateDescriptionEditors(editorSegment,lang,context),
-                twitterLink:       new EditorTextPart({
-                                                container:appendElement(editorSegment,"div"),
+                photoURL:           new EditorTextPart({
+                                                container:appendElement(createEditorSegmentBaseElement(editorSegment),"div"),
+                                                language:lang,
+                                                title:context.Input.PhotoURL.title,
+                                                description:context.Input.PhotoURL.description,
+                                                requiredField:false,
+                                                icooon:"link"
+                                            }),
+                twitterLink:        new EditorTextPart({
+                                                container:appendElement(createEditorSegmentBaseElement(editorSegment),"div"),
                                                 language:lang,
                                                 title:context.Input.TwitterLink.title,
                                                 description:context.Input.TwitterLink.description,
                                                 requiredField:false,
                                                 icooon:"link"
                                             }),
-                youtubeLink:       new EditorTextPart({
-                                                container:appendElement(editorSegment,"div"),
+                youtubeLink:        new EditorTextPart({
+                                                container:appendElement(createEditorSegmentBaseElement(editorSegment),"div"),
                                                 language:lang,
                                                 title:context.Input.YoutubeLink.title,
                                                 description:context.Input.YoutubeLink.description,

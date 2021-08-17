@@ -74,7 +74,7 @@ export function setSpanForCorrectLineBreak(str:string){
     const result = []
     let start = 0;
     for (let i = 0; i < str.length; i++){
-        if (!separators.includes(parts[i])) continue
+        if (!separators.includes(parts[i]) && i !== str.length - 1) continue
         result.push(str.slice(start,i + 1))
         start = i + 1;
     }

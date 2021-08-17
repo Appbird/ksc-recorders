@@ -25,7 +25,7 @@ export class GameSystemCardGroup implements IView{
             this.container.classList.add("c-recordCardGroup","u-width90per")
             this.language = language,
             this.clickEventListener = clickEventListener;
-            
+            info.sort((a,b) => b.releasedDate - a.releasedDate )
             for (const ele of info) this.appendCard(ele);
             if (onReady) onReady();
             

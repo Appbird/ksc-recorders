@@ -82,7 +82,7 @@ export class RecordDetailView implements IView{
                 for ( let i = 0; i < recordDetail.moderatorIDsResolved.length; i++){
                     const nameElement = board.appendChild(htmlC.elementWithoutEscaping`<div class="u-inline"><p class="u-clickable u-underline u-inline">${recordDetail.moderatorIDsResolved[i]}</p> <p class="u-inline u-smallerChara"> ${
                         formatDate(recordDetail.moderatorIDs[i].date,verifiedTime )} </p></div>` as HTMLElement)
-                    nameElement.addEventListener("click", () => onClickRunnerName(recordDetail.runnerID))
+                    nameElement.addEventListener("click", () => onClickRunnerName(recordDetail.moderatorIDs[i].id))
                 }
             } else {
                 verificationBoard.appendChild(htmlC.elementWithoutEscaping`<div class="u-redChara u-bolderChara"> Unverified </div>`)

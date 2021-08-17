@@ -25,6 +25,7 @@ export class GameModeCardsGroup implements IView{
             this.container.classList.add("c-list","u-width90per");
             this.gameSystemInfo = gameSystemInfo;
             this.clickEventListener = clickEventListener;
+            info.sort((a,b) => b.dateOfLatestPost - a.dateOfLatestPost)
             for (const ele of info) this.appendCard(ele);
         }
         destroy(){

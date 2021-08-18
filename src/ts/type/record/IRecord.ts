@@ -25,7 +25,6 @@ export interface IRecord{
     runnerID: string;
     tagName: string[];
     languageOfTagName:LanguageInApplication;
-    
     moderatorIDs: {id:string,date:number}[]; 
     tagID: string[];
     link: string[];

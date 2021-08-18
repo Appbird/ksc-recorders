@@ -17,6 +17,8 @@ import { IRecord } from "../../../../type/record/IRecord";
 import context from "./language.json"
 import { SelectTagChoicesCapsuled } from "../Input/SelectTagChoicesCapsuled";
 import { IHashTagItem } from "../../../../type/list/IGameSystemInfo";
+import { IAbilityAttributeFlagItem, IAbilityAttributeItemWithoutCollections } from "../../../../type/list/IAbilityAttributeItemWithoutCollections";
+type AbilityAttributeChoices = {attribute:IAbilityAttributeItemWithoutCollections,choices:IAbilityAttributeFlagItem}
 export class OfferFormView implements IView {
     private container: HTMLElement;
     private app: IAppUsedToReadAndChangeOnlyPageState;
@@ -31,6 +33,7 @@ export class OfferFormView implements IView {
 
     private difficultyChoices: SelectChoicesCapsuled<IGameDifficultyItem>;
     private abilityChoices: SelectChoicesCapsuled<IAbilityItem>;
+    private isAbilityChoicesNeedsAttributeSelection:boolean;
     private targetChoices: SelectChoicesCapsuled<ITargetItem>;
     
     private tagInput:SelectTagChoicesCapsuled;
@@ -47,7 +50,8 @@ export class OfferFormView implements IView {
         this.container.innerHTML = "";
     }
     //#CH  appへの依存を解消する。具体的にappを利用する処理を全てPage側で定義させ、それをコールバックでこちらに渡す。
-    constructor(container:HTMLElement,app: IAppUsedToReadAndChangeOnlyPageState, difficulties: IGameDifficultyItem[], abilities: IAbilityItem[],tags:IHashTagItem[],{
+    constructor(container:HTMLElement,app: IAppUsedToReadAndChangeOnlyPageState, difficulties: IGameDifficultyItem[], abilities: IAbilityItem[],tags:IHashTagItem[],
+            abilityAttributes:AbilityAttributeChoices[],{
         onDecideEventListener,
         defaultRecord
     }:{

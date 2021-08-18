@@ -1,9 +1,11 @@
 import { isIReceivedDataAtServer_getlist_UseId } from "../../../../src/ts/type/api/list/atServer_getlist/IReceivedDataAtServer_getlist_UseId.validator";
 import { isIReceivedDataAtServer_getlist_UseSIdId } from "../../../../src/ts/type/api/list/atServer_getlist/IReceivedDataAtServer_getlist_UseSIdId.validator";
 import { isIReceivedDataAtServer_getlist_UseSIdMIdId } from "../../../../src/ts/type/api/list/atServer_getlist/IReceivedDataAtServer_getlist_UseSIdMIdId.validator";
+import { isIReceivedDataAtServer_getList_UseSIdMIdAIdId } from "../../../../src/ts/type/api/list/atServer_getlist/IReceivedDataAtServer_getlist_UseSIdMIdAIdId.validator";
 import { isIReceivedDataAtServer_pickUp_UseId } from "../../../../src/ts/type/api/list/atServer_pickup/IReceivedDataAtServer_pickUp_UseId.validator";
 import { isIReceivedDataAtServer_pickUp_UseSIdId } from "../../../../src/ts/type/api/list/atServer_pickup/IReceivedDataAtServer_pickUp_UseSIdId.validator";
 import { isIReceivedDataAtServer_pickUp_UseSIdMIdId } from "../../../../src/ts/type/api/list/atServer_pickup/IReceivedDataAtServer_pickUp_UseSIdMIdId.validator";
+import { isIReceivedDataAtServer_pickUp_UseSIdMIdAIdId } from "../../../../src/ts/type/api/list/atServer_pickup/IReceivedDataAtServer_pickUp_UseSIdMIdAIdId.validator";
 import { isIReceivedDataAtServer_recordDetail } from "../../../../src/ts/type/api/record/notChanging/IReceivedDataAtServer_recordDetail.validator";
 import { isIReceivedDataAtServer_recordRawdata } from "../../../../src/ts/type/api/record/notChanging/IReceivedDataAtServer_recordRawdata.validator";
 import { isIReceivedDataAtServer_recordSearch } from "../../../../src/ts/type/api/record/notChanging/IReceivedDataAtServer_recordSearch.validator";
@@ -18,8 +20,8 @@ import { APIFunctions } from "../../../../src/ts/type/api/relation";
 import { IReceivedData, IReceivedDataAtClient, IReceivedDataAtServer } from "../../../../src/ts/type/api/transmissionBase";
 import { ValidateFunction } from '../../../../src/ts/type/api/ValidateFunction';
 import { RecordDataBase } from "../firestore/RecordDataBase";
-import { abilities, difficulties, gameModes, gameSystems, hashTags, hashTags_onlyApproved, runners, targets } from "./list/getList";
-import { ability, difficulty, gameMode, gameSystem, hashTag, runner, target } from "./list/pickUp";
+import { abilities, abilityAttributeFlags, abilityAttributes, difficulties, gameModes, gameSystems, hashTags, hashTags_onlyApproved, runners, targets } from "./list/getList";
+import { ability, abilityAttribute, abilityAttributeFlag, difficulty, gameMode, gameSystem, hashTag, runner, target } from "./list/pickUp";
 import { detail } from "./record/detail";
 import { search } from "./record/search";
 import { readNotification } from "./readNotification";
@@ -67,6 +69,8 @@ apiList.set<APIFunctions["list_hashTags_onlyApproved"]>("/list/hashTags/onlyAppr
 apiList.set<APIFunctions["list_difficulties"]> ("/list/difficulties", isIReceivedDataAtServer_getlist_UseSIdMIdId, difficulties)
 apiList.set<APIFunctions["list_abilities"]>    ("/list/abilities", isIReceivedDataAtServer_getlist_UseSIdMIdId, abilities)
 apiList.set<APIFunctions["list_targets"]>      ("/list/targets", isIReceivedDataAtServer_getlist_UseSIdMIdId, targets)
+apiList.set<APIFunctions["list_abilityAttributes"]>     ("/list/abilityAttributes", isIReceivedDataAtServer_getlist_UseSIdMIdId, abilityAttributes)
+apiList.set<APIFunctions["list_abilityAttributeFlags"]>     ("/list/abilityAttributeFlags", isIReceivedDataAtServer_getList_UseSIdMIdAIdId, abilityAttributeFlags)
 
 apiList.set<APIFunctions["list_gameSystem"]> ("/list/gameSystem", isIReceivedDataAtServer_pickUp_UseId, gameSystem)
 apiList.set<APIFunctions["list_runner"]>("/list/runner", isIReceivedDataAtServer_pickUp_UseId, runner)
@@ -75,6 +79,9 @@ apiList.set<APIFunctions["list_hashTag"]>    ("/list/hashTag",isIReceivedDataAtS
 apiList.set<APIFunctions["list_difficulty"]> ("/list/difficulty", isIReceivedDataAtServer_pickUp_UseSIdMIdId, difficulty)
 apiList.set<APIFunctions["list_ability"]>    ("/list/ability", isIReceivedDataAtServer_pickUp_UseSIdMIdId, ability)
 apiList.set<APIFunctions["list_target"]>     ("/list/target", isIReceivedDataAtServer_pickUp_UseSIdMIdId, target)
+apiList.set<APIFunctions["list_abilityAttribute"]>     ("/list/abilityAttribute", isIReceivedDataAtServer_pickUp_UseSIdMIdId, abilityAttribute)
+apiList.set<APIFunctions["list_abilityAttributeFlag"]>     ("/list/abilityAttributeFlag", isIReceivedDataAtServer_pickUp_UseSIdMIdAIdId, abilityAttributeFlag)
+
 
 apiList.set<APIFunctions["notification_read"]>  ("/notification/read", isIReceivedDataAtServer_notificationRead, readNotification)
 

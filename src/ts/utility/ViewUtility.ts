@@ -1,3 +1,4 @@
+import { IRegulationResolved } from "../type/foundation/IRegulation";
 import { MultiLanguageString } from "../type/foundation/MultiLanguageString";
 import { LanguageInApplication } from "../type/LanguageInApplication";
 import { choiceString } from "./aboutLang";
@@ -79,4 +80,10 @@ export function setSpanForCorrectLineBreak(str:string){
         start = i + 1;
     }
     return result.map(part => `<span class="u-inline">${part.replace(/\s/g,"")}</span>`).join(" ")
+}
+
+export function writeAbilityNameWithAttribute(regulation:IRegulationResolved,abilityName:string,playerIndex:number):string{
+    return (regulation.abilitiesAttributeNames === undefined) ? 
+            abilityName : 
+    `${abilityName}@${regulation.abilitiesAttributeNames[playerIndex].map( abilitiesAttributeName => abilitiesAttributeName.onFlagNames.join(",") ).join("/")}`
 }

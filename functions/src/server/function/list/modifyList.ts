@@ -51,3 +51,4 @@ export const hashTags       = async (database:RecordDataBase,input:APIFunctions[
 export const targets        = async (database:RecordDataBase,input:APIFunctions["list_targets"]["atServer"]) =>  modifyList_UseSIdMIdId(input,(s,m) => database.getTargetCollection(s,m))
 export const abilities      = async (database:RecordDataBase,input:APIFunctions["list_abilities"]["atServer"]) =>  modifyList_UseSIdMIdId(input,(s,m) => database.getAbilityCollection(s,m))
 export const difficulties   = async (database:RecordDataBase,input:APIFunctions["list_difficulties"]["atServer"]) =>  modifyList_UseSIdMIdId(input,(s,m) => database.getGameDifficultyCollection(s,m))
+

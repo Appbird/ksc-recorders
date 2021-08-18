@@ -1,5 +1,5 @@
 import { IReceivedData_addDiscordRoleID } from "./DiscordRole/relation";
-import { IReceivedData_listAbilities, IReceivedData_listAbility, IReceivedData_listDifficulties, IReceivedData_listDifficulty, IReceivedData_listGameMode, IReceivedData_listGameModes, IReceivedData_listGameSystem, IReceivedData_listGameSystems, IReceivedData_listHashTag, IReceivedData_listHashTags, IReceivedData_listRunner, IReceivedData_listRunners, IReceivedData_listTarget, IReceivedData_listTargets } from "./list/relation";
+import { IReceivedData_listAbilities, IReceivedData_listAbility, IReceivedData_listAbilityAttribute, IReceivedData_listAbilityAttributeFlags, IReceivedData_listAbilityAttributes, IReceivedData_listDifficulties, IReceivedData_listDifficulty, IReceivedData_listGameMode, IReceivedData_listGameModes, IReceivedData_listGameSystem, IReceivedData_listGameSystems, IReceivedData_listHashTag, IReceivedData_listHashTags, IReceivedData_listRunner, IReceivedData_listRunners, IReceivedData_listTarget, IReceivedData_listTargets, IReceivedData_listAbilityAttributeFlag } from "./list/relation";
 import { IReceivedData_notificationRead } from "./notification/relation";
 import { IReceivedData_recordDelete, IReceivedData_recordDetail, IReceivedData_recordModerate, IReceivedData_recordModify, IReceivedData_recordRawdata, IReceivedData_recordSearch, IReceivedData_recordWrite } from "./record/relation";
 
@@ -18,6 +18,8 @@ export interface APIFunctions_noChanging{
     list_targets:IReceivedData_listTargets;
     list_hashTags:IReceivedData_listHashTags;
     list_hashTags_onlyApproved:IReceivedData_listHashTags;
+    list_abilityAttributes:IReceivedData_listAbilityAttributes;
+    list_abilityAttributeFlags:IReceivedData_listAbilityAttributeFlags
 
     list_gameSystem:IReceivedData_listGameSystem;
     list_gameMode:IReceivedData_listGameMode;
@@ -26,6 +28,8 @@ export interface APIFunctions_noChanging{
     list_ability:IReceivedData_listAbility;
     list_target:IReceivedData_listTarget;
     list_hashTag:IReceivedData_listHashTag;
+    list_abilityAttribute:IReceivedData_listAbilityAttribute
+    list_abilityAttributeFlag:IReceivedData_listAbilityAttributeFlag;
 }
 
 export interface APIFunctions_changing{

@@ -6,6 +6,7 @@ import fetch from "node-fetch";
 import { IGameModeItemWithoutCollections, ScoreType } from "../../../../../src/ts/type/list/IGameModeItem";
 import { IGameSystemInfoWithoutCollections } from "../../../../../src/ts/type/list/IGameSystemInfo";
 import { isProducedVersion } from "../../utility";
+import { writeAbilityNameWithAttribute } from "../../../../../src/ts/utility/ViewUtility";
 //#NOTE これの実行には{webhookURL:string}型のオブジェクトが記述されたjsonファイルを書き込んでおく必要がある。
 //#CTODO こいつがちゃんと投稿されるか確認する。
 //#NOTE 
@@ -51,7 +52,7 @@ export class Notifier{
                       },
                       {
                         "name": "**__[ Ability ]__**",
-                        "value": "${record.regulation.abilityNames.join("\n")}",
+                        "value": "${record.regulation.abilityNames.map((ele,index) => writeAbilityNameWithAttribute(record.regulation,ele,index)).join("\n")}",
                         "inline": true
                       },
                       {

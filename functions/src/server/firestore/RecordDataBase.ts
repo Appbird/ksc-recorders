@@ -11,7 +11,7 @@ import { IItemOfResolveTableToName } from "../../../../src/ts/type/list/IItemOfR
 import { firebaseAdmin } from "../function/firebaseAdmin";
 import { createDefaultUserData } from "../utility";
 import { SearchTypeForVerifiedRecord } from "../../../../src/ts/type/record/SearchCondition";
-
+import { IAbilityAttributeFlagItem,IAbilityAttributeItemWithoutCollections } from "../../../../src/ts/type/list/IAbilityAttributeItemWithoutCollections"
 
 //[x] getRecordsWithConditionメソッドの実装
 export class RecordDataBase{
@@ -98,7 +98,20 @@ export class RecordDataBase{
     updateHashTagInfo        = (gameSystemID:string,id:string,obj:any) => this.updateDoc(this.getGameSystemRef(gameSystemID).collection("tags").doc(id),obj)
     modifyHashTagInfo       = (gameSystemID:string,id:string,obj:IHashTagItem) => this.modifyDoc<IHashTagItem>(this.getGameSystemRef(gameSystemID).collection("tags").doc(id),obj)
     deleteHashTagInfo       = (gameSystemID:string,id:string) => this.deleteDoc(this.getGameSystemRef(gameSystemID).collection("tags").doc(id))
+
+    getAbilityAttributeCollection     = (gameSystemID:string,gameModeID:string) => this.getCollection<IAbilityAttributeItemWithoutCollections>(this.getGameModeRef(gameSystemID,gameModeID).collection("abilityAttributes"))
+    getAbilityAttributeInfo           = (gameSystemID:string,gameModeID:string,id:string) => this.getDoc<IAbilityAttributeItemWithoutCollections>(this.getGameModeRef(gameSystemID,gameModeID).collection("abilityAttributes").doc(id))
+    writeAbilityAttributeInfo         = (gameSystemID:string,gameModeID:string,obj:IAbilityAttributeItemWithoutCollections) => this.writeDoc<IAbilityAttributeItemWithoutCollections>(this.getGameModeRef(gameSystemID,gameModeID).collection("abilityAttributes"),obj)
+    modifyAbilityAttributeInfo        = (gameSystemID:string,gameModeID:string,id:string,obj:IAbilityAttributeItemWithoutCollections) => this.modifyDoc<IAbilityAttributeItemWithoutCollections>(this.getGameModeRef(gameSystemID,gameModeID).collection("abilityAttributes").doc(id),obj)
+    updateAbilityAttributeInfo        = (gameSystemID:string,gameModeID:string,id:string,obj:any) => this.updateDoc(this.getGameModeRef(gameSystemID,gameModeID).collection("abilityAttributes").doc(id),obj)
+    deleteAbilityAttributeInfo           = (gameSystemID:string,gameModeID:string,id:string) => this.deleteDoc(this.getGameModeRef(gameSystemID,gameModeID).collection("abilityAttributes").doc(id))
     
+    getAbilityAttributeFlagCollection     = (gameSystemID:string,gameModeID:string,abilityAttributeID:string) => this.getCollection<IAbilityAttributeFlagItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("abilityAttributes").doc(abilityAttributeID).collection("flags"))
+    getAbilityAttributeFlagInfo           = (gameSystemID:string,gameModeID:string,abilityAttributeID:string,id:string) => this.getDoc<IAbilityAttributeFlagItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("abilityAttributes").doc(abilityAttributeID).collection("flags").doc(id))
+    writeAbilityAttributeFlagInfo         = (gameSystemID:string,gameModeID:string,abilityAttributeID:string,obj:IAbilityAttributeFlagItem) => this.writeDoc<IAbilityAttributeFlagItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("abilityAttributes").doc(abilityAttributeID).collection("flags"),obj)
+    modifyAbilityAttributeFlagInfo        = (gameSystemID:string,gameModeID:string,abilityAttributeID:string,id:string,obj:IAbilityAttributeFlagItem) => this.modifyDoc<IAbilityAttributeFlagItem>(this.getGameModeRef(gameSystemID,gameModeID).collection("abilityAttributes").doc(abilityAttributeID).collection("flags").doc(id),obj)
+    updateAbilityAttributeFlagInfo        = (gameSystemID:string,gameModeID:string,abilityAttributeID:string,id:string,obj:any) => this.updateDoc(this.getGameModeRef(gameSystemID,gameModeID).collection("abilityAttributes").doc(abilityAttributeID).collection("flags").doc(id),obj)
+    deleteAbilityAttributeFlagInfo        = (gameSystemID:string,gameModeID:string,abilityAttributeID:string,id:string) => this.deleteDoc(this.getGameModeRef(gameSystemID,gameModeID).collection("abilityAttributes").doc(abilityAttributeID).collection("flags").doc(id))
     
 
     getRunnerInfo           = async (uid:string):Promise<IRunner> => {

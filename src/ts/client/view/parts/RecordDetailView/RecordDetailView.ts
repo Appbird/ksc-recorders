@@ -1,6 +1,6 @@
 import { IRecordResolved } from "../../../../type/record/IRecord";
 import { converseMiliSecondsIntoTime, formatDate } from "../../../../utility/timeUtility";
-import {  HTMLConverter } from "../../../../utility/ViewUtility";
+import {  HTMLConverter, writeAbilityNameWithAttribute } from "../../../../utility/ViewUtility";
 import { IView } from "../../IView";
 import { TagsView } from "../TagsView";
 import { convertNumberToRank } from "../../../../utility/rankUtility";
@@ -117,8 +117,9 @@ export class RecordDetailView implements IView{
         tagsViews[0].appendTag(`${rrg.gameSystemName}/${rrg.gameModeName}/${rrg.gameDifficultyName}`,"gameSystem",{callBackOnClick:clickedCallBacks.gameSystem})
         tagsViews[0].appendTag(record.regulation.targetName,"target",{callBackOnClick:clickedCallBacks.target})
 
-        record.regulation.abilityNames.forEach( ele => 
-            tagsViews[1].appendTag(ele,"ability",{callBackOnClick:clickedCallBacks.target})
+        record.regulation.abilityNames.forEach( (ele,index) => 
+            tagsViews[1].appendTag(
+                writeAbilityNameWithAttribute(record.regulation,ele,index),"ability",{callBackOnClick:clickedCallBacks.ability})
         )
         record.tagName.forEach( (ele,index) => 
             tagsViews[2].appendTag(ele,"hashTag",{callBackOnClick: (clickedCallBacks.hashTag === undefined) ? undefined : clickedCallBacks.hashTag(index)})

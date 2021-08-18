@@ -8,6 +8,7 @@ import { ITargetItem } from "./ITargetItem";
 
 /**
  * カービィの作品にそれぞれひとつずつ対応するID解決テーブル群
+ * #TODO ここにIAbilityAttributeItemWithoutCollections
  */
 export type ScoreType = "score"|"time";
 export type IGameModeItem = IGameModeItemWithoutCollections & CollectionsInIGameModeItem

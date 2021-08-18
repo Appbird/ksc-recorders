@@ -13,6 +13,9 @@ import { IReceivedDataAtServer_pickUp_UseSIdId } from "./atServer_pickup/IReceiv
 import { IReceivedDataAtServer_pickUp_UseSIdMIdId } from "./atServer_pickup/IReceivedDataAtServer_pickUp_UseSIdMIdId";
 import { IReceivedDataAtClient_getlist } from "./IReceivedDataAtClient_getlist";
 import { IReceivedDataAtClient_pickUp } from "./IReceivedDataAtClient_pickUp";
+import { IReceivedDataAtServer_getList_UseSIdMIdAIdId } from "./atServer_getlist/IReceivedDataAtServer_getList_UseSIdMIdAIdId";
+import { IAbilityAttributeFlagItem, IAbilityAttributeItemWithoutCollections } from "../../list/IAbilityAttributeItemWithoutCollections";
+import { IReceivedDataAtServer_pickUp_UseSIdMIdAIdId } from "./atServer_pickup/IReceivedDataAtServer_pickUp_UseSIdMIdAIdId";
 
 export interface IReceivedData_listGameSystems extends IReceivedData{
     atServer:IReceivedDataAtServer_getlist_UseId
@@ -42,7 +45,14 @@ export interface IReceivedData_listDifficulties extends IReceivedData{
     atServer:IReceivedDataAtServer_getlist_UseSIdMIdId
     atClient:IReceivedDataAtClient_getlist<IGameDifficultyItem>
 }
-
+export interface IReceivedData_listAbilityAttributes extends IReceivedData{
+    atServer:IReceivedDataAtServer_getlist_UseSIdMIdId
+    atClient:IReceivedDataAtClient_getlist<IAbilityAttributeItemWithoutCollections>
+}
+export interface IReceivedData_listAbilityAttributeFlags extends IReceivedData{
+    atServer:IReceivedDataAtServer_getList_UseSIdMIdAIdId
+    atClient:IReceivedDataAtClient_getlist<IAbilityAttributeFlagItem>
+}
 
 export interface IReceivedData_listGameSystem extends IReceivedData{
     atServer:IReceivedDataAtServer_pickUp_UseId
@@ -71,4 +81,12 @@ export interface IReceivedData_listAbility extends IReceivedData{
 export interface IReceivedData_listDifficulty extends IReceivedData{
     atServer:IReceivedDataAtServer_pickUp_UseSIdMIdId
     atClient:IReceivedDataAtClient_pickUp<IGameDifficultyItem>
+}
+export interface IReceivedData_listAbilityAttribute extends IReceivedData{
+    atServer:IReceivedDataAtServer_pickUp_UseSIdMIdId
+    atClient:IReceivedDataAtClient_pickUp<IAbilityAttributeItemWithoutCollections>
+}
+export interface IReceivedData_listAbilityAttributeFlag extends IReceivedData{
+    atServer:IReceivedDataAtServer_pickUp_UseSIdMIdAIdId
+    atClient:IReceivedDataAtClient_pickUp<IAbilityAttributeFlagItem>
 }

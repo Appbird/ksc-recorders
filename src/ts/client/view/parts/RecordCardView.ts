@@ -1,7 +1,7 @@
 import { ScoreType } from "../../../type/list/IGameModeItem";
 import { IRecordInShortResolved } from "../../../type/record/IRecord";
 import { converseMiliSecondsIntoTime } from "../../../utility/timeUtility";
-import { element, HTMLConverter } from "../../../utility/ViewUtility";
+import { element, HTMLConverter, writeAbilityNameWithAttribute } from "../../../utility/ViewUtility";
 import { IView } from "../IView";
 import { TagsView } from "./TagsView";
 
@@ -41,7 +41,8 @@ export class RecordCardView implements IView{
 
         if (tagOption.gameSystemTags) this.tagsViews[0].appendTag(`${rrg.gameSystemName}/${rrg.gameModeName}/${rrg.gameDifficultyName}`,"gameSystem")
         if (tagOption.targetTags) this.tagsViews[0].appendTag(rr.targetName,"target")
-        if (tagOption.abilityTags) for(const abilityName of rr.abilityNames) this.tagsViews[1].appendTag(abilityName,"ability")
+        if (tagOption.abilityTags) 
+            rr.abilityNames.forEach( (abilityName,index) => this.tagsViews[1].appendTag(writeAbilityNameWithAttribute(rr,abilityName,index),"ability"))
         
     }
     addClickEventListener(callback:(clickedRecord:IRecordInShortResolved) => void){

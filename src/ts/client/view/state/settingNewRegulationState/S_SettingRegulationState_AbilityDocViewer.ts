@@ -1,6 +1,6 @@
 import { IAppUsedToChangeState } from "../../../interface/AppInterfaces";
 import { PageStateBaseClass } from "../PageStateClass";
-import { EditorFormManager, InputFormObject } from "../../parts/SetNewRegulation/EditorFormManager";
+import { EditorFormManagerWithAutoDetect, InputFormObject } from "../../parts/SetNewRegulation/EditorFormManagerWithAutoDetect";
 import { appendElement } from "../../../utility/aboutElement";
 import { DocViewerRequired } from "./Types";
 import { generateBaseEditors, generateDescriptionEditors, goBackFromDocToCollection, titleContext } from "./utility";
@@ -69,7 +69,7 @@ const context = {
 type HandledType = IAbilityItem
 export class S_SettingRegulationState_AbilityDocViewer
     extends PageStateBaseClass<DocViewerRequired, IAppUsedToChangeState> {
-    private editorForm:EditorFormManager<HandledType>|null = null;
+    private editorForm:EditorFormManagerWithAutoDetect<HandledType>|null = null;
     async init() {
          const headerMaker = new SettingRegulationStateHeader(
             appendElement(this.articleDOM,"div"),this.app.state.language,
@@ -88,7 +88,7 @@ export class S_SettingRegulationState_AbilityDocViewer
             ...generateBaseEditors(editorSegment,lang,context),
             ...generateDescriptionEditors(editorSegment,lang,context)
         };
-        this.editorForm = new EditorFormManager(
+        this.editorForm = new EditorFormManagerWithAutoDetect(
             editorHeader,lang,this.requiredObj.collection,this.requiredObj.pathStack.join(" > "),inputForms,
             {
                 id:"",

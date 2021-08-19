@@ -44,8 +44,8 @@ export class SelectTagChoicesCapsuled implements IView {
         if (input === undefined) throw new Error("Choices要素の中にあるinput要素を発見できませんでした。")
             
         input.addEventListener("keydown",(event) => {
+            //#TODO サジェストに近い候補のものを入力すると、それ本体ではなく似たものがタグとして入力される問題を解決する。
             if (event.key !== "Enter" || input.value.replace(/\s/g,"").length === 0 || this.data.includes(input.value)) return;
-            console.log(`${this.data.join(",")} ${input.value}`)
             this.appendChoices(input.value.replace(/^\s+/,"").replace(/(\s+)$/,""))
             input.value = ""
         })

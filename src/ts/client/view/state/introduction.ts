@@ -60,7 +60,6 @@ export class S_introduction
             },
             isDisabled:false,
             biggerTitle:false,
-            //#TODO ここをクレジット用に設定する。GitHubのリンクにするのもアリか？
             to:() => {this.app.transition("termOfUse",{needsConsensus:true})}
         })
     }

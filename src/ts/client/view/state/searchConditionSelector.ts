@@ -39,7 +39,18 @@ export class S_SearchConditionSelector
         const hashTags = (await this.app.accessToAPI("list_hashTags_onlyApproved",{
             gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed}
         })).result
-        
+        const abilityAttribute = (await this.app.accessToAPI("list_abilityAttributes",{
+            gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed}
+        })).result
+        const abilityAttributeFlags = await Promise.all(
+            abilityAttribute.map(async attribute => {return {
+                name: attribute,
+                flags: (await this.app.accessToAPI("list_abilityAttributeFlags",{
+                    gameSystemEnv : {gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed},
+                    abilityAttributeID:attribute.id
+                })).result
+            } } )
+        )
         new SearchConditionSelectorView(this.articleDOM.appendChild(document.createElement("div")),this.app,difficulties,abilities,hashTags)
         this.deleteLoadingSpinner();
     }

@@ -1,16 +1,16 @@
 import { MultiLanguageString } from "../../../../../type/foundation/MultiLanguageString";
 
 export interface EditorPart<T> {
-    addChangeEventListener(callback: (changed: T) => void): void;
+    addChangeEventListener(callback: (changed: T|undefined) => void): void;
     refresh(value: T): void;
     isFill(): boolean;
     disabled(state:boolean):void,
     destroy():void;
     checker?():void;
-    displayError?(error?:MultiLanguageString):void;
+    displayError?(error?:string|MultiLanguageString):void;
     readonly requiredTypeInString:string;
     readonly requiredField:boolean;
-    readonly value: T;
+    readonly value: T|undefined;
 }
 
 export const context_required = {

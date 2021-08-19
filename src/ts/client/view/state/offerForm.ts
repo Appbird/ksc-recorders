@@ -1,4 +1,5 @@
 import { ISentRecordOffer } from "../../../type/api/record/changing/IReceivedDataAtServer_recordWrite";
+import { SetOfFlagsOfAbilityAttributeItem } from "../../../type/list/AttributeOfAbilityItem";
 import { choiceString } from "../../../utility/aboutLang";
 import { TargetGameMode } from "../../Administrator/StateAdminister";
 import { IAppUsedToChangeState } from "../../interface/AppInterfaces";
@@ -31,19 +32,39 @@ export class S_OfferForm
                 }
 
             if (this.requiredObj.targetGameMode !== undefined) this.app.changeTargetGameMode(this.requiredObj.targetGameMode)
-            const difficulties = (await this.app.accessToAPI("list_difficulties",
-                {gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed}
-            })).result
-            const abilities = (await this.app.accessToAPI("list_abilities",{
-                gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed}
-            })).result
-            const tags = (await this.app.accessToAPI("list_hashTags_onlyApproved",{
-                gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed}
-            })).result
+            const gameSystemID = this.app.state.gameSystemIDDisplayed
+            const gameModeID = this.app.state.gameModeIDDisplayed
+            const runnerID = this.app.loginAdministratorReadOnly.loginUserID
+            const difficultyItems = (await this.app.accessToAPI("list_difficulties",
+                    {gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed}
+                })).result
+            const abilityItems = (await this.app.accessToAPI("list_abilities",{
+                    gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed}
+                })).result
+            const tagItems = (await this.app.accessToAPI("list_hashTags_onlyApproved",{
+                    gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed}
+                })).result
+            const abilityAttributeList = (await this.app.accessToAPI("list_abilityAttributes",{
+                    gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed}
+                })).result
+            let abilityAttributeItems:SetOfFlagsOfAbilityAttributeItem[] | undefined = await Promise.all(
+                    abilityAttributeList.map(async attribute => { return {
+                        attributeNameInfo: attribute,
+                        flagsInAttribute: (await this.app.accessToAPI("list_abilityAttributeFlags",{
+
+                            gameSystemEnv : {gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed},
+                            abilityAttributeID:attribute.id
+
+                        })).result
+                    } } )
+                )
+            abilityAttributeItems = (abilityAttributeItems.length === 0) ? undefined : abilityAttributeItems
             const view = new OfferFormView(
                 this.articleDOM.appendChild(document.createElement("div")),
-                this.app,difficulties,abilities,tags,{
-                    onDecideEventListener:async (input) => this.decide(input)
+                {   difficultyItems,abilityItems,tagItems,runnerID,abilityAttributeItems,
+                    language:this.app.state.language,
+                    onDecideEventListener:async (input) => this.decide(input),
+                    fetchTargetItems:async (input) => (await this.app.accessToAPI("list_targets",{gameSystemEnv:{gameSystemID,gameModeID}})).result
                 }
             )
             this.deleteLoadingSpinner();

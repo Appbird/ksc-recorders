@@ -20,6 +20,10 @@
         }
     },
     "URLInput":{
+        "Header": {
+            "Japanese":"リンク",
+            "English":"Link"
+        },
         "Notice":[{ 
             "Japanese": "<strong class='u-redChara'>[必須]</strong> 登録する記録の証拠となる画像/動画へのリンクを貼ります。", 
             "English": "<strong class='u-redChara'>[Required]</strong> Enter a link of image / video proof." 
@@ -78,6 +82,10 @@
         }]
     },
     "RunnersNote":{
+        "Header":{
+            "Japanese": "走者ノート",
+            "English":  "Note"
+        },
         "Notice":[{
             "Japanese": "[任意] 走者ノートをmarkdownで書きます。",
             "English": "[Optional] You can write notes about your record's strat in markdown here."

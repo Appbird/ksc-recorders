@@ -3,7 +3,7 @@ import { StateAdministrator } from "../../Administrator/StateAdminister";
 import { IAppUsedToChangeState } from "../../interface/AppInterfaces";
 import { appendElement } from "../../utility/aboutElement";
 import { EditorTextPart } from "../parts/SetNewRegulation/Editor/EditorTextPart";
-import { EditorFormManager, InputFormObject } from "../parts/SetNewRegulation/EditorFormManager";
+import { EditorFormManagerWithAutoDetect, InputFormObject } from "../parts/SetNewRegulation/EditorFormManagerWithAutoDetect";
 import { SettingRegulationStateHeader } from "../parts/SetNewRegulation/SettingRegulationStateHeader";
 import { PageStateBaseClass } from "./PageStateClass";
 import { createEditorSegmentBaseElement, generateBaseEditors, generateDescriptionEditors, titleContext } from "./settingNewRegulationState/utility";
@@ -100,7 +100,7 @@ const context = {
 type HandledType = IRunnerEditable
 export class S_SettingUserInfo
     extends PageStateBaseClass<null, IAppUsedToChangeState> {
-        private editorForm:EditorFormManager<HandledType>|null = null;
+        private editorForm:EditorFormManagerWithAutoDetect<HandledType>|null = null;
         async init() {
             const runnerID = this.app.loginAdministratorReadOnly.loginUserID;
             const headerMaker = new SettingRegulationStateHeader(
@@ -152,7 +152,7 @@ export class S_SettingUserInfo
                 if (/https\:\/\/www\.youtube\.com\/channel\/[a-zA-Z\-]+/.test(changed)) inputForms.youtubeLink?.refresh("");
             })
             const english = (await this.app.accessToAPI("list_runner",{id:runnerID})).result.English
-            this.editorForm = new EditorFormManager(
+            this.editorForm = new EditorFormManagerWithAutoDetect(
                 editorHeader,lang,firebase.firestore().collection("runners"),`${english}'s information`,inputForms,
                 {
                     Japanese:"",English:"",

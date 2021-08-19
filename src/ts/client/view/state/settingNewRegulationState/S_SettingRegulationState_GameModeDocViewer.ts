@@ -1,6 +1,6 @@
 import { IAppUsedToChangeState } from "../../../interface/AppInterfaces";
 import { PageStateBaseClass } from "../PageStateClass";
-import { EditorFormManager, InputFormObject } from "../../parts/SetNewRegulation/EditorFormManager";
+import { EditorFormManagerWithAutoDetect, InputFormObject } from "../../parts/SetNewRegulation/EditorFormManagerWithAutoDetect";
 import { appendElement } from "../../../utility/aboutElement";
 import { IGameModeItemWithoutCollections } from "../../../../type/list/IGameModeItem";
 import { EditorScoreTypePart } from "../../parts/SetNewRegulation/Editor/EditorScoreTypePart";
@@ -124,7 +124,7 @@ const context = {
 type HandledType = IGameModeItemWithoutCollections;
 export class S_SettingRegulationState_GameModeDocViewer
     extends PageStateBaseClass<DocViewerRequired, IAppUsedToChangeState> {
-    private editorForm:EditorFormManager<HandledType>|null = null;
+    private editorForm:EditorFormManagerWithAutoDetect<HandledType>|null = null;
     init() {
         const unset = (this.requiredObj.id===undefined)
         const headerMaker = new SettingRegulationStateHeader(
@@ -166,7 +166,7 @@ export class S_SettingRegulationState_GameModeDocViewer
         };
         const gameSystemID = this.requiredObj.collection.parent?.id
         if (gameSystemID === undefined) throw new Error("対応するゲームシステムIDが存在しません。")
-        this.editorForm = new EditorFormManager(
+        this.editorForm = new EditorFormManagerWithAutoDetect(
             editorHeader,lang,this.requiredObj.collection,this.requiredObj.pathStack.join(" > "),inputForms,
             {
                 id:"",

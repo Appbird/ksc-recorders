@@ -61,7 +61,7 @@ export class SelectChoicesCapsuled<T extends IItemOfResolveTableToName> implemen
     getValue(valueOnly: boolean = true) {
         return this._choices.getValue(valueOnly);
     }
-    getValueAsValue(valueOnly: boolean = true): string {
+    getValueAsValue(valueOnly: boolean = true): string|undefined {
         let choiced = this._choices.getValue(valueOnly);
         if (Array.isArray(choiced)) return choiced[0];
         return choiced;

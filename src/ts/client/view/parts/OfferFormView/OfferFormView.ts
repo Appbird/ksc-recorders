@@ -1,356 +1,159 @@
-import { IAbilityItem } from "../../../../type/list/IAbilityItem";
+import { appendElement } from "../../../utility/aboutElement";
+import { IView } from "../../IView";
+import { ISentRecordOffer } from "../../../../type/api/record/changing/IReceivedDataAtServer_recordWrite";
+import { IRecordWithoutID } from "../../../../type/record/IRecord";
+import context from "./language.json"
+import { EditorRecordLinkPart } from "../SetNewRegulation/Editor/EditorRecordLinkPart";
+import { InputFormObjectWithAllProperties } from "../SetNewRegulation/EditorFormManagerWithAutoDetect";
+import { EditorRecordTimePart } from "../SetNewRegulation/Editor/EditorRecordTimePart";
+import { EditorMultipleIDPart } from "../SetNewRegulation/Editor/EditorMultipleIDPart";
+import { EditorTagPart } from "../SetNewRegulation/Editor/EditorTagPart";
+import { EditorIDPart } from "../SetNewRegulation/Editor/EditorIDPart";
+import { EditorSimpleMDEPart } from "../SetNewRegulation/Editor/EditorSimpleMDEPart";
+import { EditorFormManager } from "../SetNewRegulation/EditorFormManager";
+import { createEditorSegmentBaseElement } from "../../state/settingNewRegulationState/utility";
+import { LanguageInApplication } from "../../../../type/LanguageInApplication";
 import { IGameDifficultyItem } from "../../../../type/list/IGameDifficultyItem";
 import { ITargetItem } from "../../../../type/list/ITargetItem";
-import { choiceString } from "../../../../utility/aboutLang";
-import { converseMiliSecondsIntoTime, convertScoreIntoNumber, convertTimeIntoNumber } from "../../../../utility/timeUtility";
-import { element, HTMLConverter } from "../../../../utility/ViewUtility";
-import { IAppUsedToReadAndChangeOnlyPageState } from "../../../interface/AppInterfaces";
-import { createElementWithIdAndClass, createElementWithIdTagClass, findElementByClassNameWithErrorPossibility, generateIcooonHTML } from "../../../utility/aboutElement";
-import { IView } from "../../IView";
-import { MovieWidgetCreator } from "../MovieWidgetCreator";
-import { SelectChoicesCapsuled } from "../Input/SelectChoicesCapsuled";
-import { TextInputCapsuled } from "../TextInputCapsuled";
-import SimpleMDE from "simplemde";
-import { TextChoicesCapsuled } from "../Input/TextChoicesCapsuled";
-import { ISentRecordOffer } from "../../../../type/api/record/changing/IReceivedDataAtServer_recordWrite";
-import { IRecord } from "../../../../type/record/IRecord";
-import context from "./language.json"
-import { SelectTagChoicesCapsuled } from "../Input/SelectTagChoicesCapsuled";
+import { IAbilityItem } from "../../../../type/list/IAbilityItem";
 import { IHashTagItem } from "../../../../type/list/IGameSystemInfo";
-import { IAbilityAttributeFlagItem, IAbilityAttributeItemWithoutCollections } from "../../../../type/list/IAbilityAttributeItemWithoutCollections";
-type AbilityAttributeChoices = {attribute:IAbilityAttributeItemWithoutCollections,choices:IAbilityAttributeFlagItem}
+import { SetOfFlagsOfAbilityAttributeItem } from "../../../../type/list/AttributeOfAbilityItem";
+import { OnePlayerOfAbilityAttribute } from "../../../../type/foundation/IRegulation";
+import { elementWithoutEscaping } from "../../../../utility/ViewUtility";
+type RecordInputData = {
+    link:string;
+    score:number;
+    difficultyID:string;
+    targetID:string;
+    abilityIDs:string[]|{abilityID:string,attribute:OnePlayerOfAbilityAttribute}[]
+    tagNames:string[];
+    runnerNote:string;
+}
 export class OfferFormView implements IView {
     private container: HTMLElement;
-    private app: IAppUsedToReadAndChangeOnlyPageState;
 
-    private evidenceMovieElement: HTMLDivElement;
-    private evidenceMovie: MovieWidgetCreator;
-
-    private URLInput: TextInputCapsuled;
-    private scoreInput: TextInputCapsuled;
-
-    private htmlConverter: HTMLConverter;
-
-    private difficultyChoices: SelectChoicesCapsuled<IGameDifficultyItem>;
-    private abilityChoices: SelectChoicesCapsuled<IAbilityItem>;
-    private isAbilityChoicesNeedsAttributeSelection:boolean;
-    private targetChoices: SelectChoicesCapsuled<ITargetItem>;
-    
-    private tagInput:SelectTagChoicesCapsuled;
-
-    private simpleMDE:SimpleMDE;
-    private errorDisplay:HTMLElement;
-    private onDecideEventListener:(input:ISentRecordOffer)=>void;
-    private button:HTMLElement;
+    private editors:InputFormObjectWithAllProperties<RecordInputData>;
+    private editorFormManager:EditorFormManager<RecordInputData>
+    private fetchTargetItems:(difficultyIDs:string[])=>Promise<ITargetItem[]>|ITargetItem[]
+    private targetIDPart:EditorIDPart;
+    private runnerID:string;
+    private isAbilityIDsWithAttributes:boolean;
+    private difficultyItems:IGameDifficultyItem[];
     destroy(){
-        this.tagInput.destroy();
-        this.difficultyChoices.destroy();
-        this.abilityChoices.destroy();
-        this.targetChoices.destroy();
-        this.container.innerHTML = "";
     }
-    //#CH  appへの依存を解消する。具体的にappを利用する処理を全てPage側で定義させ、それをコールバックでこちらに渡す。
-    constructor(container:HTMLElement,app: IAppUsedToReadAndChangeOnlyPageState, difficulties: IGameDifficultyItem[], abilities: IAbilityItem[],tags:IHashTagItem[],
-            abilityAttributes:AbilityAttributeChoices[],{
-        onDecideEventListener,
-        defaultRecord
-    }:{
+    //#CTODO  appへの依存を解消する。具体的にappを利用する処理を全てPage側で定義させ、それをコールバックでこちらに渡す。
+    constructor(container:HTMLElement,{language,onDecideEventListener,fetchTargetItems,defaultRecord,difficultyItems,abilityItems,abilityAttributeItems,tagItems,runnerID }:{
+       difficultyItems:IGameDifficultyItem[],abilityItems:IAbilityItem[],abilityAttributeItems?:SetOfFlagsOfAbilityAttributeItem[],tagItems:IHashTagItem[],runnerID:string,
+       language:LanguageInApplication,
         onDecideEventListener:(input:ISentRecordOffer)=>void,
-        defaultRecord?:IRecord
+        fetchTargetItems:(difficultyIDs:string[])=>Promise<ITargetItem[]>|ITargetItem[]
+        defaultRecord?:IRecordWithoutID
     }) {
         this.container = container;
         this.container.classList.add("offerForm","u-width95per","u-marginUpDown2emToChildren")
-        this.app = app;
-        this.onDecideEventListener = onDecideEventListener;
-        this.htmlConverter = new HTMLConverter(this.app.state.language);
-
-        this.container.appendChild(this.htmlConverter.elementWithoutEscaping`<h1>${generateIcooonHTML({icooonName:"link"})}${{Japanese:"リンク"}}</h1>`)
-        this.evidenceMovieElement = this.container.appendChild(createElementWithIdAndClass({ className: "c-evidenceMovie" }));
-        this.evidenceMovie = new MovieWidgetCreator(this.evidenceMovieElement);
-
-        const textInputs = this.createTextInput();
-        this.URLInput = textInputs.link;
-        this.scoreInput = textInputs.score;
-
-        this.difficultyChoices = this.createDifficultyChoices(difficulties);
-        this.targetChoices = this.createTargetChoices([]);
-        this.abilityChoices = this.createAbilityChoices(abilities);
-        this.tagInput = this.createTagInputChoices(tags);
-        //#CH 追加されるタグの色を対応させる。
-        
-        this.setTargetDropdownEventListener();
-        this.setURLInputChangeEventListener();
-        this.setScoreInputChangeEventListener();
-        
-
-        this.simpleMDE = new SimpleMDE({
-            element:this.container.appendChild(
-                        this.htmlConverter.elementWithoutEscaping`
-                                <div class="offerForm__noteInput">
-                                    <h1>${generateIcooonHTML({icooonName:"notebook"})}${{Japanese:"走者ノート"}}</h1>
-                                    <ul class="u-margin05em">
-                                        <li>${context.RunnersNote.Notice[0]}</li>
-                                        <li>${context.RunnersNote.Notice[1]}</li>
-                                    </ul>
-                                </div>
-                                `
-                        ).appendChild(createElementWithIdTagClass({className:"offerForm__runnerNote"},"textarea")),
-            autosave:{
-                enabled:true, uniqueId:"offerForm__runnerNote"
-            },
-            spellChecker:false,
-        });
-        
-        this.errorDisplay = this.container.appendChild(element`<div class="u-width90per u-margin2em u-redChara"></div>`).appendChild(document.createElement("h3"))
-        this.button = this.container.appendChild(this.htmlConverter.elementWithoutEscaping`<div class="u-width50per u-margin2em"><div class="c-button">${context.DecideButton}</div></div>`) as HTMLElement
-        this.button.addEventListener("click",() => this.whenDecide())
-
-            
-        this.container.appendChild(createElementWithIdAndClass({className:"u-space3em"}))
-        
-        this.setTargetChoices().then( () => {
-            if (defaultRecord !== undefined) return this.loadDefaultRecord(defaultRecord);
+        this.fetchTargetItems = fetchTargetItems
+        const requiredField = true;
+        const appendNewEditorElement = (editorSegment:HTMLElement) => appendElement(createEditorSegmentBaseElement(editorSegment),"div")
+        this.runnerID = runnerID
+        this.isAbilityIDsWithAttributes = abilityAttributeItems !== undefined
+        this.difficultyItems = difficultyItems
+        this.targetIDPart = new EditorIDPart({
+            container:      appendNewEditorElement(this.container),
+            title:          context.TargetChoices.Header,
+            description:    context.TargetChoices.Notice,
+            icooon:         "flag",
+            language,
+            requiredField,
+            options:        []
         })
-        
-    }
-    private async loadDefaultRecord(record:IRecord){
-        const rr = record.regulation;
-        const rrg = rr.gameSystemEnvironment;
-        this.URLInput.value = record.link[0];
-        this.scoreInput.value = (this.app.state.scoreType === "time") ? converseMiliSecondsIntoTime(record.score):record.score.toString();
-        this.difficultyChoices.setSelected(rrg.gameDifficultyID)
-        this.abilityChoices.setSelected(rr.abilityIDs)
-
-        await this.setTargetChoices()
-        this.targetChoices.setSelected(rr.targetID)
-        this.tagInput.setSelected(record.tagName),
-        this.simpleMDE.value(record.note)
-    }
-    private async whenDecide(){
-        if (this.button.classList.contains("u-unused")) return;
-        this.button.classList.add("u-unused")
-        try {       
-            this.evidenceMovie.set(this.URLInput.value);
-            this.modifyScoreInput();
-        }catch(err){
-            this.errorDisplay.textContent = choiceString(context.ErrorText.invalid,this.app.state.language)
-            this.button.classList.remove("u-unused")
-            return;
+        this.editors = {
+            link:   new EditorRecordLinkPart({
+                container:      appendNewEditorElement(this.container),
+                title:          context.URLInput.Header,
+                description:    context.URLInput.Notice,   
+                icooon:         "link",
+                errorText:      context.URLInput.Error,
+                language,
+                requiredField
+            }),
+            score:  new EditorRecordTimePart({
+                container:      appendNewEditorElement(this.container),
+                title:          context.ScoreInput.Header,
+                description:    context.ScoreInput.Notice,
+                icooon:         "time",
+                errorText:      context.ScoreInput.Error,
+                language,
+                requiredField,
+            }),
+            difficultyID: new EditorIDPart({
+                container:      appendNewEditorElement(this.container),
+                title:          context.DifficultyChoices.Header,
+                description:    context.DifficultyChoices.Notice,
+                icooon:         "difficulty",
+                language,
+                requiredField,
+                options:        difficultyItems    
+            }),
+            targetID: this.targetIDPart,
+            //#TODO AbilityAttribute専用のエディタを用意する。
+                //#NOTE     1属性ごとにEditorAbilityAttributePart, その能力ごとにEditorAbilityWithAttributesPartを用意し
+                //*>        最後に、EditorListOfAbilitiesWithAttributesPartを用意して、要求された機能を実現する。
+                //#NOTE     AbilityAttributeは一能力につく一属性のことを表すとする。
+                //#NOTE     abilityIDs
+            abilityIDs: new EditorMultipleIDPart({
+                container:      appendNewEditorElement(this.container),
+                title:          context.AbilityChoices.Header,
+                description:    context.AbilityChoices.Notice,
+                icooon:         "star",
+                language,
+                requiredField,
+                options:        abilityItems
+            }),
+            tagNames: new EditorTagPart({
+                container:      appendNewEditorElement(this.container),
+                title:          context.TagInput.Header,
+                description:    context.TagInput.Notice,
+                icooon:         "tag",
+                language,
+                requiredField,
+                options:        tagItems
+            }),
+            runnerNote: new EditorSimpleMDEPart({
+                container:      appendNewEditorElement(this.container),
+                title:          context.RunnersNote.Header,
+                description:    context.RunnersNote.Notice,
+                icooon:         "notebook",
+                language,
+                requiredField,
+            })
         }
-        const abilityIDs = this.abilityChoices.getValueAsArray();
-        const targetID = this.targetChoices.getValueAsValue()
-        const difficultyID = this.difficultyChoices.getValueAsValue();
-        
-        if (difficultyID === undefined || targetID === undefined || abilityIDs.length === 0 ){
-                this.errorDisplay.textContent = choiceString(context.ErrorText.lack,this.app.state.language)
-                this.button.classList.remove("u-unused")
-                return;
-            }
-        this.onDecideEventListener({
-            score:(() => {
-                const score = this.scoreInput.value;
-                switch (this.app.state.scoreType) {
-                    case "score": return convertScoreIntoNumber(score);
-                    case "time": return convertTimeIntoNumber(score);
-                }
-            })(),
-            tagName:this.tagInput.getValueAsArray(),
-            languageOfTagName:this.app.state.language,
-            link:[this.URLInput.value],
-            note:this.simpleMDE.value(),
-            regulation:{
-                abilityIDs:abilityIDs,
-                targetID:targetID,
-                gameSystemEnvironment:{
-                    gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed,
-                    gameDifficultyID: difficultyID,
-                }
-            }
-        
-        })
-        this.simpleMDE.value("")
-        this.simpleMDE.clearAutosavedValue()
-    }
-    private modifyScoreInput() {
-        const score = this.scoreInput.value;
-        switch (this.app.state.scoreType) {
-            case "score": return this.scoreInput.value = String(convertScoreIntoNumber(score));
-            case "time": return this.scoreInput.value = converseMiliSecondsIntoTime(convertTimeIntoNumber(score));
+        this.editorFormManager = new EditorFormManager(this.editors)
+        if (defaultRecord) {
+            const difficultyID = defaultRecord.regulation.gameSystemEnvironment.gameDifficultyID;
+            this.setTargetOptions(this.getTargetsListFromDifficultyID(difficultyID))
+            this.editorFormManager.refresh(this.convertIRecordToRecordData(defaultRecord))
         }
+        this.editors.difficultyID.addChangeEventListener( (change) => (change === undefined) ?  undefined: this.setTargetOptions(this.getTargetsListFromDifficultyID(change)))
+        this.container.appendChild(elementWithoutEscaping`<div class="u-width50per u-margin2em"><div class="c-button">決定</div></div>`)
+        .addEventListener("click",() => onDecideEventListener(this.convertRecordInputDataToISentRecordOffer(this.editorFormManager.value)))
     }
-    private setScoreInputChangeEventListener() {
-        this.scoreInput.addEventListener("change", () => {
-            try {
-                this.modifyScoreInput();
-                this.scoreInput.setError("");
-            } catch (error) {
-                const errorBaseMsg = choiceString(context.ScoreInput.Error, this.app.state.language);
-                if (!(error instanceof Error)) {
-                    this.scoreInput.setError(errorBaseMsg); return;
-                }
-                this.scoreInput.setError(errorBaseMsg);
-            }
-        });
+    private convertRecordInputDataToISentRecordOffer(value:RecordInputData):ISentRecordOffer{
+        //#TODO ここの実装
     }
-    private setURLInputChangeEventListener() {
-        this.URLInput.addEventListener("change", () => {
-            try {
-                this.evidenceMovie.set(this.URLInput.value);
-                this.evidenceMovieElement.innerHTML = "";
-                this.evidenceMovie.setWidget();
-                this.URLInput.setError("");
-            } catch (error) {
-                const errorBaseMsg = choiceString(context.URLInput.Error, this.app.state.language);
-                if (!(error instanceof Error)) {
-                    this.URLInput.setError(errorBaseMsg); return;
-                }
-                this.URLInput.setError(errorBaseMsg);
-            }
-        });
+    private convertIRecordToRecordData(value:IRecordWithoutID):RecordInputData{
+        //#TODO ここの実装
+        //#TODO API:record/modifyの記録データのsetをupdateに置き換えたい
     }
-    private setTargetDropdownEventListener() {
-        this.difficultyChoices.addEventListener("change", () => {
-                this.targetChoices.enable();
-                if (this.difficultyChoices.getValue(true) === undefined) { this.targetChoices.disable(); return; }
-                this.setTargetChoices();
-        });
+    private getTargetsListFromDifficultyID(difficultyID:string){
+        const result = this.difficultyItems.find( difficultyItem => difficultyID === difficultyItem.id )
+        if (result === undefined) throw new Error("[OfferFormView:getTargetsListFromDifficultyID] result === undefined")
+        return result.TargetIDsIncludedInTheDifficulty
     }
-        private async setTargetChoices() {
-            
-            this.targetChoices.clearChoices();
-            this.targetChoices.clearStore();
-            try {
-                const selectedTargetItem = this.difficultyChoices.data.find((ele) => ele.id === this.difficultyChoices.getValueAsValue(true));
-                if (selectedTargetItem === undefined) throw new Error(`# エラーの内容\n\nID ${this.difficultyChoices.getValueAsValue(true)} に対応した難易度が存在しません。`);
-
-                const result = await this.app.accessToAPI("list_targets", {
-                    gameSystemEnv: { gameSystemID: this.app.state.gameSystemIDDisplayed, gameModeID: this.app.state.gameModeIDDisplayed }, id: selectedTargetItem.TargetIDsIncludedInTheDifficulty
-                });
-                
-                this.targetChoices.setChoices(result.result);
-            } catch (error) {
-                console.error(error);
-                if (!(error instanceof Error)) return;
-                this.app.transition("errorView", { title: "難易度に対応する計測対象の取得に失敗しました。", message: error.message });
-            }
-        }
-        //#CH ここあたりのコードを分離したいけどするべきか迷う
-    private createTextInput(): { link: TextInputCapsuled; score: TextInputCapsuled; } {
-        const offerForm__textInputElement = this.container.appendChild(
-            //#CTODO 英語訳の追加
-            createElementWithIdAndClass({ className: "offerForm__textInput" })).appendChild(this.htmlConverter.elementWithoutEscaping`
-            <div class="offerForm__textInput">
-                <div class="c-title offerForm__textInput__link">
-                </div>
-                <ul class="u-margin05em offerForm__textInput__linkDescription">
-                    <li>${context.URLInput.Notice[0]}</li>
-                    <li>${context.URLInput.Notice[1]}</li>
-                    <li>${context.URLInput.Notice[2]}</li>
-                </ul>
-            <h1>${generateIcooonHTML({icooonName:"time"})}${context.ScoreInput.Header}</h1>
-                <div class="c-title offerForm__textInput__score">
-                </div>
-                <ul class="u-margin05em offerForm__textInput__scoreDescription">
-                    <li>${context.ScoreInput.Notice[0]}</li>
-                    <li><strong>${context.ScoreInput.Notice[1]}</strong></li>
-                    <li>${context.ScoreInput.Notice[2]}</li>
-                </ul>
-            </div>`
-            );
-        const element_textInput_link = findElementByClassNameWithErrorPossibility(offerForm__textInputElement,"offerForm__textInput__link")
-        const element_textInput_score = findElementByClassNameWithErrorPossibility(offerForm__textInputElement,"offerForm__textInput__score");
-        const element_linkDescription = findElementByClassNameWithErrorPossibility(offerForm__textInputElement,"offerForm__textInput__linkDescription");
-        const element_scoreDescription = findElementByClassNameWithErrorPossibility(offerForm__textInputElement,"offerForm__textInput__scoreDescription");
-    
-        const link_errorInput = element_linkDescription.appendChild(createElementWithIdTagClass({ className: "u-redChara u-bolderChara" }, "li"));
-        const score_errorInput = element_scoreDescription.appendChild(createElementWithIdTagClass({ className: "u-redChara u-bolderChara" }, "li"));
-        return {
-            link: new TextInputCapsuled(element_textInput_link,{placeHolder:"link to the movie", errorViewer:link_errorInput, chara:"u-smallerChara"}),
-            score: new TextInputCapsuled(element_textInput_score, {
-                placeHolder:(() => {
-                    switch (this.app.state.scoreType) {
-                        case "score": return "0";
-                        case "time": return "00:00.00";
-                    }
-                })()
-                , errorViewer:score_errorInput, chara:"u-biggerChara"})
-        };
-    }
-    
-    private createDifficultyChoices(difficulties: IGameDifficultyItem[]) {
-        const difficultySelector = this.container.appendChild(this.htmlConverter.elementWithoutEscaping`
-        <div class="offerForm__difficultySelector">
-            <h1>${generateIcooonHTML({icooonName:"difficulty"})}${context.DifficultyChoices.Header}</h1>
-            <div class="offerForm__difficultySelector__Choices">
-            </div>
-            <ul class="u-margin05em">
-                <li>${context.DifficultyChoices.Notice[0]}</li>
-            </ul>
-        </div>`);
-        return new SelectChoicesCapsuled(
-            findElementByClassNameWithErrorPossibility(difficultySelector, "offerForm__difficultySelector__Choices").appendChild(document.createElement("select")),
-            difficulties, { language: this.app.state.language,needMultipleSelect:false,shouldSort:true });
+    private async setTargetOptions(difficultyID:string[]){
+        const fetchResult = await this.fetchTargetItems(difficultyID)
+        this.targetIDPart.refreshOption(fetchResult)
     }
 
-    private createTargetChoices(targets: ITargetItem[]) {
-        const targetSelector = this.container.appendChild(this.htmlConverter.elementWithoutEscaping`
-        <div class="offerForm__targetSelector">
-            <h1>${generateIcooonHTML({icooonName:"flag"})}${context.TargetChoices.Header}</h1>
-            <div class="offerForm__targetSelector__Choices">
-            </div>
-            <ul class="u-margin05em">
-                <li>${context.TargetChoices.Notice[0]}</li>
-            </ul>
-        </div>`);
-        return new SelectChoicesCapsuled(
-            findElementByClassNameWithErrorPossibility(targetSelector, "offerForm__targetSelector__Choices").appendChild(document.createElement("select")),
-            targets, { language: this.app.state.language, needMultipleSelect: false, });
-    }
-
-    private createAbilityChoices(abilities: IAbilityItem[]) {
-        const maxNumberOfPlayer = this.app.state.gameSystemEnvDisplayed.gameMode?.maxNumberOfPlayer
-        const abilitySelector = this.container.appendChild(this.htmlConverter.elementWithoutEscaping`
-        <div class="offerForm__abilitySelector">
-            <h1>${generateIcooonHTML({icooonName:"star"})}${context.AbilityChoices.Header}</h1>
-            <div class="offerForm__abilitySelector__Choices">
-            </div>
-            <ul class="u-margin05em">
-                    <li>${context.AbilityChoices.Notice[0]}</li>
-                    <li>${context.AbilityChoices.Notice[1]}</li>
-                    <li>${{ Japanese: `このゲームモードは${maxNumberOfPlayer}人プレイまで対応しています。` }}</li>
-            </ul>
-        </div>`);
-        return new SelectChoicesCapsuled(
-            findElementByClassNameWithErrorPossibility(abilitySelector, "offerForm__abilitySelector__Choices").appendChild(document.createElement("select")),
-            abilities, { language: this.app.state.language, 
-                maxItemCount:this.app.state.gameSystemEnvDisplayed.gameMode?.maxNumberOfPlayer,
-                needMultipleSelect: true, needDuplicatedSelect: true , shouldSort:true,
-                maxItemText:
-                    {
-                        JDescription:`このゲームモードは最大${maxNumberOfPlayer}人プレイまで対応しています。`,
-                        EDescription:`This mode can be played with ${maxNumberOfPlayer} kirbys (friends) at most.`
-                    }
-            });
-    }
-
-    private createTagInputChoices(tags:IHashTagItem[]) {
-        const tagSegment = this.container.appendChild(this.htmlConverter.elementWithoutEscaping`
-        <div class="offerForm__tagInput">
-        <h1>${generateIcooonHTML({icooonName:"tag"})}${context.TagInput.Header}</h1>
-            <div class="offerForm__tagInput__Choices">
-            </div>
-            <ul class="u-margin05em">
-                    <li>${context.TagInput.Notice[0]}</li>
-                    <li>${context.TagInput.Notice[1]}</li>
-            </ul>
-        </div>`);
-        return new SelectTagChoicesCapsuled(
-            findElementByClassNameWithErrorPossibility(tagSegment,"offerForm__tagInput__Choices").appendChild(document.createElement("select")),
-            tags.map(tag => choiceString(tag,this.app.state.language)),{
-                language:this.app.state.language,shouldSort:true
-            }
-        )
-    }
 
     get htmlElement() {
         return this.container;

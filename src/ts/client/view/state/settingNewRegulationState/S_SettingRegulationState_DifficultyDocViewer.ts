@@ -1,12 +1,12 @@
 import { IAppUsedToChangeState } from "../../../interface/AppInterfaces";
 import { PageStateBaseClass } from "../PageStateClass";
-import { EditorFormManager, InputFormObject } from "../../parts/SetNewRegulation/EditorFormManager";
+import { EditorFormManagerWithAutoDetect, InputFormObject } from "../../parts/SetNewRegulation/EditorFormManagerWithAutoDetect";
 import { appendElement } from "../../../utility/aboutElement";
 import { DocViewerRequired } from "./Types";
 import { SettingRegulationStateHeader } from "../../parts/SetNewRegulation/SettingRegulationStateHeader";
 import { createEditorSegmentBaseElement, generateBaseEditors, generateDescriptionEditors, goBackFromDocToCollection, titleContext } from "./utility";
 import { IGameDifficultyItem } from "../../../../type/list/IGameDifficultyItem";
-import { EditorIDPart } from "../../parts/SetNewRegulation/Editor/EditorIDPart";
+import { EditorMultipleIDPart } from "../../parts/SetNewRegulation/Editor/EditorMultipleIDPart";
 import { ITargetItem } from "../../../../type/list/ITargetItem";
 import { choiceString } from "../../../../utility/aboutLang";
 
@@ -87,7 +87,7 @@ const context = {
 type HandledType = IGameDifficultyItem
 export class S_SettingRegulationState_DifficultyDocViewer
     extends PageStateBaseClass<DocViewerRequired, IAppUsedToChangeState> {
-    private editorForm:EditorFormManager<HandledType>|null = null;
+    private editorForm:EditorFormManagerWithAutoDetect<HandledType>|null = null;
     async init() {
         const headerMaker = new SettingRegulationStateHeader(
             appendElement(this.articleDOM,"div"),this.app.state.language,
@@ -108,7 +108,7 @@ export class S_SettingRegulationState_DifficultyDocViewer
 
             ...generateBaseEditors(editorSegment,lang,context),
             TargetIDsIncludedInTheDifficulty:   
-                                new EditorIDPart({
+                                new EditorMultipleIDPart({
                                     container:createEditorSegmentBaseElement(editorSegment),
                                     language:lang,
                                     title:context.Input.TargetIDs.title,
@@ -121,7 +121,7 @@ export class S_SettingRegulationState_DifficultyDocViewer
                                 
             ...generateDescriptionEditors(editorSegment,lang,context)
         };
-        this.editorForm = new EditorFormManager(
+        this.editorForm = new EditorFormManagerWithAutoDetect(
             editorHeader,lang,this.requiredObj.collection,this.requiredObj.pathStack.join(" > "),inputForms,
             {
                 id:"",

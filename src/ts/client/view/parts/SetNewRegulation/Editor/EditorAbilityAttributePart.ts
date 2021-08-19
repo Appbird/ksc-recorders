@@ -7,30 +7,34 @@ import { SelectChoicesCapsuled } from "../../Input/SelectChoicesCapsuled";
 import { UListCupsuled } from "../../Input/UListCupsuled";
 import { context_required, EditorPart } from "./EditorPart";
 import firebase from "firebase/app";
+import { MultiLanguageDescription } from "../../../../../utility/aboutLang";
 import { IItemOfResolveTableToName } from "../../../../../type/list/IItemOfResolveTableToName";
 
-export class EditorIDPart implements EditorPart<string> {
+export class EditorAbilityAttributePart implements EditorPart<string[]> {
     private container: HTMLElement;
     private selectInput: SelectChoicesCapsuled<ITargetItem>;
     private htmlCon: HTMLConverter;
-    private static _requiredTypeInString = "string";
+    private static _requiredTypeInString = "string[]";
     private _requiredField:boolean;
     private ulist:UListCupsuled;
     private unsubscribe:(()=>void)|null = null;
     get requiredTypeInString(){
-        return EditorIDPart._requiredTypeInString
+        return EditorAbilityAttributePart._requiredTypeInString
     }
     constructor({
         container,language,title,
-        description,requiredField,icooon,
-        options,observed
+        description=[],requiredField,icooon,
+        options,observed,maxItemCount,needMultipleSelect = true, maxItemText,
     }:{
         container: HTMLElement,
         language: LanguageInApplication,
         title: string|MultiLanguageString,
-        description:MultiLanguageString[],
+        description?:MultiLanguageString[],
         requiredField:boolean,
         icooon?:string,
+        maxItemCount?:number,
+        needMultipleSelect?:boolean,
+        maxItemText?:MultiLanguageDescription,
         options:IItemOfResolveTableToName[],
         observed?:firebase.firestore.CollectionReference
     }
@@ -41,10 +45,10 @@ export class EditorIDPart implements EditorPart<string> {
         this.htmlCon = new HTMLConverter(language);
         this._requiredField = requiredField;
         this.container.appendChild(this.htmlCon.elementWithoutEscaping`
-            <h1 class="u-noUnderline">${generateIcooonHTML({icooonName:icooon})}${title}</h1>
+            <h3 class="u-noUnderline">${generateIcooonHTML({icooonName:icooon})}${title}</h3>
         `);
         
-        this.selectInput = new SelectChoicesCapsuled(this.container.appendChild(document.createElement("select")), options, { language: language,needMultipleSelect:false });
+        this.selectInput = new SelectChoicesCapsuled(this.container.appendChild(document.createElement("select")), options, { language: language,needMultipleSelect,maxItemCount,maxItemText });
         this.ulist = new UListCupsuled(appendElement(this.container,"ul"),language,description)
         if (observed === undefined) return;
         this.unsubscribe = observed.onSnapshot(querySnapshots => {
@@ -54,18 +58,17 @@ export class EditorIDPart implements EditorPart<string> {
             this.refresh(selected);
         })
     }
-    addChangeEventListener(callback: (changed: string|undefined) => void) {
+    addChangeEventListener(callback: (changed: string[]) => void) {
         this.selectInput.addEventListener("change", () => callback(this.value));
     }
-    get value(): string|undefined {
-        return this.selectInput.getValueAsValue();
+    get value(): string[] {
+        return this.selectInput.getValueAsArray();
     }
     disabled(state:boolean){
         if (state) this.selectInput.disable()
             else this.selectInput.enable()
     }
-    refresh(value: string|undefined) {
-        if (value === undefined) throw new Error()
+    refresh(value: string[]) {
         this.selectInput.setSelected(value);
     }
     refreshOption(options:ITargetItem[]){

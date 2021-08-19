@@ -3,36 +3,32 @@ import { LanguageInApplication } from "../../../../../type/LanguageInApplication
 import { ITargetItem } from "../../../../../type/list/ITargetItem";
 import { HTMLConverter } from "../../../../../utility/ViewUtility";
 import { appendElement, generateIcooonHTML } from "../../../../utility/aboutElement";
-import { SelectChoicesCapsuled } from "../../Input/SelectChoicesCapsuled";
 import { UListCupsuled } from "../../Input/UListCupsuled";
 import { context_required, EditorPart } from "./EditorPart";
-import firebase from "firebase/app";
+import { SelectTagChoicesCapsuled } from "../../Input/SelectTagChoicesCapsuled";
 import { IItemOfResolveTableToName } from "../../../../../type/list/IItemOfResolveTableToName";
+import { choiceString } from "../../../../../utility/aboutLang";
 
-export class EditorIDPart implements EditorPart<string> {
+export class EditorTagPart implements EditorPart<string[]> {
     private container: HTMLElement;
-    private selectInput: SelectChoicesCapsuled<ITargetItem>;
+    private language: LanguageInApplication
+    private selectInput: SelectTagChoicesCapsuled;
     private htmlCon: HTMLConverter;
-    private static _requiredTypeInString = "string";
+    private static _requiredTypeInString = "string[]";
     private _requiredField:boolean;
     private ulist:UListCupsuled;
     private unsubscribe:(()=>void)|null = null;
     get requiredTypeInString(){
-        return EditorIDPart._requiredTypeInString
+        return EditorTagPart._requiredTypeInString
     }
-    constructor({
-        container,language,title,
-        description,requiredField,icooon,
-        options,observed
-    }:{
+    constructor({container,language,title,description,requiredField,icooon,options}:{
         container: HTMLElement,
         language: LanguageInApplication,
         title: string|MultiLanguageString,
         description:MultiLanguageString[],
         requiredField:boolean,
         icooon?:string,
-        options:IItemOfResolveTableToName[],
-        observed?:firebase.firestore.CollectionReference
+        options:IItemOfResolveTableToName[]
     }
     ) {
         description = [...description];
@@ -43,34 +39,26 @@ export class EditorIDPart implements EditorPart<string> {
         this.container.appendChild(this.htmlCon.elementWithoutEscaping`
             <h1 class="u-noUnderline">${generateIcooonHTML({icooonName:icooon})}${title}</h1>
         `);
-        
-        this.selectInput = new SelectChoicesCapsuled(this.container.appendChild(document.createElement("select")), options, { language: language,needMultipleSelect:false });
+        this.language = language
+        this.selectInput = new SelectTagChoicesCapsuled(this.container.appendChild(document.createElement("select")), options.map(option => choiceString(option,language)), { language: language});
         this.ulist = new UListCupsuled(appendElement(this.container,"ul"),language,description)
-        if (observed === undefined) return;
-        this.unsubscribe = observed.onSnapshot(querySnapshots => {
-            const selected = this.value;
-            this.selectInput.clearStore();
-            this.selectInput.setChoices(querySnapshots.docs.map(doc => doc.data() as ITargetItem))
-            this.refresh(selected);
-        })
     }
-    addChangeEventListener(callback: (changed: string|undefined) => void) {
+    addChangeEventListener(callback: (changed: string[]) => void) {
         this.selectInput.addEventListener("change", () => callback(this.value));
     }
-    get value(): string|undefined {
-        return this.selectInput.getValueAsValue();
+    get value(): string[] {
+        return this.selectInput.getValueAsArray();
     }
     disabled(state:boolean){
         if (state) this.selectInput.disable()
             else this.selectInput.enable()
     }
-    refresh(value: string|undefined) {
-        if (value === undefined) throw new Error()
+    refresh(value: string[]) {
         this.selectInput.setSelected(value);
     }
     refreshOption(options:ITargetItem[]){
         this.selectInput.clearStore();
-        this.selectInput.setChoices(options);
+        this.selectInput.setChoices(options.map(option => choiceString(option,this.language)));
     }
     isFill(): boolean {
         return this.selectInput.getValueAsArray().length === 0;

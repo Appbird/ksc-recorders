@@ -25,7 +25,7 @@ export class RadioButtonCupsuled<T> implements IView {
                 <div class="__item ${(index === 0) ? "--checked" : ""}" name="${name}" ><p>${optionLabel}</p></div>
             `) as HTMLElement;
             ele.addEventListener("click", () => this.select(index));
-            return { id:this.selectedIndex, input: ele, value: value };
+            return { input: ele, value: value };
         });
     }
     onChangeEventListener(callback: (selected: T) => void): void {

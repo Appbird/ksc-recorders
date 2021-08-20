@@ -1,3 +1,4 @@
+import { appendElement } from "../../utility/aboutElement";
 import { IView } from "../IView";
 import { TitleCupsuled } from "./TitleCupsuled";
 
@@ -20,8 +21,6 @@ export class TextInputCapsuled implements IView{
             main:string, sub:string
         }
     } = {}) {
-        this.errorElement = errorViewer;
-        if (this.errorElement !== null) this.errorElement.classList.add("u-unused")
         if (title !== undefined) {
             this.titleElement = new TitleCupsuled(title.titleViewer)
             this.titleElement.refresh(title.main,title.sub,{underline:false,chara:"u-smallerChara"})
@@ -34,6 +33,9 @@ export class TextInputCapsuled implements IView{
         if (allowNewLine) this.element.classList.add("u-height15em");
         this.element.placeholder = placeHolder;
         
+        this.errorElement = errorViewer;
+        if (this.errorElement !== null) this.errorElement.classList.add("u-unused")
+
         if (chara !== undefined && chara !== "") this.element.classList.add(chara);
         
         container.appendChild(this.element);

@@ -61,10 +61,11 @@ export class S_OfferForm
             abilityAttributeItems = (abilityAttributeItems.length === 0) ? undefined : abilityAttributeItems
             const view = new OfferFormView(
                 this.articleDOM.appendChild(document.createElement("div")),
-                {   difficultyItems,abilityItems,tagItems,runnerID,abilityAttributeItems,
-                    language:this.app.state.language,
+                {   difficultyItems,abilityItems,tagItems,runnerID,abilityAttributeItems,gameSystemID,gameModeID,
+                    tagLanguage:this.app.state.language,
+                    maxPlayerNumber:this.app.state.gameSystemEnvDisplayed.gameMode.maxNumberOfPlayer,
                     onDecideEventListener:async (input) => this.decide(input),
-                    fetchTargetItems:async (input) => (await this.app.accessToAPI("list_targets",{gameSystemEnv:{gameSystemID,gameModeID}})).result
+                    fetchTargetItems:async (input) => (await this.app.accessToAPI("list_targets",{gameSystemEnv:{gameSystemID,gameModeID},id:input})).result
                 }
             )
             this.deleteLoadingSpinner();

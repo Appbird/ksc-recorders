@@ -37,8 +37,9 @@ export class EditorRecordTimePart implements EditorPart<number> {
 
         this._requiredField = requiredField;
         this.container.appendChild(this.htmlCon.elementWithoutEscaping `<h1 class="u-noUnderline">${generateIcooonHTML({icooonName:(icooon)})}${title}</h1>`);
-        this.textInput = new TextInputCapsuled(appendElement(this.container,"div"), { defaultValue:"",className:"u-width90per",placeHolder:"00:00.00 or 00:00.00-00:00.00" });
+        const textInputSegment = appendElement(this.container,"div");
         this.ulist = new UListCupsuled(appendElement(this.container,"ul"),language,description)
+        this.textInput = new TextInputCapsuled(textInputSegment, { defaultValue:"",className:"u-biggerChara",placeHolder:"00:00.00",errorViewer:this.ulist.unshift({},true) });
         this.language = language;
         this.errorText = errorText
         this.addChangeEventListener( (change) => {

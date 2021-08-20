@@ -146,9 +146,11 @@ export class S_SettingUserInfo
                 
             };
             inputForms.twitterLink?.addChangeEventListener((changed) => {
+                if (changed === undefined) return;
                 if (/https\:\/\/twitter\.com\/[a-zA-Z\-]+/.test(changed)) inputForms.youtubeLink?.refresh("");
             })
             inputForms.youtubeLink?.addChangeEventListener((changed) => {
+                if (changed === undefined) return;
                 if (/https\:\/\/www\.youtube\.com\/channel\/[a-zA-Z\-]+/.test(changed)) inputForms.youtubeLink?.refresh("");
             })
             const english = (await this.app.accessToAPI("list_runner",{id:runnerID})).result.English

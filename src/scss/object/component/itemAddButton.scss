@@ -1,0 +1,37 @@
+.c-itemAddButton{
+    display: flex;
+    flex-direction: row;
+    justify-content:center;
+    align-items: center;
+    border-radius : 0.5em;
+    border-width: 3px;
+    border-style: solid;
+    border-color: rgb(231, 230, 230);
+    
+    &>*{
+        margin: 0.2em;
+        margin-top: 0.8em;
+        margin-bottom: 0.8em;
+    }
+    &:hover{
+        background-color: rgb(231, 230, 230);
+        transition: 0.3s;
+    }
+    &.--disabled{
+        background-color: rgb(231, 230, 230);
+        transition: 0.3s;
+    }
+    &.--red{
+        color: rgb(255, 44, 44);
+        border-color: rgb(255, 240, 240);
+        &.--disabled{
+            border-color: rgb(243, 229, 229);
+            background-color: rgb(243, 229, 229);
+            transition: 0.3s;
+        }
+        &:hover{
+            background-color: rgb(255, 240, 240);
+        }
+    }
+}
+

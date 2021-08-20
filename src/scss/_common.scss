@@ -1,5 +1,4 @@
 @charset "UTF-8";
-
 @use "choicesjs/choices.scss";
 @use "notie/overwrite.scss";
 
@@ -32,6 +31,7 @@
 @use "object/component/list.scss";
 @use "object/component/runnerNote.scss";
 @use "object/component/button.scss";
+@use "object/component/itemAddButton.scss";
 
 @use "object/project/titlePostHeader.scss";
 @use "object/project/KSSRsHeader.scss";

@@ -135,6 +135,7 @@ export class EditorFormManagerWithAutoDetect<TypeOfObserved extends object> impl
         if (item !== undefined) this.data = item;
         for (const [key,editor] of this.inputFormsTuples){
             if (editor === undefined) continue;
+            if (editor.requiredTypeInString === undefined) throw new Error("[EditorFormManagerWithAutoDetect:reflectView] editor.requiredTypeInString === undefined")
             if (this.data.hasOwnProperty(key) && checkType(this.data[key],editor.requiredTypeInString)) editor.refresh(this.data[key])
             //#NOTE 型システム的には保証されていないが一応チェックも通してるので正当な型が入る…ハズ。
         }

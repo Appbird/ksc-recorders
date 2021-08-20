@@ -2,10 +2,8 @@ import { MultiLanguageString } from "../../../../../type/foundation/MultiLanguag
 import { LanguageInApplication } from "../../../../../type/LanguageInApplication";
 import { HTMLConverter } from "../../../../../utility/ViewUtility";
 import { appendElement, generateIcooonHTML } from "../../../../utility/aboutElement";
-import { TextInputCapsuled } from "../../TextInputCapsuled";
 import { UListCupsuled } from "../../Input/UListCupsuled";
 import { context_required, EditorPart } from "./EditorPart";
-import { MovieWidgetCreator } from "../../MovieWidgetCreator";
 import SimpleMDE from "simplemde";
 
 export class EditorSimpleMDEPart implements EditorPart<string> {
@@ -33,8 +31,16 @@ export class EditorSimpleMDEPart implements EditorPart<string> {
         this.htmlCon = new HTMLConverter(language);
         this._requiredField = requiredField;
         this.container.appendChild(this.htmlCon.elementWithoutEscaping `<h1 class="u-noUnderline">${generateIcooonHTML({icooonName:(icooon)})}${title}</h1>`);
-        this.textInput = new SimpleMDE(appendElement(this.container,"div"));
+        
         this.ulist = new UListCupsuled(appendElement(this.container,"ul"),language,description)
+        this.textInput = new SimpleMDE({
+            element:    appendElement(this.container,"textarea"),
+            autosave:{
+                enabled:true,
+                uniqueId:"offerForm__runnerNote"
+            },
+            spellChecker:false,
+        });
         
     }
     addChangeEventListener(callback: (changed: string) => void) {

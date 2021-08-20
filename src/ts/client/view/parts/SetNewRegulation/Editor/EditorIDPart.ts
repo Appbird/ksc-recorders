@@ -1,29 +1,26 @@
 import { MultiLanguageString } from "../../../../../type/foundation/MultiLanguageString";
 import { LanguageInApplication } from "../../../../../type/LanguageInApplication";
-import { ITargetItem } from "../../../../../type/list/ITargetItem";
 import { HTMLConverter } from "../../../../../utility/ViewUtility";
 import { appendElement, generateIcooonHTML } from "../../../../utility/aboutElement";
 import { SelectChoicesCapsuled } from "../../Input/SelectChoicesCapsuled";
 import { UListCupsuled } from "../../Input/UListCupsuled";
 import { context_required, EditorPart } from "./EditorPart";
-import firebase from "firebase/app";
 import { IItemOfResolveTableToName } from "../../../../../type/list/IItemOfResolveTableToName";
 
 export class EditorIDPart implements EditorPart<string> {
     private container: HTMLElement;
-    private selectInput: SelectChoicesCapsuled<ITargetItem>;
+    private selectInput: SelectChoicesCapsuled<IItemOfResolveTableToName>;
     private htmlCon: HTMLConverter;
     private static _requiredTypeInString = "string";
     private _requiredField:boolean;
     private ulist:UListCupsuled;
-    private unsubscribe:(()=>void)|null = null;
     get requiredTypeInString(){
         return EditorIDPart._requiredTypeInString
     }
     constructor({
         container,language,title,
         description,requiredField,icooon,
-        options,observed
+        options
     }:{
         container: HTMLElement,
         language: LanguageInApplication,
@@ -31,8 +28,7 @@ export class EditorIDPart implements EditorPart<string> {
         description:MultiLanguageString[],
         requiredField:boolean,
         icooon?:string,
-        options:IItemOfResolveTableToName[],
-        observed?:firebase.firestore.CollectionReference
+        options:IItemOfResolveTableToName[]
     }
     ) {
         description = [...description];
@@ -43,19 +39,13 @@ export class EditorIDPart implements EditorPart<string> {
         this.container.appendChild(this.htmlCon.elementWithoutEscaping`
             <h1 class="u-noUnderline">${generateIcooonHTML({icooonName:icooon})}${title}</h1>
         `);
-        
         this.selectInput = new SelectChoicesCapsuled(this.container.appendChild(document.createElement("select")), options, { language: language,needMultipleSelect:false });
         this.ulist = new UListCupsuled(appendElement(this.container,"ul"),language,description)
-        if (observed === undefined) return;
-        this.unsubscribe = observed.onSnapshot(querySnapshots => {
-            const selected = this.value;
-            this.selectInput.clearStore();
-            this.selectInput.setChoices(querySnapshots.docs.map(doc => doc.data() as ITargetItem))
-            this.refresh(selected);
-        })
     }
     addChangeEventListener(callback: (changed: string|undefined) => void) {
-        this.selectInput.addEventListener("change", () => callback(this.value));
+        this.selectInput.addEventListener("change", () => {
+            callback(this.value)
+        });
     }
     get value(): string|undefined {
         return this.selectInput.getValueAsValue();
@@ -68,7 +58,7 @@ export class EditorIDPart implements EditorPart<string> {
         if (value === undefined) throw new Error()
         this.selectInput.setSelected(value);
     }
-    refreshOption(options:ITargetItem[]){
+    refreshOption(options:IItemOfResolveTableToName[]){
         this.selectInput.clearStore();
         this.selectInput.setChoices(options);
     }
@@ -79,7 +69,6 @@ export class EditorIDPart implements EditorPart<string> {
         return this._requiredField;
     }
     destroy(){
-        if (this.unsubscribe !== null)this.unsubscribe();
         this.selectInput.destroy();
         this.ulist.destroy();
     }

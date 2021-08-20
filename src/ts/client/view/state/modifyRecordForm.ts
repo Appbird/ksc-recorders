@@ -1,4 +1,5 @@
 import { ISentRecordOffer } from "../../../type/api/record/changing/IReceivedDataAtServer_recordWrite";
+import { SetOfFlagsOfAbilityAttributeItem } from "../../../type/list/AttributeOfAbilityItem";
 import { choiceString } from "../../../utility/aboutLang";
 import { TargetGameMode } from "../../Administrator/StateAdminister";
 import { IAppUsedToChangeState } from "../../interface/AppInterfaces";
@@ -28,33 +29,50 @@ export class S_ModifyRecordForm
             );
 
             if (this.requiredObj.targetGameMode !== undefined) this.app.changeTargetGameMode(this.requiredObj.targetGameMode)
-            const difficulties = (await this.app.accessToAPI("list_difficulties",
+            
+            const gameSystemID = this.requiredObj.targetGameMode.gameSystem.id
+            const gameModeID = this.requiredObj.targetGameMode.gameMode.id
+            const difficultyItems = (await this.app.accessToAPI("list_difficulties",
                     {gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed}
                 })).result
-            const abilities = (await this.app.accessToAPI("list_abilities",{
+            const abilityItems = (await this.app.accessToAPI("list_abilities",{
                     gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed}
                 })).result
-            const tags = (await this.app.accessToAPI("list_hashTags_onlyApproved",{
+            const tagItems = (await this.app.accessToAPI("list_hashTags_onlyApproved",{
                 gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed}
             })).result
+            const abilityAttributeList = (await this.app.accessToAPI("list_abilityAttributes",{
+                gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed}
+            })).result
+            let abilityAttributeItems:SetOfFlagsOfAbilityAttributeItem[] | undefined = await Promise.all(
+                    abilityAttributeList.map(async attribute => { return {
+                        attributeNameInfo: attribute,
+                        flagsInAttribute: (await this.app.accessToAPI("list_abilityAttributeFlags",{
+
+                            gameSystemEnv : {gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed},
+                            abilityAttributeID:attribute.id
+
+                        })).result
+                    } } )
+                )
+            abilityAttributeItems = (abilityAttributeItems.length === 0) ? undefined : abilityAttributeItems
             const record = (await this.app.accessToAPI("record_rawdata",{
                                 gameSystemEnv:{
-                                    gameSystemID:this.requiredObj.targetGameMode.gameSystem.id,
-                                    gameModeID:this.requiredObj.targetGameMode.gameMode.id
+                                    gameSystemID,
+                                    gameModeID
                                 },
                                 id:this.requiredObj.id,
                                 lang:this.app.state.language
                             })).result
-            
+            const runnerID = record.runnerID
             const view = new OfferFormView(
                 this.articleDOM.appendChild(document.createElement("div")),
-                this.app,difficulties,abilities,tags,{
-                    onDecideEventListener:async (input) => {
-                        this.app.goToTop();
-                        this.sendInputInfo(this.app.state.gameSystemIDDisplayed,this.app.state.gameModeIDDisplayed,this.requiredObj.id,input)
-                        
-                    },
-                    defaultRecord:record
+                {   
+                    difficultyItems,abilityItems,tagItems,runnerID,abilityAttributeItems,gameSystemID,gameModeID,
+                    tagLanguage:record.languageOfTagName,
+                    maxPlayerNumber:this.app.state.gameSystemEnvDisplayed.gameMode.maxNumberOfPlayer,
+                    onDecideEventListener:async (input) => this.sendInputInfo(gameSystemID,gameModeID,record.id,input),
+                    fetchTargetItems:async (input) => (await this.app.accessToAPI("list_targets",{gameSystemEnv:{gameSystemID,gameModeID},id:input})).result
                 }
             )
             this.deleteLoadingSpinner();

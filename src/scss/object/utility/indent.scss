@@ -16,8 +16,12 @@ li.u-indent--level1{
 }
 ul{
     padding-left: 1em;
+    
 }
 li.u-indent--level1{
     list-style: none;
     padding: 0.5em 0;
+}
+li::marker{
+    color: rgb(196, 196, 196)
 }

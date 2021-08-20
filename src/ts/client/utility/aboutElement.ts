@@ -28,6 +28,8 @@ export function findElementByClassNameWithErrorPossibility(findPlace:Element,cla
 export function generateIcooonHTML(info:icooonResolvable){
     return `<i class="c-icooon u-background--${(info.icooonName === undefined) ? "star":info.icooonName}"></i>`
 }
-export function appendElement<K extends keyof HTMLElementTagNameMap>(inserted:HTMLElement,tag:K):HTMLElementTagNameMap[K]{
-    return inserted.appendChild(document.createElement(tag))
+export function appendElement<K extends keyof HTMLElementTagNameMap>(inserted:HTMLElement,tag:K,className:string = ""):HTMLElementTagNameMap[K]{
+    const element = inserted.appendChild(document.createElement(tag))
+    element.className = className
+    return element
 }

@@ -35,9 +35,11 @@ export class EditorRecordLinkPart implements EditorPart<string> {
         this.htmlCon = new HTMLConverter(language);
         this._requiredField = requiredField;
         this.container.appendChild(this.htmlCon.elementWithoutEscaping `<h1 class="u-noUnderline">${generateIcooonHTML({icooonName:(icooon)})}${title}</h1>`);
-        this.evidenceMovie = new MovieWidgetCreator(appendElement(this.container,"div"))
-        this.textInput = new TextInputCapsuled(appendElement(this.container,"div"), { defaultValue:"",className:"u-width90per" });
+        this.evidenceMovie = new MovieWidgetCreator(appendElement(this.container,"div","u-flex-center"))
+        const textInputSegment = appendElement(this.container,"div")
         this.ulist = new UListCupsuled(appendElement(this.container,"ul"),language,description)
+
+        this.textInput = new TextInputCapsuled(textInputSegment, { defaultValue:"",className:"u-smallerChara",errorViewer:this.ulist.unshift({},true) });
         this.addChangeEventListener((changed) => {
             try {
                 this.evidenceMovie.set(changed)

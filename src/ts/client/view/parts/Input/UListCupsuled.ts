@@ -6,7 +6,7 @@ import { IView } from "../../IView";
 export class UListCupsuled implements IView{
     private container:HTMLElement;
     private language:LanguageInApplication
-    constructor(container:HTMLUListElement,language:LanguageInApplication,notices:MultiLanguageString[],className:string = "u-margin05em"){
+    constructor(container:HTMLUListElement,language:LanguageInApplication,notices:MultiLanguageString[],className:string = ""){
         this.container = container;
         this.container.className = className;
         this.language = language
@@ -16,13 +16,16 @@ export class UListCupsuled implements IView{
     }
     unshift(notice:MultiLanguageString,attention:boolean = false){
         const ele = document.createElement(`li`);
-        ele.innerHTML = `<p class="${(attention) ? "u-redChara" : ""}">${choiceString(notice,this.language)}</p>`
+        ele.className= (attention) ? "u-redChara u-bolderChara" : ""
+        ele.innerHTML = choiceString(notice,this.language)
         this.container.prepend(ele)
+        return ele;
     }
     append(notice:MultiLanguageString){
         const ele = document.createElement(`li`);
         ele.innerHTML = choiceString(notice,this.language)
         this.container.appendChild(ele)
+        return ele;
     }
     deleteFirst(){
         if (this.container.firstChild===null)return;

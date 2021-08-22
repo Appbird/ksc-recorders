@@ -1,4 +1,4 @@
-import { expected_IRegulation, IRegulation, IRegulationResolved } from "../foundation/IRegulation";
+import { expected_IRegulation, IRegulation, IRegulationResolved, IRegulationWritedInDataBase } from "../foundation/IRegulation";
 import { LanguageInApplication } from "../LanguageInApplication";
 
 //#NOTE ここでの"Resolved"は、「IDを対応する文字列に置き換えた(ID解決済)状態である」ことを表す。Resolvedのオブジェクトでは、対応するResolvedでないオブジェクトのうち「Dを表さないパラメタ」を削除している。
@@ -22,6 +22,21 @@ export interface IRecord{
     //[x] timestampを追加する
     timestamp_post: number;
     regulation: IRegulation;
+    runnerID: string;
+    tagName: string[];
+    languageOfTagName:LanguageInApplication;
+    moderatorIDs: {id:string,date:number}[]; 
+    tagID: string[];
+    link: string[];
+    note: string;
+}
+export interface IRecordWritedInDatabase{
+    id: string;
+    //[x] ここの命名をtimeInMiliSecondではなくscoreにしたい…。
+    score: number;
+    //[x] timestampを追加する
+    timestamp_post: number;
+    regulation: IRegulationWritedInDataBase;
     runnerID: string;
     tagName: string[];
     languageOfTagName:LanguageInApplication;

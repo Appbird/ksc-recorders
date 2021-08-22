@@ -46,7 +46,7 @@ export class EditorCheckButtonPart<T> implements EditorPart<T[]> {
         }
     }
     isFill(): boolean {
-        return this.requiredItemCount <= this.selectedIndex.length && this.selectedIndex.length <= this.maxItemCount;
+        return (this.requiredItemCount <= this.selectedIndex.length) && (this.selectedIndex.length <= this.maxItemCount);
     }
     disabled(state:boolean){
         this.disabledState = state;
@@ -66,6 +66,7 @@ export class EditorCheckButtonPart<T> implements EditorPart<T[]> {
         }
         const value = this.value
         for (const callback of this.callbacks) callback(value) 
+
         if (this.selectedIndex.length > this.maxItemCount){
             const shiftedIndex = this.selectedIndex.shift()
             if (shiftedIndex === undefined) throw new Error("[CheckButtonCupsuled:select] shiftedIndex === undefined")

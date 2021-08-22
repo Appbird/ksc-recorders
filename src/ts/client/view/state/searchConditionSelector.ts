@@ -28,7 +28,10 @@ export class S_SearchConditionSelector
             "",
             "c-icooon u-background--menu"
         );
-        
+        const gameSystemID = this.app.state.gameSystemIDDisplayed
+        const gameModeID = this.app.state.gameModeIDDisplayed
+        const gameModeInfo = this.app.state.gameSystemEnvDisplayed.gameMode
+        if (gameModeInfo === null) throw new Error("[S_SearchConditionSelector:init] gameModeInfo === undefined")
 
         const difficulties = (await this.app.accessToAPI("list_difficulties",{
             gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed}
@@ -42,16 +45,26 @@ export class S_SearchConditionSelector
         const abilityAttribute = (await this.app.accessToAPI("list_abilityAttributes",{
             gameSystemEnv:{gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed}
         })).result
-        const abilityAttributeFlags = await Promise.all(
+        const setsOfFlagsOfAbilityAttributeItem = await Promise.all(
             abilityAttribute.map(async attribute => {return {
-                name: attribute,
-                flags: (await this.app.accessToAPI("list_abilityAttributeFlags",{
+                attributeNameInfo: attribute,
+                flagsInAttribute: (await this.app.accessToAPI("list_abilityAttributeFlags",{
                     gameSystemEnv : {gameSystemID:this.app.state.gameSystemIDDisplayed, gameModeID:this.app.state.gameModeIDDisplayed},
                     abilityAttributeID:attribute.id
                 })).result
             } } )
         )
-        new SearchConditionSelectorView(this.articleDOM.appendChild(document.createElement("div")),this.app,difficulties,abilities,hashTags)
+        new SearchConditionSelectorView(this.articleDOM.appendChild(document.createElement("div")),{
+            difficulties,abilities,hashTags,gameSystemID,gameModeID,setsOfFlagsOfAbilityAttributeItem,
+            superiorScore:(gameModeInfo.scoreType === "time") ? "LowerFirst":"HigherFirst",language:this.app.state.language,maxPlayerNumber:gameModeInfo.maxNumberOfPlayer,
+            onDecideEventListener:(input) => this.app.transition("searchResultView",{condition:input}),
+            fetchTargetItems: (segmentIDs) => this.app.accessToAPI("list_targets",{
+                gameSystemEnv:{
+                    gameSystemID,gameModeID
+                },
+                id:segmentIDs
+            }).then((result) => result.result)
+        })
         this.deleteLoadingSpinner();
     }
 }

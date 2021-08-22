@@ -63,7 +63,7 @@ export class EditorIDPart implements EditorPart<string> {
         this.selectInput.setChoices(options);
     }
     isFill(): boolean {
-        return this.selectInput.getValueAsArray().length === 0;
+        return this.selectInput.getValueAsArray().length !== 0;
     }
     get requiredField(){
         return this._requiredField;

@@ -8,11 +8,10 @@ import { OnePlayerOfAbilityAttribute } from "../../../../../type/foundation/IReg
 import { EditorPlayerWithAttributesPart } from "./EditorPlayerWithAttributesPart";
 import { IAbilityItem } from "../../../../../type/list/IAbilityItem";
 import { SetOfFlagsOfAbilityAttributeItem } from "../../../../../type/list/AttributeOfAbilityItem";
-import { createEditorSegmentBaseElement } from "../../../state/settingNewRegulationState/utility";
+import { SmallButtonPart } from "../../MultiButtonPart";
 
 type HandledType ={abilityID:string,attribute:OnePlayerOfAbilityAttribute}
 export class EditorPlayersWithAttributesPart implements EditorPart<HandledType[]> {
-    //#TODO {能力ID,属性ID}の形で扱えるEditorにする。
     private container: HTMLElement;
     private playersWithAttributesChoices:EditorPlayerWithAttributesPart[] = [];
     private htmlCon: HTMLConverter;
@@ -24,16 +23,20 @@ export class EditorPlayersWithAttributesPart implements EditorPart<HandledType[]
     private maxPlayerNumber:number;
     private callbacks:((changed:HandledType[]) => void)[] = [];
     private editorSegment:HTMLElement
+    private deleteItemButton:SmallButtonPart
+    private addNewItemButton:SmallButtonPart
+    private minPlayerNumber:number;
     constructor({
         container,language,title,
         description,requiredField,icooon="star",maxPlayerNumber,
-        setsOfFlagsOfAbilityAttributeItem,abilityOptions
+        setsOfFlagsOfAbilityAttributeItem,abilityOptions,minPlayerNumber=1
     }:{
         container: HTMLElement,
         language: LanguageInApplication,
         title: string|MultiLanguageString,
         description:MultiLanguageString[],
         requiredField:boolean,
+        minPlayerNumber?:number,
         maxPlayerNumber:number,
         icooon?:string,
         abilityOptions:IAbilityItem[],
@@ -49,42 +52,43 @@ export class EditorPlayersWithAttributesPart implements EditorPart<HandledType[]
         this.language = language
         this.abilityOptions = abilityOptions;
         this.setsFlagsofAbilityAttributeItem = setsOfFlagsOfAbilityAttributeItem
+        this.minPlayerNumber = minPlayerNumber
         this.container.appendChild(this.htmlCon.elementWithoutEscaping`
             <h1 class="u-noUnderline">${generateIcooonHTML({icooonName:icooon})}${title}</h1>
         `);
         
         this.ulist = new UListCupsuled(appendElement(this.container,"ul"),language,description)
         this.editorSegment = appendElement(this.container,"ul")
-        this.addEditor()
-
         container.appendChild(elementWithoutEscaping`<hr noshade class="u-thin u-width90per">`)
 
-        const deleteItemButton = this.container.appendChild(this.htmlCon.elementWithoutEscaping`
-            <div class="u-width90per u-marginUpDown05em c-itemAddButton --disabled --red"><i class="fas fa-trash"></i><div class="__text">${{
+        this.deleteItemButton = new SmallButtonPart(appendElement(this.container,"div"),{
+            text:{
                 Japanese:"削除",
-                English: "Remove"
-            }}</div></div>
-        `) as HTMLElement;
-        deleteItemButton.addEventListener("click",() => {
-            if (this.playersWithAttributesChoices.length === 1) return;
-            addNewItemButton.classList.remove("--disabled")
-            if (this.playersWithAttributesChoices.length === 2) deleteItemButton.classList.add("--disabled")
-            this.removeEditor()
+                English: "Remove",
+                iconCSS: "fas fa-trash"
+            },color:"--red",
+            language,
+            switchValue:true,
+            onClick:() => {
+                if (this.playersWithAttributesChoices.length === this.minPlayerNumber) return;
+                this.removeEditor()
+            }
         })
 
-        const addNewItemButton = this.container.appendChild(this.htmlCon.elementWithoutEscaping`
-            <div class="u-width90per u-marginUpDown05em c-itemAddButton"><i class="far fa-plus-square"></i><div class="__text">${{
+        this.addNewItemButton = new SmallButtonPart(appendElement(this.container,"div"),{
+            text:{
                 Japanese:"追加",
-                English: "Add"
-            }}</div></div>
-        `) as HTMLElement;
-        addNewItemButton.addEventListener("click",() => {
-            const difference = this.maxPlayerNumber - this.playersWithAttributesChoices.length
-            if (difference === 0) return
-            deleteItemButton.classList.remove("--disabled")
-            if (difference === 1) addNewItemButton.classList.add("--disabled")
-            this.addEditor()
+                English: "Add",
+                iconCSS:"far fa-plus-square"
+            },
+            language,
+            switchValue:true,
+            onClick:() => {
+                if (this.maxPlayerNumber === this.playersWithAttributesChoices.length) return
+                this.addEditor()
+            }
         })
+        this.addEditor()
     }
     addChangeEventListener(callback: (changed: HandledType[]) => void) {
         this.callbacks.push(callback)
@@ -110,13 +114,19 @@ export class EditorPlayersWithAttributesPart implements EditorPart<HandledType[]
             })
         )
         this.playersWithAttributesChoices.push(newEditor)
+        this.resetButtonState()
     }
     private removeEditor(){
         const removedEditor = this.playersWithAttributesChoices.pop()
         removedEditor?.destroy()
+        this.resetButtonState()
+    }
+    private resetButtonState(){
+        this.deleteItemButton.toggle(this.minPlayerNumber < this.playersWithAttributesChoices.length)
+        this.addNewItemButton.toggle(this.maxPlayerNumber > this.playersWithAttributesChoices.length)
     }
     get value():HandledType[]|undefined {
-        if (this.playersWithAttributesChoices.some( (choice,index) => (choice.value.abilityID === undefined) && index !== this.playersWithAttributesChoices.length - 1)) return undefined
+        if (this.requiredField && this.playersWithAttributesChoices.some( (choice,index) => (choice.value.abilityID === undefined) && index !== this.playersWithAttributesChoices.length - 1)) return undefined
         const array =  this.playersWithAttributesChoices.map(
             choice => {
                 return {
@@ -131,10 +141,14 @@ export class EditorPlayersWithAttributesPart implements EditorPart<HandledType[]
     disabled(state:boolean){
         for (const editor of this.playersWithAttributesChoices) editor.disabled(state)
     }
+    isFillAllAbility(){
+        return this.playersWithAttributesChoices.every((editor) => editor.isFillAllAbility())
+    }
     refresh(values:{abilityID:string,attribute:OnePlayerOfAbilityAttribute}[]) {
-        while (values.length !== this.playersWithAttributesChoices.length){
-            if (values.length >= this.playersWithAttributesChoices.length) this.addEditor()
-            if (values.length <= this.playersWithAttributesChoices.length) this.removeEditor()
+        while (true){
+            if (values.length > this.playersWithAttributesChoices.length) this.addEditor()
+            if (values.length === this.playersWithAttributesChoices.length) break;
+            if (values.length < this.playersWithAttributesChoices.length) this.removeEditor()
         }
         for (let i = 0; i < values.length; i++) this.playersWithAttributesChoices[i].refresh(values[i])
     }
@@ -142,7 +156,7 @@ export class EditorPlayersWithAttributesPart implements EditorPart<HandledType[]
         this.playersWithAttributesChoices.forEach(choice => choice.refreshOption(options))
     }
     isFill(): boolean {
-        return this.playersWithAttributesChoices.every(choice => choice.isFill())
+        return this.minPlayerNumber <= this.playersWithAttributesChoices.length && this.playersWithAttributesChoices.length <= this.maxPlayerNumber && this.playersWithAttributesChoices.every(choice => choice.isFill())
     }
     get requiredField(){
         return this._requiredField;

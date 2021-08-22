@@ -20,20 +20,25 @@ export class EditorFormManager<TypeOfObserved extends {[key:string]:any}>{
         for (const [key,element] of this.inputFormsTuples){
             const editor = element
             result[key] =  editor.value
-            if (editor.value === undefined) throw new Error("[EditorFormManager:value] editor.value === undefined")
         }
         return result as TypeOfObserved
     }
 
     refresh(obj:TypeOfObserved){
-        for (const [key,value] of Object.entries(obj)) this.inputForm[key].refresh(value)
+        for (const [key,editor] of this.inputFormsTuples){
+            const targetValue = obj[key]
+            if (targetValue !== undefined) {
+                editor.refresh(targetValue)
+            }
+            else console.log(`[EditorFormManager:refresh] obj[${key}] is undefined.`)
+        }
     }
     disabled(state:boolean){
         for(const [,editor] of this.inputFormsTuples) if (editor !== undefined) editor.disabled(state)
     }
 
     isFill(){
-        return this.inputFormsTuples.every(([,editor]) => (editor!==undefined) ? (!editor.requiredField || editor.isFill() ):true)
+        return this.inputFormsTuples.every(([,editor]) => (!editor.requiredField || editor.isFill() ))
     }
 
     destroy(){

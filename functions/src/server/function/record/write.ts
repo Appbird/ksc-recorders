@@ -5,6 +5,7 @@ import { ControllerOfTableForResolvingID } from "../../recordConverter/Controlle
 import { authentication } from "../foundation/auth";
 import { Notifier } from "../webhooks/Notificator";
 import { convertTagNameToTagID } from "./convertTagNameToTagID";
+import { validateRecord } from "./validateRecord";
 
 export async function write(recordDataBase:RecordDataBase,input:APIFunctions["record_write"]["atServer"]):Promise<APIFunctions["record_write"]["atClient"]>{
     
@@ -18,6 +19,12 @@ export async function write(recordDataBase:RecordDataBase,input:APIFunctions["re
                                     input.language),
         timestamp_post: Date.now()
     }
+    const irrg = input.record.regulation.gameSystemEnvironment
+    const gameMode = await recordDataBase.getGameModeInfo(irrg.gameSystemID,irrg.gameModeID)
+    const attributes = await recordDataBase.getAbilityAttributeCollection(irrg.gameSystemID,irrg.gameModeID)
+
+    validateRecord(result,gameMode,attributes)
+
     const record = await recordDataBase.writeRecord(result);
     const cotfr = new ControllerOfTableForResolvingID(recordDataBase);
     const resolvedRecord = await cotfr.convertRecordIntoRecordResolved(record,input.language)
@@ -29,3 +36,4 @@ export async function write(recordDataBase:RecordDataBase,input:APIFunctions["re
         result: resolvedRecord
     }
 }
+

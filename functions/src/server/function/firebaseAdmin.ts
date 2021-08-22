@@ -6,6 +6,7 @@ export const firebaseAdmin = {
     auth:firebase.auth(),
     firestore:firebase.firestore()
 }
+firebaseAdmin.firestore.settings({ignoreUndefinedProperties:true})
 export const firebaseConfig = 
 (() => {
         if (process.env.FIREBASE_CONFIG === undefined) throw new Error("実行環境がFirebase上のものではありません。")

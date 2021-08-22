@@ -32,6 +32,30 @@ export const IReceivedDataAtServer_recordSearchSchema = {
     },
     "IRegulation": {
       "properties": {
+        "abilitiesAttributeIDs": {
+          "items": {
+            "items": {
+              "properties": {
+                "attributeID": {
+                  "type": "string"
+                },
+                "onFlagIDs": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "attributeID",
+                "onFlagIDs"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "type": "array"
+        },
         "abilityIDs": {
           "items": {
             "type": "string"

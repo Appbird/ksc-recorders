@@ -67,19 +67,19 @@ export class S_ModifyRecordForm
             const runnerID = record.runnerID
             const view = new OfferFormView(
                 this.articleDOM.appendChild(document.createElement("div")),
-                {   
-                    difficultyItems,abilityItems,tagItems,runnerID,abilityAttributeItems,gameSystemID,gameModeID,
-                    tagLanguage:record.languageOfTagName,
-                    maxPlayerNumber:this.app.state.gameSystemEnvDisplayed.gameMode.maxNumberOfPlayer,
-                    onDecideEventListener:async (input) => this.sendInputInfo(gameSystemID,gameModeID,record.id,input),
-                    fetchTargetItems:async (input) => (await this.app.accessToAPI("list_targets",{gameSystemEnv:{gameSystemID,gameModeID},id:input})).result
-                }
+                    {   
+                        difficultyItems,abilityItems,tagItems,runnerID,abilityAttributeItems,gameSystemID,gameModeID,language:this.app.state.language,
+                        tagLanguage:record.languageOfTagName,defaultRecord:record,
+                        maxPlayerNumber:this.app.state.gameSystemEnvDisplayed.gameMode.maxNumberOfPlayer,
+                        onDecideEventListener:async (input) => this.sendInputInfo(gameSystemID,gameModeID,record.id,input),
+                        fetchTargetItems:async (input) => (await this.app.accessToAPI("list_targets",{gameSystemEnv:{gameSystemID,gameModeID},id:input})).result
+                    }
             )
             this.deleteLoadingSpinner();
         }
         private async sendInputInfo(gameSystemID:string,gameModeID:string,recordID:string,recordModified:ISentRecordOffer){
             try{
-                
+                this.app.goToTop()
                 this.generateLoadingSpinner("cloud")
 
                 const language = this.app.state.language;

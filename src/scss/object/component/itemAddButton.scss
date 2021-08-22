@@ -13,7 +13,7 @@
         margin-top: 0.8em;
         margin-bottom: 0.8em;
     }
-    &:hover{
+    &:hover:not(.--disabled){
         background-color: rgb(231, 230, 230);
         transition: 0.3s;
     }
@@ -29,7 +29,7 @@
             background-color: rgb(243, 229, 229);
             transition: 0.3s;
         }
-        &:hover{
+        &:hover:not(.--disabled){
             background-color: rgb(255, 240, 240);
         }
     }

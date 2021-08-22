@@ -45,6 +45,9 @@ export class SelectTagChoicesCapsuled implements IView {
             
         input.addEventListener("keydown",(event) => {
             //#TODO サジェストに近い候補のものを入力すると、それ本体ではなく似たものがタグとして入力される問題を解決する。
+            //*> Tagifyを利用してここを書き換える。  
+            //#TODO ゲームモードごとのルールを書く
+            //#TODO 属性編集画面と、ゲームモードルール編集画面を作る
             if (event.key !== "Enter" || input.value.replace(/\s/g,"").length === 0 || this.data.includes(input.value)) return;
             this.appendChoices(input.value.replace(/^\s+/,"").replace(/(\s+)$/,""))
             input.value = ""

@@ -26,6 +26,8 @@
   "dependencies": {
     "@types/marked": "^2.0.2",
     "@types/simplemde": "^1.11.7",
+    "@types/yaireo__tagify": "^4.6.0",
+    "@yaireo/tagify": "^4.7.1",
     "choices.js": "^9.0.1",
     "fibers": "^5.0.0",
     "firebase": "^8.4.3",

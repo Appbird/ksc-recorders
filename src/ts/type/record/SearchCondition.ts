@@ -1,3 +1,4 @@
+import { OnePlayerOfAbilityAttribute } from "../foundation/IRegulation";
 import { LanguageInApplication } from "../LanguageInApplication";
 import { OrderOfRecordArray } from "./OrderOfRecordArray";
 
@@ -15,6 +16,7 @@ export interface SearchCondition {
     limitOfRecordArray?: number;
     targetIDs?: string[];
     abilityIDs?: string[];
+    abilityAttributeIDs?: OnePlayerOfAbilityAttribute[]
     /** 能力カテゴリを用いた記録検索において、And検索を行うかOr検索を行うか */
     abilityIDsCondition?: "AND" | "OR" | "AllowForOrder";
     runnerIDs?: string[];

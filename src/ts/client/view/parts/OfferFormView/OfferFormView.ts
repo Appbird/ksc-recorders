@@ -22,6 +22,7 @@ import { OnePlayerOfAbilityAttribute } from "../../../../type/foundation/IRegula
 import { HTMLConverter } from "../../../../utility/ViewUtility";
 import { EditorPlayersWithAttributesPart } from "../SetNewRegulation/Editor/EditorPlayersWithAttributesPart";
 import { choiceString } from "../../../../utility/aboutLang";
+import { DecideButtonPart } from "../DecideButtonPart";
 type RecordInputData = {
     link:string;
     score:number;
@@ -41,21 +42,22 @@ export class OfferFormView implements IView {
     private runnerID:string;
     private gameSystemID:string;
     private gameModeID:string;
-    private language:LanguageInApplication
+    private tagLanguage:LanguageInApplication
     private isAbilityIDsWithAttributes:boolean;
     private difficultyItems:IGameDifficultyItem[];
     destroy(){
     }
-    //#TODO エラー3 INVALID_ARGUMENT: Cannot convert an array value in an array value.を解決する。
+    //#CTODO エラー3 INVALID_ARGUMENT: Cannot convert an array value in an array value.を解決する。
     //#CTODO  appへの依存を解消する。具体的にappを利用する処理を全てPage側で定義させ、それをコールバックでこちらに渡す。
-    constructor(container:HTMLElement,{tagLanguage: language,onDecideEventListener,maxPlayerNumber,fetchTargetItems,defaultRecord,gameSystemID,gameModeID,difficultyItems,abilityItems,abilityAttributeItems,tagItems,runnerID }:{
+    constructor(container:HTMLElement,{tagLanguage,language,onDecideEventListener,maxPlayerNumber,fetchTargetItems,defaultRecord,gameSystemID,gameModeID,difficultyItems,abilityItems,abilityAttributeItems,tagItems,runnerID }:{
        difficultyItems:IGameDifficultyItem[],
        abilityItems:IAbilityItem[],
        abilityAttributeItems?:SetOfFlagsOfAbilityAttributeItem[],
        tagItems:IHashTagItem[],
        runnerID:string,
        gameSystemID:string,
-       gameModeID:string,maxPlayerNumber:number
+       gameModeID:string,maxPlayerNumber:number,
+       language:LanguageInApplication,
        tagLanguage:LanguageInApplication,
         onDecideEventListener:(input:ISentRecordOffer)=>void,
         fetchTargetItems:(targetIDs:string[])=>Promise<ITargetItem[]>|ITargetItem[]
@@ -63,13 +65,13 @@ export class OfferFormView implements IView {
     }) {
         this.gameSystemID = gameSystemID
         this.gameModeID = gameModeID
-        this.language = language
+        this.tagLanguage = tagLanguage
         this.container = container;
         this.container.classList.add("offerForm","u-width95per","u-marginUpDown2emToChildren")
         this.fetchTargetItems = fetchTargetItems
         const appendNewEditorElement = (editorSegment:HTMLElement) => appendElement(createEditorSegmentBaseElement(editorSegment),"div")
         this.runnerID = runnerID
-        this.isAbilityIDsWithAttributes = abilityAttributeItems !== undefined
+        this.isAbilityIDsWithAttributes = abilityAttributeItems !== undefined && abilityAttributeItems.length !== 0
         this.difficultyItems = difficultyItems
         const htmlCon = new HTMLConverter(language)
         const link = new EditorRecordLinkPart({
@@ -78,7 +80,7 @@ export class OfferFormView implements IView {
             description:    context.URLInput.Notice,   
             icooon:         "link",
             errorText:      context.URLInput.Error,
-            language,
+            language:       language,
             requiredField:  true
         })
         const score = new EditorRecordTimePart({
@@ -87,7 +89,7 @@ export class OfferFormView implements IView {
             description:    context.ScoreInput.Notice,
             icooon:         "time",
             errorText:      context.ScoreInput.Error,
-            language,
+            language:       language,
             requiredField:  true
         })
         const difficultyID = new EditorIDPart({
@@ -95,7 +97,7 @@ export class OfferFormView implements IView {
             title:          context.DifficultyChoices.Header,
             description:    context.DifficultyChoices.Notice,
             icooon:         "difficulty",
-            language,
+            language:       language,
             requiredField:  true,
             options:        difficultyItems    
         })
@@ -104,18 +106,18 @@ export class OfferFormView implements IView {
             title:          context.TargetChoices.Header,
             description:    context.TargetChoices.Notice,
             icooon:         "flag",
-            language,
+            language:       language,
             requiredField:  true,
             options:        []
         })
-        const abilityIDs = (abilityAttributeItems !== undefined) ? 
+        const abilityIDs = (this.isAbilityIDsWithAttributes && abilityAttributeItems !== undefined) ? 
             new EditorPlayersWithAttributesPart({
                 container:      appendNewEditorElement(this.container),
                 title:          context.AbilityChoices.Header,
                 description:    context.AbilityChoices.Notice,
                 maxPlayerNumber:     maxPlayerNumber,
                 icooon:         "star",
-                language,
+                language:       language,
                 requiredField:  true,
                 abilityOptions: abilityItems,
                 setsOfFlagsOfAbilityAttributeItem: abilityAttributeItems
@@ -126,7 +128,7 @@ export class OfferFormView implements IView {
                 description:    context.AbilityChoices.Notice,
                 maxItemCount:   maxPlayerNumber,
                 icooon:         "star",
-                language,
+                language:       language,
                 requiredField:  true,
                 options:        abilityItems
             })
@@ -135,7 +137,7 @@ export class OfferFormView implements IView {
             title:          context.TagInput.Header,
             description:    context.TagInput.Notice,
             icooon:         "tag",
-            language,
+            language:       language,
             requiredField:  false,
             options:        tagItems
         })
@@ -144,7 +146,7 @@ export class OfferFormView implements IView {
             title:          context.RunnersNote.Header,
             description:    context.RunnersNote.Notice,
             icooon:         "notebook",
-            language,
+            language:       language,
             requiredField:  false,
         })
         this.editors = {
@@ -157,24 +159,29 @@ export class OfferFormView implements IView {
 
         this.editorFormManager = new EditorFormManager(this.editors)
 
-        if (defaultRecord) {
-            const difficultyID = defaultRecord.regulation.gameSystemEnvironment.gameDifficultyID;
-            this.setTargetOptions(this.getTargetsListFromDifficultyID(difficultyID))
-            this.editorFormManager.refresh(this.convertIRecordToRecordData(defaultRecord))
-        }
+        
         const errorViewer =  this.container.appendChild(htmlCon.elementWithoutEscaping`<div class="u-width90per u-margin2em u-redChara u-bolderChara"></div>`)
-        this.container.appendChild(htmlCon.elementWithoutEscaping`<div class="u-width50per u-margin2em"><div class="c-button">${{Japanese:"決定",English:"Submit"}}</div></div>`)
-            .addEventListener("click",() => {
+        const decideButton = new DecideButtonPart(this.container.appendChild(htmlCon.elementWithoutEscaping`<div class="u-width50per u-margin2em"></div>`) as HTMLElement,{
+            text:{Japanese:"決定",English:"Submit"},language: language,
+            onClick:() => {
                 if (!this.editorFormManager.isFill()){
-                    errorViewer.innerHTML = choiceString({Japanese:"入力が不十分です。",English:"The input of the form is not enough."},language)
+                    errorViewer.innerHTML = choiceString({Japanese:"入力が不十分です。",English:"The input of the form is not enough."},tagLanguage)
+                    return;
                 }
                 onDecideEventListener(this.convertRecordInputDataToISentRecordOffer(this.editorFormManager.value))
-            })
+                decideButton.disabled()
+            }
+        })
         
         this.editors.difficultyID.addChangeEventListener( (change) => (change === undefined) ?  undefined: this.setTargetOptions(this.getTargetsListFromDifficultyID(change)))
         if (this.editors.difficultyID.value !== undefined) this.setTargetOptions(this.getTargetsListFromDifficultyID(this.editors.difficultyID.value))
+        if (defaultRecord) {
+            const difficultyID = defaultRecord.regulation.gameSystemEnvironment.gameDifficultyID;
+            this.setTargetOptions(this.getTargetsListFromDifficultyID(difficultyID)).then(() => {
+                this.editorFormManager.refresh(this.convertIRecordToRecordData(defaultRecord))
+            })
+        }
     }
-
 
     private convertRecordInputDataToISentRecordOffer(value:RecordInputData):ISentRecordOffer{
         //#CTODO ここの実装
@@ -197,7 +204,7 @@ export class OfferFormView implements IView {
                 targetID: value.targetID
             },
             tagName: value.tagNames,
-            languageOfTagName:this.language,
+            languageOfTagName:this.tagLanguage,
             link: [value.link],
             note: value.runnerNote
 
@@ -207,19 +214,19 @@ export class OfferFormView implements IView {
 
     private convertIRecordToRecordData(value:IRecordWithoutID):RecordInputData{
         //#CTODO ここの実装
-        //#TODO API:record/modifyの記録データのsetをupdateに置き換えたい
+        //#CTODO API:record/modifyの記録データのsetをupdateに置き換えたい
         const vr = value.regulation
         const vrg = vr.gameSystemEnvironment
-        return {
+        const result = {
             link:           value.link[0],
             score:          value.score,
             difficultyID:   vrg.gameDifficultyID,
             targetID:       vr.targetID,
             tagNames:       value.tagName,
-            abilityIDs:     (vr.abilitiesAttributeIDs === undefined) ? 
+            abilityIDs:     (!this.isAbilityIDsWithAttributes) ? 
                 vr.abilityIDs : 
                 vr.abilityIDs.map((abilityID,index) => {
-                    if (vr.abilitiesAttributeIDs === undefined) throw new Error("[OfferFormView:convertIRecordToRecordData] vr.abilitiesAttributeIDs === undefined")
+                    if (vr.abilitiesAttributeIDs === undefined) return {abilityID,attribute:[]};
                     return {
                         abilityID,
                         attribute: vr.abilitiesAttributeIDs[index]
@@ -227,6 +234,7 @@ export class OfferFormView implements IView {
                 }),
             runnerNote:     value.note
         }
+        return result
     }
     private getTargetsListFromDifficultyID(difficultyID:string){
         const result = this.difficultyItems.find( difficultyItem => difficultyID === difficultyItem.id )

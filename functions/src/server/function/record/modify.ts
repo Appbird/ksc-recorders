@@ -5,6 +5,7 @@ import { ControllerOfTableForResolvingID } from "../../recordConverter/Controlle
 import { authentication } from "../foundation/auth";
 import { Notifier } from "../webhooks/Notificator";
 import { convertTagNameToTagID } from "./convertTagNameToTagID";
+import { validateRecord } from "./validateRecord";
 
 export async function modify(recordDataBase:RecordDataBase,input:APIFunctions["record_modify"]["atServer"]):Promise<APIFunctions["record_write"]["atClient"]>{
     const recordBeforeModified = await recordDataBase.getRecord(input.gameSystemEnv.gameSystemID,input.gameSystemEnv.gameModeID,input.recordID)
@@ -29,6 +30,11 @@ export async function modify(recordDataBase:RecordDataBase,input:APIFunctions["r
                     input.recordModified.tagName,
                     input.language),
     }
+    
+    const irrg = result.regulation.gameSystemEnvironment
+    const gameMode = await recordDataBase.getGameModeInfo(irrg.gameSystemID,irrg.gameModeID)
+    const attributes = await recordDataBase.getAbilityAttributeCollection(irrg.gameSystemID,irrg.gameModeID)
+    validateRecord(result,gameMode,attributes)
     const record = await recordDataBase.modifyRecord(input.recordID,modifier,result);
     const cotfr = new ControllerOfTableForResolvingID(recordDataBase);
     

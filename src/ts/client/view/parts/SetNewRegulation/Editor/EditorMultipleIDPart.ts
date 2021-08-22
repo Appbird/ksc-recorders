@@ -24,7 +24,7 @@ export class EditorMultipleIDPart implements EditorPart<string[]> {
     constructor({
         container,language,title,
         description,requiredField,icooon,
-        options,observed,maxItemCount,needMultipleSelect = true, maxItemText,
+        options,observed,maxItemCount = -1,needMultipleSelect = true, maxItemText,
     }:{
         container: HTMLElement,
         language: LanguageInApplication,

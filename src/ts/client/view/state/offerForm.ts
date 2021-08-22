@@ -63,9 +63,9 @@ export class S_OfferForm
                 this.articleDOM.appendChild(document.createElement("div")),
                 {   difficultyItems,abilityItems,tagItems,runnerID,abilityAttributeItems,gameSystemID,gameModeID,
                     tagLanguage:this.app.state.language,
-                    maxPlayerNumber:this.app.state.gameSystemEnvDisplayed.gameMode.maxNumberOfPlayer,
+                    maxPlayerNumber:this.app.state.gameSystemEnvDisplayed.gameMode.maxNumberOfPlayer,language:this.app.state.language,
                     onDecideEventListener:async (input) => this.decide(input),
-                    fetchTargetItems:async (input) => (await this.app.accessToAPI("list_targets",{gameSystemEnv:{gameSystemID,gameModeID},id:input})).result
+                    fetchTargetItems:   async (input) => (await this.app.accessToAPI("list_targets",{gameSystemEnv:{gameSystemID,gameModeID},id:input})).result
                 }
             )
             this.deleteLoadingSpinner();

@@ -9,6 +9,12 @@ export interface IRegulation {
     targetID:string;
     abilitiesAttributeIDs?:OnePlayerOfAbilityAttribute[]
 }
+export interface IRegulationWritedInDataBase {
+    gameSystemEnvironment:IGameSystemEnvironment;
+    abilityIDs: string[];
+    targetID:string;
+    abilitiesAttributeIDs?:string
+}
 export const expected_IRegulation = {
     gameSystemEnvironment:expected_IGameSystemEnvironment,
     abilityIDs: "string[]",

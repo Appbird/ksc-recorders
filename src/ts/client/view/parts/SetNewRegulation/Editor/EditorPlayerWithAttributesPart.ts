@@ -13,7 +13,7 @@ import { EditorCheckButtonPart } from "./EditorCheckButtonPart";
 
 type HandledType ={abilityID:string|undefined,attribute:OnePlayerOfAbilityAttribute}
 export class EditorPlayerWithAttributesPart implements EditorPart<HandledType> {
-    //#TODO {能力ID,属性ID}の形で扱えるEditorにする。
+    //#CTODO {能力ID,属性ID}の形で扱えるEditorにする。
     private container: HTMLElement;
     private selectInput: SelectChoicesCapsuled<IItemOfResolveTableToName>;
     private htmlCon: HTMLConverter;
@@ -111,10 +111,13 @@ export class EditorPlayerWithAttributesPart implements EditorPart<HandledType> {
         this.selectInput.setChoices(options);
     }
     isFill(): boolean {
-        return this.selectInput.getValueAsArray().length >= 1 && this.attributeChoices.every(attributeChoice => attributeChoice.editor.isFill())
+        return this.selectInput.getValueAsArray()[0] !== undefined && this.attributeChoices.every(attributeChoice => attributeChoice.editor.isFill())
     }
     get requiredField(){
         return this._requiredField;
+    }
+    isFillAllAbility(){
+        return this.selectInput.getValueAsArray()[0] !== undefined
     }
     destroy(){
         if (this.unsubscribe !== null)this.unsubscribe();

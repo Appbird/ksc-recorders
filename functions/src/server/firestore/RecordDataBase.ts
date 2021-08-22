@@ -1,4 +1,4 @@
-import { IRecord, IRecordWithoutID } from "../../../../src/ts/type/record/IRecord";
+import { IRecord, IRecordWithoutID, IRecordWritedInDatabase } from "../../../../src/ts/type/record/IRecord";
 import { INotificationItem, IRunner, IRunnerEditable } from "../../../../src/ts/type/record/IRunner";
 import { IHashTagItem, IGameSystemInfoWithoutCollections } from "../../../../src/ts/type/list/IGameSystemInfo";
 import { OrderOfRecordArray } from "../../../../src/ts/type/record/OrderOfRecordArray";
@@ -7,11 +7,11 @@ import { IGameDifficultyItem } from "../../../../src/ts/type/list/IGameDifficult
 import { ITargetItem } from "../../../../src/ts/type/list/ITargetItem";
 import { IAbilityItem } from "../../../../src/ts/type/list/IAbilityItem";
 import { LanguageInApplication } from "../../../../src/ts/type/LanguageInApplication";
-import { IItemOfResolveTableToName } from "../../../../src/ts/type/list/IItemOfResolveTableToName";
 import { firebaseAdmin } from "../function/firebaseAdmin";
 import { createDefaultUserData } from "../utility";
 import { SearchTypeForVerifiedRecord } from "../../../../src/ts/type/record/SearchCondition";
 import { IAbilityAttributeFlagItem,IAbilityAttributeItemWithoutCollections } from "../../../../src/ts/type/list/IAbilityAttributeItemWithoutCollections"
+import { OnePlayerOfAbilityAttribute } from "../../../../src/ts/type/foundation/IRegulation";
 
 //[x] getRecordsWithConditionメソッドの実装
 export class RecordDataBase{
@@ -30,22 +30,22 @@ export class RecordDataBase{
     
     
 
-    private async getCollection<T extends IItemOfResolveTableToName>(ref:FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>|FirebaseFirestore.Query<FirebaseFirestore.DocumentData>):Promise<T[]>{
+    private async getCollection<T>(ref:FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>|FirebaseFirestore.Query<FirebaseFirestore.DocumentData>):Promise<T[]>{
         const result = await ref.get()
         if (result.empty) return []
         return result.docs.map(doc => doc.data()) as T[];
     }
-    private async getDoc<T extends IItemOfResolveTableToName>(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>):Promise<T>{
+    private async getDoc<T>(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>):Promise<T>{
         const result = await ref.get()
         if (!result.exists) throw new Error(`[Not Found] ドキュメント ${ref.path} が存在しません。`);
         return result.data() as T;
     }
-    private async writeDoc<T extends IItemOfResolveTableToName>(ref:FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>,object:T):Promise<string>{
+    private async writeDoc<T>(ref:FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>,object:T):Promise<string>{
         const result = await ref.add(object);
         await ref.doc(result.id).set({...object,id:result.id});
         return result.id;
     }
-    private async modifyDoc<T extends IItemOfResolveTableToName>(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>,object:T):Promise<void>{
+    private async modifyDoc<T extends {id:string}>(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>,object:T):Promise<void>{
         object.id = ref.id;
         await ref.set(object);
     }
@@ -113,6 +113,15 @@ export class RecordDataBase{
     updateAbilityAttributeFlagInfo        = (gameSystemID:string,gameModeID:string,abilityAttributeID:string,id:string,obj:any) => this.updateDoc(this.getGameModeRef(gameSystemID,gameModeID).collection("abilityAttributes").doc(abilityAttributeID).collection("flags").doc(id),obj)
     deleteAbilityAttributeFlagInfo        = (gameSystemID:string,gameModeID:string,abilityAttributeID:string,id:string) => this.deleteDoc(this.getGameModeRef(gameSystemID,gameModeID).collection("abilityAttributes").doc(abilityAttributeID).collection("flags").doc(id))
     
+    private getRecordCollectionRef            = (gameSystemID:string,gameModeID:string) => this.getGameModeRef(gameSystemID,gameModeID).collection("records")
+    private getRecordRef            = (gameSystemID:string,gameModeID:string,id:string) => this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(id)
+    //private getRecordCollection     = (gameSystemID:string,gameModeID:string) => this.getCollection<IRecordWritedInDatabase>(this.getRecordCollectionRef(gameSystemID,gameModeID))
+    private getRecordInfo           = (gameSystemID:string,gameModeID:string,id:string) => this.getDoc<IRecordWritedInDatabase>(this.getRecordRef(gameSystemID,gameModeID,id))
+    //private writeRecordInfo         = (gameSystemID:string,gameModeID:string,obj:IRecordWritedInDatabase) => this.writeDoc<IRecordWritedInDatabase>(this.getRecordCollectionRef(gameSystemID,gameModeID),obj)
+    private modifyRecordInfo        = (gameSystemID:string,gameModeID:string,id:string,obj:IRecordWritedInDatabase) => this.modifyDoc<IRecordWritedInDatabase>(this.getRecordRef(gameSystemID,gameModeID,id),obj)
+    private updateRecordInfo        = (gameSystemID:string,gameModeID:string,id:string,obj:any) => this.updateDoc(this.getRecordRef(gameSystemID,gameModeID,id),obj)
+    private deleteRecordInfo           = (gameSystemID:string,gameModeID:string,id:string) => this.deleteDoc(this.getRecordRef(gameSystemID,gameModeID,id))
+    
 
     getRunnerInfo           = async (uid:string):Promise<IRunner> => {
         const info = await this.getRunnersRef().doc(uid).get()
@@ -163,10 +172,10 @@ export class RecordDataBase{
     
 
     async getRecord(gameSystemID:string,gameModeID:string,recordID:string):Promise<IRecord>{
-        const result = await this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(recordID).get();
-        const record = result.data() as IRecord | undefined;
-        if (!result.exists || record === undefined) throw new Error(`指定されたゲームID${gameSystemID},モードID${gameModeID}内の記録ID${recordID}に対応するモードが存在しません。`);
-        return {...record, id:result.id};
+        const result = await this.getRecordInfo(gameSystemID,gameModeID,recordID);
+        return {
+            ...convertRecordWritedInDatabaseIntoRecord(result),
+        };
     }
 
     async getRecordsWithCondition(gameSystemID:string, gameModeID:string,
@@ -179,10 +188,8 @@ export class RecordDataBase{
     ):Promise<IRecord[]>{
         if (abilityIDs.length > 10 || targetIDs.length > 10 || runnerIDs.length > 10) throw Error(`能力(${abilityIDs.length}つ),計測対象(${targetIDs.length}つ),走者(${runnerIDs.length}つ)のうちいずれかの条件指定が10個よりも多いです。`)
         
-        console.log(`[${new Date().toUTCString()}] 以下の条件で検索を開始します。\n\u001b[33m gameSystemID:${gameSystemID}, gameModeID:${gameModeID}, order:${order}, abilityIDsCondition:${abilityIDsCondition}, abilityIDs:[${abilityIDs}] (${abilityIDs.length}), targetIDs:[${targetIDs}] (${targetIDs.length}), runnerIDs:[${runnerIDs}] (${runnerIDs.length}) \u001b[0m`)
-        
         //[x] undefinedは指定なしとみなし、与えられた条件のうちで「早い順で」start件目からlimit件のデータをグループとして取り出す。(0スタート)
-        let recordsQuery:FirebaseFirestore.Query = this.getGameModeRef(gameSystemID,gameModeID).collection("records");
+        let recordsQuery:FirebaseFirestore.Query = this.getRecordCollectionRef(gameSystemID,gameModeID);
 
         if (abilityIDs.length !== 0) recordsQuery = this.addQueryAboutAbilityIDs(recordsQuery,abilityIDsCondition,abilityIDs)
         if (targetIDs.length !== 0) recordsQuery = recordsQuery.where("regulation.targetID","in",targetIDs)
@@ -190,10 +197,17 @@ export class RecordDataBase{
 
             const recordsQuerySnapshot = await recordsQuery.get();
             //#NOTE 本当はrecordsの構造が正しいかを確認しなくてはならないが、データベースに登録されているデータに不正な構造であるドキュメントが交じる可能性が低く、また、このデータがどう使われるかも踏まえるとチェックするメリットが薄いと判断したため型アサーションを利用した。
-            let records = recordsQuerySnapshot.docs.map( (doc) => {
-                const data = doc.data(); data.id = doc.id; return data;
-            }) as IRecord[]
-        if (recordsQuerySnapshot.empty) console.info("条件に該当する記録が存在しませんでした。")
+            let recordsWithUndefinded = recordsQuerySnapshot.docs.map( (doc) => {
+                const data = doc.data() as IRecordWritedInDatabase;
+                return {
+                    ...data,
+                    regulation: {
+                        ...data.regulation,
+                        abilitiesAttributeIDs: (data.regulation.abilitiesAttributeIDs===undefined) ? undefined:(JSON.parse(data.regulation.abilitiesAttributeIDs) as OnePlayerOfAbilityAttribute[]) 
+                    }
+                };
+            })
+            let records = recordsWithUndefinded.filter((record) => record !== undefined) as IRecord[]
 
         //#NOTE abilityIDsでAND検索を行った場合の補填をここでする。
         if (abilityIDsCondition === "AND") records = records.filter( (record) => abilityIDs.every( (abilityID) => record.regulation.abilityIDs.includes(abilityID)) )
@@ -231,7 +245,7 @@ export class RecordDataBase{
     async verifyRecord(gameSystemID:string,gameModeID:string,recordID:string,moderatorID:string){
         const record = await this.getRecord(gameSystemID,gameModeID,recordID)
         record.moderatorIDs.push({id:moderatorID,date:Date.now()})
-        console.log(`[${new Date().toUTCString()}:Verified] Record ${gameSystemID}/${gameModeID}/${recordID} is verified.`)
+        await this.updateRecordInfo(gameSystemID,gameModeID,recordID,{moderatorIDs:record.moderatorIDs})
         for (const tagID of record.tagID){
             await this.updateHashTagInfo(gameSystemID,tagID,{isApproved:true})
         }
@@ -244,7 +258,6 @@ export class RecordDataBase{
         await this.updateGameModeInfo(gameSystem.id,gameMode.id,{
             UnverifiedRecordNumber:(gameMode.UnverifiedRecordNumber === undefined) ? 0:gameMode.UnverifiedRecordNumber-1
         })
-        await this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(recordID).set(record)
         return record;
     }
 
@@ -252,41 +265,44 @@ export class RecordDataBase{
     async writeRecord(record:IRecordWithoutID):Promise<IRecord>{
         const rrg = record.regulation.gameSystemEnvironment;
         const result = await this.getGameModeRef(rrg.gameSystemID,rrg.gameModeID).collection("records").add({})
-        const recordWithID:IRecord = {...record,id:result.id,moderatorIDs:[]}
-        await this.getGameModeRef(rrg.gameSystemID,rrg.gameModeID).collection("records").doc(result.id).set(recordWithID)
+        const recordWithID:IRecord = {
+                ...record,
+                id:result.id,
+                moderatorIDs:[]
+        }
+        await this.modifyRecordInfo(rrg.gameSystemID,rrg.gameModeID,result.id,convertRecordIntoRecordWritedInDatabase(recordWithID))
         await this.refreshInfoWhenWriting(recordWithID)
         return recordWithID;
     }
     
     async removeRecord(gameSystemID:string,gameModeID:string,recordID:string){
 
-        const modifiedHistoryRef = this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(recordID).collection("modifiedHistoryStack")
+        const modifiedHistoryRef = this.getRecordRef(gameSystemID,gameModeID,recordID).collection("modifiedHistoryStack")
         const modifiedHistoryData = await modifiedHistoryRef.get();
         for (const doc of modifiedHistoryData.docs) doc.ref.delete();
 
-        const ref = this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(recordID)
         await this.refreshInfoWhenRemoving(await this.getRecord(gameSystemID,gameModeID,recordID))
-        await ref.delete();
+        await this.deleteRecordInfo(gameSystemID,gameModeID,recordID);
         return;
     }
     
     async modifyRecord(recordID:string,modifierID:string,record:IRecordWithoutID):Promise<IRecord>{
         const rrg = record.regulation.gameSystemEnvironment
         
-        const ref =  this.getGameModeRef(rrg.gameSystemID,rrg.gameModeID).collection("records").doc(recordID);
+        const ref =  this.getRecordRef(rrg.gameSystemID,rrg.gameModeID,recordID);
         const recordModifiedHistoryRef = ref.collection("modifiedHistoryStack")
-        const recordBeforeModified = await this.getRecord(rrg.gameSystemID,rrg.gameModeID,recordID);
-        await recordModifiedHistoryRef.add({ modifierID:modifierID,timestamp:Date.now(),before:recordBeforeModified});
+        const recordBeforeModified = await this.getRecord(rrg.gameSystemID,rrg.gameModeID,recordID)
+        await recordModifiedHistoryRef.add({ modifierID:modifierID,timestamp:Date.now(),before:convertRecordIntoRecordWritedInDatabase(recordBeforeModified)});
         
         const modifiedOffer:IRecord = {
             ...record,id:recordID,moderatorIDs:[]
         }
-        await ref.set(modifiedOffer)
+        await ref.set(convertRecordIntoRecordWritedInDatabase(modifiedOffer))
         await this.refreshInfoWhenEditing(modifiedOffer,(recordBeforeModified.moderatorIDs.length !== 0))
         return modifiedOffer;
     }
     async getModifiedHistoryStack(gameSystemID:string,gameModeID:string,recordID:string){
-        return (await this.getGameModeRef(gameSystemID,gameModeID).collection("records").doc(recordID).collection("modifiedHistoryStack").get()).docs.map(doc => doc.data())
+        return (await this.getRecordRef(gameSystemID,gameModeID,recordID).collection("modifiedHistoryStack").get()).docs.map(doc => doc.data())
     }
 
 
@@ -468,3 +484,22 @@ function decideOrder(type:ScoreType){
 
 
 export const recordDataBase = new RecordDataBase();
+
+function convertRecordIntoRecordWritedInDatabase(record:IRecord):IRecordWritedInDatabase{
+    return {
+        ...record,
+        regulation:{
+            ...record.regulation,
+            abilitiesAttributeIDs: (record.regulation.abilitiesAttributeIDs) ? JSON.stringify(record.regulation.abilitiesAttributeIDs) : undefined
+        }
+    }
+}
+function convertRecordWritedInDatabaseIntoRecord(record:IRecordWritedInDatabase):IRecord{
+    return {
+        ...record,
+        regulation:{
+            ...record.regulation,
+            abilitiesAttributeIDs: (record.regulation.abilitiesAttributeIDs) ? JSON.parse(record.regulation.abilitiesAttributeIDs) : undefined
+        }
+    }
+}

@@ -75,10 +75,13 @@
         },
         "Notice":[{
             "Japanese": " 使ったTAにおけるテクニックの名前などをタグとして登録します。",
-            "English": " You can tag the record here. (such as techniques in your record)"
+            "English": " You can tag your record here. (such as techniques in your record)"
         },{
             "Japanese": "サジェストとして承認された記録に使われたタグが提示されます。",
-            "English": "Tags used in the approved record will be suggested when you start to enter something in this textbox."
+            "English": "Tags used in the approved record will be suggested when you focus this textbox."
+        },{
+            "Japanese": "タグは10個まで入力することが出来ます。",
+            "English":"You can enter 10 tags at most."
         }]
     },
     "RunnersNote":{

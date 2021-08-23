@@ -1,57 +1,48 @@
-import Choices from "choices.js";
-import { choiceDescription, choiceString, MultiLanguageDescription } from "../../../../utility/aboutLang";
+import { MultiLanguageDescription } from "../../../../utility/aboutLang";
 import { LanguageInApplication } from "../../../../type/LanguageInApplication";
 import { IView } from "../../IView";
+import Tagify from "@yaireo/tagify";
 
 export class SelectTagChoicesCapsuled implements IView {
     private _data: string[];
     private readonly _language: LanguageInApplication;
-    private _choices: Choices;
-    private container: HTMLSelectElement;
+    private tagify: Tagify;
+    private container: HTMLInputElement;
     constructor(
-        container: HTMLSelectElement, data: string[],
+        container: HTMLInputElement, data: string[],
         {
             language,
-            removeItemButton = true, disable = false, 
-            maxItemText, placeholderValue = undefined, noChoiceText = { JDescription: "このゲームモードの中で今まで使われたタグはありません。", EDescription: "There isn't any tag used before in this gamemode." },
-            noResultText = { JDescription: "Enterを押すとタグが追加されます。", EDescription: "Press Enter to add new tag." }, shouldSort=false
-        }: {
-            placeholderValue?: string; language: LanguageInApplication;
-            removeItemButton?: boolean; disable?: boolean; maxItemText?: MultiLanguageDescription;
-            noChoiceText?: MultiLanguageDescription; noResultText?: MultiLanguageDescription; shouldSort?:boolean;
+            disable = false, 
+            placeholderValue = undefined        }: {
+            placeholderValue?: string; language: LanguageInApplication; disable?: boolean; 
         }
     ) {
         container.multiple = true;
         container.disabled = disable;
-        const result = new Choices(
-            container,
-            {
-                choices: data.map((ele) => { return {label:ele,value:ele} }),
-                placeholderValue,
-                maxItemText: choiceDescription(maxItemText, language),
-                removeItemButton,
-                maxItemCount:10,
-                shouldSort,
-                noChoicesText: choiceDescription(noChoiceText, language),
-                noResultsText: choiceDescription(noResultText, language),
-            });
+        
+        this.container = container;
+        this.tagify = new Tagify(this.container,{
+            placeholder:placeholderValue,
+            editTags:1,
+            maxTags:10,
+            autoComplete:{
+                enabled:true
+            },
+            whitelist:data,
+            dropdown: {
+                enabled: 0,             
+                closeOnSelect: false
+              }
+            
+        })
             
         this._language = language;
         this._data = data;
-        this._choices = result;
-        this.container = container;
-        const input = this.container.parentElement?.getElementsByTagName("input")[0]
-        if (input === undefined) throw new Error("Choices要素の中にあるinput要素を発見できませんでした。")
-            
-        input.addEventListener("keydown",(event) => {
-            //#TODO サジェストに近い候補のものを入力すると、それ本体ではなく似たものがタグとして入力される問題を解決する。
+
+            //#CTODO サジェストに近い候補のものを入力すると、それ本体ではなく似たものがタグとして入力される問題を解決する。
             //*> Tagifyを利用してここを書き換える。  
             //#TODO ゲームモードごとのルールを書く
             //#TODO 属性編集画面と、ゲームモードルール編集画面を作る
-            if (event.key !== "Enter" || input.value.replace(/\s/g,"").length === 0 || this.data.includes(input.value)) return;
-            this.appendChoices(input.value.replace(/^\s+/,"").replace(/(\s+)$/,""))
-            input.value = ""
-        })
 
     }
     addEventListener(eventType: "addItem" | "click" | "hideDropdown" | "change" | "choice", callback: (event: any) => void) {
@@ -59,43 +50,35 @@ export class SelectTagChoicesCapsuled implements IView {
         this.container.addEventListener(eventType, callback);
         
     }
-    getValueAsArray(valueOnly: boolean = true): string[] {
-        let choiced = this._choices.getValue(valueOnly);
-        if (Array.isArray(choiced))
-            return choiced;
-        return [choiced];
+    getValueAsArray(): string[] {
+        const choiced = this.tagify.value
+        return choiced.map(choice => choice.value);
     }
     setSelected(IDs:string|string[]){
-        this._choices.setChoiceByValue(IDs)
+        if (typeof IDs === "string") IDs = [IDs]
+        this.tagify.value = 
+            IDs.map(id => {return {value:id}})
     }
-    setChoices(item: string[]) {
+    setWhiteList(item: string[]) {
         
-        this._choices.setChoices(item.map(ele => {
-            return { value: ele, label: ele };
-        }));
+        this.tagify.whitelist = item
         this._data = item;
     }
-    appendChoices(item: string) {
-        const values = this.getValueAsArray()
-        values.push(item)
-        this.data.push(item)
-        this.clearStore()
-        this._choices.setChoices(this.data.map(ele => {
-            return { value: ele, label: ele };
-        }));
-        this.setSelected(values)
+    appendWhiteListItem(item: string) {
+        this._data.push(item)
+        this.tagify.whitelist = this.data
     }
     clearChoices() {
-        this._choices.clearChoices();
+        this.tagify.removeAllTags()
     }
     clearStore() {
-        this._choices.clearStore();
+        this.tagify.whitelist = []
     }
     disable() {
-        this._choices.disable();
+        this.tagify.setDisabled(true)
     }
     enable() {
-        this._choices.enable();
+        this.tagify.setDisabled(false)
     }
     get data() {
         return this._data;
@@ -104,13 +87,13 @@ export class SelectTagChoicesCapsuled implements IView {
         return this._language;
     }
     get choices() {
-        return this._choices;
+        return this.tagify;
     }
     get insertedElement() {
         return this.container;
     }
     destroy(){
-        this._choices.destroy();
+        this.tagify.destroy();
         this.container.innerHTML = "";
     }
 }

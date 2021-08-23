@@ -14,6 +14,7 @@ import { IAbilityAttributeFlagItem,IAbilityAttributeItemWithoutCollections } fro
 import { OnePlayerOfAbilityAttribute } from "../../../../src/ts/type/foundation/IRegulation";
 
 //[x] getRecordsWithConditionメソッドの実装
+
 export class RecordDataBase{
     private dataBase:FirebaseFirestore.Firestore;
     constructor(){
@@ -55,6 +56,9 @@ export class RecordDataBase{
     private async deleteDoc(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>):Promise<void>{
         ref.delete();
     }
+
+
+    
 
     getGameSystemCollection = () => this.getCollection<IGameSystemInfoWithoutCollections>(this.getGameSystemCollectionRef())
     getGameSystemInfo       = (gameSystemID:string) => this.getDoc<IGameSystemInfoWithoutCollections>(this.getGameSystemCollectionRef().doc(gameSystemID))

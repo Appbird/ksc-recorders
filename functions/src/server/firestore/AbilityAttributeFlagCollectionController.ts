@@ -1,0 +1,31 @@
+import { IAbilityAttributeFlagItem } from "../../../../src/ts/type/list/IAbilityAttributeItemWithoutCollections";
+import { firestoreCollectionUtility } from "./FirestoreCollectionUtility";
+
+type HandledType = IAbilityAttributeFlagItem
+
+export class AbilityAttributeFlagsCollectiCollectionController implements IFirestoreCollectionController<HandledType> {
+    private ref: FirebaseFirestore.CollectionReference;
+    constructor(gameSystemID:string,gameModeID:string,attributeID:string) {
+        this.ref = firestoreCollectionUtility.getGameModeItemRef(gameSystemID,gameModeID).collection("attributes").doc(attributeID).collection("abilityAttributes");
+    }
+    getCollection(): Promise<HandledType[]> {
+        return firestoreCollectionUtility.getCollection<HandledType>(this.ref);
+    }
+    getInfo(id: string): Promise<HandledType> {
+        return firestoreCollectionUtility.getDoc<HandledType>(this.ref.doc(id));
+    }
+    async write(object: HandledType): Promise<void> {
+        await firestoreCollectionUtility.writeDoc<HandledType>(this.ref, object);
+    }
+    async modify(id: string, object: HandledType): Promise<void> {
+        await firestoreCollectionUtility.modifyDoc<HandledType>(this.ref.doc(id), object);
+    }
+    delete(id: string): Promise<HandledType> {
+        return firestoreCollectionUtility.deleteDoc<HandledType>(this.ref.doc(id));
+    }
+    async update(id: string, object: {
+        [P in keyof HandledType]?: HandledType[P];
+    }): Promise<void> {
+        await firestoreCollectionUtility.updateDoc(this.ref.doc(id), object);
+    }
+}

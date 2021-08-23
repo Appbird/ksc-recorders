@@ -40,7 +40,7 @@ export class EditorTagPart implements EditorPart<string[]> {
             <h1 class="u-noUnderline">${generateIcooonHTML({icooonName:icooon})}${title}</h1>
         `);
         this.language = language
-        this.selectInput = new SelectTagChoicesCapsuled(this.container.appendChild(document.createElement("select")), options.map(option => choiceString(option,language)), { language: language});
+        this.selectInput = new SelectTagChoicesCapsuled(this.container.appendChild(document.createElement("input")), options.map(option => choiceString(option,language)), { language: language});
         this.ulist = new UListCupsuled(appendElement(this.container,"ul"),language,description)
     }
     addChangeEventListener(callback: (changed: string[]) => void) {
@@ -58,7 +58,7 @@ export class EditorTagPart implements EditorPart<string[]> {
     }
     refreshOption(options:ITargetItem[]){
         this.selectInput.clearStore();
-        this.selectInput.setChoices(options.map(option => choiceString(option,this.language)));
+        this.selectInput.setWhiteList(options.map(option => choiceString(option,this.language)));
     }
     isFill(): boolean {
         return this.selectInput.getValueAsArray().length === 0;

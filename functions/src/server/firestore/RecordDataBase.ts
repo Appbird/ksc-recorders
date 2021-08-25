@@ -489,21 +489,3 @@ function decideOrder(type:ScoreType){
 
 export const recordDataBase = new RecordDataBase();
 
-function convertRecordIntoRecordWritedInDatabase(record:IRecord):IRecordWritedInDatabase{
-    return {
-        ...record,
-        regulation:{
-            ...record.regulation,
-            abilitiesAttributeIDs: (record.regulation.abilitiesAttributeIDs) ? JSON.stringify(record.regulation.abilitiesAttributeIDs) : undefined
-        }
-    }
-}
-function convertRecordWritedInDatabaseIntoRecord(record:IRecordWritedInDatabase):IRecord{
-    return {
-        ...record,
-        regulation:{
-            ...record.regulation,
-            abilitiesAttributeIDs: (record.regulation.abilitiesAttributeIDs) ? JSON.parse(record.regulation.abilitiesAttributeIDs) : undefined
-        }
-    }
-}

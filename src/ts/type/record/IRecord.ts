@@ -82,7 +82,7 @@ export interface ModifiedHistoryStack{
     before:{
         score:number;
         timestamp_post:number;
-        regulation:IRegulation;
+        regulation:IRegulationWritedInDataBase;
         runnerID:string;
         tagName: string[];
         languageOfTagName:LanguageInApplication;

@@ -12,6 +12,7 @@ type ResolveTable = Map<string, IItemOfResolveTableToName>
 export class ControllerOfTableForResolvingID {
 
     //#NOTE キャッシュ。既に得たID-名前対応表を保存しておくことでFirestoreへの読み出しリクエスト回数を制限する。
+    //#NOTE これ一つに全部まとめた方が良くない？
     private gameSystem: ResolveTable = new Map<string, IItemOfResolveTableToName>();
     private runner: ResolveTable = new Map<string, IItemOfResolveTableToName>();
     private hashTag: ResolveTable = new Map<string, IItemOfResolveTableToName>();

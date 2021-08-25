@@ -1,15 +1,16 @@
-import { IGameDifficultyItem } from "../../../../src/ts/type/list/IGameDifficultyItem";
+import { ModifiedHistoryStack } from "../../../../src/ts/type/record/IRecord";
 import { PartialValueWithFieldValue, Transaction } from "../function/firebaseAdmin";
 import { firestoreCollectionUtility } from "./FirestoreCollectionUtility";
 import { IFirestoreCollectionController, WithoutID } from "./IFirestoreCollectionController";
 
-type HandledType = IGameDifficultyItem
+type HandledType = ModifiedHistoryStack
 
-export class DifficultyCollectionController implements IFirestoreCollectionController<HandledType> {
+export class RecordModifiedHistoryStackController implements IFirestoreCollectionController<HandledType> {
     readonly ref: FirebaseFirestore.CollectionReference;
-    constructor(gameSystemID:string,gameModeID:string,
-        private transaction?:Transaction) {
-        this.ref = firestoreCollectionUtility.getGameModeItemRef(gameSystemID,gameModeID).collection("difficulties");
+    constructor(gameSystemID:string,gameModeID:string,recordID:string,
+        private transaction?:Transaction    
+    ) {
+        this.ref = firestoreCollectionUtility.getGameModeItemRef(gameSystemID,gameModeID).collection("records").doc(recordID).collection("modifiedHistoryStack");
     }
     getCollection(): Promise<HandledType[]> {
         return firestoreCollectionUtility.getCollection<HandledType>(this.ref,this.transaction);
@@ -26,7 +27,10 @@ export class DifficultyCollectionController implements IFirestoreCollectionContr
     delete(id: string): Promise<HandledType> {
         return firestoreCollectionUtility.deleteDoc<HandledType>(this.ref.doc(id),this.transaction);
     }
-    async update(id: string, object: PartialValueWithFieldValue<HandledType>): Promise<void> {
+    async update(id: string, object:PartialValueWithFieldValue<HandledType>): Promise<void> {
         await firestoreCollectionUtility.updateDoc(this.ref.doc(id), object,this.transaction);
+    }
+    async deleteAll(): Promise<void>{
+        await Promise.all((await this.ref.listDocuments()).map(doc => doc.delete()))
     }
 }

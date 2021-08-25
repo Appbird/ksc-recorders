@@ -1,15 +1,16 @@
-import { IGameDifficultyItem } from "../../../../src/ts/type/list/IGameDifficultyItem";
-import { PartialValueWithFieldValue, Transaction } from "../function/firebaseAdmin";
+import { IHashTagItem } from "../../../../src/ts/type/list/IGameSystemInfo";
+import { PartialValueWithFieldValue } from "../function/firebaseAdmin";
 import { firestoreCollectionUtility } from "./FirestoreCollectionUtility";
 import { IFirestoreCollectionController, WithoutID } from "./IFirestoreCollectionController";
 
-type HandledType = IGameDifficultyItem
+type HandledType = IHashTagItem
 
-export class DifficultyCollectionController implements IFirestoreCollectionController<HandledType> {
+export class HashTagCollectionController implements IFirestoreCollectionController<HandledType> {
     readonly ref: FirebaseFirestore.CollectionReference;
-    constructor(gameSystemID:string,gameModeID:string,
-        private transaction?:Transaction) {
-        this.ref = firestoreCollectionUtility.getGameModeItemRef(gameSystemID,gameModeID).collection("difficulties");
+    constructor(gameSystemID:string,
+        private transaction?:FirebaseFirestore.Transaction
+    ) {
+        this.ref = firestoreCollectionUtility.getGameSystemItemRef(gameSystemID).collection("hashTags");
     }
     getCollection(): Promise<HandledType[]> {
         return firestoreCollectionUtility.getCollection<HandledType>(this.ref,this.transaction);
@@ -28,5 +29,10 @@ export class DifficultyCollectionController implements IFirestoreCollectionContr
     }
     async update(id: string, object: PartialValueWithFieldValue<HandledType>): Promise<void> {
         await firestoreCollectionUtility.updateDoc(this.ref.doc(id), object,this.transaction);
+    }
+    async verifiedHashTag(id:string){
+        this.update(id,{
+            isApproved: true    
+        })
     }
 }

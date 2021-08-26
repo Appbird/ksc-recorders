@@ -1,9 +1,9 @@
-import { IItemOfResolveTableToName } from "./IItemOfResolveTableToName";
+import { ILabelledDocument } from "./ILabelledDocument";
 import { IGameModeItem } from "./IGameModeItem";
 import { icooonResolvable } from "../foundation/icooonResolvable";
 
 export type IGameSystemInfo = IGameSystemInfoWithoutCollections & CollectionInIGameSystemInfo
-export interface IGameSystemInfoWithoutCollections extends IItemOfResolveTableToName,icooonResolvable {
+export interface IGameSystemInfoWithoutCollections extends ILabelledDocument,icooonResolvable {
     id: string;
     Japanese: string;
     English: string;
@@ -21,7 +21,7 @@ export interface CollectionInIGameSystemInfo {
 }
 
 
-export interface IHashTagItem extends IItemOfResolveTableToName{
+export interface IHashTagItem extends ILabelledDocument{
     description?:string;
     isApproved:boolean;
 }

@@ -5,6 +5,7 @@ import { Transaction } from "../function/firebaseAdmin";
 import { firestoreCollectionUtility } from "./FirestoreCollectionUtility";
 import { GameModeItemController } from "./GameModeItemController";
 import { GameSystemItemController } from "./GameSystemController";
+import { HashTagCollectionController } from "./HashTagCollectionController";
 import { IFirestoreCollectionController } from "./IFirestoreCollectionController";
 import { RecordModifiedHistoryStackController } from "./RecordModifiedHistoryStackController";
 import { RunnerCollectionController } from "./RunnerCollectionController";
@@ -60,6 +61,23 @@ export class RecordCollectionController implements IFirestoreCollectionControlle
         
     }
 
+    async verifiedRecord(recordID:string, moderatorID:string): Promise<IRecord>{
+        return await firestoreCollectionUtility.runTransaction(async (transaction) => {
+            const recordC = new RecordCollectionController(this.gameSystemID,this.gameModeID,transaction)
+            const hashTagC = new HashTagCollectionController(this.gameSystemID,transaction)
+            const gameSystemC = new GameSystemItemController(transaction)
+            const gameModeC = new GameModeItemController(this.gameSystemID,transaction)
+            
+            const record = await recordC.getInfo(recordID)
+
+            await Promise.all(record.tagID.map(id => hashTagC.verifiedHashTag(id)))
+            await gameSystemC.incrementUnverifiedRecordNumber(this.gameSystemID,"-")
+            await gameModeC.incrementUnverifiedRecordNumber(this.gameModeID,"-")
+            await recordC.updateModeratorList(recordID,moderatorID)
+            return record;
+        });
+    }
+
     async modifyWithConsistency(recordID:string, modifierID:string, record:IRecordWithoutID): Promise<IRecord>{
         this.checkValidInput(record)
         return await firestoreCollectionUtility.runTransaction(async (transaction) => {
@@ -109,7 +127,15 @@ export class RecordCollectionController implements IFirestoreCollectionControlle
         }
         )
     }
+    updateModeratorList(id:string,moderatorID:string){
+        return firestoreCollectionUtility.updateDoc<IRecordWritedInDatabase>(this.ref.doc(id),{
+               moderatorIDs:firestoreCollectionUtility.fieldValue.arrayUnion({
+                    id: moderatorID,
+                    data: firestoreCollectionUtility.fieldValue.serverTimestamp()
+                })
+        },this.transaction)
     
+    }
 
 
     async getWithCondition(

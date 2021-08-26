@@ -5,11 +5,11 @@ import { appendElement, generateIcooonHTML } from "../../../../utility/aboutElem
 import { SelectChoicesCapsuled } from "../../Input/SelectChoicesCapsuled";
 import { UListCupsuled } from "../../Input/UListCupsuled";
 import { context_required, EditorPart } from "./EditorPart";
-import { IItemOfResolveTableToName } from "../../../../../type/list/IItemOfResolveTableToName";
+import { ILabelledDocument } from "../../../../../type/list/ILabelledDocument";
 
 export class EditorIDPart implements EditorPart<string> {
     private container: HTMLElement;
-    private selectInput: SelectChoicesCapsuled<IItemOfResolveTableToName>;
+    private selectInput: SelectChoicesCapsuled<ILabelledDocument>;
     private htmlCon: HTMLConverter;
     private static _requiredTypeInString = "string";
     private _requiredField:boolean;
@@ -28,7 +28,7 @@ export class EditorIDPart implements EditorPart<string> {
         description:MultiLanguageString[],
         requiredField:boolean,
         icooon?:string,
-        options:IItemOfResolveTableToName[]
+        options:ILabelledDocument[]
     }
     ) {
         description = [...description];
@@ -58,7 +58,7 @@ export class EditorIDPart implements EditorPart<string> {
         if (value === undefined) throw new Error()
         this.selectInput.setSelected(value);
     }
-    refreshOption(options:IItemOfResolveTableToName[]){
+    refreshOption(options:ILabelledDocument[]){
         this.selectInput.clearStore();
         this.selectInput.setChoices(options);
     }

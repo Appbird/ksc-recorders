@@ -1,6 +1,6 @@
-import { IItemOfResolveTableToName } from "./IItemOfResolveTableToName";
+import { ILabelledDocument } from "./ILabelledDocument";
 
-export interface IAbilityAttributeItemWithoutCollections extends IItemOfResolveTableToName{
+export interface IAbilityAttributeItemWithoutCollections extends ILabelledDocument{
     multipleItems:boolean;
     requiredItemCount:number;
     maxItemCount:number;
@@ -9,6 +9,6 @@ export interface IAbilityAttributeItemWithoutCollections extends IItemOfResolveT
     icooonName?:string;
 
 }
-export interface IAbilityAttributeFlagItem extends IItemOfResolveTableToName{
+export interface IAbilityAttributeFlagItem extends ILabelledDocument{
 
 }

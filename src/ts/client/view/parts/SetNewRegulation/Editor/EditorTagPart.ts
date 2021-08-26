@@ -6,7 +6,7 @@ import { appendElement, generateIcooonHTML } from "../../../../utility/aboutElem
 import { UListCupsuled } from "../../Input/UListCupsuled";
 import { context_required, EditorPart } from "./EditorPart";
 import { SelectTagChoicesCapsuled } from "../../Input/SelectTagChoicesCapsuled";
-import { IItemOfResolveTableToName } from "../../../../../type/list/IItemOfResolveTableToName";
+import { ILabelledDocument } from "../../../../../type/list/ILabelledDocument";
 import { choiceString } from "../../../../../utility/aboutLang";
 
 export class EditorTagPart implements EditorPart<string[]> {
@@ -28,7 +28,7 @@ export class EditorTagPart implements EditorPart<string[]> {
         description:MultiLanguageString[],
         requiredField:boolean,
         icooon?:string,
-        options:IItemOfResolveTableToName[]
+        options:ILabelledDocument[]
     }
     ) {
         description = [...description];

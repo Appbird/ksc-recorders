@@ -8,7 +8,7 @@ import { UListCupsuled } from "../../Input/UListCupsuled";
 import { context_required, EditorPart } from "./EditorPart";
 import firebase from "firebase/app";
 import { MultiLanguageDescription } from "../../../../../utility/aboutLang";
-import { IItemOfResolveTableToName } from "../../../../../type/list/IItemOfResolveTableToName";
+import { ILabelledDocument } from "../../../../../type/list/ILabelledDocument";
 
 export class EditorMultipleIDPart implements EditorPart<string[]> {
     private container: HTMLElement;
@@ -35,7 +35,7 @@ export class EditorMultipleIDPart implements EditorPart<string[]> {
         maxItemCount?:number,
         needMultipleSelect?:boolean,
         maxItemText?:MultiLanguageDescription,
-        options:IItemOfResolveTableToName[],
+        options:ILabelledDocument[],
         observed?:firebase.firestore.CollectionReference
     }
     ) {

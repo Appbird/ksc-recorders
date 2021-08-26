@@ -1,4 +1,4 @@
-import { IItemOfResolveTableToName } from "../list/IItemOfResolveTableToName";
+import { ILabelledDocument } from "../list/ILabelledDocument";
 
 export type IRunner = IRunnerEditable&IRunnerUneditable;
 
@@ -28,7 +28,7 @@ export interface CollectionOfIRunner{
     notification:Notification[]
 }
 
-export interface INotificationItem extends IItemOfResolveTableToName{
+export interface INotificationItem extends ILabelledDocument{
     postedDate:number;
     id:string;
     iconCSSClass:string;

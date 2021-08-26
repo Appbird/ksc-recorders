@@ -2,7 +2,7 @@ import { icooonResolvable } from "../foundation/icooonResolvable";
 import { IRecord } from "../record/IRecord";
 import { IAbilityItem } from "./IAbilityItem";
 import { IGameDifficultyItem } from "./IGameDifficultyItem";
-import { IItemOfResolveTableToName } from "./IItemOfResolveTableToName";
+import { ILabelledDocument } from "./ILabelledDocument";
 import { IStoredOfferedRecord } from "./IStoredOfferedRecord";
 import { ITargetItem } from "./ITargetItem";
 
@@ -12,7 +12,7 @@ import { ITargetItem } from "./ITargetItem";
  */
 export type ScoreType = "score"|"time";
 export type IGameModeItem = IGameModeItemWithoutCollections & CollectionsInIGameModeItem
-export interface IGameModeItemWithoutCollections extends IItemOfResolveTableToName,icooonResolvable{
+export interface IGameModeItemWithoutCollections extends ILabelledDocument,icooonResolvable{
     runnersNumber:number;
     recordsNumber:number;
     dateOfLatestPost:number;

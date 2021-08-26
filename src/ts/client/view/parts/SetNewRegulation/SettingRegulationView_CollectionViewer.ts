@@ -4,7 +4,7 @@ import { IView } from "../../IView";
 import { LanguageInApplication } from "../../../../type/LanguageInApplication";
 import firebase from "firebase";
 import { choiceString, selectAppropriateDescription } from "../../../../utility/aboutLang";
-import { IItemOfResolveTableToName, IItemOfResolveTableToNameLackingOfID } from "../../../../type/list/IItemOfResolveTableToName";
+import { ILabelledDocument, ILabelledDocumentLackingOfID } from "../../../../type/list/ILabelledDocument";
 import { icooonResolvable } from "../../../../type/foundation/icooonResolvable";
 import { MultiLanguageString } from "../../../../type/foundation/MultiLanguageString";
 import { TitleCupsuled } from "../TitleCupsuled";
@@ -54,7 +54,7 @@ export class SettingRegulationView_CollectionViewer implements IView{
         if (this.callbacks.whenStart !== undefined) this.callbacks.whenStart();
         const items = [
             {...context.appendNewItem,id:undefined},
-            ...(await this.path.orderBy(this.language,"asc").get()).docs.map( doc => {return {...(doc.data()),id:doc.id} as (IItemOfResolveTableToNameLackingOfID&icooonResolvable)})
+            ...(await this.path.orderBy(this.language,"asc").get()).docs.map( doc => {return {...(doc.data()),id:doc.id} as (ILabelledDocumentLackingOfID&icooonResolvable)})
         ];
 
         for (const [,listItem] of this.cardObj) listItem.destroy()
@@ -67,7 +67,7 @@ export class SettingRegulationView_CollectionViewer implements IView{
             for(const docChange of querySnapshot.docChanges()){
                 switch(docChange.type){
                     case "removed": this.removeItem(docChange.doc.id);break;
-                    default:        this.setItem(docChange.doc.id,docChange.doc.data() as (IItemOfResolveTableToName&icooonResolvable))
+                    default:        this.setItem(docChange.doc.id,docChange.doc.data() as (ILabelledDocument&icooonResolvable))
                 }  
             }
         })
@@ -77,7 +77,7 @@ export class SettingRegulationView_CollectionViewer implements IView{
         this.cardObj.get(id)?.destroy();
         this.cardObj.delete(id)
     }
-    private setItem(id:string|undefined,item:(IItemOfResolveTableToNameLackingOfID&icooonResolvable)){
+    private setItem(id:string|undefined,item:(ILabelledDocumentLackingOfID&icooonResolvable)){
         if (this.cardObj.has(id)) 
             this.cardObj.get(id)?.change(item)
         else this.cardObj.set(id,new ListItem(
@@ -102,7 +102,7 @@ export class SettingRegulationView_CollectionViewer implements IView{
 class ListItem implements IView{
     private container:HTMLElement;
     private language:LanguageInApplication;
-    constructor(container:HTMLElement,language:LanguageInApplication,info:IItemOfResolveTableToNameLackingOfID&icooonResolvable,{
+    constructor(container:HTMLElement,language:LanguageInApplication,info:ILabelledDocumentLackingOfID&icooonResolvable,{
         onClickEventListener = null
     }:{onClickEventListener:((clickedID:string|undefined,name:MultiLanguageString)=>void)|null}){
         this.container = container;
@@ -110,7 +110,7 @@ class ListItem implements IView{
         this.language = language;
         this.change(info);
     }
-    change(info:IItemOfResolveTableToNameLackingOfID&icooonResolvable){
+    change(info:ILabelledDocumentLackingOfID&icooonResolvable){
         this.container.innerHTML = `
             <div class="c-list__item">
                 <div class="u-width90per">

@@ -1,7 +1,7 @@
-import { IItemOfResolveTableToName } from "../../list/IItemOfResolveTableToName";
+import { ILabelledDocument } from "../../list/ILabelledDocument";
 import { IReceivedDataAtClient } from "../transmissionBase";
 
 
-export interface IReceivedDataAtClient_pickUp<T extends IItemOfResolveTableToName> extends IReceivedDataAtClient {
+export interface IReceivedDataAtClient_pickUp<T extends ILabelledDocument> extends IReceivedDataAtClient {
     result: T;
 }

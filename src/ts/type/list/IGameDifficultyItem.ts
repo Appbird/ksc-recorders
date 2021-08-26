@@ -1,5 +1,5 @@
-import { IItemOfResolveTableToName } from "./IItemOfResolveTableToName";
+import { ILabelledDocument } from "./ILabelledDocument";
 
-export interface IGameDifficultyItem extends IItemOfResolveTableToName {
+export interface IGameDifficultyItem extends ILabelledDocument {
     TargetIDsIncludedInTheDifficulty: string[];
 }

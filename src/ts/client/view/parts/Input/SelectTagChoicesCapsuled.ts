@@ -1,4 +1,3 @@
-import { MultiLanguageDescription } from "../../../../utility/aboutLang";
 import { LanguageInApplication } from "../../../../type/LanguageInApplication";
 import { IView } from "../../IView";
 import Tagify from "@yaireo/tagify";

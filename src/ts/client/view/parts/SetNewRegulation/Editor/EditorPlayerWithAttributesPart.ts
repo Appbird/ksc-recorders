@@ -6,7 +6,7 @@ import { SelectChoicesCapsuled } from "../../Input/SelectChoicesCapsuled";
 import { UListCupsuled } from "../../Input/UListCupsuled";
 import { context_required, EditorPart } from "./EditorPart";
 import { MultiLanguageDescription } from "../../../../../utility/aboutLang";
-import { IItemOfResolveTableToName } from "../../../../../type/list/IItemOfResolveTableToName";
+import { ILabelledDocument } from "../../../../../type/list/ILabelledDocument";
 import { SetOfFlagsOfAbilityAttributeItem } from "../../../../../type/list/AttributeOfAbilityItem";
 import { OnePlayerOfAbilityAttribute } from "../../../../../type/foundation/IRegulation";
 import { EditorCheckButtonPart } from "./EditorCheckButtonPart";
@@ -15,7 +15,7 @@ type HandledType ={abilityID:string|undefined,attribute:OnePlayerOfAbilityAttrib
 export class EditorPlayerWithAttributesPart implements EditorPart<HandledType> {
     //#CTODO {能力ID,属性ID}の形で扱えるEditorにする。
     private container: HTMLElement;
-    private selectInput: SelectChoicesCapsuled<IItemOfResolveTableToName>;
+    private selectInput: SelectChoicesCapsuled<ILabelledDocument>;
     private htmlCon: HTMLConverter;
     private _requiredField:boolean;
     private ulist:UListCupsuled;
@@ -34,7 +34,7 @@ export class EditorPlayerWithAttributesPart implements EditorPart<HandledType> {
         maxItemCount?:number,
         icooon?:string,
         maxItemText?:MultiLanguageDescription,
-        abilityOptions:IItemOfResolveTableToName[],
+        abilityOptions:ILabelledDocument[],
         setsOfFlagsOfAbilityAttributeItem:SetOfFlagsOfAbilityAttributeItem[]
     }
     ) {
@@ -106,7 +106,7 @@ export class EditorPlayerWithAttributesPart implements EditorPart<HandledType> {
             targetAttribute.editor.refresh(attribute.onFlagIDs)
         }
     }
-    refreshOption(options:IItemOfResolveTableToName[]){
+    refreshOption(options:ILabelledDocument[]){
         this.selectInput.clearStore();
         this.selectInput.setChoices(options);
     }

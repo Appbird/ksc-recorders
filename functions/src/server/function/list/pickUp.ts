@@ -2,21 +2,21 @@ import { IReceivedDataAtServer_pickUp_UseSIdMIdAIdId } from "../../../../../src/
 import { IReceivedDataAtServer_pickUp_UseSIdMIdId } from "../../../../../src/ts/type/api/list/atServer_pickup/IReceivedDataAtServer_pickUp_UseSIdMIdId";
 import { IReceivedDataAtServer_pickUp_UseSIdId } from "../../../../../src/ts/type/api/list/atServer_pickup/IReceivedDataAtServer_pickUp_UseSIdId";
 import { IReceivedDataAtServer_pickUp_UseId } from "../../../../../src/ts/type/api/list/atServer_pickup/IReceivedDataAtServer_pickUp_UseId";
-import { IItemOfResolveTableToName } from "../../../../../src/ts/type/list/IItemOfResolveTableToName";
+import { ILabelledDocument } from "../../../../../src/ts/type/list/ILabelledDocument";
 import { RecordDataBase } from "../../firestore/RecordDataBase";
 import { IReceivedDataAtClient_pickUp } from "../../../../../src/ts/type/api/list/IReceivedDataAtClient_pickUp";
 import { APIFunctions } from "../../../../../src/ts/type/api/relation";
  
-async function pickUp_UseId<T extends IItemOfResolveTableToName>(input:IReceivedDataAtServer_pickUp_UseId, searchFunc:(id:string)=>Promise<T>):Promise<IReceivedDataAtClient_pickUp<T>>{
+async function pickUp_UseId<T extends ILabelledDocument>(input:IReceivedDataAtServer_pickUp_UseId, searchFunc:(id:string)=>Promise<T>):Promise<IReceivedDataAtClient_pickUp<T>>{
     return {isSucceeded:true,result: await searchFunc(input.id)}
 }
-async function pickUp_UseSIdId<T extends IItemOfResolveTableToName>(input:IReceivedDataAtServer_pickUp_UseSIdId, searchFunc:(gameSystemID:string,id:string)=>Promise<T>):Promise<IReceivedDataAtClient_pickUp<T>>{
+async function pickUp_UseSIdId<T extends ILabelledDocument>(input:IReceivedDataAtServer_pickUp_UseSIdId, searchFunc:(gameSystemID:string,id:string)=>Promise<T>):Promise<IReceivedDataAtClient_pickUp<T>>{
     return {isSucceeded:true,result:await searchFunc(input.gameSystemEnv.gameSystemID,input.id)}
 }
-async function pickUp_UseSIdMIdId<T extends IItemOfResolveTableToName>(input:IReceivedDataAtServer_pickUp_UseSIdMIdId, searchFunc:(gameSystemID:string,gameModeID:string,id:string)=>Promise<T>):Promise<IReceivedDataAtClient_pickUp<T>>{
+async function pickUp_UseSIdMIdId<T extends ILabelledDocument>(input:IReceivedDataAtServer_pickUp_UseSIdMIdId, searchFunc:(gameSystemID:string,gameModeID:string,id:string)=>Promise<T>):Promise<IReceivedDataAtClient_pickUp<T>>{
     return {isSucceeded:true,result:await searchFunc(input.gameSystemEnv.gameSystemID,input.gameSystemEnv.gameModeID,input.id)}
 }
-async function pickUp_UseSIdMIdAIdId<T extends IItemOfResolveTableToName>(input:IReceivedDataAtServer_pickUp_UseSIdMIdAIdId, searchFunc:(gameSystemID:string,gameModeID:string,abilityAttributeID:string,id:string)=>Promise<T>):Promise<IReceivedDataAtClient_pickUp<T>>{
+async function pickUp_UseSIdMIdAIdId<T extends ILabelledDocument>(input:IReceivedDataAtServer_pickUp_UseSIdMIdAIdId, searchFunc:(gameSystemID:string,gameModeID:string,abilityAttributeID:string,id:string)=>Promise<T>):Promise<IReceivedDataAtClient_pickUp<T>>{
     return {isSucceeded:true,result:await searchFunc(input.gameSystemEnv.gameSystemID,input.gameSystemEnv.gameModeID,input.abilityAttributeID,input.id)}
 }
 

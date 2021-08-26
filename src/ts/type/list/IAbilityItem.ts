@@ -1,4 +1,4 @@
-import { IItemOfResolveTableToName } from "./IItemOfResolveTableToName";
+import { ILabelledDocument } from "./ILabelledDocument";
 
-export interface IAbilityItem extends IItemOfResolveTableToName {
+export interface IAbilityItem extends ILabelledDocument {
 }

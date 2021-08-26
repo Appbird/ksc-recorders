@@ -1,20 +1,20 @@
 import { MultiLanguageString } from "../../../../../type/foundation/MultiLanguageString";
 import { LanguageInApplication } from "../../../../../type/LanguageInApplication";
-import { IItemOfResolveTableToNameLackingOfID } from "../../../../../type/list/IItemOfResolveTableToName";
+import { ILabelledDocumentLackingOfID } from "../../../../../type/list/ILabelledDocument";
 import { HTMLConverter } from "../../../../../utility/ViewUtility";
 import { appendElement, generateIcooonHTML } from "../../../../utility/aboutElement";
 import { TextInputCapsuled } from "../../TextInputCapsuled";
 import { UListCupsuled } from "../../Input/UListCupsuled";
 import { context_required, EditorPart } from "./EditorPart";
 
-export class EditorCSVForInputingItemPart implements EditorPart<IItemOfResolveTableToNameLackingOfID[]> {
+export class EditorCSVForInputingItemPart implements EditorPart<ILabelledDocumentLackingOfID[]> {
     private container: HTMLElement;
     private textInput: TextInputCapsuled;
     private htmlCon: HTMLConverter;
     private _requiredField:boolean;
     private ulist:UListCupsuled;
     private errorMsg?:MultiLanguageString;
-    private static readonly _requiredTypeInString = "IItemOfResolveTableToNameLackingOfID[]";
+    private static readonly _requiredTypeInString = "ILabelledDocumentLackingOfID[]";
     get requiredTypeInString(){
         return EditorCSVForInputingItemPart._requiredTypeInString;
     }
@@ -36,16 +36,16 @@ export class EditorCSVForInputingItemPart implements EditorPart<IItemOfResolveTa
         this.textInput = new TextInputCapsuled(appendElement(this.container,"div"), { defaultValue:"",className:"u-width90per", allowNewLine:true });
         this.ulist = new UListCupsuled(appendElement(this.container,"ul"),language,description)
     }
-    addChangeEventListener(callback: (changed: IItemOfResolveTableToNameLackingOfID[]) => void) {
+    addChangeEventListener(callback: (changed: ILabelledDocumentLackingOfID[]) => void) {
         this.textInput.addEventListener("change", () => callback(this.value));
     }
     /** @throws 形式が不完全であったときにエラーを出します。 */
-    get value(): IItemOfResolveTableToNameLackingOfID[] {
+    get value(): ILabelledDocumentLackingOfID[] {
         //#CTODO ここを変更する
         //*> テキストデータをCSVとして読み取り、型に合うようなデータに変換する。
         return convertCSVToData(this.textInput.value);
     }
-    refresh(value: IItemOfResolveTableToNameLackingOfID[]) {
+    refresh(value: ILabelledDocumentLackingOfID[]) {
         //#CTODO ここを変更する。
         this.textInput.value = 
             "Japanese,English,JDescription,EDescription\n" +
@@ -81,7 +81,7 @@ export class EditorCSVForInputingItemPart implements EditorPart<IItemOfResolveTa
 }
 
 
-function convertCSVToData(input:string):IItemOfResolveTableToNameLackingOfID[]{
+function convertCSVToData(input:string):ILabelledDocumentLackingOfID[]{
     const lines = input.split("\n");
     const header = lines.shift()?.split(",");
     if (header === undefined) throw new Error("CSVで表される表のカラムが未定義です。")

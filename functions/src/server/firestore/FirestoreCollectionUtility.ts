@@ -2,6 +2,9 @@ import { firebaseAdmin, PartialValueWithFieldValue } from "../function/firebaseA
 import { WithoutID } from "./IFirestoreCollectionController";
 
 const base = {
+    getRuleAttributeCollectionRef(){
+        return firebaseAdmin.firestore.collection("runners");
+    },
     getRunnerCollectionRef(){
         return firebaseAdmin.firestore.collection("runners");
     },

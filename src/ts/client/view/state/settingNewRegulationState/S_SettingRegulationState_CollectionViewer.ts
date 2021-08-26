@@ -6,7 +6,7 @@ import "firebase/firestore";
 import { choiceString } from "../../../../utility/aboutLang";
 import { SettingRegulationStateHeader } from "../../parts/SetNewRegulation/SettingRegulationStateHeader";
 import { appendElement } from "../../../utility/aboutElement";
-import { IItemOfResolveTableToName } from "../../../../type/list/IItemOfResolveTableToName";
+import { ILabelledDocument } from "../../../../type/list/ILabelledDocument";
 
 const context = {
     title:{
@@ -132,7 +132,7 @@ async function convertToCSV(collection:firebase.firestore.CollectionReference){
     return collection.get()
         .then(
             (result) => {
-                const items = result.docs.map(doc => doc.data() as IItemOfResolveTableToName)
+                const items = result.docs.map(doc => doc.data() as ILabelledDocument)
                 return "Japanese,English,JDescription,EDescription\n" +
                     items.map(item => `${item.Japanese},${item.English},${(item.JDescription) ? item.JDescription:""},${(item.EDescription) ? item.EDescription:""}`).join("\n")
             }

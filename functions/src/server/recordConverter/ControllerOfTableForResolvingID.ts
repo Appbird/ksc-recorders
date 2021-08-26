@@ -1,6 +1,6 @@
 import { IRecord, IRecordInShortResolved, IRecordResolved } from "../../../../src/ts/type/record/IRecord";
 import { IRecordGroupResolved } from "../../../../src/ts/type/record/IRecordGroupResolved";
-import { IItemOfResolveTableToName } from "../../../../src/ts/type/list/IItemOfResolveTableToName";
+import { ILabelledDocument } from "../../../../src/ts/type/list/ILabelledDocument";
 import { LanguageInApplication } from "../../../../src/ts/type/LanguageInApplication";
 import { RecordDataBase } from "../firestore/RecordDataBase";
 import { choiceString } from "../../../../src/ts/utility/aboutLang";
@@ -8,20 +8,20 @@ import { OnePlayerOfAbilityAttribute, OnePlayerOfAbilityAttributeResolved } from
 /**
  * データベースのデータを参照してIDを解決してくれるテーブルマネージャー
  */
-type ResolveTable = Map<string, IItemOfResolveTableToName>
+type ResolveTable = Map<string, ILabelledDocument>
 export class ControllerOfTableForResolvingID {
 
     //#NOTE キャッシュ。既に得たID-名前対応表を保存しておくことでFirestoreへの読み出しリクエスト回数を制限する。
     //#NOTE これ一つに全部まとめた方が良くない？
-    private gameSystem: ResolveTable = new Map<string, IItemOfResolveTableToName>();
-    private runner: ResolveTable = new Map<string, IItemOfResolveTableToName>();
-    private hashTag: ResolveTable = new Map<string, IItemOfResolveTableToName>();
-    private gameMode: ResolveTable = new Map<string, IItemOfResolveTableToName>();
-    private difficulty: ResolveTable = new Map<string, IItemOfResolveTableToName>();
-    private ability: ResolveTable = new Map<string, IItemOfResolveTableToName>();
-    private target: ResolveTable = new Map<string, IItemOfResolveTableToName>();
-    private abilityAttribute: ResolveTable = new Map<string, IItemOfResolveTableToName>();
-    private abilityAttributeFlag: ResolveTable = new Map<string, IItemOfResolveTableToName>();
+    private gameSystem: ResolveTable = new Map<string, ILabelledDocument>();
+    private runner: ResolveTable = new Map<string, ILabelledDocument>();
+    private hashTag: ResolveTable = new Map<string, ILabelledDocument>();
+    private gameMode: ResolveTable = new Map<string, ILabelledDocument>();
+    private difficulty: ResolveTable = new Map<string, ILabelledDocument>();
+    private ability: ResolveTable = new Map<string, ILabelledDocument>();
+    private target: ResolveTable = new Map<string, ILabelledDocument>();
+    private abilityAttribute: ResolveTable = new Map<string, ILabelledDocument>();
+    private abilityAttributeFlag: ResolveTable = new Map<string, ILabelledDocument>();
 
     private database: RecordDataBase;
 
@@ -33,7 +33,7 @@ export class ControllerOfTableForResolvingID {
 
     // #NOTE 基礎メソッド
     private async getName(id: string, lang: LanguageInApplication, cacheList: ResolveTable,
-        getDoc: (id: string) => Promise<IItemOfResolveTableToName>
+        getDoc: (id: string) => Promise<ILabelledDocument>
     ) {
         const result = (this.hashTag.has(id)) ? await cacheList.get(id) : cacheList.set(id, await getDoc(id)).get(id)
         if (result === undefined) throw new Error("予期しないエラーです。")
@@ -41,7 +41,7 @@ export class ControllerOfTableForResolvingID {
     }
     private async getNameBySID(gameSystemID: string, id: string, lang: LanguageInApplication,
         cacheList: ResolveTable,
-        getDoc: (gameSystemID: string, id: string) => Promise<IItemOfResolveTableToName>
+        getDoc: (gameSystemID: string, id: string) => Promise<ILabelledDocument>
     ) {
         const accessKey = `${gameSystemID}/${id}`
         const result = (this.hashTag.has(accessKey)) ? await cacheList.get(accessKey) : cacheList.set(accessKey, await getDoc(gameSystemID, id)).get(accessKey)
@@ -50,7 +50,7 @@ export class ControllerOfTableForResolvingID {
     }
     private async getNameBySIDMID(gameSystemID: string, gameModeID: string, id: string, lang: LanguageInApplication,
         cacheList: ResolveTable,
-        getDoc: (gameSystemID: string, gameModeID: string, id: string) => Promise<IItemOfResolveTableToName>
+        getDoc: (gameSystemID: string, gameModeID: string, id: string) => Promise<ILabelledDocument>
     ) {
         const accessKey = `${gameSystemID}/${gameModeID}/${id}`
         const result = (this.hashTag.has(accessKey)) ? await cacheList.get(accessKey) : cacheList.set(accessKey, await getDoc(gameSystemID, gameModeID, id)).get(accessKey)
@@ -59,7 +59,7 @@ export class ControllerOfTableForResolvingID {
     }
     private async getNameBySIDMIDAID(gameSystemID: string, gameModeID: string, abilityAttributeID: string, id: string, lang: LanguageInApplication,
         cacheList: ResolveTable,
-        getDoc: (gameSystemID: string, gameModeID: string, abilityAttributeID: string, id: string) => Promise<IItemOfResolveTableToName>
+        getDoc: (gameSystemID: string, gameModeID: string, abilityAttributeID: string, id: string) => Promise<ILabelledDocument>
     ) {
         const accessKey = `${gameSystemID}/${gameModeID}/${abilityAttributeID}/${id}`
         const result = (this.hashTag.has(accessKey)) ? await cacheList.get(accessKey) : cacheList.set(accessKey, await getDoc(gameSystemID, gameModeID, abilityAttributeID, id)).get(accessKey)

@@ -2,19 +2,19 @@ import { IReceivedDataAtServer_getList_UseSIdMIdAIdId } from "../../../../../src
 import { IReceivedDataAtServer_getlist_UseSIdMIdId } from "../../../../../src/ts/type/api/list/atServer_getlist/IReceivedDataAtServer_getlist_UseSIdMIdId";
 import { IReceivedDataAtServer_getlist_UseSIdId } from "../../../../../src/ts/type/api/list/atServer_getlist/IReceivedDataAtServer_getlist_UseSIdId";
 import { IReceivedDataAtServer_getlist_UseId } from "../../../../../src/ts/type/api/list/atServer_getlist/IReceivedDataAtServer_getlist_UseId";
-import { IItemOfResolveTableToName } from "../../../../../src/ts/type/list/IItemOfResolveTableToName";
+import { ILabelledDocument } from "../../../../../src/ts/type/list/ILabelledDocument";
 import { RecordDataBase } from "../../firestore/RecordDataBase";
 import { IReceivedDataAtClient_getlist } from "../../../../../src/ts/type/api/list/IReceivedDataAtClient_getlist";
 import { APIFunctions } from "../../../../../src/ts/type/api/relation";
  
-function searchBasedOnIDList<T extends IItemOfResolveTableToName>(inputIdList:string[],data:T[]):T[]{
+function searchBasedOnIDList<T extends ILabelledDocument>(inputIdList:string[],data:T[]):T[]{
     return inputIdList.map((id) => {
         const found = data.find( item => item.id === id)
         if (found === undefined) throw new Error(`番号${id}に対応するアイテムが存在しません。`)
         return found
     })
 }
-async function getList_UseId<T extends IItemOfResolveTableToName>(
+async function getList_UseId<T extends ILabelledDocument>(
     input:IReceivedDataAtServer_getlist_UseId, searchFunc:()=>Promise<T[]>):Promise<IReceivedDataAtClient_getlist<T>>{
 
     if (input.start === undefined) input.start = 0;
@@ -23,7 +23,7 @@ async function getList_UseId<T extends IItemOfResolveTableToName>(
     if ( input.id === undefined ) return {isSucceeded:true, result:result}
     return {isSucceeded:true,result:searchBasedOnIDList(input.id,result)}
 }
-async function getList_UseSIdId<T extends IItemOfResolveTableToName>(
+async function getList_UseSIdId<T extends ILabelledDocument>(
     input:IReceivedDataAtServer_getlist_UseSIdId, searchFunc:(gameSystemID:string)=>Promise<T[]>):Promise<IReceivedDataAtClient_getlist<T>>{
 
     if (input.start === undefined) input.start = 0;
@@ -32,7 +32,7 @@ async function getList_UseSIdId<T extends IItemOfResolveTableToName>(
     if ( input.id === undefined ) return {isSucceeded:true, result:result}
     return {isSucceeded:true,result:searchBasedOnIDList(input.id,result)}
 }
-async function getList_UseSIdMIdId<T extends IItemOfResolveTableToName>(
+async function getList_UseSIdMIdId<T extends ILabelledDocument>(
     input:IReceivedDataAtServer_getlist_UseSIdMIdId, searchFunc:(gameSystemID:string,gameModeID:string)=>Promise<T[]>):Promise<IReceivedDataAtClient_getlist<T>>{
     if (input.start === undefined) input.start = 0;
     const end = (input.limit === undefined) ? undefined : input.start + input.limit
@@ -40,7 +40,7 @@ async function getList_UseSIdMIdId<T extends IItemOfResolveTableToName>(
     if ( input.id === undefined ) return {isSucceeded:true, result:result}
     return {isSucceeded:true,result:searchBasedOnIDList(input.id,result)}
 }
-async function getList_UseSIdMIdAIdId<T extends IItemOfResolveTableToName>(
+async function getList_UseSIdMIdAIdId<T extends ILabelledDocument>(
     input:IReceivedDataAtServer_getList_UseSIdMIdAIdId, searchFunc:(gameSystemID:string,gameModeID:string,abilityAttributeId:string)=>Promise<T[]>):Promise<IReceivedDataAtClient_getlist<T>>{
     if (input.start === undefined) input.start = 0;
     const end = (input.limit === undefined) ? undefined : input.start + input.limit

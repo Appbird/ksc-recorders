@@ -1,7 +1,7 @@
 
-//#TODO GameModeRuleType,GameModeRuleClassのデータ型interfaceとそのラッパーオブジェクトをつくる。
-//#TODO [- HashTag,] GameModeRule, GameModeRuleClassを定義する
-//#TODO RecordDatabaseを削除する。
+//#CTODO GameModeRuleType,GameModeRuleClassのデータ型interfaceとそのラッパーオブジェクトをつくる。
+//#CTODO [- HashTag,] GameModeRule, GameModeRuleClassを定義する
+//#CTODO RecordDatabaseを削除する。
 //#TODO 周辺をこれらのリファクタリングに合わせて書き換える。
     //*> どこからでもインスタンスを作成することでデータベースにアクセスできるようになった点に注意。
     
@@ -23,7 +23,8 @@ import { RecordCollectionController } from "./RecordCollectionController";
 import { RunnerCollectionController } from "./RunnerCollectionController";
 import { TargetCollectionController } from "./TargetCollectionController";
 
-interface CollectionList{
+
+export interface CollectionList{
     gameSystem:GameSystemItemController,
     gameMode:GameModeItemController,
     difficulty:DifficultyCollectionController
@@ -46,12 +47,13 @@ const CollectionListConstructors = new Map<keyof CollectionList, new (...data: a
 ])
 
 export function generateCollectionController<T extends keyof CollectionList>(collectionName:T,{gameSystemEnv,abilityAttributeID}:{
-    gameSystemEnv:{
+    gameSystemEnv?:{
         gameSystemID?:string,
         gameModeID?:string
     },
     abilityAttributeID?:string
-}):IFirestoreCollectionController<any>{
+}):IFirestoreCollectionController<CollectionList[T] extends IFirestoreCollectionController<infer R> ? R : any>{
+    
     const CollectionController = CollectionListConstructors.get(collectionName)
     if (CollectionController === undefined) throw new Error("[generateCollectionController] collectionName is invalid.")
     switch(collectionName){
@@ -60,20 +62,21 @@ export function generateCollectionController<T extends keyof CollectionList>(col
             return new CollectionController()
         
         case "gameMode":
-            if (!gameSystemEnv.gameSystemID) throw new Error("[generateCollectionController] gameSystemEnv.gameSystemID is not defined.")
+            if (!gameSystemEnv || !gameSystemEnv.gameSystemID) throw new Error("[generateCollectionController] gameSystemEnv.gameSystemID is not defined.")
             return new CollectionController(gameSystemEnv.gameSystemID)
 
         case "difficulty":
         case "ability":
         case "target":
         case "abilityAttribute":
-            if (!gameSystemEnv.gameSystemID || !gameSystemEnv.gameModeID) throw new Error("[generateCollectionController] Either gameSystemEnv.gameSystemID or .gameModeID is not defined.")
+            if (!gameSystemEnv || !gameSystemEnv.gameSystemID || !gameSystemEnv.gameModeID) throw new Error("[generateCollectionController] Either gameSystemEnv.gameSystemID or .gameModeID is not defined.")
             return new CollectionController(gameSystemEnv.gameSystemID,gameSystemEnv.gameModeID)
     
         case "abilityAttributeFlag":
-            if (!gameSystemEnv.gameSystemID || !gameSystemEnv.gameModeID || !abilityAttributeID) throw new Error("[generateCollectionController] Either gameSystemEnv.gameSystemID, .gameModeID or .abilityAttributeID is not defined.")
+            if (!gameSystemEnv || !gameSystemEnv.gameSystemID || !gameSystemEnv.gameModeID || !abilityAttributeID) throw new Error("[generateCollectionController] Either gameSystemEnv.gameSystemID, .gameModeID or .abilityAttributeID is not defined.")
             return new CollectionController(gameSystemEnv.gameSystemID,gameSystemEnv.gameModeID,abilityAttributeID)
         default:
             throw new Error("[generateCollectionController] invalid CollectionName.")
     }
-    }
+}
+

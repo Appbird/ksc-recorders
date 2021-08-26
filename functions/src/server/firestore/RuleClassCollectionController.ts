@@ -8,10 +8,10 @@ type HandledType = IRuleClassItem
 export class RuleClassCollectionController implements IFirestoreCollectionController<HandledType> {
     readonly ref: FirebaseFirestore.CollectionReference;
     constructor(
-        gameSystemID:string,gameModeID:string,
+        id:string,
         private transaction?:Transaction    
     ) {
-        this.ref = firestoreCollectionUtility.getGameModeItemRef(gameSystemID,gameModeID).collection("rules")
+        this.ref = firestoreCollectionUtility.getRuleAttributeCollectionRef().doc(id).collection("classes")
     }
     getCollection(): Promise<HandledType[]> {
         return firestoreCollectionUtility.getCollection<HandledType>(this.ref,this.transaction);

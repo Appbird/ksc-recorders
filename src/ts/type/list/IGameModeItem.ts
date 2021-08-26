@@ -1,4 +1,5 @@
 import { icooonResolvable } from "../foundation/icooonResolvable";
+import { MultiLanguageString } from "../foundation/MultiLanguageString";
 import { IRecord } from "../record/IRecord";
 import { IAbilityItem } from "./IAbilityItem";
 import { IGameDifficultyItem } from "./IGameDifficultyItem";
@@ -21,6 +22,7 @@ export interface IGameModeItemWithoutCollections extends ILabelledDocument,icooo
     gameSystemID:string;
     UnverifiedRecordNumber?:number;
     DiscordRoleID?:string;
+    rules?:RuleDescription[]
 }
 export interface CollectionsInIGameModeItem{
     targets: ITargetItem[];
@@ -30,3 +32,9 @@ export interface CollectionsInIGameModeItem{
     offers:IStoredOfferedRecord[];
 }
 
+
+export interface RuleDescription{
+    id:string,
+    appliedClassIDs:string[],
+    noteInMarkdown:MultiLanguageString
+}

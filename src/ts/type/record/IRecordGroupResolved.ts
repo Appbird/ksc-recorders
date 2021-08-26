@@ -4,7 +4,7 @@ export interface IRecordGroupResolved {
     groupName: string;
     groupSubName?:string;
     records:IRecordInShortResolved[];
-    lastPost: number;
+    lastPost: number|undefined;
     numberOfRecords:number;
     numberOfRunners:number;
 }

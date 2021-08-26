@@ -20,8 +20,6 @@ import { APIFunctions } from "../../../../src/ts/type/api/relation";
 import { IReceivedData, IReceivedDataAtClient, IReceivedDataAtServer } from "../../../../src/ts/type/api/transmissionBase";
 import { ValidateFunction } from '../../../../src/ts/type/api/ValidateFunction';
 import { RecordDataBase } from "../firestore/RecordDataBase";
-import { abilities, abilityAttributeFlags, abilityAttributes, difficulties, gameModes, gameSystems, hashTags, hashTags_onlyApproved, runners, targets } from "./list/getList";
-import { ability, abilityAttribute, abilityAttributeFlag, difficulty, gameMode, gameSystem, hashTag, runner, target } from "./list/pickUp";
 import { detail } from "./record/detail";
 import { search } from "./record/search";
 import { readNotification } from "./readNotification";
@@ -31,6 +29,7 @@ import { modify } from "./record/modify";
 import { rawdata } from "./record/rawdata";
 import { moderate } from "./record/moderate";
 import { addDiscordRoleID } from "./webhooks/addDiscordRoleID";
+import { getList } from "./list/getList";
 
 class APIList{
     private apiDefinition = new Map<string,apiInterface<IReceivedData>>()
@@ -42,8 +41,9 @@ class APIList{
         return this.apiDefinition.forEach(callback)
     }
 }
+//#TODO ここのパラメータの型を書き換えたことによる修正
+type ProcessFunction<AtServer extends IReceivedDataAtServer,AtClient extends IReceivedDataAtClient > = (input:AtServer) => Promise<AtClient>;
 
-type ProcessFunction<AtServer extends IReceivedDataAtServer,AtClient extends IReceivedDataAtClient > = (recordDatabase:RecordDataBase,input:AtServer) => Promise<AtClient>;
 export type PrivilegeType = "comiteeMemberOrOwner"|"onlyCommiteeMember"|"everyone";
 interface apiInterface<Received extends IReceivedData>{    
     validator:ValidateFunction<Received["atServer"]>
@@ -61,10 +61,11 @@ apiList.set<APIFunctions["record_delete"]>  ("/record/delete", isIReceivedDataAt
 apiList.set<APIFunctions["record_modify"]>  ("/record/modify", isIReceivedDataAtServer_recordModify, modify,{privilege:"comiteeMemberOrOwner"})
 apiList.set<APIFunctions["record_moderate"]>  ("/record/moderate", isIReceivedDataAtServer_recordModerate, moderate,{privilege:"onlyCommiteeMember"})
 
-apiList.set<APIFunctions["list_gameSystems"]>  ("/list/gameSystems", isIReceivedDataAtServer_getlist_UseId, gameSystems)
-apiList.set<APIFunctions["list_runners"]>      ("/list/runners", isIReceivedDataAtServer_getlist_UseId, runners)
-apiList.set<APIFunctions["list_gameModes"]>    ("/list/gameModes", isIReceivedDataAtServer_getlist_UseSIdId, gameModes)
-apiList.set<APIFunctions["list_hashTags"]>     ("/list/hashTags",isIReceivedDataAtServer_getlist_UseSIdId,hashTags)
+apiList.set<APIFunctions["list_gameSystems"]>  ("/list/gameSystems", isIReceivedDataAtServer_getlist_UseId, getList("gameSystem"))
+apiList.set<APIFunctions["list_runners"]>      ("/list/runners", isIReceivedDataAtServer_getlist_UseId, getList("runner"))
+apiList.set<APIFunctions["list_gameModes"]>    ("/list/gameModes", isIReceivedDataAtServer_getlist_UseSIdId, getList("gameMode"))
+apiList.set<APIFunctions["list_hashTags"]>     ("/list/hashTags",isIReceivedDataAtServer_getlist_UseSIdId,getList())
+//#TODO HashTag_onlyApprovedの実装
 apiList.set<APIFunctions["list_hashTags_onlyApproved"]>("/list/hashTags/onlyApproved",isIReceivedDataAtServer_getlist_UseSIdId,hashTags_onlyApproved)
 apiList.set<APIFunctions["list_difficulties"]> ("/list/difficulties", isIReceivedDataAtServer_getlist_UseSIdMIdId, difficulties)
 apiList.set<APIFunctions["list_abilities"]>    ("/list/abilities", isIReceivedDataAtServer_getlist_UseSIdMIdId, abilities)

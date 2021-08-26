@@ -6,27 +6,36 @@ import { IFirestoreCollectionController, WithoutID } from "./IFirestoreCollectio
 type HandledType = IAbilityAttributeFlagItem
 
 export class AbilityAttributeFlagsCollectiCollectionController implements IFirestoreCollectionController<HandledType> {
-    readonly ref: FirebaseFirestore.CollectionReference;
+    private readonly baseRef:FirebaseFirestore.CollectionReference;
+    private _ref: FirebaseFirestore.CollectionReference;
+    get ref(){
+        return this._ref
+    }
     constructor(gameSystemID:string,gameModeID:string,attributeID:string,
         private transaction?:Transaction) {
-        this.ref = firestoreCollectionUtility.getGameModeItemRef(gameSystemID,gameModeID).collection("attributes").doc(attributeID).collection("abilityAttributes");
+        this.baseRef = firestoreCollectionUtility.getGameModeItemRef(gameSystemID,gameModeID).collection("attributes")
+        this._ref = this.baseRef.doc(attributeID).collection("abilityAttributes");
+    }
+    changeRef(attributeID:string){
+        this._ref = this.baseRef.doc(attributeID).collection("abilityAttributes");
+        return this;
     }
     getCollection(): Promise<HandledType[]> {
-        return firestoreCollectionUtility.getCollection<HandledType>(this.ref,this.transaction);
+        return firestoreCollectionUtility.getCollection<HandledType>(this._ref,this.transaction);
     }
     getInfo(id: string): Promise<HandledType> {
-        return firestoreCollectionUtility.getDoc<HandledType>(this.ref.doc(id),this.transaction);
+        return firestoreCollectionUtility.getDoc<HandledType>(this._ref.doc(id),this.transaction);
     }
     async add(object: WithoutID<HandledType>): Promise<void> {
-        await firestoreCollectionUtility.addDoc<HandledType>(this.ref, object,this.transaction);
+        await firestoreCollectionUtility.addDoc<HandledType>(this._ref, object,this.transaction);
     }
     async modify(id: string, object: HandledType): Promise<void> {
-        await firestoreCollectionUtility.modifyDoc<HandledType>(this.ref.doc(id), object,this.transaction);
+        await firestoreCollectionUtility.modifyDoc<HandledType>(this._ref.doc(id), object,this.transaction);
     }
     delete(id: string): Promise<HandledType> {
-        return firestoreCollectionUtility.deleteDoc<HandledType>(this.ref.doc(id),this.transaction);
+        return firestoreCollectionUtility.deleteDoc<HandledType>(this._ref.doc(id),this.transaction);
     }
     async update(id: string, object: PartialValueWithFieldValue<HandledType>): Promise<void> {
-        await firestoreCollectionUtility.updateDoc(this.ref.doc(id), object,this.transaction);
+        await firestoreCollectionUtility.updateDoc(this._ref.doc(id), object,this.transaction);
     }
 }

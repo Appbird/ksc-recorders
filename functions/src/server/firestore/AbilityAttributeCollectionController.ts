@@ -10,7 +10,7 @@ export class AbilityAttributeCollectionController implements IFirestoreCollectio
     constructor(gameSystemID:string,gameModeID:string,
         private transaction?:Transaction    
     ) {
-        this.ref = firestoreCollectionUtility.getGameModeItemRef(gameSystemID,gameModeID).collection("attributes");
+        this.ref = firestoreCollectionUtility.getGameModeItemRef(gameSystemID,gameModeID).collection("abilityAttributes");
     }
     getCollection(): Promise<HandledType[]> {
         return firestoreCollectionUtility.getCollection<HandledType>(this.ref,this.transaction);

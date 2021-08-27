@@ -37,7 +37,7 @@ export interface CollectionList{
     runner:RunnerCollectionController,
     record:RecordCollectionController,
     hashTag:HashTagCollectionController,
-    hashTagOnlyApproved:HashTagCollectionController
+    hashTagOnlyApproved:HashTagCollectionController,
 }
 const CollectionListConstructors = new Map<keyof CollectionList, new (...data: any[]) => IFirestoreCollectionController<any>>([
     ["gameSystem",GameSystemItemController],

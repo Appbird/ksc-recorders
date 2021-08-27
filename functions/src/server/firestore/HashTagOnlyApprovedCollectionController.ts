@@ -9,7 +9,7 @@ export class HashTagOnlyApprovedCollectionController implements IFirestoreCollec
     constructor(gameSystemID:string,
         private transaction?:FirebaseFirestore.Transaction
     ) {
-        this.ref = firestoreCollectionUtility.getGameSystemItemRef(gameSystemID).collection("hashTags");
+        this.ref = firestoreCollectionUtility.getGameSystemItemRef(gameSystemID).collection("tags");
     }
     getCollection(): Promise<HandledType[]> {
         return firestoreCollectionUtility.getCollection<HandledType>(this.ref.where("isApproved","==",true),this.transaction);

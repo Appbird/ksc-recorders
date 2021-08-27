@@ -12,7 +12,8 @@ export class SelectTagChoicesCapsuled implements IView {
         {
             language,
             disable = false, 
-            placeholderValue = undefined        }: {
+            placeholderValue = undefined
+        } : {
             placeholderValue?: string; language: LanguageInApplication; disable?: boolean; 
         }
     ) {

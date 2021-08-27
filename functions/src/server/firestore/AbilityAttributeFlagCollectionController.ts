@@ -13,11 +13,11 @@ export class AbilityAttributeFlagsCollectiCollectionController implements IFires
     }
     constructor(gameSystemID:string,gameModeID:string,attributeID:string,
         private transaction?:Transaction) {
-        this.baseRef = firestoreCollectionUtility.getGameModeItemRef(gameSystemID,gameModeID).collection("attributes")
-        this._ref = this.baseRef.doc(attributeID).collection("abilityAttributes");
+        this.baseRef = firestoreCollectionUtility.getGameModeItemRef(gameSystemID,gameModeID).collection("abilityAttributes")
+        this._ref = this.baseRef.doc(attributeID).collection("flags");
     }
     changeRef(attributeID:string){
-        this._ref = this.baseRef.doc(attributeID).collection("abilityAttributes");
+        this._ref = this.baseRef.doc(attributeID).collection("flags");
         return this;
     }
     getCollection(): Promise<HandledType[]> {

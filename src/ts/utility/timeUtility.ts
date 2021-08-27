@@ -12,7 +12,8 @@ export function converseTimeIntoMiliSeconds(time:string):number{
     
     return time.split(/[:.]/).map(ele => Number(ele)).reduce((result,value,index) => result + value*([6000,100,1][index]),0)
 }
-export function convertNumberIntoDateString(num:number):string{
+export function convertNumberIntoDateString(num?:number):string{
+    if (num === undefined) return "----"
     const date = new Date(num);
     return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()} ${WriteNumberIn2Digits(date.getHours())}:${WriteNumberIn2Digits(date.getMinutes())}:${WriteNumberIn2Digits(date.getSeconds())}`
 }

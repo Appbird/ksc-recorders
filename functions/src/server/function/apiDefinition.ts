@@ -81,6 +81,8 @@ apiList.set<APIFunctions["list_ability"]>    ("/list/ability", isIReceivedDataAt
 apiList.set<APIFunctions["list_target"]>     ("/list/target", isIReceivedDataAtServer_pickUp_UseSIdMIdId, pickUp("target"))
 apiList.set<APIFunctions["list_abilityAttribute"]>     ("/list/abilityAttribute", isIReceivedDataAtServer_pickUp_UseSIdMIdId, pickUp("abilityAttribute"))
 apiList.set<APIFunctions["list_abilityAttributeFlag"]>     ("/list/abilityAttributeFlag", isIReceivedDataAtServer_pickUp_UseSIdMIdAIdId, pickUp("abilityAttributeFlag"))
+apiList.set<APIFunctions["list_abilityAttribute"]>     ("/list/abilityAttribute", isIReceivedDataAtServer_pickUp_UseSIdMIdId, pickUp("abilityAttribute"))
+apiList.set<APIFunctions["list_abilityAttributeFlag"]>     ("/list/abilityAttributeFlag", isIReceivedDataAtServer_pickUp_UseSIdMIdAIdId, pickUp("abilityAttributeFlag"))
 
 
 apiList.set<APIFunctions["notification_read"]>  ("/notification/read", isIReceivedDataAtServer_notificationRead, readNotification)

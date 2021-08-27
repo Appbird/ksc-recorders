@@ -1,5 +1,5 @@
-import { recordDataBase } from "../../firestore/RecordDataBase";
+import { RunnerCollectionController } from "../../firestore/RunnerCollectionController";
 
 export async function isCommiteeMember(uid:string){
-    return (await recordDataBase.getRunnerInfo(uid)).isCommitteeMember
+    return (await new RunnerCollectionController().getInfo(uid)).isCommitteeMember
 }

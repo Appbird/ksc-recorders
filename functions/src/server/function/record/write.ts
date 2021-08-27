@@ -2,7 +2,7 @@ import { APIFunctions } from "../../../../../src/ts/type/api/relation";
 import { IRecord } from "../../../../../src/ts/type/record/IRecord";
 import { AbilityAttributeCollectionController } from "../../firestore/AbilityAttributeCollectionController";
 import { GameModeItemController } from "../../firestore/GameModeItemController";
-import { WithoutID } from "../../firestore/IFirestoreCollectionController";
+import { WithoutID } from "../../firestore/base/IFirestoreCollectionController";
 import { RecordCollectionController } from "../../firestore/RecordCollectionController";
 import { RecordResolver } from "../../wraper/RecordResolver";
 import { authentication } from "../foundation/auth";

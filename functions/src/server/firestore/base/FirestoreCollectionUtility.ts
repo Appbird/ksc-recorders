@@ -1,4 +1,4 @@
-import { firebaseAdmin, PartialValueWithFieldValue } from "../function/firebaseAdmin";
+import { firebaseAdmin, PartialValueWithFieldValue } from "../../function/firebaseAdmin";
 import { WithoutID } from "./IFirestoreCollectionController";
 
 const base = {
@@ -17,13 +17,14 @@ const base = {
     getGameModeItemRef(gameSystemID:string,gameModeID:string){
         return this.getGameSystemItemRef(gameSystemID).collection("modes").doc(gameModeID);
     },
-    runTransaction:firebaseAdmin.firestore.runTransaction,
+    runTransaction:(arg: (transaction: FirebaseFirestore.Transaction) => Promise<any>) => firebaseAdmin.firestore.runTransaction(arg),
     fieldValue:firebaseAdmin.firestoreFieldValue
 }
+type CollectionORQuery = FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>|FirebaseFirestore.Query<FirebaseFirestore.DocumentData>
 export const firestoreCollectionUtility = {
     ...base,
-    async getCollection<T>(ref:FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>|FirebaseFirestore.Query<FirebaseFirestore.DocumentData>,transaction:FirebaseFirestore.Transaction|undefined):Promise<T[]>{
-        if (transaction !== undefined) throw new Error("This method's behabior with transaction is not implemented.")
+    async getCollection<T>(ref:CollectionORQuery,transaction:FirebaseFirestore.Transaction|undefined):Promise<T[]>{
+        if (transaction) return await firestoreTransactionUtility.getCollection(ref,transaction)
         const result = await ref.get()
         if (result.empty) return []
         
@@ -41,6 +42,12 @@ export const firestoreCollectionUtility = {
         if (!result.exists) return undefined;
         return result.data() as T;
     },
+    async getDocWithNullPossibility<T>(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>,transaction:FirebaseFirestore.Transaction|undefined):Promise<T|null>{
+        if (transaction) return await firestoreTransactionUtility.getDocWithNullPossibility(ref,transaction)
+        const result = await ref.get()
+        if (!result.exists) return null;
+        return result.data() as T;
+    },
     async addDoc<T>(ref:FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>,object:WithoutID<T>,transaction:FirebaseFirestore.Transaction|undefined):Promise<string>{
         if (transaction) return await firestoreTransactionUtility.addDoc(ref,object,transaction)
         const result = ref.doc()
@@ -55,17 +62,24 @@ export const firestoreCollectionUtility = {
         if (transaction) return await firestoreTransactionUtility.updateDoc(ref,object,transaction)
         await ref.update(object)
     },
-    async deleteDoc<T>(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>,transaction:FirebaseFirestore.Transaction|undefined):Promise<T>{
-        if (transaction) return await firestoreTransactionUtility.deleteDoc(ref,transaction)
+    async getAndDeleteDoc<T>(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>,transaction:FirebaseFirestore.Transaction|undefined):Promise<T>{
+        if (transaction) return await firestoreTransactionUtility.getAndDeleteDoc(ref,transaction)
         const data = this.getDoc<T>(ref,transaction)
         await ref.delete();
         return data;
     },
+    async deleteDoc(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>,transaction:FirebaseFirestore.Transaction|undefined):Promise<void>{
+        if (transaction) return await firestoreTransactionUtility.deleteDoc(ref,transaction)
+        await ref.delete();
+    },
 }
 
 const firestoreTransactionUtility = {
-    async getCollection<T>(ref:FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>|FirebaseFirestore.Query<FirebaseFirestore.DocumentData>,transaction:FirebaseFirestore.Transaction):Promise<T[]>{
-        throw new Error("This method is not implemented.")
+
+    async getCollection<T>(ref:CollectionORQuery,transaction:FirebaseFirestore.Transaction):Promise<T[]>{
+        const result = await transaction.get(ref)
+        if (result.empty) return []
+        return result.docs.map(doc => doc.data()) as T[];
     },
     async getDoc<T>(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>,transaction:FirebaseFirestore.Transaction):Promise<T>{
         const result = await transaction.get(ref)
@@ -75,6 +89,11 @@ const firestoreTransactionUtility = {
     async getDocWithPossibilityOfUndefined<T>(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>,transaction:FirebaseFirestore.Transaction):Promise<T|undefined>{
         const result = await transaction.get(ref)
         if (!result.exists) return undefined
+        return result.data() as T;
+    },
+    async getDocWithNullPossibility<T>(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>,transaction:FirebaseFirestore.Transaction):Promise<T|null>{
+        const result = await transaction.get(ref)
+        if (!result.exists) return null
         return result.data() as T;
     },
     async addDoc<T>(ref:FirebaseFirestore.CollectionReference<FirebaseFirestore.DocumentData>,object:T,transaction:FirebaseFirestore.Transaction):Promise<string>{
@@ -88,9 +107,12 @@ const firestoreTransactionUtility = {
     async updateDoc<T>(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>,object:PartialValueWithFieldValue<T>,transaction:FirebaseFirestore.Transaction):Promise<void>{
         await transaction.update(ref,object)
     },
-    async deleteDoc<T>(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>,transaction:FirebaseFirestore.Transaction):Promise<T>{
+    async getAndDeleteDoc<T>(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>,transaction:FirebaseFirestore.Transaction):Promise<T>{
         const data = this.getDoc<T>(ref,transaction)
         await transaction.delete(ref)
         return data;
+    },
+    async deleteDoc(ref:FirebaseFirestore.DocumentReference<FirebaseFirestore.DocumentData>,transaction:FirebaseFirestore.Transaction):Promise<void>{
+        await transaction.delete(ref)
     },
 }

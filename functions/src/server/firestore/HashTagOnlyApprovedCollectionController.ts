@@ -1,6 +1,6 @@
 import { IHashTagItem } from "../../../../src/ts/type/list/IGameSystemInfo";
-import { firestoreCollectionUtility } from "./FirestoreCollectionUtility";
-import { IFirestoreCollectionController } from "./IFirestoreCollectionController";
+import { firestoreCollectionUtility } from "./base/FirestoreCollectionUtility";
+import { IFirestoreCollectionController } from "./base/IFirestoreCollectionController";
 
 type HandledType = IHashTagItem
 

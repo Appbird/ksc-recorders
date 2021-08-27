@@ -12,18 +12,18 @@
 //#TODO デバッグ
     //*> record/write,delete,modify,verifyがきちんと働くかチェック。
 
-import { AbilityAttributeCollectionController } from "./AbilityAttributeCollectionController";
-import { AbilityAttributeFlagsCollectiCollectionController } from "./AbilityAttributeFlagCollectionController";
-import { AbilityCollectionController } from "./AbilityCollectionController";
-import { DifficultyCollectionController } from "./DifficultyCollectionController";
-import { GameModeItemController } from "./GameModeItemController";
-import { GameSystemItemController } from "./GameSystemController";
-import { HashTagCollectionController } from "./HashTagCollectionController";
-import { HashTagOnlyApprovedCollectionController } from "./HashTagOnlyApprovedCollectionController";
+import { AbilityAttributeCollectionController } from "../AbilityAttributeCollectionController";
+import { AbilityAttributeFlagsCollectiCollectionController } from "../AbilityAttributeFlagCollectionController";
+import { AbilityCollectionController } from "../AbilityCollectionController";
+import { DifficultyCollectionController } from "../DifficultyCollectionController";
+import { GameModeItemController } from "../GameModeItemController";
+import { GameSystemItemController } from "../GameSystemController";
+import { HashTagCollectionController } from "../HashTagCollectionController";
+import { HashTagOnlyApprovedCollectionController } from "../HashTagOnlyApprovedCollectionController";
 import { IFirestoreCollectionController } from "./IFirestoreCollectionController";
-import { RecordCollectionController } from "./RecordCollectionController";
-import { RunnerCollectionController } from "./RunnerCollectionController";
-import { TargetCollectionController } from "./TargetCollectionController";
+import { RecordCollectionController } from "../RecordCollectionController";
+import { RunnerCollectionController } from "../RunnerCollectionController";
+import { TargetCollectionController } from "../TargetCollectionController";
 
 
 export interface CollectionList{

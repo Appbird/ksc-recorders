@@ -3,10 +3,8 @@ import { ScoreType } from "../../../../src/ts/type/list/IGameModeItem";
 import { IRecord } from "../../../../src/ts/type/record/IRecord";
 import { IRunner } from "../../../../src/ts/type/record/IRunner";
 import { PartialValueWithFieldValue } from "../function/firebaseAdmin";
-import { firestoreCollectionUtility } from "./FirestoreCollectionUtility";
-import { IFirestoreCollectionController, WithoutID } from "./IFirestoreCollectionController";
-import { RecordCollectionController } from "./RecordCollectionController";
-import { RunnerCollectionController } from "./RunnerCollectionController";
+import { firestoreCollectionUtility } from "./base/FirestoreCollectionUtility";
+import { IFirestoreCollectionController, WithoutID } from "./base/IFirestoreCollectionController";
 
 interface IRecordTableItem {
     target__ability:string,
@@ -31,6 +29,9 @@ export class TableCollectionController implements IFirestoreCollectionController
     getInfo(id: string): Promise<IRecordTableItem> {
         return firestoreCollectionUtility.getDoc<IRecordTableItem>(this.ref.doc(id),this.transaction);
     }
+    getInfoWithNullPossibility(id: string): Promise<IRecordTableItem|null> {
+       return firestoreCollectionUtility.getDocWithNullPossibility<IRecordTableItem>(this.ref.doc(id),this.transaction)
+    }
     add(object: WithoutID<IRecordTableItem>): Promise<string> {
         return firestoreCollectionUtility.addDoc<IRecordTableItem>(this.ref, object,this.transaction);
     }
@@ -38,7 +39,7 @@ export class TableCollectionController implements IFirestoreCollectionController
         await firestoreCollectionUtility.modifyDoc<IRecordTableItem>(this.ref.doc(id), object,this.transaction);
     }
     delete(id: string): Promise<IRecordTableItem> {
-        return firestoreCollectionUtility.deleteDoc<IRecordTableItem>(this.ref.doc(id),this.transaction);
+        return firestoreCollectionUtility.getAndDeleteDoc<IRecordTableItem>(this.ref.doc(id),this.transaction);
     }
     async update(id: string, object: PartialValueWithFieldValue<IRecordTableItem>): Promise<void> {
         await firestoreCollectionUtility.updateDoc(this.ref.doc(id), object, this.transaction);
@@ -47,12 +48,12 @@ export class TableCollectionController implements IFirestoreCollectionController
         if (abilityIDs.length !== 1) return;
         return this.getInfo(`${targetID}__${abilityIDs[0]}`)
     }
-    async setNewTableCell(record:IRecord,runner:IRunner,scoreType:ScoreType){
+    async setNewTableCell(record:IRecord,runner:IRunner,scoreType:ScoreType,itemInFastestTable?:IRecordTableItem|null){
         const rr = record.regulation;
         if (rr.abilityIDs.length !== 1) return;
         const key = `${rr.targetID}__${rr.abilityIDs[0]}`
-        const itemOfFastestTable = await firestoreCollectionUtility.getDocWithPossibilityOfUndefined<IRecordTableItem>(this.ref.doc(key),this.transaction)
-        if (itemOfFastestTable !== undefined){
+        const itemOfFastestTable = (itemInFastestTable !== undefined) ? itemInFastestTable : await firestoreCollectionUtility.getDocWithNullPossibility<IRecordTableItem>(this.ref.doc(key),this.transaction)
+        if (itemOfFastestTable !== null){
             const fastestScore = itemOfFastestTable.score
             if (!(
                 (scoreType === "score" && fastestScore < record.score) || (scoreType === "time" && fastestScore > record.score)
@@ -70,30 +71,22 @@ export class TableCollectionController implements IFirestoreCollectionController
         })
     }
 
-    async refreshFastestTableWhenRemoving(record:IRecord,scoreType:ScoreType){
+    async refreshFastestTableWhenRemoving(record:IRecord,fastestRecord:IRecord|undefined,runnerOfFastestRecord:IRunner){
         const rr = record.regulation;
         const key = `${rr.targetID}__${rr.abilityIDs[0]}`
         if (rr.abilityIDs.length !== 1) return;
-        const itemOfFastestTable = await firestoreCollectionUtility.getDoc<IRecordTableItem>(this.ref.doc(key),this.transaction);
-        if (itemOfFastestTable === undefined || record.id !== itemOfFastestTable.recordID) return;
+        if (fastestRecord === undefined || record.id !== fastestRecord.id) return;
         this.delete(key)
-        await this.refindFastestRecord(record,scoreType)
+        await this.refindFastestRecord(record,fastestRecord,runnerOfFastestRecord)
     }
 
-    async refindFastestRecord(record:IRecord,scoreType:ScoreType){
+    async refindFastestRecord(record:IRecord,fastestRecord:IRecord,runnerOfFastestRecord:IRunner){
         const rr = record.regulation;
         if (rr.abilityIDs.length !== 1) return;
         const rrg = rr.gameSystemEnvironment;
         const tableID = `${rr.targetID}__${rr.abilityIDs[0]}`
         if (rrg.gameSystemID !== this.gameSystemID || rrg.gameModeID !== this.gameModeID) throw new Error("rrg.gameSystemID !== this.gameSystemID || rrg.gameModeID !== this.gameModeID")
 
-
-        
-        const recordsInSameRegulation = await (new RecordCollectionController(rrg.gameSystemID,rrg.gameModeID)).getWithCondition(decideOrder(scoreType),"AllowForOrder",rr.abilityIDs,[rr.targetID],[])
-        if (recordsInSameRegulation.length === 0) return;
-        const fastestRecord = recordsInSameRegulation[0];
-        const runnerOfFastestRecord = await (new RunnerCollectionController(this.transaction)).getInfo(fastestRecord.runnerID);
-        
         this.modify(tableID,{
             target__ability:tableID,
             score:fastestRecord.score,
@@ -104,12 +97,5 @@ export class TableCollectionController implements IFirestoreCollectionController
             date:fastestRecord.timestamp_post,
             recordID:fastestRecord.id,
         })
-    }
-}
-
-function decideOrder(type:ScoreType){
-    switch(type){
-        case "score": return "HigherFirst";
-        case "time":  return "LowerFirst";
     }
 }

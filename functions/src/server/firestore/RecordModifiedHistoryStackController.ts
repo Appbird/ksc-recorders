@@ -1,7 +1,7 @@
 import { ModifiedHistoryStack } from "../../../../src/ts/type/record/IRecord";
 import { PartialValueWithFieldValue, Transaction } from "../function/firebaseAdmin";
-import { firestoreCollectionUtility } from "./FirestoreCollectionUtility";
-import { IFirestoreCollectionController, WithoutID } from "./IFirestoreCollectionController";
+import { firestoreCollectionUtility } from "./base/FirestoreCollectionUtility";
+import { IFirestoreCollectionController, WithoutID } from "./base/IFirestoreCollectionController";
 
 type HandledType = ModifiedHistoryStack
 
@@ -25,12 +25,12 @@ export class RecordModifiedHistoryStackController implements IFirestoreCollectio
         await firestoreCollectionUtility.modifyDoc<HandledType>(this.ref.doc(id), object,this.transaction);
     }
     delete(id: string): Promise<HandledType> {
-        return firestoreCollectionUtility.deleteDoc<HandledType>(this.ref.doc(id),this.transaction);
+        return firestoreCollectionUtility.getAndDeleteDoc<HandledType>(this.ref.doc(id),this.transaction);
     }
     async update(id: string, object:PartialValueWithFieldValue<HandledType>): Promise<void> {
         await firestoreCollectionUtility.updateDoc(this.ref.doc(id), object,this.transaction);
     }
     async deleteAll(): Promise<void>{
-        await Promise.all((await this.ref.listDocuments()).map(doc => doc.delete()))
+        await Promise.all((await this.ref.listDocuments()).map(doc => firestoreCollectionUtility.deleteDoc(this.ref.doc(doc.id),this.transaction)))
     }
 }

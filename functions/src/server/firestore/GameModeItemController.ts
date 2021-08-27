@@ -1,7 +1,7 @@
 import { IGameModeItemWithoutCollections } from "../../../../src/ts/type/list/IGameModeItem";
 import { PartialValueWithFieldValue, Transaction } from "../function/firebaseAdmin";
-import { firestoreCollectionUtility } from "./FirestoreCollectionUtility";
-import { IFirestoreCollectionController, WithoutID } from "./IFirestoreCollectionController";
+import { firestoreCollectionUtility } from "./base/FirestoreCollectionUtility";
+import { IFirestoreCollectionController, WithoutID } from "./base/IFirestoreCollectionController";
 
 type HandledType = IGameModeItemWithoutCollections
 
@@ -25,30 +25,31 @@ export class GameModeItemController implements IFirestoreCollectionController<Ha
         await firestoreCollectionUtility.modifyDoc<HandledType>(this.ref.doc(id), object,this.transaction);
     }
     delete(id: string): Promise<HandledType> {
-        return firestoreCollectionUtility.deleteDoc<HandledType>(this.ref.doc(id),this.transaction);
+        return firestoreCollectionUtility.getAndDeleteDoc<HandledType>(this.ref.doc(id),this.transaction);
     }
     async update(id: string, object: PartialValueWithFieldValue<HandledType>): Promise<void> {
         await firestoreCollectionUtility.updateDoc(this.ref.doc(id), object,this.transaction);
     }
-    async incrementCounterWhenRecordIsSubmitted(id:string,incrementRunnersNumber:boolean){
+    async incrementCounterWhenRecordIsSubmitted(id:string,runnerID:string,incrementRunnersNumber:boolean){
         this.update(id,{
             recordsNumber: firestoreCollectionUtility.fieldValue.increment(1),
             UnverifiedRecordNumber: firestoreCollectionUtility.fieldValue.increment(1),
-            runnersNumber: firestoreCollectionUtility.fieldValue.increment(incrementRunnersNumber ? 1:0),
-            dateOfLatestPost: firestoreCollectionUtility.fieldValue.serverTimestamp()
+            dateOfLatestPost: Date.now(),
+            runnerIDList: firestoreCollectionUtility.fieldValue.arrayUnion(runnerID)
+            
         })
     }
     async incrementUnverifiedRecordNumber(id:string,mode:"+"|"-"){
         this.update(id,{
-            runnersNumber: firestoreCollectionUtility.fieldValue.increment(mode === "+" ? 1:-1),
+            UnverifiedRecordNumber: firestoreCollectionUtility.fieldValue.increment(mode === "+" ? 1:-1),
         })
     }
-    async decrementCounterWhenRecordIsDeleted(id:string,decrementRunnersNumber:boolean){
+    async decrementCounterWhenRecordIsDeleted(id:string,runnerID:string,decrementRunnersNumber:boolean,shouldDecrementUnverifiedNumberCount:boolean){
         this.update(id,{
             recordsNumber: firestoreCollectionUtility.fieldValue.increment(-1),
-            UnverifiedRecordNumber: firestoreCollectionUtility.fieldValue.increment(-1),
-            runnersNumber: firestoreCollectionUtility.fieldValue.increment(decrementRunnersNumber ? -1:0)
+            UnverifiedRecordNumber: firestoreCollectionUtility.fieldValue.increment((shouldDecrementUnverifiedNumberCount) ? -1:0),
         })
+        if (decrementRunnersNumber) this.update(id, {runnerIDList: firestoreCollectionUtility.fieldValue.arrayRemove(runnerID)})
     }
     //#CTODO GameModeの記録数、走者数とかをインクリメントするメソッドがほしい
      //*> (uid:string) => void 

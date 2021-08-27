@@ -1,4 +1,4 @@
-import { PartialValueWithFieldValue } from "../function/firebaseAdmin";
+import { PartialValueWithFieldValue } from "../../function/firebaseAdmin";
 
 export type WithoutID<T> = Omit<T,"id">
 export interface IFirestoreCollectionController<T>{

@@ -8,12 +8,12 @@ export interface IGameSystemInfoWithoutCollections extends ILabelledDocument,ico
     Japanese: string;
     English: string;
     recordsNumber:number;
-    runnersNumber:number;
     dateOfLatestPost:number;
     releasedDate:number;
     UnverifiedRecordNumber?:number;
     JDescription?: string;
     EDescription?: string;
+    runnerIDList:string[];
 }
 export interface CollectionInIGameSystemInfo {
     tags :IHashTagItem[];

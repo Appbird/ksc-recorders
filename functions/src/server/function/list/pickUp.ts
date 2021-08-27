@@ -1,4 +1,4 @@
-import { CollectionList, generateCollectionController } from "../../firestore/FirestoreCollectionList";
+import { CollectionList, generateCollectionController } from "../../firestore/base/FirestoreCollectionList";
 
 interface IReceivedDataAtServer_pickUp{
     gameSystemEnv?: {

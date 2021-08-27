@@ -1,7 +1,7 @@
 import { INotificationItem } from "../../../../src/ts/type/record/IRunner";
 import { Transaction } from "../function/firebaseAdmin";
-import { firestoreCollectionUtility } from "./FirestoreCollectionUtility";
-import { IFirestoreCollectionController, WithoutID } from "./IFirestoreCollectionController";
+import { firestoreCollectionUtility } from "./base/FirestoreCollectionUtility";
+import { IFirestoreCollectionController, WithoutID } from "./base/IFirestoreCollectionController";
 import { RunnerCollectionController } from "./RunnerCollectionController";
 
 type HandledType = INotificationItem

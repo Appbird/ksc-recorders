@@ -54,7 +54,7 @@ export class S_GamemodeListOfPlayersPlayed extends PageStateBaseClass<{runnersIn
                     <div class ="c-iconWithDescription"> <i class="fas fa-list"></i> ${gameMode.recordsNumber} Records</div>
                 </div>
                 <div class = "c-stateInfo__unit">
-                    <div class ="c-iconWithDescription"> <i class="fas fa-running"></i> ${gameMode.runnersNumber} Runners</div>
+                    <div class ="c-iconWithDescription"> <i class="fas fa-running"></i> ${gameMode.runnerIDList.length} Runners</div>
                 </div>
                 <div class = "c-stateInfo__unit">
                     <div class ="c-iconWithDescription"> <i class="fas fa-history"></i> ${convertNumberIntoDateString(gameMode.dateOfLatestPost)} </div>

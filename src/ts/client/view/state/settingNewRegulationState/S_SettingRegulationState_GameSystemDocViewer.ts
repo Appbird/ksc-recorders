@@ -129,7 +129,7 @@ export class S_SettingRegulationState_GameSystemDocViewer
                 id:"",
                 Japanese:"",English:"",
                 JDescription:"",EDescription:"",
-                recordsNumber:0,runnersNumber:0,
+                recordsNumber:0,runnerIDList:[],
                 dateOfLatestPost:Date.now(),
                 releasedDate:Date.now(),
             },{

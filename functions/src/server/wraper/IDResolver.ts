@@ -1,7 +1,7 @@
 import { LanguageInApplication } from "../../../../src/ts/type/LanguageInApplication";
 import { ILabelledDocument, ResolvedID } from "../../../../src/ts/type/list/ILabelledDocument";
 import { choiceDescription, choiceString } from "../../../../src/ts/utility/aboutLang";
-import { IFirestoreCollectionController } from "../firestore/IFirestoreCollectionController";
+import { IFirestoreCollectionController } from "../firestore/base/IFirestoreCollectionController";
 
 export class IDResolver<T extends ILabelledDocument>{
     private cacheMap = new Map<string,T>()

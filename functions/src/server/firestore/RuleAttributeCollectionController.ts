@@ -1,7 +1,7 @@
 import { IRuleAttributeWithoutCollection } from "../../../../src/ts/type/list/IRuleAttributeItem";
 import { PartialValueWithFieldValue, Transaction } from "../function/firebaseAdmin";
-import { firestoreCollectionUtility } from "./FirestoreCollectionUtility";
-import { IFirestoreCollectionController, WithoutID } from "./IFirestoreCollectionController";
+import { firestoreCollectionUtility } from "./base/FirestoreCollectionUtility";
+import { IFirestoreCollectionController, WithoutID } from "./base/IFirestoreCollectionController";
 
 type HandledType = IRuleAttributeWithoutCollection
 
@@ -25,7 +25,7 @@ export class RuleAttributeCollectionController implements IFirestoreCollectionCo
         await firestoreCollectionUtility.modifyDoc<HandledType>(this.ref.doc(id), object,this.transaction);
     }
     delete(id: string): Promise<HandledType> {
-        return firestoreCollectionUtility.deleteDoc<HandledType>(this.ref.doc(id),this.transaction);
+        return firestoreCollectionUtility.getAndDeleteDoc<HandledType>(this.ref.doc(id),this.transaction);
     }
     async update(id: string, object:PartialValueWithFieldValue<HandledType>): Promise<void> {
         await firestoreCollectionUtility.updateDoc(this.ref.doc(id), object,this.transaction);

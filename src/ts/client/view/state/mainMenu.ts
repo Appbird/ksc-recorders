@@ -108,7 +108,7 @@ export class S_MainMenu
                         <div class="c-stateInfo">
                             <div class = "c-stateInfo__unit">
                                 <div class ="c-iconWithDescription"> <i class="fas fa-list"></i> ${gsed.gameMode.recordsNumber.toString()}</div>
-                                <div class ="c-iconWithDescription"> <i class="fas fa-running"></i> ${gsed.gameMode.runnersNumber.toString()}</div>
+                                <div class ="c-iconWithDescription"> <i class="fas fa-running"></i> ${gsed.gameMode.runnerIDList.length.toString()}</div>
                                 <div class ="c-iconWithDescription"> <i class="fas fa-history"></i>${formatDate(gsed.gameMode.dateOfLatestPost,"time",false)}</div>
                             </div>
                         </div>

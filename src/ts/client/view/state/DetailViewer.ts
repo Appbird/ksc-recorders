@@ -163,23 +163,6 @@ export class S_DetailViewer
             }
             )
         }
-        private async deleteRecord(record:IRecord,reason:string,gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections){
-            if(!StateAdministrator.checkGameSystemEnvIsSet({gameMode,gameSystem})) return;
-            await this.app.accessToAPI("record_delete",{
-                gameSystemEnv: {
-                    gameModeID:gameMode.id, gameSystemID:gameSystem.id
-                },
-                recordID:record.id,
-                IDToken: await this.app.loginAdministratorReadOnly.getIDToken(),
-                reason
-            })
-            
-            this.app.notie.successAlert({
-                Japanese:"削除されました",
-                English:"the Record is now deleted."
-            })
-            this.app.transition("mainMenu",null)
-        }
         private confirmWhenVerify(record:IRecord,operationDiv:HTMLElement,gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections){
             this.app.notie.confirmAlert({
                 text:context.operation.confirm_verify, 
@@ -189,26 +172,51 @@ export class S_DetailViewer
                     await this.verifyRecord(record,gameSystem,gameMode).catch((err) => this.app.errorCatcher(err))
                     this.deleteLoadingSpinner()
                 }
+            })
+        }
+        private async deleteRecord(record:IRecord,reason:string,gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections){
+            if(!StateAdministrator.checkGameSystemEnvIsSet({gameMode,gameSystem})) return;
+            try {
+                await this.app.accessToAPI("record_delete",{
+                    gameSystemEnv: {
+                        gameModeID:gameMode.id, gameSystemID:gameSystem.id
+                    },
+                    recordID:record.id,
+                    IDToken: await this.app.loginAdministratorReadOnly.getIDToken(),
+                    reason
                 })
+            
+                this.app.notie.successAlert({
+                    Japanese:"削除されました",
+                    English:"the Record is now deleted."
+                })
+                this.app.transition("mainMenu",null)
+            } catch(err) {
+                this.app.errorCatcher(err)
+            }
         }
         private async verifyRecord(record:IRecord,gameSystem:IGameSystemInfoWithoutCollections,gameMode:IGameModeItemWithoutCollections){
-            await this.app.accessToAPI("record_moderate",{
-                gameSystemEnv: {
-                    gameModeID:gameMode.id, gameSystemID:gameSystem.id
-                },
-                recordId:record.id,
-                IDToken: await this.app.loginAdministratorReadOnly.getIDToken()
-            })
-            this.app.notie.successAlert({
-                Japanese:"この記録は承認されました！",
-                English:"The record is now verified!"
-            })
-            const rrg = record.regulation.gameSystemEnvironment
-            if (this.requiredObj.needRedirectToUnverifiedRecordList){
-                this.app.transition("unverifiedRecord",{gameSystem, gameMode})
-                return
+            try {
+                await this.app.accessToAPI("record_moderate",{
+                    gameSystemEnv: {
+                        gameModeID:gameMode.id, gameSystemID:gameSystem.id
+                    },
+                    recordId:record.id,
+                    IDToken: await this.app.loginAdministratorReadOnly.getIDToken()
+                })
+                this.app.notie.successAlert({
+                    Japanese:"この記録は承認されました！",
+                    English:"The record is now verified!"
+                })
+                const rrg = record.regulation.gameSystemEnvironment
+                if (this.requiredObj.needRedirectToUnverifiedRecordList){
+                    this.app.transition("unverifiedRecord",{gameSystem, gameMode})
+                    return
+                }
+                this.app.transition("detailView",{id:record.id,gameSystemEnv:{gameSystemID:rrg.gameSystemID, gameModeID:rrg.gameModeID},lang:this.app.state.language})
+            }catch(err){
+                this.app.errorCatcher(err)
             }
-            this.app.transition("detailView",{id:record.id,gameSystemEnv:{gameSystemID:rrg.gameSystemID, gameModeID:rrg.gameModeID},lang:this.app.state.language})
         }
         
 }

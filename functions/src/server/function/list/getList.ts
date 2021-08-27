@@ -1,4 +1,4 @@
-import { CollectionList, generateCollectionController } from "../../firestore/FirestoreCollectionList";
+import { CollectionList, generateCollectionController } from "../../firestore/base/FirestoreCollectionList";
  
 
 export function getList<T extends keyof CollectionList>(collectionName:T){

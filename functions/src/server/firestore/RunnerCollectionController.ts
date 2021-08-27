@@ -1,8 +1,8 @@
 import { IRunner, IRunnerEditable, IRunnerUneditable } from "../../../../src/ts/type/record/IRunner";
 import { firebaseAdmin, PartialValueWithFieldValue } from "../function/firebaseAdmin";
 import { createDefaultUserData } from "../utility";
-import { firestoreCollectionUtility } from "./FirestoreCollectionUtility";
-import { IFirestoreCollectionController } from "./IFirestoreCollectionController";
+import { firestoreCollectionUtility } from "./base/FirestoreCollectionUtility";
+import { IFirestoreCollectionController } from "./base/IFirestoreCollectionController";
 
 type HandledType = IRunner
 //#CTODO ここで足りてない分を修正する。
@@ -59,39 +59,39 @@ export class RunnerCollectionController implements IFirestoreCollectionControlle
      * 
      * @param runner IDを与えることが出来ます。
      */
-    async incrementPlayCount(runner:string|IRunner,gameSystemID:string,gameModeID:string){
+    async incrementPlayCount(runner:IRunner,gameSystemID:string,gameModeID:string){
         const runnerInfo = (typeof runner === "string") ? await this.getInfo(runner):runner 
         runnerInfo.idOfGameSystemRunnerHavePlayed = incrementCounterInRunner(gameSystemID,runnerInfo.idOfGameSystemRunnerHavePlayed)
         runnerInfo.idOfGameModeRunnerHavePlayed = incrementCounterInRunner(`${gameSystemID}/${gameModeID}`,runnerInfo.idOfGameModeRunnerHavePlayed)
         await this.update(runnerInfo.id,{
             idOfGameSystemRunnerHavePlayed: runnerInfo.idOfGameSystemRunnerHavePlayed,
             idOfGameModeRunnerHavePlayed: runnerInfo.idOfGameModeRunnerHavePlayed,
-            theDateOfLastPost: firestoreCollectionUtility.fieldValue.serverTimestamp()
+            theDateOfLastPost: Date.now(),
+            theNumberOfPost:firestoreCollectionUtility.fieldValue.increment(1)
         })
     }
-    async decrementPlayCount(runner:string|IRunner,gameSystemID:string,gameModeID:string){
-        const runnerInfo = (typeof runner === "string") ? await this.getInfo(runner):runner
-        runnerInfo.idOfGameSystemRunnerHavePlayed = decrementCounterInRunner(runnerInfo.id,runnerInfo.idOfGameSystemRunnerHavePlayed)
-        runnerInfo.idOfGameModeRunnerHavePlayed = decrementCounterInRunner(runnerInfo.id,runnerInfo.idOfGameModeRunnerHavePlayed)
+    async decrementPlayCount(runner:IRunner,gameSystemID:string,gameModeID:string){
+        const runnerInfo = runner
+        runnerInfo.idOfGameSystemRunnerHavePlayed = decrementCounterInRunner(gameSystemID,runnerInfo.idOfGameSystemRunnerHavePlayed)
+        runnerInfo.idOfGameModeRunnerHavePlayed = decrementCounterInRunner(`${gameSystemID}/${gameModeID}`,runnerInfo.idOfGameModeRunnerHavePlayed)
         await this.update(runnerInfo.id,{
             idOfGameSystemRunnerHavePlayed: runnerInfo.idOfGameSystemRunnerHavePlayed,
-            idOfGameModeRunnerHavePlayed: runnerInfo.idOfGameModeRunnerHavePlayed
+            idOfGameModeRunnerHavePlayed: runnerInfo.idOfGameModeRunnerHavePlayed,
+            theNumberOfPost:firestoreCollectionUtility.fieldValue.increment(-1)
         })
     }
     //#CTODO SendNotificationsとReadNotificationsを実装 => NotificationListControllerへ分離
 }
 
 function incrementCounterInRunner(id:string,playedList:{id:string,times:number}[]){
-    const result = playedList.find(item => item.id === id)
-    const Index = (result === undefined) ? playedList.push({id,times:0}) - 1 : -1
-    const target = (result === undefined) ? playedList[Index]:result
+    const searchedIndex = playedList.findIndex(item => item.id === id)
+    const target = playedList[(searchedIndex === -1) ? playedList.push({id,times:0}) - 1 : searchedIndex]
     target.times += 1
     return playedList;
 }
 function decrementCounterInRunner(id:string,playedList:{id:string,times:number}[]){
-    const result = playedList.find(item => item.id === id)
-    const Index = (result === undefined) ? playedList.push({id,times:1}) - 1 : -1
-    const target = (result === undefined) ? playedList[Index]:result
+    const searchedIndex = playedList.findIndex(item => item.id === id)
+    const target = playedList[(searchedIndex === -1) ? playedList.push({id,times:1}) - 1 : searchedIndex]
     target.times -= 1
     return playedList;
 }

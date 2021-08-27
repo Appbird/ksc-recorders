@@ -32,8 +32,7 @@ export class SelectTagChoicesCapsuled implements IView {
             dropdown: {
                 enabled: 0,             
                 closeOnSelect: false
-              }
-            
+            }
         })
             
         this._language = language;
@@ -55,9 +54,9 @@ export class SelectTagChoicesCapsuled implements IView {
         return choiced.map(choice => choice.value);
     }
     setSelected(IDs:string|string[]){
+        this.tagify.removeAllTags()
         if (typeof IDs === "string") IDs = [IDs]
-        this.tagify.value = 
-            IDs.map(id => {return {value:id}})
+        this.tagify.addTags(IDs)
     }
     setWhiteList(item: string[]) {
         

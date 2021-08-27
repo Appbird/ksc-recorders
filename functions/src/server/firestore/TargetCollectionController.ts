@@ -1,7 +1,7 @@
 import { ITargetItem } from "../../../../src/ts/type/list/ITargetItem";
 import { PartialValueWithFieldValue, Transaction } from "../function/firebaseAdmin";
-import { firestoreCollectionUtility } from "./FirestoreCollectionUtility";
-import { IFirestoreCollectionController, WithoutID } from "./IFirestoreCollectionController";
+import { firestoreCollectionUtility } from "./base/FirestoreCollectionUtility";
+import { IFirestoreCollectionController, WithoutID } from "./base/IFirestoreCollectionController";
 
 type HandledType = ITargetItem
 
@@ -24,7 +24,7 @@ export class TargetCollectionController implements IFirestoreCollectionControlle
         await firestoreCollectionUtility.modifyDoc<HandledType>(this.ref.doc(id), object,this.transaction);
     }
     delete(id: string): Promise<HandledType> {
-        return firestoreCollectionUtility.deleteDoc<HandledType>(this.ref.doc(id),this.transaction);
+        return firestoreCollectionUtility.getAndDeleteDoc<HandledType>(this.ref.doc(id),this.transaction);
     }
     async update(id: string, object: PartialValueWithFieldValue<HandledType>): Promise<void> {
         await firestoreCollectionUtility.updateDoc(this.ref.doc(id), object,this.transaction);

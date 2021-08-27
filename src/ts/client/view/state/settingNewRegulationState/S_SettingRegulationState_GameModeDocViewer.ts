@@ -172,7 +172,7 @@ export class S_SettingRegulationState_GameModeDocViewer
                 id:"",
                 Japanese:"",English:"",
                 JDescription:"",EDescription:"",
-                recordsNumber:0,runnersNumber:0,
+                recordsNumber:0,runnerIDList:[],
                 dateOfLatestPost:Date.now(),
                 maxNumberOfPlayer:Date.now(),
                 scoreType:"time",

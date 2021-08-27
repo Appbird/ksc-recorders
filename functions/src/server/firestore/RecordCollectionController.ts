@@ -2,14 +2,15 @@ import { IRecord, IRecordWithoutID, IRecordWritedInDatabase } from "../../../../
 import { OrderOfRecordArray } from "../../../../src/ts/type/record/OrderOfRecordArray";
 import { SearchTypeForVerifiedRecord } from "../../../../src/ts/type/record/SearchCondition";
 import { Transaction } from "../function/firebaseAdmin";
-import { firestoreCollectionUtility } from "./FirestoreCollectionUtility";
+import { firestoreCollectionUtility } from "./base/FirestoreCollectionUtility";
 import { GameModeItemController } from "./GameModeItemController";
 import { GameSystemItemController } from "./GameSystemController";
 import { HashTagCollectionController } from "./HashTagCollectionController";
-import { IFirestoreCollectionController, WithoutID } from "./IFirestoreCollectionController";
+import { IFirestoreCollectionController, WithoutID } from "./base/IFirestoreCollectionController";
 import { RecordModifiedHistoryStackController } from "./RecordModifiedHistoryStackController";
 import { RunnerCollectionController } from "./RunnerCollectionController";
 import { TableCollectionController } from "./TableCollectionController";
+import { ScoreType } from "../../../../src/ts/type/list/IGameModeItem";
 
 
 //#CTODO ここを修正する。
@@ -39,20 +40,21 @@ export class RecordCollectionController implements IFirestoreCollectionControlle
             
             const newDocRef = this.ref.doc()
 
-            const runnerC = new RunnerCollectionController(transaction)
-            const gameSystemC = new GameSystemItemController(transaction)
-            const gameModeC = new GameModeItemController(rrg.gameSystemID,transaction)
-            const tableC = new TableCollectionController(this.gameSystemID,this.gameModeID,transaction)
-            
+            const runnerC       = new RunnerCollectionController(transaction)
+            const gameSystemC   = new GameSystemItemController(transaction)
+            const gameModeC     = new GameModeItemController(rrg.gameSystemID,transaction)
+            const tableC        = new TableCollectionController(this.gameSystemID,this.gameModeID,transaction)
+
             const recordWithID:IRecord = {...record, id:newDocRef.id,moderatorIDs:[]}
             
-            const runnerInfo = await runnerC.getInfo(record.runnerID)
-            const gameModeInfo = await gameModeC.getInfo(rrg.gameModeID)
+            const runner            = await runnerC.getInfo(record.runnerID)
+            const gameModeInfo          = await gameModeC.getInfo(rrg.gameModeID)
+            const itemInFastestTable    = await tableC.getInfoWithNullPossibility(rrg.gameModeID)
 
-            await gameSystemC.incrementCounterWhenRecordIsSubmitted(rrg.gameSystemID,shouldIncrementRunnerNumberCount(rrg.gameSystemID,runnerInfo.idOfGameSystemRunnerHavePlayed))
-            await gameModeC.incrementCounterWhenRecordIsSubmitted(rrg.gameModeID,shouldIncrementRunnerNumberCount(`${rrg.gameSystemID}/${rrg.gameModeID}`,runnerInfo.idOfGameModeRunnerHavePlayed))
-            await tableC.setNewTableCell(recordWithID,runnerInfo,gameModeInfo.scoreType)
-            await runnerC.incrementPlayCount(runnerInfo,this.gameSystemID,this.gameModeID)
+            await gameSystemC.incrementCounterWhenRecordIsSubmitted(rrg.gameSystemID,runner.id,shouldIncrementRunnerNumberCount(rrg.gameSystemID,runner.idOfGameSystemRunnerHavePlayed))
+            await gameModeC.incrementCounterWhenRecordIsSubmitted(rrg.gameModeID,runner.id,shouldIncrementRunnerNumberCount(`${rrg.gameSystemID}/${rrg.gameModeID}`,runner.idOfGameModeRunnerHavePlayed))
+            await tableC.setNewTableCell(recordWithID,runner,gameModeInfo.scoreType,itemInFastestTable)
+            await runnerC.incrementPlayCount(runner,this.gameSystemID,this.gameModeID)
             await firestoreCollectionUtility.modifyDoc<HandledTypeInDataBase>(this.ref.doc(newDocRef.id),convertRecordIntoRecordWritedInDatabase(recordWithID) ,transaction);
             return recordWithID
         }
@@ -60,7 +62,7 @@ export class RecordCollectionController implements IFirestoreCollectionControlle
         
     }
 
-    async verifiedRecord(recordID:string, moderatorID:string): Promise<IRecord>{
+    async verifyRecord(recordID:string, moderatorID:string): Promise<IRecord>{
         return await firestoreCollectionUtility.runTransaction(async (transaction) => {
             const recordC = new RecordCollectionController(this.gameSystemID,this.gameModeID,transaction)
             const hashTagC = new HashTagCollectionController(this.gameSystemID,transaction)
@@ -80,23 +82,29 @@ export class RecordCollectionController implements IFirestoreCollectionControlle
     async modifyWithConsistency(recordID:string, modifierID:string, record:IRecordWithoutID): Promise<IRecord>{
         this.checkValidInput(record)
         return await firestoreCollectionUtility.runTransaction(async (transaction) => {
-            const gameSystemC = new GameSystemItemController(transaction)
-            const gameModeC = new GameModeItemController(this.gameSystemID,transaction)
-            const tableC = new TableCollectionController(this.gameSystemID,this.gameModeID,transaction)
+            const gameSystemC   = new GameSystemItemController(transaction)
+            const gameModeC     = new GameModeItemController(this.gameSystemID,transaction)
+            const tableC        = new TableCollectionController(this.gameSystemID,this.gameModeID,transaction)
+            const recordC       = new RecordCollectionController(this.gameSystemID,this.gameModeID,transaction)
+            const runnerC       = new RunnerCollectionController(transaction)
             const recordModifiedHistoryC = new RecordModifiedHistoryStackController(this.gameSystemID,this.gameModeID,recordID,transaction)
             
             const modifiedOffer:IRecord = { ...record,id:recordID,moderatorIDs:[] }
 
             const gameMode = await gameModeC.getInfo(this.gameModeID);      
             const recordBeforeModified = await this.getInfo(recordID)
-
+            const rr = modifiedOffer.regulation
+            const recordsInSameRegulation = await recordC.getWithCondition(decideOrder(gameMode.scoreType),"AllowForOrder",rr.abilityIDs,[rr.targetID],[])
+            const fastestRecord = recordsInSameRegulation[0];
+            const runnerOfFastestRecord = (fastestRecord !== undefined) ? await runnerC.getInfo(fastestRecord.runnerID): undefined
+        
+            if (record.regulation.abilityIDs.length === 1 && runnerOfFastestRecord !== undefined) tableC.refindFastestRecord(modifiedOffer,fastestRecord,runnerOfFastestRecord)
             await recordModifiedHistoryC.add({ modifierID:modifierID, timestamp:Date.now(), before:convertRecordIntoRecordWritedInDatabase(recordBeforeModified) });
             if (recordBeforeModified.moderatorIDs.length !== 0){
                 await gameSystemC.incrementUnverifiedRecordNumber(this.gameSystemID,"+")
                 await gameModeC.incrementUnverifiedRecordNumber(this.gameModeID,"+")
             }
-            await firestoreCollectionUtility.modifyDoc<HandledTypeInDataBase>(this.ref.doc(recordID), convertRecordIntoRecordWritedInDatabase(modifiedOffer),this.transaction);
-            if (record.regulation.abilityIDs.length === 1) tableC.refindFastestRecord(modifiedOffer,gameMode.scoreType)
+            await firestoreCollectionUtility.modifyDoc<HandledTypeInDataBase>(this.ref.doc(recordID), convertRecordIntoRecordWritedInDatabase(modifiedOffer),transaction);
             return modifiedOffer;
         })
     }
@@ -114,23 +122,26 @@ export class RecordCollectionController implements IFirestoreCollectionControlle
             const runner = await runnerC.getInfo(record.runnerID)
             const gameMode = await gameModeC.getInfo(this.gameModeID);
 
-            
+            const rr = record.regulation
+            const recordsInSameRegulation = await recordC.getWithCondition(decideOrder(gameMode.scoreType),"AllowForOrder",rr.abilityIDs,[rr.targetID],[])
+            const fastestRecord = recordsInSameRegulation[0];
+            const runnerOfFastestRecord = (fastestRecord !== undefined) ? await (new RunnerCollectionController(this.transaction)).getInfo(fastestRecord.runnerID): undefined
+        
             await modifiedHistoryC.deleteAll()
-            await gameSystemC.decrementCounterWhenRecordIsDeleted(this.gameSystemID,shouldDecrementRunnerNumberCount(id,runner.idOfGameSystemRunnerHavePlayed))
-            await gameModeC.decrementCounterWhenRecordIsDeleted(this.gameModeID,shouldDecrementRunnerNumberCount(id,runner.idOfGameModeRunnerHavePlayed))
+            await gameSystemC.decrementCounterWhenRecordIsDeleted(this.gameSystemID,runner.id,shouldDecrementRunnerNumberCount(this.gameSystemID,runner.idOfGameSystemRunnerHavePlayed),record.moderatorIDs.length === 0)
+            await gameModeC.decrementCounterWhenRecordIsDeleted(this.gameModeID,runner.id,shouldDecrementRunnerNumberCount(`${this.gameSystemID}/${this.gameModeID}`,runner.idOfGameModeRunnerHavePlayed),record.moderatorIDs.length === 0)
             await runnerC.decrementPlayCount(runner,this.gameSystemID,this.gameModeID)
-            await tableC.refreshFastestTableWhenRemoving(record,gameMode.scoreType);
-            return convertRecordWritedInDatabaseIntoRecord(
-                await firestoreCollectionUtility.deleteDoc<IRecordWritedInDatabase>(this.ref.doc(id),transaction)
-            )
+            if (runnerOfFastestRecord !== undefined) await tableC.refreshFastestTableWhenRemoving(record,fastestRecord,runnerOfFastestRecord);
+            await firestoreCollectionUtility.deleteDoc(this.ref.doc(id),transaction)
+            return record
         }
         )
     }
     updateModeratorList(id:string,moderatorID:string){
         return firestoreCollectionUtility.updateDoc<IRecordWritedInDatabase>(this.ref.doc(id),{
-               moderatorIDs:firestoreCollectionUtility.fieldValue.arrayUnion({
+               moderatorIDs: firestoreCollectionUtility.fieldValue.arrayUnion({
                     id: moderatorID,
-                    data: firestoreCollectionUtility.fieldValue.serverTimestamp()
+                    date: Date.now()
                 })
         },this.transaction)
     
@@ -143,7 +154,10 @@ export class RecordCollectionController implements IFirestoreCollectionControlle
         abilityIDs:string[] = [],
         targetIDs:string[] = [],
         runnerIDs:string[] = [],
-        searchTypeForVerifiedRecord:SearchTypeForVerifiedRecord = "OnlyVerified"
+        searchTypeForVerifiedRecord:SearchTypeForVerifiedRecord = "OnlyVerified",
+        {limits}:{
+            limits?:number
+        }={}
     ):Promise<IRecord[]>{
         if (abilityIDs.length > 10 || targetIDs.length > 10 || runnerIDs.length > 10) throw Error(`能力(${abilityIDs.length}つ),計測対象(${targetIDs.length}つ),走者(${runnerIDs.length}つ)のうちいずれかの条件指定が10個よりも多いです。`)
         
@@ -153,6 +167,7 @@ export class RecordCollectionController implements IFirestoreCollectionControlle
         if (abilityIDs.length !== 0) recordsQuery = addQueryAboutAbilityIDs(recordsQuery,abilityIDsCondition,abilityIDs)
         if (targetIDs.length !== 0) recordsQuery = recordsQuery.where("regulation.targetID","in",targetIDs)
         if (runnerIDs.length !== 0) recordsQuery = recordsQuery.where("runnerID","in",runnerIDs)
+        if (limits !== undefined && limits > 0) recordsQuery = recordsQuery.limit(limits)
 
             const recordsQuerySnapshot = await firestoreCollectionUtility.getCollection<IRecordWritedInDatabase>(recordsQuery,this.transaction);
             //#NOTE 本当はrecordsの構造が正しいかを確認しなくてはならないが、データベースに登録されているデータに不正な構造であるドキュメントが交じる可能性が低く、また、このデータがどう使われるかも踏まえるとチェックするメリットが薄いと判断したため型アサーションを利用した。
@@ -224,4 +239,10 @@ function shouldIncrementRunnerNumberCount(id:string,playedList:{id:string,times:
 function shouldDecrementRunnerNumberCount(id:string,playedList:{id:string,times:number}[]){
     const target = playedList.find(item => item.id === id)
     return (target?.times === 1)
+}
+function decideOrder(type:ScoreType){
+    switch(type){
+        case "score": return "HigherFirst";
+        case "time":  return "LowerFirst";
+    }
 }

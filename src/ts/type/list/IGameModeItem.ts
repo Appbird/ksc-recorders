@@ -14,7 +14,6 @@ import { ITargetItem } from "./ITargetItem";
 export type ScoreType = "score"|"time";
 export type IGameModeItem = IGameModeItemWithoutCollections & CollectionsInIGameModeItem
 export interface IGameModeItemWithoutCollections extends ILabelledDocument,icooonResolvable{
-    runnersNumber:number;
     recordsNumber:number;
     dateOfLatestPost:number;
     maxNumberOfPlayer:number;
@@ -22,6 +21,8 @@ export interface IGameModeItemWithoutCollections extends ILabelledDocument,icooo
     gameSystemID:string;
     UnverifiedRecordNumber?:number;
     DiscordRoleID?:string;
+    
+    runnerIDList:string[];
     rules?:RuleDescription[]
 }
 export interface CollectionsInIGameModeItem{

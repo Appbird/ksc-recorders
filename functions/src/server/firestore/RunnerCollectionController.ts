@@ -28,7 +28,7 @@ export class RunnerCollectionController implements IFirestoreCollectionControlle
         return userData
     }
     /**@throws この操作は許可されていません。必ずエラーがthrowされます。 */
-    async add(): Promise<void> {
+    async add(): Promise<string> {
         throw new Error("[RunnerCollectionController] It is not allowed to add a new item to the Runner Collection through pickUp API. You should add a new runner by user authorization.")
     }
     /**@remarks この操作はIDTokenを用いた認証後に行われるべきです。 */

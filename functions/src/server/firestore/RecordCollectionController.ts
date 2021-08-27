@@ -6,7 +6,7 @@ import { firestoreCollectionUtility } from "./FirestoreCollectionUtility";
 import { GameModeItemController } from "./GameModeItemController";
 import { GameSystemItemController } from "./GameSystemController";
 import { HashTagCollectionController } from "./HashTagCollectionController";
-import { IFirestoreCollectionController } from "./IFirestoreCollectionController";
+import { IFirestoreCollectionController, WithoutID } from "./IFirestoreCollectionController";
 import { RecordModifiedHistoryStackController } from "./RecordModifiedHistoryStackController";
 import { RunnerCollectionController } from "./RunnerCollectionController";
 import { TableCollectionController } from "./TableCollectionController";
@@ -32,10 +32,10 @@ export class RecordCollectionController implements IFirestoreCollectionControlle
         return convertRecordWritedInDatabaseIntoRecord(await firestoreCollectionUtility.getDoc<HandledTypeInDataBase>(this.ref.doc(id),this.transaction))
     }
 
-    async addWithConsistency(record: IRecordWithoutID): Promise<void> {
+    async addWithConsistency(record: WithoutID<IRecord>): Promise<IRecord> {
         this.checkValidInput(record)
         const rrg = record.regulation.gameSystemEnvironment
-        await firestoreCollectionUtility.runTransaction(async (transaction) => {
+        return await firestoreCollectionUtility.runTransaction(async (transaction) => {
             
             const newDocRef = this.ref.doc()
 
@@ -53,9 +53,8 @@ export class RecordCollectionController implements IFirestoreCollectionControlle
             await gameModeC.incrementCounterWhenRecordIsSubmitted(rrg.gameModeID,shouldIncrementRunnerNumberCount(`${rrg.gameSystemID}/${rrg.gameModeID}`,runnerInfo.idOfGameModeRunnerHavePlayed))
             await tableC.setNewTableCell(recordWithID,runnerInfo,gameModeInfo.scoreType)
             await runnerC.incrementPlayCount(runnerInfo,this.gameSystemID,this.gameModeID)
-            await firestoreCollectionUtility.modifyDoc<HandledTypeInDataBase>(this.ref.doc(newDocRef.id), {
-                ...convertRecordIntoRecordWritedInDatabase(recordWithID)
-            },transaction);
+            await firestoreCollectionUtility.modifyDoc<HandledTypeInDataBase>(this.ref.doc(newDocRef.id),convertRecordIntoRecordWritedInDatabase(recordWithID) ,transaction);
+            return recordWithID
         }
         )
         

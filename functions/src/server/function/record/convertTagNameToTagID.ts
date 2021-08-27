@@ -1,16 +1,22 @@
 import { LanguageInApplication } from "../../../../../src/ts/type/LanguageInApplication";
-import { RecordDataBase } from "../../firestore/RecordDataBase";
+import { HashTagCollectionController } from "../../firestore/HashTagCollectionController";
+import { IDResolver } from "../../wraper/IDResolver";
 
-export async function convertTagNameToTagID(gameSystemID: string, recordDataBase: RecordDataBase, tagNames: string[], language: LanguageInApplication):Promise<string[]>{
+export async function convertTagNameToTagID(gameSystemID: string, tagNames: string[], language: LanguageInApplication):Promise<string[]>{
     if (tagNames.length > 10) throw new Error("指定するタグのIDが多すぎます。");
     if (tagNames.length === 0) return [];
-    const result = await recordDataBase.searchHashTag(gameSystemID, tagNames, language);
+    const hashTagC = new HashTagCollectionController(gameSystemID)
+    const tagResolver = new IDResolver(hashTagC)
+    const result = await Promise.all(tagNames.map(tagName => tagResolver.getItemFromName(tagName, language)))
 
-    return await Promise.all(result.map((ele, index) => {
+    return await Promise.all(
+        result.map(async (ele, index) => {
         if (ele === undefined) {
-            const hashTagItem:any = { id: "", isApproved:false };
-            hashTagItem[language] = tagNames[index];
-            return recordDataBase.writeHashTagInfo(gameSystemID, hashTagItem);
+            const newItem = {
+                isApproved:false,
+                Japanese: tagNames[index],English: tagNames[index]
+            }
+            return await hashTagC.add(newItem);
         }
         return ele.id;
     }));

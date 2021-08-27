@@ -2,7 +2,7 @@
 //#CTODO GameModeRuleType,GameModeRuleClassのデータ型interfaceとそのラッパーオブジェクトをつくる。
 //#CTODO [- HashTag,] GameModeRule, GameModeRuleClassを定義する
 //#CTODO RecordDatabaseを削除する。
-//#TODO 周辺をこれらのリファクタリングに合わせて書き換える。
+//#CTODO 周辺をこれらのリファクタリングに合わせて書き換える。
     //*> どこからでもインスタンスを作成することでデータベースにアクセスできるようになった点に注意。
     
 //#CTODO コンストラクタで求められる情報量の違いを吸収するような関数Aをここでまとめ、それをfunction/list/getListとかで使用する。
@@ -18,6 +18,8 @@ import { AbilityCollectionController } from "./AbilityCollectionController";
 import { DifficultyCollectionController } from "./DifficultyCollectionController";
 import { GameModeItemController } from "./GameModeItemController";
 import { GameSystemItemController } from "./GameSystemController";
+import { HashTagCollectionController } from "./HashTagCollectionController";
+import { HashTagOnlyApprovedCollectionController } from "./HashTagOnlyApprovedCollectionController";
 import { IFirestoreCollectionController } from "./IFirestoreCollectionController";
 import { RecordCollectionController } from "./RecordCollectionController";
 import { RunnerCollectionController } from "./RunnerCollectionController";
@@ -33,7 +35,9 @@ export interface CollectionList{
     abilityAttribute:AbilityAttributeCollectionController,
     abilityAttributeFlag:AbilityAttributeCollectionController
     runner:RunnerCollectionController,
-    record:RecordCollectionController
+    record:RecordCollectionController,
+    hashTag:HashTagCollectionController,
+    hashTagOnlyApproved:HashTagCollectionController
 }
 const CollectionListConstructors = new Map<keyof CollectionList, new (...data: any[]) => IFirestoreCollectionController<any>>([
     ["gameSystem",GameSystemItemController],
@@ -43,7 +47,9 @@ const CollectionListConstructors = new Map<keyof CollectionList, new (...data: a
     ["target",TargetCollectionController],
     ["abilityAttribute",AbilityAttributeCollectionController],
     ["abilityAttributeFlag",AbilityAttributeFlagsCollectiCollectionController],
-    ["runner",RunnerCollectionController]
+    ["runner",RunnerCollectionController],
+    ["hashTag",HashTagCollectionController],
+    ["hashTagOnlyApproved",HashTagOnlyApprovedCollectionController]
 ])
 
 export function generateCollectionController<T extends keyof CollectionList>(collectionName:T,{gameSystemEnv,abilityAttributeID}:{
@@ -62,6 +68,8 @@ export function generateCollectionController<T extends keyof CollectionList>(col
             return new CollectionController()
         
         case "gameMode":
+        case "hashTag":
+        case "hashTagOnlyApproved":
             if (!gameSystemEnv || !gameSystemEnv.gameSystemID) throw new Error("[generateCollectionController] gameSystemEnv.gameSystemID is not defined.")
             return new CollectionController(gameSystemEnv.gameSystemID)
 

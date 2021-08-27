@@ -1,7 +1,6 @@
 import * as functions from "firebase-functions"
 import express from "express"
 import { apiList } from "./server/function/apiDefinition";
-import { recordDataBase } from "./server/firestore/RecordDataBase";
 import { deleteUserEventListener, setUserEventListener } from "./server/function/listener/user";
 import { authentication } from "./server/function/foundation/auth";
 import { IReceivedDataAtServerNeedAuthentication } from "../../src/ts/type/api/transmissionBase";
@@ -11,8 +10,8 @@ import { generateOGP } from "./ogp";
 const app = express();
 app.use(express.json())
 
-exports.createNewUser = functions.auth.user().onCreate((user) => setUserEventListener(user,recordDataBase));
-exports.deleteNewUser = functions.auth.user().onDelete((user) => deleteUserEventListener(user,recordDataBase));
+exports.createNewUser = functions.auth.user().onCreate((user) => setUserEventListener(user));
+exports.deleteNewUser = functions.auth.user().onDelete((user) => deleteUserEventListener(user));
 
 apiList.forEach( (value,key) => {
     app.post(`/api${key}`,async (req,res) => {
@@ -34,7 +33,7 @@ apiList.forEach( (value,key) => {
         
         try {
             //#NOTE process
-            const result = await value.process(recordDataBase,req.body)
+            const result = await value.process(req.body)
             res.status(200).json(result)
         }catch(error){ res.status(500).json(errorCatcher(key,"failed",error)); return;}
         console.log(`\u001b[32m[${new Date().toLocaleString()}] Process /api${key} was completed Successfully! \u001b[0m\n`)
@@ -57,7 +56,7 @@ exports.ogp = functions.https.onRequest(async (request,response) => {
         return;
     }
     try {
-        const result = await generateOGP(recordDataBase,gs,gm,id)
+        const result = await generateOGP(gs,gm,id)
         response.status(200).send(result)
     } catch(err){
         response.status(500).send(`500 ${err.message}`)

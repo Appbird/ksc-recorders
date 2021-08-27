@@ -1,8 +1,8 @@
 import { APIFunctions } from "../../../../src/ts/type/api/relation";
-import { RecordDataBase } from "../firestore/RecordDataBase";
+import { NotificationListController } from "../firestore/NotificationListController";
 import { authentication } from "./foundation/auth";
 
-export async function readNotification(recordDataBase:RecordDataBase,{idToken}:APIFunctions["notification_read"]["atServer"]):Promise<APIFunctions["notification_read"]["atClient"]>{
-    recordDataBase.readNotificationsOfRunner(await authentication(idToken));
+export async function readNotification({idToken}:APIFunctions["notification_read"]["atServer"]):Promise<APIFunctions["notification_read"]["atClient"]>{
+    new NotificationListController(await authentication(idToken)).readNotification();
     return {isSucceeded:true,result:undefined}
 }

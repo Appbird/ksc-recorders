@@ -3,22 +3,28 @@
 //#NOTE ここの実装はRecordDataBaseの実装に依存しない。
 import { SearchCondition } from "../../../../../src/ts/type/record/SearchCondition";
 import { IRecord } from "../../../../../src/ts/type/record/IRecord";
-import { ControllerOfTableForResolvingID } from "../../recordConverter/ControllerOfTableForResolvingID";
-import { RecordDataBase } from "../../firestore/RecordDataBase";
 import { IReceivedData_recordSearch } from "../../../../../src/ts/type/api/record/relation";
 import { OnePlayerOfAbilityAttribute } from "../../../../../src/ts/type/foundation/IRegulation";
+import { RecordResolver } from "../../wraper/RecordResolver";
+import { RecordCollectionController } from "../../firestore/RecordCollectionController";
+import { TargetCollectionController } from "../../firestore/TargetCollectionController";
+import { DifficultyCollectionController } from "../../firestore/DifficultyCollectionController";
+import { IDResolver } from "../../wraper/IDResolver";
 
-export async function search(recordDataBase:RecordDataBase,input:IReceivedData_recordSearch["atServer"]):Promise<IReceivedData_recordSearch["atClient"]>{
-    
-    const cotfr = new ControllerOfTableForResolvingID(recordDataBase)
-    if (input.condition[0].gameSystemEnv.gameDifficultyID !== undefined) input.condition = await prepareForDifficultySearch(cotfr,recordDataBase,input.condition[0])
+export async function search(input:IReceivedData_recordSearch["atServer"]):Promise<IReceivedData_recordSearch["atClient"]>{
+    if (input.condition[0].gameSystemEnv.gameDifficultyID !== undefined) input.condition = await prepareForDifficultySearch(input.condition[0])
     //#CTODO ここの結果に、abilityAttributeの検索条件を混ぜ込む。
-   
+    const recordResolvers = new Map<string,RecordResolver>()
+    const recordCs = new Map<string,RecordCollectionController>()
     const result = await Promise.all(
         input.condition.map( async input => {
+                const ig = input.gameSystemEnv
+                const recordC = getRecordCollectionController(recordCs,ig.gameSystemID,ig.gameModeID)
+                const recordResolver = getRecordResolver(recordResolvers,ig.gameSystemID,ig.gameModeID)
+
                  let records = 
-                    (await recordDataBase.getRecordsWithCondition(
-                            input.gameSystemEnv.gameSystemID,input.gameSystemEnv.gameModeID,input.orderOfRecordArray,
+                    (await recordC.getWithCondition(
+                            input.orderOfRecordArray,
                             input.abilityIDsCondition,input.abilityIDs,
                             input.targetIDs,input.runnerIDs,
                             input.searchTypeForVerifiedRecord
@@ -37,13 +43,12 @@ export async function search(recordDataBase:RecordDataBase,input:IReceivedData_r
                         return result;
                     })
                 }
-                if (input.tagIDs !== undefined) {
-                    records = records.filter(record => input.tagIDs?.every(tagID => record.tagID.includes(tagID)))
-                }
+                if (input.tagIDs !== undefined) records = records.filter(record => input.tagIDs?.every(tagID => record.tagID.includes(tagID)))
+                
                 if (input.startOfRecordArray === undefined) input.startOfRecordArray = 0;
                 if (input.limitOfRecordArray === undefined) input.limitOfRecordArray = 7;
                 
-                return cotfr.convertRecordsIntoRecordGroupResolved(
+                return recordResolver.convertRecordsIntoRecordGroupResolved(
                         records.slice(input.startOfRecordArray,input.limitOfRecordArray) , { groupName: input.groupName, numberOfRecords: records.length, numberOfRunners: countRunners(records), lang:input.language}
                     ); 
                  }
@@ -59,18 +64,25 @@ function countRunners(record:IRecord[]):number{
     return new Set(record.map((element) => element.runnerID)).size
 }
 
-async function prepareForDifficultySearch(converter:ControllerOfTableForResolvingID,recordDataBase:RecordDataBase,input:SearchCondition):Promise<SearchCondition[]>{
-    
-    if (input.gameSystemEnv.gameDifficultyID === undefined) throw new Error("予期せぬエラーが発生しました。")
-    const gameEnv = input.gameSystemEnv;
-    let targetIDs:string[]
-    if (input.gameSystemEnv.gameDifficultyID === "whole") targetIDs = (await recordDataBase.getTargetCollection(gameEnv.gameSystemID,gameEnv.gameModeID)).map((ele) => ele.id)
-    else targetIDs = (await recordDataBase.getGameDifficultyInfo(gameEnv.gameSystemID,gameEnv.gameModeID,input.gameSystemEnv.gameDifficultyID)).TargetIDsIncludedInTheDifficulty;
+async function prepareForDifficultySearch(input:SearchCondition):Promise<SearchCondition[]>{
+    const ig = input.gameSystemEnv
+    const targetC = new TargetCollectionController(ig.gameSystemID,ig.gameModeID)
+    const targetIDResolver = new IDResolver(targetC)
+    const difficultyC = new DifficultyCollectionController(ig.gameSystemID,ig.gameModeID)
+    if (ig.gameDifficultyID === undefined) throw new Error("予期せぬエラーが発生しました。")
+
+    let targetIDs:string[] = (input.gameSystemEnv.gameDifficultyID === "whole") 
+                                ? (await targetC.getCollection()).map((ele) => ele.id)
+                                : (await difficultyC.getInfo(ig.gameDifficultyID)).TargetIDsIncludedInTheDifficulty;
+
     console.info(`[KSSRs] 検索条件にDifficultyIDの指定があるため、この条件は敵の検索 [${targetIDs.join(",")}] に置き換えられます。`)
+
     const targetNames = await Promise.all(
-        targetIDs.map( targetID => converter.resolveTargetID(gameEnv.gameSystemID,gameEnv.gameModeID,targetID,input.language))
+        targetIDs.map( targetID => targetIDResolver.resolveForTitle(targetID,input.language))
     )
+
     delete input.gameSystemEnv.gameDifficultyID;
+
     return targetIDs.map( (targetID,index) => {
         return { ...input,
             targetIDs:[targetID],
@@ -87,4 +99,24 @@ function isOnePlayerOfAbilityAttributesSatisfiedTheCondition(subject:OnePlayerOf
         if (targetAttributeInSubject === undefined) return true;
         return conditionOnOneAttribute.onFlagIDs.every((conditionFlag,index) => conditionFlag === targetAttributeInSubject?.onFlagIDs[index])
     })
+}
+function getRecordResolver(RecordResolvers:Map<string,RecordResolver>,gameSystemID:string,gameModeID:string){
+    const key = `${gameSystemID}/${gameModeID}`
+    const result = RecordResolvers.get(key)
+    if (result === undefined) {
+        const inserted = new RecordResolver(gameSystemID,gameModeID)
+        RecordResolvers.set(key,inserted)
+        return inserted
+    }
+    return result;
+}
+function getRecordCollectionController(RecordResolvers:Map<string,RecordCollectionController>,gameSystemID:string,gameModeID:string){
+    const key = `${gameSystemID}/${gameModeID}`
+    const result = RecordResolvers.get(key)
+    if (result === undefined) {
+        const inserted = new RecordCollectionController(gameSystemID,gameModeID)
+        RecordResolvers.set(key,inserted)
+        return inserted
+    }
+    return result;
 }

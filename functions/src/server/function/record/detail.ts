@@ -1,12 +1,15 @@
-import { ControllerOfTableForResolvingID } from "../../recordConverter/ControllerOfTableForResolvingID";
-import { RecordDataBase } from "../../firestore/RecordDataBase";
-import { APIFunctions } from "../../../../../src/ts/type/api/relation";
 
-export async function detail(recordDataBase:RecordDataBase,input:APIFunctions["record_detail"]["atServer"]):Promise<APIFunctions["record_detail"]["atClient"]>{
-    const result = await recordDataBase.getRecord(input.gameSystemEnv.gameSystemID,input.gameSystemEnv.gameModeID,input.id)
-    const converter = new ControllerOfTableForResolvingID(recordDataBase)
+import { APIFunctions } from "../../../../../src/ts/type/api/relation";
+import { RecordCollectionController } from "../../firestore/RecordCollectionController";
+import { RecordResolver } from "../../wraper/RecordResolver";
+
+export async function detail(input:APIFunctions["record_detail"]["atServer"]):Promise<APIFunctions["record_detail"]["atClient"]>{
+    const ig = input.gameSystemEnv
+    const recordC = new RecordCollectionController(ig.gameSystemID,ig.gameModeID)
+    const recordResolver = new RecordResolver(ig.gameSystemID,ig.gameModeID)
+    const result = await recordC.getInfo(ig.gameSystemID)
     return {
         isSucceeded:true,
-        result: await converter.convertRecordIntoRecordResolved(result,input.lang)
+        result: await recordResolver.convertRecordIntoRecordResolved(result,input.lang)
     }
 }

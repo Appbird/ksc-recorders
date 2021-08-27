@@ -19,7 +19,6 @@ import { isIReceivedDataAtServer_addDiscordRoleID }from "../../../../src/ts/type
 import { APIFunctions } from "../../../../src/ts/type/api/relation";
 import { IReceivedData, IReceivedDataAtClient, IReceivedDataAtServer } from "../../../../src/ts/type/api/transmissionBase";
 import { ValidateFunction } from '../../../../src/ts/type/api/ValidateFunction';
-import { RecordDataBase } from "../firestore/RecordDataBase";
 import { detail } from "./record/detail";
 import { search } from "./record/search";
 import { readNotification } from "./readNotification";
@@ -30,6 +29,7 @@ import { rawdata } from "./record/rawdata";
 import { moderate } from "./record/moderate";
 import { addDiscordRoleID } from "./webhooks/addDiscordRoleID";
 import { getList } from "./list/getList";
+import { pickUp } from "./list/pickUp";
 
 class APIList{
     private apiDefinition = new Map<string,apiInterface<IReceivedData>>()
@@ -41,7 +41,7 @@ class APIList{
         return this.apiDefinition.forEach(callback)
     }
 }
-//#TODO ここのパラメータの型を書き換えたことによる修正
+//#CTODO ここのパラメータの型を書き換えたことによる修正
 type ProcessFunction<AtServer extends IReceivedDataAtServer,AtClient extends IReceivedDataAtClient > = (input:AtServer) => Promise<AtClient>;
 
 export type PrivilegeType = "comiteeMemberOrOwner"|"onlyCommiteeMember"|"everyone";
@@ -50,7 +50,6 @@ interface apiInterface<Received extends IReceivedData>{
     process:ProcessFunction<Received["atServer"],Received["atClient"]>
     privilege:PrivilegeType
 }
-
 export const apiList = new APIList();
 
 apiList.set<APIFunctions["record_search"]>  ("/record/search", isIReceivedDataAtServer_recordSearch, search)
@@ -64,24 +63,24 @@ apiList.set<APIFunctions["record_moderate"]>  ("/record/moderate", isIReceivedDa
 apiList.set<APIFunctions["list_gameSystems"]>  ("/list/gameSystems", isIReceivedDataAtServer_getlist_UseId, getList("gameSystem"))
 apiList.set<APIFunctions["list_runners"]>      ("/list/runners", isIReceivedDataAtServer_getlist_UseId, getList("runner"))
 apiList.set<APIFunctions["list_gameModes"]>    ("/list/gameModes", isIReceivedDataAtServer_getlist_UseSIdId, getList("gameMode"))
-apiList.set<APIFunctions["list_hashTags"]>     ("/list/hashTags",isIReceivedDataAtServer_getlist_UseSIdId,getList())
-//#TODO HashTag_onlyApprovedの実装
-apiList.set<APIFunctions["list_hashTags_onlyApproved"]>("/list/hashTags/onlyApproved",isIReceivedDataAtServer_getlist_UseSIdId,hashTags_onlyApproved)
-apiList.set<APIFunctions["list_difficulties"]> ("/list/difficulties", isIReceivedDataAtServer_getlist_UseSIdMIdId, difficulties)
-apiList.set<APIFunctions["list_abilities"]>    ("/list/abilities", isIReceivedDataAtServer_getlist_UseSIdMIdId, abilities)
-apiList.set<APIFunctions["list_targets"]>      ("/list/targets", isIReceivedDataAtServer_getlist_UseSIdMIdId, targets)
-apiList.set<APIFunctions["list_abilityAttributes"]>     ("/list/abilityAttributes", isIReceivedDataAtServer_getlist_UseSIdMIdId, abilityAttributes)
-apiList.set<APIFunctions["list_abilityAttributeFlags"]>     ("/list/abilityAttributeFlags", isIReceivedDataAtServer_getList_UseSIdMIdAIdId, abilityAttributeFlags)
+apiList.set<APIFunctions["list_hashTags"]>     ("/list/hashTags",isIReceivedDataAtServer_getlist_UseSIdId,getList("hashTag"))
+//#CTODO HashTag_onlyApprovedの実装
+apiList.set<APIFunctions["list_hashTags_onlyApproved"]>("/list/hashTags/onlyApproved",isIReceivedDataAtServer_getlist_UseSIdId,getList("hashTagOnlyApproved"))
+apiList.set<APIFunctions["list_difficulties"]> ("/list/difficulties", isIReceivedDataAtServer_getlist_UseSIdMIdId, getList("difficulty"))
+apiList.set<APIFunctions["list_abilities"]>    ("/list/abilities", isIReceivedDataAtServer_getlist_UseSIdMIdId, getList("ability"))
+apiList.set<APIFunctions["list_targets"]>      ("/list/targets", isIReceivedDataAtServer_getlist_UseSIdMIdId, getList("target"))
+apiList.set<APIFunctions["list_abilityAttributes"]>     ("/list/abilityAttributes", isIReceivedDataAtServer_getlist_UseSIdMIdId, getList("abilityAttribute"))
+apiList.set<APIFunctions["list_abilityAttributeFlags"]>     ("/list/abilityAttributeFlags", isIReceivedDataAtServer_getList_UseSIdMIdAIdId, getList("abilityAttributeFlag"))
 
-apiList.set<APIFunctions["list_gameSystem"]> ("/list/gameSystem", isIReceivedDataAtServer_pickUp_UseId, gameSystem)
-apiList.set<APIFunctions["list_runner"]>("/list/runner", isIReceivedDataAtServer_pickUp_UseId, runner)
-apiList.set<APIFunctions["list_gameMode"]>   ("/list/gameMode", isIReceivedDataAtServer_pickUp_UseSIdId, gameMode)
-apiList.set<APIFunctions["list_hashTag"]>    ("/list/hashTag",isIReceivedDataAtServer_pickUp_UseSIdId,hashTag)
-apiList.set<APIFunctions["list_difficulty"]> ("/list/difficulty", isIReceivedDataAtServer_pickUp_UseSIdMIdId, difficulty)
-apiList.set<APIFunctions["list_ability"]>    ("/list/ability", isIReceivedDataAtServer_pickUp_UseSIdMIdId, ability)
-apiList.set<APIFunctions["list_target"]>     ("/list/target", isIReceivedDataAtServer_pickUp_UseSIdMIdId, target)
-apiList.set<APIFunctions["list_abilityAttribute"]>     ("/list/abilityAttribute", isIReceivedDataAtServer_pickUp_UseSIdMIdId, abilityAttribute)
-apiList.set<APIFunctions["list_abilityAttributeFlag"]>     ("/list/abilityAttributeFlag", isIReceivedDataAtServer_pickUp_UseSIdMIdAIdId, abilityAttributeFlag)
+apiList.set<APIFunctions["list_gameSystem"]> ("/list/gameSystem", isIReceivedDataAtServer_pickUp_UseId, pickUp("gameSystem"))
+apiList.set<APIFunctions["list_runner"]>("/list/runner", isIReceivedDataAtServer_pickUp_UseId, pickUp("runner"))
+apiList.set<APIFunctions["list_gameMode"]>   ("/list/gameMode", isIReceivedDataAtServer_pickUp_UseSIdId,pickUp("gameMode"))
+apiList.set<APIFunctions["list_hashTag"]>    ("/list/hashTag",isIReceivedDataAtServer_pickUp_UseSIdId,pickUp("hashTag"))
+apiList.set<APIFunctions["list_difficulty"]> ("/list/difficulty", isIReceivedDataAtServer_pickUp_UseSIdMIdId, pickUp("difficulty"))
+apiList.set<APIFunctions["list_ability"]>    ("/list/ability", isIReceivedDataAtServer_pickUp_UseSIdMIdId, pickUp("ability"))
+apiList.set<APIFunctions["list_target"]>     ("/list/target", isIReceivedDataAtServer_pickUp_UseSIdMIdId, pickUp("target"))
+apiList.set<APIFunctions["list_abilityAttribute"]>     ("/list/abilityAttribute", isIReceivedDataAtServer_pickUp_UseSIdMIdId, pickUp("abilityAttribute"))
+apiList.set<APIFunctions["list_abilityAttributeFlag"]>     ("/list/abilityAttributeFlag", isIReceivedDataAtServer_pickUp_UseSIdMIdAIdId, pickUp("abilityAttributeFlag"))
 
 
 apiList.set<APIFunctions["notification_read"]>  ("/notification/read", isIReceivedDataAtServer_notificationRead, readNotification)

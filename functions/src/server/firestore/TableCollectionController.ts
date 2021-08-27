@@ -4,7 +4,7 @@ import { IRecord } from "../../../../src/ts/type/record/IRecord";
 import { IRunner } from "../../../../src/ts/type/record/IRunner";
 import { PartialValueWithFieldValue } from "../function/firebaseAdmin";
 import { firestoreCollectionUtility } from "./FirestoreCollectionUtility";
-import { IFirestoreCollectionController } from "./IFirestoreCollectionController";
+import { IFirestoreCollectionController, WithoutID } from "./IFirestoreCollectionController";
 import { RecordCollectionController } from "./RecordCollectionController";
 import { RunnerCollectionController } from "./RunnerCollectionController";
 
@@ -31,8 +31,8 @@ export class TableCollectionController implements IFirestoreCollectionController
     getInfo(id: string): Promise<IRecordTableItem> {
         return firestoreCollectionUtility.getDoc<IRecordTableItem>(this.ref.doc(id),this.transaction);
     }
-    async add(object: IRecordTableItem): Promise<void> {
-        await firestoreCollectionUtility.addDoc<IRecordTableItem>(this.ref, object,this.transaction);
+    add(object: WithoutID<IRecordTableItem>): Promise<string> {
+        return firestoreCollectionUtility.addDoc<IRecordTableItem>(this.ref, object,this.transaction);
     }
     async modify(id: string, object: IRecordTableItem): Promise<void> {
         await firestoreCollectionUtility.modifyDoc<IRecordTableItem>(this.ref.doc(id), object,this.transaction);

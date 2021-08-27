@@ -18,8 +18,8 @@ export class HashTagCollectionController implements IFirestoreCollectionControll
     getInfo(id: string): Promise<HandledType> {
         return firestoreCollectionUtility.getDoc<HandledType>(this.ref.doc(id),this.transaction);
     }
-    async add(object: WithoutID<HandledType>): Promise<void> {
-        await firestoreCollectionUtility.addDoc<HandledType>(this.ref, object,this.transaction);
+    add(object: WithoutID<HandledType>): Promise<string> {
+        return firestoreCollectionUtility.addDoc<HandledType>(this.ref, object,this.transaction);
     }
     async modify(id: string, object: HandledType): Promise<void> {
         await firestoreCollectionUtility.modifyDoc<HandledType>(this.ref.doc(id), object,this.transaction);

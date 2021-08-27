@@ -1,25 +1,24 @@
 import { APIFunctions } from "../../../../../src/ts/type/api/relation";
-import { RecordDataBase } from "../../firestore/RecordDataBase";
-import { ControllerOfTableForResolvingID } from "../../recordConverter/ControllerOfTableForResolvingID";
+import { RecordCollectionController } from "../../firestore/RecordCollectionController";
+import { RecordResolver } from "../../wraper/RecordResolver";
 import { authentication } from "../foundation/auth";
 import { Notifier } from "../webhooks/Notificator";
 
 //#CH ユーザーの権限認証をこの関数から分離したい、APIList側にそういうチェック関数を持たせられないか？
-export async function remove(recordDataBase:RecordDataBase,input:APIFunctions["record_delete"]["atServer"]):Promise<APIFunctions["record_delete"]["atClient"]>{
+export async function remove(input:APIFunctions["record_delete"]["atServer"]):Promise<APIFunctions["record_delete"]["atClient"]>{
     const uid = await authentication(input.IDToken);
-    const deleted = await recordDataBase.getRecord(input.gameSystemEnv.gameSystemID,input.gameSystemEnv.gameModeID,input.recordID)
-        const cotfr = new ControllerOfTableForResolvingID(recordDataBase);
+    const ig = input.gameSystemEnv
+    const recordC = new RecordCollectionController(ig.gameSystemID,ig.gameModeID)
+    const deleted = await recordC.getInfo(input.recordID)
+        const cotfr = new RecordResolver(ig.gameSystemID,ig.gameModeID)
         const resolvedRecord = await cotfr.convertRecordIntoRecordResolved(deleted,"English")
 
     //#CTODO Discordに通知する際にuidを使う。
-    recordDataBase.removeRecord(
-        input.gameSystemEnv.gameSystemID,
-        input.gameSystemEnv.gameModeID,
+    recordC.deleteWithConsistency(
         input.recordID
     );
-    const discord = new Notifier(recordDataBase);
     
-    await discord.sendRecordRemovedMessage(recordDataBase,uid,deleted,resolvedRecord,input.reason);
+    await new Notifier().sendRecordRemovedMessage(uid,deleted,resolvedRecord,input.reason);
     return {
         isSucceeded:true
     }

@@ -1,14 +1,18 @@
 import { APIFunctions } from "../../../../../src/ts/type/api/relation";
 import { IRecordWithoutID } from "../../../../../src/ts/type/record/IRecord";
-import { RecordDataBase } from "../../firestore/RecordDataBase";
-import { ControllerOfTableForResolvingID } from "../../recordConverter/ControllerOfTableForResolvingID";
+import { AbilityAttributeCollectionController } from "../../firestore/AbilityAttributeCollectionController";
+import { GameModeItemController } from "../../firestore/GameModeItemController";
+import { RecordCollectionController } from "../../firestore/RecordCollectionController";
+import { RecordResolver } from "../../wraper/RecordResolver";
 import { authentication } from "../foundation/auth";
 import { Notifier } from "../webhooks/Notificator";
 import { convertTagNameToTagID } from "./convertTagNameToTagID";
 import { validateRecord } from "./validateRecord";
 
-export async function modify(recordDataBase:RecordDataBase,input:APIFunctions["record_modify"]["atServer"]):Promise<APIFunctions["record_write"]["atClient"]>{
-    const recordBeforeModified = await recordDataBase.getRecord(input.gameSystemEnv.gameSystemID,input.gameSystemEnv.gameModeID,input.recordID)
+export async function modify(input:APIFunctions["record_modify"]["atServer"]):Promise<APIFunctions["record_write"]["atClient"]>{
+    const ir = input.gameSystemEnv
+    const recordC = new RecordCollectionController(ir.gameSystemID,ir.gameModeID)
+    const recordBeforeModified = await recordC.getInfo(input.recordID)
     const {timestamp_post,runnerID,languageOfTagName} = recordBeforeModified
     const modifier = await authentication(input.IDToken);
     const result:IRecordWithoutID = {
@@ -25,23 +29,22 @@ export async function modify(recordDataBase:RecordDataBase,input:APIFunctions["r
         runnerID:runnerID,
         languageOfTagName:languageOfTagName,
         tagID:await convertTagNameToTagID(
-                    input.gameSystemEnv.gameSystemID,
-                    recordDataBase,
+                    ir.gameSystemID,
                     input.recordModified.tagName,
                     input.language),
     }
     
     const irrg = result.regulation.gameSystemEnvironment
-    const gameMode = await recordDataBase.getGameModeInfo(irrg.gameSystemID,irrg.gameModeID)
-    const attributes = await recordDataBase.getAbilityAttributeCollection(irrg.gameSystemID,irrg.gameModeID)
+    const gameMode = await new GameModeItemController(irrg.gameSystemID).getInfo(irrg.gameModeID)
+    const attributes = await new AbilityAttributeCollectionController(irrg.gameSystemID,irrg.gameModeID).getCollection()
     validateRecord(result,gameMode,attributes)
-    const record = await recordDataBase.modifyRecord(input.recordID,modifier,result);
-    const cotfr = new ControllerOfTableForResolvingID(recordDataBase);
+    const record = await recordC.modifyWithConsistency(input.recordID,modifier,result);
+    const cotfr = new RecordResolver(irrg.gameSystemID,irrg.gameModeID);
     
     const recordResolved = await cotfr.convertRecordIntoRecordResolved(record,input.language);
     
-    const discord = new Notifier(recordDataBase);
-    await discord.sendRecordModifiedMessage(recordDataBase,modifier,(input.language === "English") ? recordResolved:await cotfr.convertRecordIntoRecordResolved(record,"English"),input.reason)
+    const discord = new Notifier();
+    await discord.sendRecordModifiedMessage(modifier,(input.language === "English") ? recordResolved:await cotfr.convertRecordIntoRecordResolved(record,"English"),input.reason)
     return {
         isSucceeded:true,
         result: recordResolved

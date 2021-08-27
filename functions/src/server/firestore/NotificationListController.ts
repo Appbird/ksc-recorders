@@ -10,7 +10,7 @@ export class NotificationListController implements IFirestoreCollectionControlle
     readonly ref: FirebaseFirestore.CollectionReference;
     constructor(private runnerID:string,
         private transaction?:Transaction) {
-        this.ref = firestoreCollectionUtility.getRunnerCollectionRef().doc(runnerID).collection("abilities");
+        this.ref = firestoreCollectionUtility.getRunnerCollectionRef().doc(runnerID).collection("notifications");
     }
     async getCollection(): Promise<HandledType[]> {
         const list = await firestoreCollectionUtility.getCollection<HandledType>(this.ref,this.transaction)
@@ -20,13 +20,12 @@ export class NotificationListController implements IFirestoreCollectionControlle
         
         return firestoreCollectionUtility.getDoc<HandledType>(this.ref.doc(id),this.transaction);
     }
-    async add(object: WithoutID<HandledType>): Promise<void> {
-        await firestoreCollectionUtility.addDoc<HandledType>(this.ref, object,this.transaction);
+    async add(object: WithoutID<HandledType>): Promise<string> {
         const runnerC = new RunnerCollectionController()
         await runnerC.update(this.runnerID,{
             numberOfUnreadNotification: firestoreCollectionUtility.fieldValue.increment(1)
         },{privateDocWrite:false});
-        return;
+        return firestoreCollectionUtility.addDoc<HandledType>(this.ref, object,this.transaction);;
     }
     async readNotification(){
         await new RunnerCollectionController().update(this.runnerID,{

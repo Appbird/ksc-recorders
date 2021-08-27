@@ -1,19 +1,20 @@
 import { APIFunctions } from "../../../../../src/ts/type/api/relation";
-import { RecordDataBase } from "../../firestore/RecordDataBase";
-import { ControllerOfTableForResolvingID } from "../../recordConverter/ControllerOfTableForResolvingID";
+import { RecordCollectionController } from "../../firestore/RecordCollectionController";
+import { RecordResolver } from "../../wraper/RecordResolver";
 import { authentication } from "../foundation/auth";
 import { Notifier } from "../webhooks/Notificator";
 
-export async function moderate(recordDataBase:RecordDataBase,input:APIFunctions["record_moderate"]["atServer"]):Promise<APIFunctions["record_moderate"]["atClient"]>{
+export async function moderate(input:APIFunctions["record_moderate"]["atServer"]):Promise<APIFunctions["record_moderate"]["atClient"]>{
+    const ig = input.gameSystemEnv
     const moderator = await authentication(input.IDToken);
-    const cotfr = new ControllerOfTableForResolvingID(recordDataBase)
-    const record = await cotfr.convertRecordIntoRecordResolved(
-        await recordDataBase.verifyRecord(input.gameSystemEnv.gameSystemID,input.gameSystemEnv.gameModeID,input.recordId,moderator),"English"
-    )
-
-    const webhooker = new Notifier(recordDataBase)
+    const cotfr = new RecordResolver(ig.gameSystemID,ig.gameModeID)
+    const record = await new RecordCollectionController(ig.gameSystemID,ig.gameModeID).verifiedRecord(input.recordId,moderator)
     
-    webhooker.sendRecordModeratedMessage(recordDataBase,record,moderator)
+    const recordResolved = await cotfr.convertRecordIntoRecordResolved(record,"English")
+
+    const webhooker = new Notifier()
+    
+    webhooker.sendRecordModeratedMessage(recordResolved,moderator)
     return {
         isSucceeded:true,
         result:undefined

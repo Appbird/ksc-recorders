@@ -32,7 +32,8 @@ export class RecordResolver{
     private attributeFlagID: IDResolver<IAbilityAttributeFlagItem>;
     private attributeFlagC: AbilityAttributeFlagsCollectiCollectionController;
     private hashTagID: IDResolver<IHashTagItem>;
-    constructor(gameSystemID:string,gameModeID:string,transaction:Transaction){
+    constructor(gameSystemID:string,gameModeID:string,
+        transaction?:Transaction){
         this.attributeFlagC     = new AbilityAttributeFlagsCollectiCollectionController(gameSystemID,gameModeID,"undefined")
         this.runnerID           = new IDResolver(new RunnerCollectionController(transaction))
         this.gameSystemID       = new IDResolver(new GameSystemItemController(transaction))

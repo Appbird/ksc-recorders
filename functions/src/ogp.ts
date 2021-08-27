@@ -1,17 +1,19 @@
 import { converseMiliSecondsIntoTime } from "../../src/ts/utility/timeUtility";
-import { RecordDataBase } from "./server/firestore/RecordDataBase";
-import { ControllerOfTableForResolvingID } from "./server/recordConverter/ControllerOfTableForResolvingID";
+import { GameModeItemController } from "./server/firestore/GameModeItemController";
+import { GameSystemItemController } from "./server/firestore/GameSystemController";
+import { RecordCollectionController } from "./server/firestore/RecordCollectionController";
+import { RecordResolver } from "./server/wraper/RecordResolver";
 // 参考
 // https://qiita.com/yuneco/items/5e526464939082862f5d
 // https://qiita.com/stin_dev/items/41ac4acb6ee7e1bc2d50
 
 //#CH 404や500の時のOGPも用意したい。 
 
-export async function generateOGP(recordDataBase:RecordDataBase,gs:string,gm:string,id:string){
-    const gameSystem =await recordDataBase.getGameSystemInfo(gs)
-    const gameMode =await recordDataBase.getGameModeInfo(gs,gm)
-    const record =await recordDataBase.getRecord(gs,gm,id)
-    const cotfr = new ControllerOfTableForResolvingID(recordDataBase)
+export async function generateOGP(gs:string,gm:string,id:string){
+    const gameSystem =await new GameSystemItemController().getInfo(gs)
+    const gameMode =await new GameModeItemController(gs).getInfo(gm)
+    const record =await new RecordCollectionController(gs,gm).getInfo(id)
+    const cotfr = new RecordResolver(gs,gm)
     const recordResolved = await cotfr.convertRecordIntoRecordResolved(record,"English")
     const score = gameMode.scoreType === "time" ? converseMiliSecondsIntoTime(record.score) : record.score.toString()
     

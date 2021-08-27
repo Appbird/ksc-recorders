@@ -9,5 +9,10 @@ interface IReceivedDataAtServer_pickUp{
     id: string;
 }
 export function pickUp<T extends keyof CollectionList>(collectionName:T){
-    return (input:IReceivedDataAtServer_pickUp) => generateCollectionController(collectionName,input).getInfo(input.id)
+    return async (input:IReceivedDataAtServer_pickUp) => {
+        return {
+            isSucceeded:true,
+            result:await generateCollectionController(collectionName,input).getInfo(input.id)
+        }
+    }
 }

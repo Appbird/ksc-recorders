@@ -2,7 +2,7 @@ import { choiceString } from "../../../../utility/aboutLang";
 import { IAppUsedToRead } from "../../../interface/AppInterfaces";
 import { appendElement } from "../../../utility/aboutElement";
 import { TitleCupsuled } from "../../parts/TitleCupsuled";
-import { PageStateBaseClass } from "../PageStateClass";
+import { PageStateBaseClass } from "../Base/PageStateClass";
 import context from "./language.json";
 export class S_Credits
     extends PageStateBaseClass<null,IAppUsedToRead>{

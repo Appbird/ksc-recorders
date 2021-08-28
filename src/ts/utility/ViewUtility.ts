@@ -65,7 +65,7 @@ export function elementWithoutEscaping(strings:TemplateStringsArray,...values:an
     );
     const ele = htmlToElement(htmlString);
     if (ele === null) throw new Error("与HTMLを要素に変換できませんでした。")
-    return ele;
+    return ele as HTMLElement;
 }
 
 const separators = ["、","。",",",".","？","！","?","!"," "]

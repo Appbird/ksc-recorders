@@ -1,7 +1,7 @@
 import marked from "marked";
 import { elementWithoutEscaping } from "../../../utility/ViewUtility";
 import { IAppUsedToRead } from "../../interface/AppInterfaces";
-import { PageStateBaseClass } from "./PageStateClass";
+import { PageStateBaseClass } from "./Base/PageStateClass";
 
 export class S_ErrorState
     extends PageStateBaseClass<{title:string,message:string},IAppUsedToRead>{

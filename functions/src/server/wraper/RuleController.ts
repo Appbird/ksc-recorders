@@ -1,28 +1,37 @@
-import { RuleDescription } from "../../../../src/ts/type/list/IGameModeItem";
-import { IRuleAttributeWithoutCollection } from "../../../../src/ts/type/list/IRuleAttributeItem";
-import { IRuleClassItem } from "../../../../src/ts/type/list/IRuleClassItem";
-import { RuleAttributeCollectionController } from "../firestore/RuleAttributeCollectionController";
-import { RuleClassCollectionController } from "../firestore/RuleClassCollectionController";
+import { LanguageInApplication } from "../../../../src/ts/type/LanguageInApplication";
+import { DefinedRuleAttributeCollectionController } from "../firestore/DefinedRuleAttributeCollectionController";
+import { DefinedRuleClassCollectionController } from "../firestore/DefinedRuleClassCollectionController";
 import { Transaction } from "../function/firebaseAdmin";
-
-export type RuleAttributeAndAppliedClassInfo = {rule:IRuleAttributeWithoutCollection,appliedClass:IRuleClassItem[]}
+import { chooseMultiLanguageString } from "./IDResolver";
+import { RuleAttributeAndAppliedClassInfo } from "../../../../src/ts/type/api/gameRule/RuleAttributeAndAppliedClassInfo";
+import { choiceString } from "../../../../src/ts/utility/aboutLang";
+import { IAppliedGameModeRule } from "../../../../src/ts/type/list/GameModeRule";
 
 export class RuleResolver {
-    private ruleAttributeC:RuleAttributeCollectionController
+    private ruleAttributeC:DefinedRuleAttributeCollectionController
     constructor(
         private transaction?:Transaction
     ){
-        this.ruleAttributeC = new RuleAttributeCollectionController(transaction)
+        this.ruleAttributeC = new DefinedRuleAttributeCollectionController(transaction)
     }
-    async getRuleAttributeInfo({rules}:{rules?:RuleDescription[]}):Promise<RuleAttributeAndAppliedClassInfo[]|undefined>{
-        if (rules === undefined) return undefined
-        return await Promise.all(rules.map(async rule => {
-            const ruleClassC = new RuleClassCollectionController(rule.id,this.transaction)
-            return {
-                    rule:           await this.ruleAttributeC.getInfo(rule.id),
-                    appliedClass:   await Promise.all(rule.appliedClassIDs.map(classID => ruleClassC.getInfo(classID)))
-            }
-        }))
+    async getRuleAttributeInfo(rule:IAppliedGameModeRule,language:LanguageInApplication):Promise<RuleAttributeAndAppliedClassInfo|undefined>{
+        if (rule === undefined) return undefined
+        const ruleClassC = new DefinedRuleClassCollectionController(rule.id,this.transaction)
+        return {
+                rule:           {
+                    ...chooseMultiLanguageString(await this.ruleAttributeC.getInfo(rule.id),language),
+                    note: choiceString(rule.note,language)
+                },
+                appliedClass:   await Promise.all(
+                    rule.appliedClassID.map(
+                        async appliedClassInfo => { return {
+                                ...chooseMultiLanguageString(await ruleClassC.getInfo(appliedClassInfo.id),language),
+                                note: choiceString(appliedClassInfo.note,language),
+                                scope: choiceString(appliedClassInfo.note,language)
+                        }}
+                    )
+                )
+        }
     }
     
     

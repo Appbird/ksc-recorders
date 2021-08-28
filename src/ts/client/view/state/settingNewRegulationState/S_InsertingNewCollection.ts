@@ -1,5 +1,5 @@
 import { IAppUsedToChangeState } from "../../../interface/AppInterfaces";
-import { PageStateBaseClass } from "../PageStateClass";
+import { PageStateBaseClass } from "../Base/PageStateClass";
 import { appendElement } from "../../../utility/aboutElement";
 import { titleContext } from "./utility";
 import { SettingRegulationStateHeader } from "../../parts/SetNewRegulation/SettingRegulationStateHeader";

@@ -7,7 +7,7 @@ import { RadioButtonCupsuled } from "../parts/Input/RadioButtonCupsuled";
 import { MenuView } from "../parts/MenuView";
 import { PageTitleView } from "../parts/PageTitleView";
 import { TitleCupsuled } from "../parts/TitleCupsuled";
-import { PageStateBaseClass } from "./PageStateClass";
+import { PageStateBaseClass } from "./Base/PageStateClass";
 
 export class S_introduction
     extends PageStateBaseClass<null,IAppUsedToReadAndChangePage>{

@@ -15,6 +15,7 @@ import { isIReceivedDataAtServer_recordDelete } from "../../../../src/ts/type/ap
 import { isIReceivedDataAtServer_recordModify } from "../../../../src/ts/type/api/record/changing/IReceivedDataAtServer_recordModify.validator";
 import { isIReceivedDataAtServer_recordModerate } from "../../../../src/ts/type/api/record/changing/IReceivedDataAtServer_recordModerate.validator";
 import { isIReceivedDataAtServer_addDiscordRoleID }from "../../../../src/ts/type/api/DiscordRole/IReceivedDataAtServer_addDiscordRoleID.validator"
+import { isIReceivedDataAtServer_gameRule_get }from "../../../../src/ts/type/api/gameRule/IReceivedDataAtServer_gameRule_get.validator";
 //#CH 出来ることならTypeScript_json_validatorの出力結果を一つにまとめたい。--collection trueオプションをどう使えばいいのだろうか…。
 import { APIFunctions } from "../../../../src/ts/type/api/relation";
 import { IReceivedData, IReceivedDataAtClient, IReceivedDataAtServer } from "../../../../src/ts/type/api/transmissionBase";
@@ -30,6 +31,7 @@ import { moderate } from "./record/moderate";
 import { addDiscordRoleID } from "./webhooks/addDiscordRoleID";
 import { getList } from "./list/getList";
 import { pickUp } from "./list/pickUp";
+import { gameMode_get } from "./gameRule/get";
 
 class APIList{
     private apiDefinition = new Map<string,apiInterface<IReceivedData>>()
@@ -52,38 +54,39 @@ interface apiInterface<Received extends IReceivedData>{
 }
 export const apiList = new APIList();
 
-apiList.set<APIFunctions["record_search"]>  ("/record/search", isIReceivedDataAtServer_recordSearch, search)
-apiList.set<APIFunctions["record_detail"]>  ("/record/detail", isIReceivedDataAtServer_recordDetail, detail)
-apiList.set<APIFunctions["record_rawdata"]>  ("/record/rawdata", isIReceivedDataAtServer_recordRawdata, rawdata)
-apiList.set<APIFunctions["record_write"]>   ("/record/write", isIReceivedDataAtServer_recordWrite, write)
-apiList.set<APIFunctions["record_delete"]>  ("/record/delete", isIReceivedDataAtServer_recordDelete, remove,{privilege:"comiteeMemberOrOwner"})
-apiList.set<APIFunctions["record_modify"]>  ("/record/modify", isIReceivedDataAtServer_recordModify, modify,{privilege:"comiteeMemberOrOwner"})
-apiList.set<APIFunctions["record_moderate"]>  ("/record/moderate", isIReceivedDataAtServer_recordModerate, moderate,{privilege:"onlyCommiteeMember"})
+apiList.set<APIFunctions["record_search"]>      ("/record/search", isIReceivedDataAtServer_recordSearch, search)
+apiList.set<APIFunctions["record_detail"]>      ("/record/detail", isIReceivedDataAtServer_recordDetail, detail)
+apiList.set<APIFunctions["record_rawdata"]>     ("/record/rawdata", isIReceivedDataAtServer_recordRawdata, rawdata)
+apiList.set<APIFunctions["record_write"]>       ("/record/write", isIReceivedDataAtServer_recordWrite, write)
+apiList.set<APIFunctions["record_delete"]>      ("/record/delete", isIReceivedDataAtServer_recordDelete, remove,{privilege:"comiteeMemberOrOwner"})
+apiList.set<APIFunctions["record_modify"]>      ("/record/modify", isIReceivedDataAtServer_recordModify, modify,{privilege:"comiteeMemberOrOwner"})
+apiList.set<APIFunctions["record_moderate"]>    ("/record/moderate", isIReceivedDataAtServer_recordModerate, moderate,{privilege:"onlyCommiteeMember"})
 
-apiList.set<APIFunctions["list_gameSystems"]>  ("/list/gameSystems", isIReceivedDataAtServer_getlist_UseId, getList("gameSystem"))
-apiList.set<APIFunctions["list_runners"]>      ("/list/runners", isIReceivedDataAtServer_getlist_UseId, getList("runner"))
-apiList.set<APIFunctions["list_gameModes"]>    ("/list/gameModes", isIReceivedDataAtServer_getlist_UseSIdId, getList("gameMode"))
-apiList.set<APIFunctions["list_hashTags"]>     ("/list/hashTags",isIReceivedDataAtServer_getlist_UseSIdId,getList("hashTag"))
+apiList.set<APIFunctions["list_gameSystems"]>   ("/list/gameSystems", isIReceivedDataAtServer_getlist_UseId, getList("gameSystem"))
+apiList.set<APIFunctions["list_runners"]>       ("/list/runners", isIReceivedDataAtServer_getlist_UseId, getList("runner"))
+apiList.set<APIFunctions["list_gameModes"]>     ("/list/gameModes", isIReceivedDataAtServer_getlist_UseSIdId, getList("gameMode"))
+apiList.set<APIFunctions["list_hashTags"]>      ("/list/hashTags",isIReceivedDataAtServer_getlist_UseSIdId,getList("hashTag"))
 //#CTODO HashTag_onlyApprovedの実装
 apiList.set<APIFunctions["list_hashTags_onlyApproved"]>("/list/hashTags/onlyApproved",isIReceivedDataAtServer_getlist_UseSIdId,getList("hashTagOnlyApproved"))
-apiList.set<APIFunctions["list_difficulties"]> ("/list/difficulties", isIReceivedDataAtServer_getlist_UseSIdMIdId, getList("difficulty"))
-apiList.set<APIFunctions["list_abilities"]>    ("/list/abilities", isIReceivedDataAtServer_getlist_UseSIdMIdId, getList("ability"))
-apiList.set<APIFunctions["list_targets"]>      ("/list/targets", isIReceivedDataAtServer_getlist_UseSIdMIdId, getList("target"))
-apiList.set<APIFunctions["list_abilityAttributes"]>     ("/list/abilityAttributes", isIReceivedDataAtServer_getlist_UseSIdMIdId, getList("abilityAttribute"))
+apiList.set<APIFunctions["list_difficulties"]>  ("/list/difficulties", isIReceivedDataAtServer_getlist_UseSIdMIdId, getList("difficulty"))
+apiList.set<APIFunctions["list_abilities"]>     ("/list/abilities", isIReceivedDataAtServer_getlist_UseSIdMIdId, getList("ability"))
+apiList.set<APIFunctions["list_targets"]>       ("/list/targets", isIReceivedDataAtServer_getlist_UseSIdMIdId, getList("target"))
+apiList.set<APIFunctions["list_abilityAttributes"]>         ("/list/abilityAttributes", isIReceivedDataAtServer_getlist_UseSIdMIdId, getList("abilityAttribute"))
 apiList.set<APIFunctions["list_abilityAttributeFlags"]>     ("/list/abilityAttributeFlags", isIReceivedDataAtServer_getList_UseSIdMIdAIdId, getList("abilityAttributeFlag"))
 
-apiList.set<APIFunctions["list_gameSystem"]> ("/list/gameSystem", isIReceivedDataAtServer_pickUp_UseId, pickUp("gameSystem"))
-apiList.set<APIFunctions["list_runner"]>("/list/runner", isIReceivedDataAtServer_pickUp_UseId, pickUp("runner"))
-apiList.set<APIFunctions["list_gameMode"]>   ("/list/gameMode", isIReceivedDataAtServer_pickUp_UseSIdId,pickUp("gameMode"))
-apiList.set<APIFunctions["list_hashTag"]>    ("/list/hashTag",isIReceivedDataAtServer_pickUp_UseSIdId,pickUp("hashTag"))
-apiList.set<APIFunctions["list_difficulty"]> ("/list/difficulty", isIReceivedDataAtServer_pickUp_UseSIdMIdId, pickUp("difficulty"))
-apiList.set<APIFunctions["list_ability"]>    ("/list/ability", isIReceivedDataAtServer_pickUp_UseSIdMIdId, pickUp("ability"))
-apiList.set<APIFunctions["list_target"]>     ("/list/target", isIReceivedDataAtServer_pickUp_UseSIdMIdId, pickUp("target"))
-apiList.set<APIFunctions["list_abilityAttribute"]>     ("/list/abilityAttribute", isIReceivedDataAtServer_pickUp_UseSIdMIdId, pickUp("abilityAttribute"))
-apiList.set<APIFunctions["list_abilityAttributeFlag"]>     ("/list/abilityAttributeFlag", isIReceivedDataAtServer_pickUp_UseSIdMIdAIdId, pickUp("abilityAttributeFlag"))
-apiList.set<APIFunctions["list_abilityAttribute"]>     ("/list/abilityAttribute", isIReceivedDataAtServer_pickUp_UseSIdMIdId, pickUp("abilityAttribute"))
-apiList.set<APIFunctions["list_abilityAttributeFlag"]>     ("/list/abilityAttributeFlag", isIReceivedDataAtServer_pickUp_UseSIdMIdAIdId, pickUp("abilityAttributeFlag"))
+apiList.set<APIFunctions["list_gameSystem"]>    ("/list/gameSystem", isIReceivedDataAtServer_pickUp_UseId, pickUp("gameSystem"))
+apiList.set<APIFunctions["list_runner"]>        ("/list/runner", isIReceivedDataAtServer_pickUp_UseId, pickUp("runner"))
+apiList.set<APIFunctions["list_gameMode"]>      ("/list/gameMode", isIReceivedDataAtServer_pickUp_UseSIdId,pickUp("gameMode"))
+apiList.set<APIFunctions["list_hashTag"]>       ("/list/hashTag",isIReceivedDataAtServer_pickUp_UseSIdId,pickUp("hashTag"))
+apiList.set<APIFunctions["list_difficulty"]>    ("/list/difficulty", isIReceivedDataAtServer_pickUp_UseSIdMIdId, pickUp("difficulty"))
+apiList.set<APIFunctions["list_ability"]>       ("/list/ability", isIReceivedDataAtServer_pickUp_UseSIdMIdId, pickUp("ability"))
+apiList.set<APIFunctions["list_target"]>        ("/list/target", isIReceivedDataAtServer_pickUp_UseSIdMIdId, pickUp("target"))
+apiList.set<APIFunctions["list_abilityAttribute"]>      ("/list/abilityAttribute", isIReceivedDataAtServer_pickUp_UseSIdMIdId, pickUp("abilityAttribute"))
+apiList.set<APIFunctions["list_abilityAttributeFlag"]>  ("/list/abilityAttributeFlag", isIReceivedDataAtServer_pickUp_UseSIdMIdAIdId, pickUp("abilityAttributeFlag"))
+apiList.set<APIFunctions["list_abilityAttribute"]>      ("/list/abilityAttribute", isIReceivedDataAtServer_pickUp_UseSIdMIdId, pickUp("abilityAttribute"))
+apiList.set<APIFunctions["list_abilityAttributeFlag"]>  ("/list/abilityAttributeFlag", isIReceivedDataAtServer_pickUp_UseSIdMIdAIdId, pickUp("abilityAttributeFlag"))
 
+apiList.set<APIFunctions["gameRule_get"]>  ("/gameRule/get", isIReceivedDataAtServer_gameRule_get, gameMode_get)
 
 apiList.set<APIFunctions["notification_read"]>  ("/notification/read", isIReceivedDataAtServer_notificationRead, readNotification)
 

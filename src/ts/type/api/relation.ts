@@ -1,5 +1,5 @@
 import { IReceivedData_addDiscordRoleID } from "./DiscordRole/relation";
-import { IReceivedData_listAbilities, IReceivedData_listAbility, IReceivedData_listAbilityAttribute, IReceivedData_listAbilityAttributeFlags, IReceivedData_listAbilityAttributes, IReceivedData_listDifficulties, IReceivedData_listDifficulty, IReceivedData_listGameMode, IReceivedData_listGameModes, IReceivedData_listGameSystem, IReceivedData_listGameSystems, IReceivedData_listHashTag, IReceivedData_listHashTags, IReceivedData_listRunner, IReceivedData_listRunners, IReceivedData_listTarget, IReceivedData_listTargets, IReceivedData_listAbilityAttributeFlag } from "./list/relation";
+import { IReceivedData_listAbilities, IReceivedData_listAbility, IReceivedData_listAbilityAttribute, IReceivedData_listAbilityAttributeFlags, IReceivedData_listAbilityAttributes, IReceivedData_listDifficulties, IReceivedData_listDifficulty, IReceivedData_listGameMode, IReceivedData_listGameModes, IReceivedData_listGameSystem, IReceivedData_listGameSystems, IReceivedData_listHashTag, IReceivedData_listHashTags, IReceivedData_listRunner, IReceivedData_listRunners, IReceivedData_listTarget, IReceivedData_listTargets, IReceivedData_listAbilityAttributeFlag, IReceivedData_gameRule_get } from "./list/relation";
 import { IReceivedData_notificationRead } from "./notification/relation";
 import { IReceivedData_recordDelete, IReceivedData_recordDetail, IReceivedData_recordModerate, IReceivedData_recordModify, IReceivedData_recordRawdata, IReceivedData_recordSearch, IReceivedData_recordWrite } from "./record/relation";
 
@@ -30,6 +30,8 @@ export interface APIFunctions_noChanging{
     list_hashTag:IReceivedData_listHashTag;
     list_abilityAttribute:IReceivedData_listAbilityAttribute
     list_abilityAttributeFlag:IReceivedData_listAbilityAttributeFlag;
+
+    gameRule_get:IReceivedData_gameRule_get
 }
 
 export interface APIFunctions_changing{

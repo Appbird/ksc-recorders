@@ -1,7 +1,7 @@
 import { APIFunctions } from "../../../type/api/relation";
 import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfaces";
 import { RecordGroupView } from "../parts/RecordsGroupView";
-import { PageStateBaseClass } from "./PageStateClass";
+import { PageStateBaseClass } from "./Base/PageStateClass";
 
 export class S_SearchResult 
     extends PageStateBaseClass<APIFunctions["record_search"]["atServer"],IAppUsedToReadAndChangeOnlyPageState>{

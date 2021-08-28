@@ -51,7 +51,7 @@ export class GameModeCardsGroup implements IView{
                         <div class ="c-iconWithDescription"> <i class="fas fa-list"></i> ${info.recordsNumber} Records</div>
                     </div>
                     <div class = "c-stateInfo__unit">
-                        <div class ="c-iconWithDescription"> <i class="fas fa-running"></i> ${info.runnersNumber} Runners</div>
+                        <div class ="c-iconWithDescription"> <i class="fas fa-running"></i> ${info.runnerIDList.length} Runners</div>
                     </div>
                     <div class = "c-stateInfo__unit">
                         <div class ="c-iconWithDescription"> <i class="fas fa-history"></i> ${convertNumberIntoDateString(info.dateOfLatestPost)} </div>

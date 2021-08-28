@@ -5,7 +5,7 @@ import { appendElement } from "../../utility/aboutElement";
 import { PageTitleView } from "../parts/PageTitleView";
 import { RecordGroupView } from "../parts/RecordsGroupView";
 import { TitleCupsuled } from "../parts/TitleCupsuled";
-import { PageStateBaseClass } from "./PageStateClass";
+import { PageStateBaseClass } from "./Base/PageStateClass";
 
 const context = {
     title: {

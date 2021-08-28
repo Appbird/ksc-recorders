@@ -1,34 +1,35 @@
-import { S_NowLoading } from "./nowLoading";
-import { S_ErrorState} from "./ErrorState"
-import { PageStatesConstructorObj} from "../../interface/PageStatesStructure";
-import { S_DetailViewer } from "./DetailViewer";
-import { S_SearchConditionSelector } from "./searchConditionSelector";
-import { S_SearchResult } from "./searchResult";
-import { S_GameSystemSelector } from "./gameSystemSelector";
-import { S_GameModeSelector } from "./GameModeSelector";
-import { S_MainMenu } from "./mainMenu";
-import { IAppUsedToRead } from "../../interface/AppInterfaces";
+import { S_NowLoading } from "../nowLoading";
+import { S_ErrorState} from "../ErrorState"
+import { PageStatesConstructorObj} from "../../../interface/PageStatesStructure";
+import { S_DetailViewer } from "../DetailViewer";
+import { S_SearchConditionSelector } from "../searchConditionSelector";
+import { S_SearchResult } from "../searchResult";
+import { S_GameSystemSelector } from "../gameSystemSelector";
+import { S_GameModeSelector } from "../GameModeSelector";
+import { S_MainMenu } from "../mainMenu";
+import { IAppUsedToRead } from "../../../interface/AppInterfaces";
 import { PageStateBaseClass } from "./PageStateClass";
-import { S_OfferForm } from "./offerForm";
-import { S_SpinnerExhibition } from "./SpinnerExhibition";
-import { S_SettingNewRegulationState_CollectionViewer } from "./settingNewRegulationState/S_SettingRegulationState_CollectionViewer";
-import { S_SettingRegulationState_GameSystemDocViewer } from "./settingNewRegulationState/S_SettingRegulationState_GameSystemDocViewer";
-import { S_SettingRegulationState_GameModeDocViewer } from "./settingNewRegulationState/S_SettingRegulationState_GameModeDocViewer";
-import { S_SettingRegulationState_AbilityDocViewer } from "./settingNewRegulationState/S_SettingRegulationState_AbilityDocViewer";
-import { S_SettingRegulationState_TargetDocViewer } from "./settingNewRegulationState/S_SettingRegulationState_TargetDocViewer";
-import { S_SettingRegulationState_DifficultyDocViewer } from "./settingNewRegulationState/S_SettingRegulationState_DifficultyDocViewer";
-import { S_GamemodeListOfPlayersPlayed } from "./gamemodeListOfPlayersPlayed";
-import { S_UserPageInSpecific } from "./UserPageInSpecific";
-import { S_UserPageInWhole } from "./UserPageInWhole";
-import { S_SettingUserInfo } from "./settingUserInfo";
-import { S_NotificationList } from "./notificationList";
-import { S_ModifyRecordForm } from "./modifyRecordForm";
-import { S_Credits } from "./credits/credits";
-import { S_SettingRegulationState_CollectionAppender } from "./settingNewRegulationState/S_InsertingNewCollection";
-import { S_UnverifiedRecords } from "./UnverifiedRecords";
-import { S_TermOfUse } from "./termOfUse";
-import { S_introduction } from "./introduction";
-import { S_SetLanguage } from "./setLanguage";
+import { S_OfferForm } from "../offerForm";
+import { S_SpinnerExhibition } from "../SpinnerExhibition";
+import { S_SettingNewRegulationState_CollectionViewer } from "../settingNewRegulationState/S_SettingRegulationState_CollectionViewer";
+import { S_SettingRegulationState_GameSystemDocViewer } from "../settingNewRegulationState/S_SettingRegulationState_GameSystemDocViewer";
+import { S_SettingRegulationState_GameModeDocViewer } from "../settingNewRegulationState/S_SettingRegulationState_GameModeDocViewer";
+import { S_SettingRegulationState_AbilityDocViewer } from "../settingNewRegulationState/S_SettingRegulationState_AbilityDocViewer";
+import { S_SettingRegulationState_TargetDocViewer } from "../settingNewRegulationState/S_SettingRegulationState_TargetDocViewer";
+import { S_SettingRegulationState_DifficultyDocViewer } from "../settingNewRegulationState/S_SettingRegulationState_DifficultyDocViewer";
+import { S_GamemodeListOfPlayersPlayed } from "../gamemodeListOfPlayersPlayed";
+import { S_UserPageInSpecific } from "../UserPageInSpecific";
+import { S_UserPageInWhole } from "../UserPageInWhole";
+import { S_SettingUserInfo } from "../settingUserInfo";
+import { S_NotificationList } from "../notificationList";
+import { S_ModifyRecordForm } from "../modifyRecordForm";
+import { S_Credits } from "../credits/credits";
+import { S_SettingRegulationState_CollectionAppender } from "../settingNewRegulationState/S_InsertingNewCollection";
+import { S_UnverifiedRecords } from "../UnverifiedRecords";
+import { S_TermOfUse } from "../termOfUse";
+import { S_introduction } from "../introduction";
+import { S_SetLanguage } from "../setLanguage";
+import { S_GameModeRule } from "../gameModeRule";
 
 export type RequiredObjectType<StateClass> = StateClass extends PageStateBaseClass<infer U,IAppUsedToRead>? U : never;
 export type UsedIAppLimited<IAppLimited> = IAppLimited extends PageStateBaseClass<any,infer U>? U:never;
@@ -55,7 +56,8 @@ export interface PageStatesWithRequiredObject{
     settingRegulation_DifficultyDocViewer:S_SettingRegulationState_DifficultyDocViewer,
     settingRegulation_CollectionAppender: S_SettingRegulationState_CollectionAppender,
     
-    unverifiedRecord:S_UnverifiedRecords
+    unverifiedRecord:S_UnverifiedRecords,
+    gameRuleView:S_GameModeRule
 }
 export interface PageStateWithoutRequiredObject{
     NowLoading:S_NowLoading,
@@ -103,5 +105,6 @@ export const pageStates:PageStatesConstructorObj= {
     unverifiedRecord:S_UnverifiedRecords,
     termOfUse:S_TermOfUse,
     introduction:S_introduction,
-    language:S_SetLanguage
+    language:S_SetLanguage,
+    gameRuleView:S_GameModeRule
 }

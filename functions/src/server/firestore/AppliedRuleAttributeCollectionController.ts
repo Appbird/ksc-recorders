@@ -1,16 +1,17 @@
-import { IRuleAttributeWithoutCollection } from "../../../../src/ts/type/list/IRuleAttributeItem";
+import { IAppliedGameModeRule } from "../../../../src/ts/type/list/GameModeRule";
 import { PartialValueWithFieldValue, Transaction } from "../function/firebaseAdmin";
 import { firestoreCollectionUtility } from "./base/FirestoreCollectionUtility";
 import { IFirestoreCollectionController, WithoutID } from "./base/IFirestoreCollectionController";
 
-type HandledType = IRuleAttributeWithoutCollection
+type HandledType = IAppliedGameModeRule
 
-export class RuleAttributeCollectionController implements IFirestoreCollectionController<HandledType> {
+export class AppliedRuleAttributeCollectionController implements IFirestoreCollectionController<HandledType> {
     readonly ref: FirebaseFirestore.CollectionReference;
     constructor(
+        gameSystemID:string,gameModeID:string,
         private transaction?:Transaction    
     ) {
-        this.ref = firestoreCollectionUtility.getRuleAttributeCollectionRef()
+        this.ref = firestoreCollectionUtility.getGameModeItemRef(gameSystemID,gameModeID).collection("appliedRuleAttributes")
     }
     getCollection(): Promise<HandledType[]> {
         return firestoreCollectionUtility.getCollection<HandledType>(this.ref,this.transaction);

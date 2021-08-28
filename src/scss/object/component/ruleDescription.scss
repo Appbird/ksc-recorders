@@ -1,0 +1,29 @@
+.c-ruleDescription{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    &>.__header{
+        font-weight: bolder;
+        width:90%;
+    }
+    &>.__rule{
+        width:80%;
+        display: flex;
+        flex-direction: column;
+        &>.__item{
+            display: flex;
+            justify-content:space-between;
+            flex-wrap: nowrap;
+            &>.__ruleScope{
+                font-weight: bolder;
+                display:inline-block;
+            }
+            &>.__ruleClass{
+                display:inline-block;
+            }
+        }
+    }
+    &>.__note{
+        width:80%;
+    }
+}

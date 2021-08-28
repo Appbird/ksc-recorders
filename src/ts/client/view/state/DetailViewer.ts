@@ -8,7 +8,7 @@ import { appendElement, createElementWithIdAndClass } from "../../utility/aboutE
 import { RecordDetailView } from "../parts/RecordDetailView/RecordDetailView";
 import { RecordGroupView } from "../parts/RecordsGroupView";
 import { TagsClickedCallbacks } from "../parts/Interface/TagsClickedCallbacks";
-import { PageStateBaseClass } from "./PageStateClass";
+import { PageStateBaseClass } from "./Base/PageStateClass";
 import { RecordOperation } from "../parts/RecordOperation";
 import { PageTitleView } from "../parts/PageTitleView";
 import { IGameSystemInfoWithoutCollections } from "../../../type/list/IGameSystemInfo";

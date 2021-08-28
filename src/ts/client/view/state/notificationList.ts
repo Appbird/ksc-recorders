@@ -1,5 +1,5 @@
 import { IAppUsedToChangeState } from "../../interface/AppInterfaces";
-import { PageStateBaseClass } from "./PageStateClass";
+import { PageStateBaseClass } from "./Base/PageStateClass";
 import firebase from "firebase/app";
 import "firebase/firestore"
 import { appendElement } from "../../utility/aboutElement";

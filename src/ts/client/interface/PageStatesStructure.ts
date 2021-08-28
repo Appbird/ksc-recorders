@@ -1,5 +1,5 @@
 import App from "../App";
-import { IPageStateBaseClass} from "../view/state/PageStateClass";
+import { IPageStateBaseClass} from "../view/state/Base/PageStateClass";
 
 export interface PageStatesConstructorObj {
     [key:string]:PageStateConstructor

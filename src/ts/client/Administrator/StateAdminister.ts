@@ -1,4 +1,4 @@
-import { PageStates, RequiredObjectType } from "../view/state/PageStates";
+import { PageStates, RequiredObjectType } from "../view/state/Base/PageStates";
 import { LanguageInApplication } from "../../type/LanguageInApplication";
 import { IGameSystemInfoWithoutCollections } from "../../type/list/IGameSystemInfo";
 import { IGameModeItemWithoutCollections, ScoreType } from "../../type/list/IGameModeItem";

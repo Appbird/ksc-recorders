@@ -6,7 +6,7 @@ import { convertNumberIntoDateString } from "../../../utility/timeUtility";
 import { elementWithoutEscaping } from "../../../utility/ViewUtility";
 import { IAppUsedToReadAndChangePage } from "../../interface/AppInterfaces";
 import { generateIcooonHTML, writeElement } from "../../utility/aboutElement";
-import { PageStateBaseClass } from "./PageStateClass";
+import { PageStateBaseClass } from "./Base/PageStateClass";
 
 export class S_GamemodeListOfPlayersPlayed extends PageStateBaseClass<{runnersInfo:IRunner},IAppUsedToReadAndChangePage>{
     private listCache:Map<string,IGameSystemInfoWithoutCollections> = new Map<string,IGameSystemInfoWithoutCollections>();

@@ -16,6 +16,8 @@ import { IReceivedDataAtClient_pickUp } from "./IReceivedDataAtClient_pickUp";
 import { IReceivedDataAtServer_getList_UseSIdMIdAIdId } from "./atServer_getlist/IReceivedDataAtServer_getList_UseSIdMIdAIdId";
 import { IAbilityAttributeFlagItem, IAbilityAttributeItemWithoutCollections } from "../../list/IAbilityAttributeItemWithoutCollections";
 import { IReceivedDataAtServer_pickUp_UseSIdMIdAIdId } from "./atServer_pickup/IReceivedDataAtServer_pickUp_UseSIdMIdAIdId";
+import { IReceivedDataAtServer_gameRule_get } from "../gameRule/IReceivedDataAtServer_gameRule_get";
+import { IReceivedDataAtClient_gameRule_get } from "../gameRule/IReceivedDataAtClient_gameRule_get";
 
 export interface IReceivedData_listGameSystems extends IReceivedData{
     atServer:IReceivedDataAtServer_getlist_UseId
@@ -89,4 +91,9 @@ export interface IReceivedData_listAbilityAttribute extends IReceivedData{
 export interface IReceivedData_listAbilityAttributeFlag extends IReceivedData{
     atServer:IReceivedDataAtServer_pickUp_UseSIdMIdAIdId
     atClient:IReceivedDataAtClient_pickUp<IAbilityAttributeFlagItem>
+}
+
+export interface IReceivedData_gameRule_get extends IReceivedData{
+    atServer:IReceivedDataAtServer_gameRule_get,
+    atClient:IReceivedDataAtClient_gameRule_get
 }

@@ -5,7 +5,7 @@ import { IAppUsedToReadAndChangePage } from "../../interface/AppInterfaces";
 import { appendElement } from "../../utility/aboutElement";
 import { SearchConditionSelectorView } from "../parts/Input/searchConditionSelector";
 import { PageTitleView } from "../parts/PageTitleView";
-import { PageStateBaseClass } from "./PageStateClass";
+import { PageStateBaseClass } from "./Base/PageStateClass";
 
 const context = {
     

@@ -1,6 +1,6 @@
 import { IAppUsedToReadAndChangePage } from "../../interface/AppInterfaces";
 import { appendElement, generateIcooonHTML, writeElement } from "../../utility/aboutElement";
-import { PageStateBaseClass } from "./PageStateClass";
+import { PageStateBaseClass } from "./Base/PageStateClass";
 import { UserInformationBoard } from "../parts/UserInformationBoard";
 import { IGameModeItemWithoutCollections } from "../../../type/list/IGameModeItem";
 import { IGameSystemInfoWithoutCollections } from "../../../type/list/IGameSystemInfo";

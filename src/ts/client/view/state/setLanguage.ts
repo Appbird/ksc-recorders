@@ -5,7 +5,7 @@ import { createElementWithIdAndClass, appendElement } from "../../utility/aboutE
 import { RadioButtonCupsuled } from "../parts/Input/RadioButtonCupsuled";
 import { PageTitleView } from "../parts/PageTitleView";
 import { TitleCupsuled } from "../parts/TitleCupsuled";
-import { PageStateBaseClass } from "./PageStateClass";
+import { PageStateBaseClass } from "./Base/PageStateClass";
 
 export class S_SetLanguage
     extends PageStateBaseClass<null,IAppUsedToReadAndChangePage>{

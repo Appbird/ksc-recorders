@@ -4,7 +4,7 @@ import { IAppUsedToReadAndChangeOnlyPageState } from "../../interface/AppInterfa
 import { appendElement } from "../../utility/aboutElement";
 import { GameModeCardsGroup } from "../parts/gameModeCardsGroup";
 import { PageTitleView } from "../parts/PageTitleView";
-import { PageStateBaseClass } from "./PageStateClass";
+import { PageStateBaseClass } from "./Base/PageStateClass";
 
 const context = {
     subtitle : {

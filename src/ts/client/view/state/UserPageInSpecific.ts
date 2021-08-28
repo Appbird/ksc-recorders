@@ -6,7 +6,7 @@ import { appendElement, createElementWithIdAndClass } from "../../utility/aboutE
 import { MenuView, RequiredObjectToGenerateItem } from "../parts/MenuView";
 import { RecordGroupView } from "../parts/RecordsGroupView";
 import { UserInformationBoard } from "../parts/UserInformationBoard";
-import { PageStateBaseClass } from "./PageStateClass";
+import { PageStateBaseClass } from "./Base/PageStateClass";
 
 const context = {
     menuHeader:{

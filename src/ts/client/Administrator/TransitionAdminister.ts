@@ -1,8 +1,8 @@
-import { pageStates, PageStates, RequiredObjectType } from "../view/state/PageStates";
+import { pageStates, PageStates, RequiredObjectType } from "../view/state/Base/PageStates";
 import App from "../App";
 import { StateAdministrator } from "./StateAdminister";
 import { elementWithoutEscaping } from "../../utility/ViewUtility";
-import { IPageStateBaseClass } from "../view/state/PageStateClass";
+import { IPageStateBaseClass } from "../view/state/Base/PageStateClass";
 
 
 export class TransitionAdministrator {

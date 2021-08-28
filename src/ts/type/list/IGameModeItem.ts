@@ -21,9 +21,7 @@ export interface IGameModeItemWithoutCollections extends ILabelledDocument,icooo
     gameSystemID:string;
     UnverifiedRecordNumber?:number;
     DiscordRoleID?:string;
-    
     runnerIDList:string[];
-    rules?:RuleDescription[]
 }
 export interface CollectionsInIGameModeItem{
     targets: ITargetItem[];
@@ -33,9 +31,3 @@ export interface CollectionsInIGameModeItem{
     offers:IStoredOfferedRecord[];
 }
 
-
-export interface RuleDescription{
-    id:string,
-    appliedClassIDs:string[],
-    noteInMarkdown:MultiLanguageString
-}

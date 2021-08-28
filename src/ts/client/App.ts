@@ -1,4 +1,4 @@
-import { PageStates, RequiredObjectType } from "./view/state/PageStates";
+import { PageStates, RequiredObjectType } from "./view/state/Base/PageStates";
 import { LanguageInApplication, LanguageList } from "../type/LanguageInApplication";
 import { TransitionAdministrator } from "./Administrator/TransitionAdminister";
 import { StateAdministrator, StateAdministerReadOnly } from "./Administrator/StateAdminister";

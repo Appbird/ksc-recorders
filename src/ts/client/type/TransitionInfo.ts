@@ -1,4 +1,4 @@
-import { PageStates, RequiredObjectType } from "../view/state/PageStates";
+import { PageStates, RequiredObjectType } from "../view/state/Base/PageStates";
 
 export interface TransitionInfo<T extends keyof PageStates> {
     to: T;

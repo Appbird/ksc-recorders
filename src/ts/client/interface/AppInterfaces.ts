@@ -5,7 +5,7 @@ import { IGameSystemInfoWithoutCollections } from "../../type/list/IGameSystemIn
 import { LoginAdministratorReadOnly } from "../Administrator/LoginAdministrator";
 import { PageNotificationAdministrator } from "../Administrator/PageNotificationAdministrator";
 import { StateAdministerReadOnly } from "../Administrator/StateAdminister";
-import { PageStates, RequiredObjectType } from "../view/state/PageStates";
+import { PageStates, RequiredObjectType } from "../view/state/Base/PageStates";
 
 
 export interface IAppUsedToRead{

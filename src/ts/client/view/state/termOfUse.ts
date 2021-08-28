@@ -4,7 +4,7 @@ import { elementWithoutEscaping, HTMLConverter } from "../../../utility/ViewUtil
 import { IAppUsedToChangeState } from "../../interface/AppInterfaces";
 import { appendElement } from "../../utility/aboutElement";
 import { PageTitleView } from "../parts/PageTitleView";
-import { PageStateBaseClass } from "./PageStateClass";
+import { PageStateBaseClass } from "./Base/PageStateClass";
 import context from "./termOfUse.json" 
 
 const contents = context.termOfUse as ITermOfUse

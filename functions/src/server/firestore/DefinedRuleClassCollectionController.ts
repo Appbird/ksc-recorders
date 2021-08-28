@@ -1,11 +1,11 @@
-import { IRuleClassItem } from "../../../../src/ts/type/list/IRuleClassItem";
+import { IDefinedRuleClassItem } from "../../../../src/ts/type/list/IRuleClassItem";
 import { PartialValueWithFieldValue, Transaction } from "../function/firebaseAdmin";
 import { firestoreCollectionUtility } from "./base/FirestoreCollectionUtility";
 import { IFirestoreCollectionController, WithoutID } from "./base/IFirestoreCollectionController";
 
-type HandledType = IRuleClassItem
+type HandledType = IDefinedRuleClassItem
 
-export class RuleClassCollectionController implements IFirestoreCollectionController<HandledType> {
+export class DefinedRuleClassCollectionController implements IFirestoreCollectionController<HandledType> {
     readonly ref: FirebaseFirestore.CollectionReference;
     constructor(
         id:string,

@@ -1,5 +1,5 @@
 import { IAppUsedToChangeState } from "../../../interface/AppInterfaces";
-import { PageStateBaseClass } from "../PageStateClass";
+import { PageStateBaseClass } from "../Base/PageStateClass";
 import { EditorFormManagerWithAutoDetect, InputFormObject } from "../../parts/SetNewRegulation/EditorFormManagerWithAutoDetect";
 import { IGameSystemInfoWithoutCollections } from "../../../../type/list/IGameSystemInfo";
 import { appendElement } from "../../../utility/aboutElement";

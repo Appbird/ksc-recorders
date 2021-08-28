@@ -5,7 +5,7 @@ import { appendElement } from "../../utility/aboutElement";
 import { EditorTextPart } from "../parts/SetNewRegulation/Editor/EditorTextPart";
 import { EditorFormManagerWithAutoDetect, InputFormObject } from "../parts/SetNewRegulation/EditorFormManagerWithAutoDetect";
 import { SettingRegulationStateHeader } from "../parts/SetNewRegulation/SettingRegulationStateHeader";
-import { PageStateBaseClass } from "./PageStateClass";
+import { PageStateBaseClass } from "./Base/PageStateClass";
 import { createEditorSegmentBaseElement, generateBaseEditors, generateDescriptionEditors, titleContext } from "./settingNewRegulationState/utility";
 import firebase from "firebase/app";
 import "firebase/firestore";

@@ -1,6 +1,6 @@
 import { IAppUsedToChangeState } from "../../../interface/AppInterfaces";
 import { SettingRegulationView_CollectionViewer } from "../../parts/SetNewRegulation/SettingRegulationView_CollectionViewer";
-import { PageStateBaseClass } from "../PageStateClass";
+import { PageStateBaseClass } from "../Base/PageStateClass";
 import firebase from "firebase/app"
 import "firebase/firestore";
 import { choiceString } from "../../../../utility/aboutLang";

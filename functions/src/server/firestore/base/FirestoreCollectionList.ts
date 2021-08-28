@@ -24,6 +24,8 @@ import { IFirestoreCollectionController } from "./IFirestoreCollectionController
 import { RecordCollectionController } from "../RecordCollectionController";
 import { RunnerCollectionController } from "../RunnerCollectionController";
 import { TargetCollectionController } from "../TargetCollectionController";
+import { DefinedRuleAttributeCollectionController } from "../DefinedRuleAttributeCollectionController";
+import { DefinedRuleClassCollectionController } from "../DefinedRuleClassCollectionController";
 
 
 export interface CollectionList{
@@ -38,6 +40,9 @@ export interface CollectionList{
     record:RecordCollectionController,
     hashTag:HashTagCollectionController,
     hashTagOnlyApproved:HashTagCollectionController,
+    ruleAttribute:DefinedRuleAttributeCollectionController,
+    ruleClass:DefinedRuleClassCollectionController
+
 }
 const CollectionListConstructors = new Map<keyof CollectionList, new (...data: any[]) => IFirestoreCollectionController<any>>([
     ["gameSystem",GameSystemItemController],
@@ -49,7 +54,9 @@ const CollectionListConstructors = new Map<keyof CollectionList, new (...data: a
     ["abilityAttributeFlag",AbilityAttributeFlagsCollectiCollectionController],
     ["runner",RunnerCollectionController],
     ["hashTag",HashTagCollectionController],
-    ["hashTagOnlyApproved",HashTagOnlyApprovedCollectionController]
+    ["hashTagOnlyApproved",HashTagOnlyApprovedCollectionController],
+    ["ruleAttribute",DefinedRuleAttributeCollectionController],
+    ["ruleClass",DefinedRuleClassCollectionController]
 ])
 
 export function generateCollectionController<T extends keyof CollectionList>(collectionName:T,{gameSystemEnv,abilityAttributeID}:{
@@ -65,6 +72,7 @@ export function generateCollectionController<T extends keyof CollectionList>(col
     switch(collectionName){
         case "gameSystem":
         case "runner":
+        case "ruleAttribute":
             return new CollectionController()
         
         case "gameMode":
@@ -76,6 +84,7 @@ export function generateCollectionController<T extends keyof CollectionList>(col
         case "difficulty":
         case "ability":
         case "target":
+        case "ruleClass":
         case "abilityAttribute":
             if (!gameSystemEnv || !gameSystemEnv.gameSystemID || !gameSystemEnv.gameModeID) throw new Error("[generateCollectionController] Either gameSystemEnv.gameSystemID or .gameModeID is not defined.")
             return new CollectionController(gameSystemEnv.gameSystemID,gameSystemEnv.gameModeID)

@@ -1,5 +1,5 @@
 import { IAppUsedToRead } from "../../interface/AppInterfaces";
-import { PageStateBaseClass } from "./PageStateClass";
+import { PageStateBaseClass } from "./Base/PageStateClass";
 
 export class S_SpinnerExhibition
     extends PageStateBaseClass<null,IAppUsedToRead>{

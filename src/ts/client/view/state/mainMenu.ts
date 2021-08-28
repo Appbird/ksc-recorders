@@ -2,7 +2,7 @@ import { IGameModeItemWithoutCollections } from "../../../type/list/IGameModeIte
 import { IGameSystemInfoWithoutCollections } from "../../../type/list/IGameSystemInfo";
 import { element, HTMLConverter, setSpanForCorrectLineBreak } from "../../../utility/ViewUtility";
 import { IAppUsedToReadAndChangePage } from "../../interface/AppInterfaces";
-import { PageStateBaseClass } from "./PageStateClass";
+import { PageStateBaseClass } from "./Base/PageStateClass";
 import { MenuView, RequiredObjectToGenerateItem } from "../parts/MenuView";
 import { appendElement } from "../../utility/aboutElement";
 import { StateAdministrator } from "../../Administrator/StateAdminister";

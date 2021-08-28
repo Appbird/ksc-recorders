@@ -1,6 +1,6 @@
-import { element } from "../../../utility/ViewUtility";
-import { IAppUsedToRead } from "../../interface/AppInterfaces";
-import { createElementWithIdAndClass } from "../../utility/aboutElement";
+import { element } from "../../../../utility/ViewUtility";
+import { IAppUsedToRead } from "../../../interface/AppInterfaces";
+import { createElementWithIdAndClass } from "../../../utility/aboutElement";
 
 const spinnerKind = [
     "flag","punch","person","iceCream","ns","ds","ramen","notebook","heart",

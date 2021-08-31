@@ -9,6 +9,7 @@ export class SelectChoicesCapsuled<T extends ILabelledDocument> implements IView
     private readonly _language: LanguageInApplication;
     private _choices: Choices;
     private container: HTMLSelectElement;
+    private _value:string|string[] = [];
     constructor(
         container: HTMLSelectElement, data: T[],
         {
@@ -73,10 +74,12 @@ export class SelectChoicesCapsuled<T extends ILabelledDocument> implements IView
         return [choiced];
     }
     setSelected(IDs:string|string[]){
+        this._value = IDs
         this._choices.setChoiceByValue(IDs)
     }
     setChoices(item: T[]) {
-        
+        const value = (this.getValueAsArray().length !== 0) ? this.getValueAsArray() : this._value
+        this._choices.clearStore()
         this._choices.setChoices(item.map(ele => {
             return { value: ele.id, label: choiceString(ele, this._language) };
         }));

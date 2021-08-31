@@ -20,6 +20,10 @@ service cloud.firestore {
     	}
     
     }
+    match /rules/{document=**}{
+      allow read: if true;
+      allow write: if isCommitteeMember(request.auth.uid)
+    }
     
     
     match /titles/{document=**} {

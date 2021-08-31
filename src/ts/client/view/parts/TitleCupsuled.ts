@@ -22,7 +22,7 @@ export class TitleCupsuled implements IView{
         this.container.innerHTML = "";
         const title = this.container.appendChild(elementWithoutEscaping`
         <div class="c-title u-margin05em">
-            <div class="c-title__main ${chara}">${(iconCSS) ? `$<i class="${iconCSS}"></i>` : "" }${main}</div>
+            <div class="c-title__main ${chara}">${(iconCSS) ? `<i class="${iconCSS}"></i> ` : "" }${main}</div>
         </div>
         `);
         if (sub !== undefined) title.appendChild(elementWithoutEscaping`<div class="c-title__sub ${subChara}">${sub}</div>`)

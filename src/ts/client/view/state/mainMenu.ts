@@ -296,6 +296,20 @@ export class S_MainMenu
                 isDisabled:!isSetTargetGameMode || !isLogIn,
                 biggerTitle:false,
                 to:(this.app.loginAdministratorReadOnly.isUserLogin) ? () => this.app.transition("offerForm",null):undefined
+            },{
+                title:{
+                    Japanese:"ルール",
+                    English:"Rules",
+                    icon:"contract"
+                },
+                description:{
+                    Japanese:"<p>このゲームモードにおけるルールを確認することが出来ます。<strong>記録を投稿する前に読んでください。</strong></p>",
+                    English:"<p>Rules in this game mode is written in this page. <strong>Please read this rules before you submit a record.</strong></p>"
+                },
+                isDisabled:!isSetTargetGameMode,
+                biggerTitle:false,
+                //#TODO なんか404になる
+                to:() => {this.app.transition("gameRuleView",{gameSystemID:this.app.state.gameSystemIDDisplayed,gameModeID:this.app.state.gameModeIDDisplayed})}
             }];
         }
 

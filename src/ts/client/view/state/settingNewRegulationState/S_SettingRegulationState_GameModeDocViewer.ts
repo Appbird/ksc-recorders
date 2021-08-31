@@ -52,6 +52,26 @@ const context = {
                 Japanese:"このゲームモードに登場する難易度を羅列しているリストです。",
                 English:"The list included all of difficulties in this gamemode"
             },
+        },
+        abilityAttributes:{
+            title:{
+                Japanese:"能力属性値",
+                English:"Ability Attribute"
+            },
+            explain:{
+                Japanese:"能力に着けることのできる属性を羅列しているリストです。",
+                English:"The list includes all attributes associated with ability in this gamemode."
+            },
+        },
+        appliedRule:{
+            title:{
+                Japanese:"適用ルール",
+                English:"Applied Rules"
+            },
+            explain:{
+                Japanese:"このゲームモードにおいて設定されているルールのリストです。",
+                English:"The list including all rules applied in this gamemode."
+            },
         }
     },
     Input:{
@@ -133,17 +153,19 @@ export class S_SettingRegulationState_GameModeDocViewer
                 mainTitle: (this.requiredObj.id !== undefined) ? context.title:context.titleWithoutID,
                 subTitle:  (this.requiredObj.id !== undefined) ? context.titleDescription:context.titleWithoutIDDescription
             },[
-                {id:"back",icooon:"folder",title:context.List.backSelectable.title,description:context.List.backSelectable.explain,unused:false, onClickCallBack: () => goBackFromDocToCollection(this.app,this.requiredObj)},
+                {id:"back",icooon:"folder"  ,title:context.List.backSelectable.title,description:context.List.backSelectable.explain,unused:false, onClickCallBack: () => goBackFromDocToCollection(this.app,this.requiredObj)},
                 {id:"abilities",icooon:"star",title:context.List.abilitySelectable.title,description:context.List.abilitySelectable.explain,unused:unset, onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"abilities")},
                 {id:"targets",icooon:"flag",title:context.List.targetSelectable.title,description:context.List.targetSelectable.explain,unused:unset, onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"targets")},
                 {id:"difficulties",icooon:"difficulty",title:context.List.difficultySelectable.title,description:context.List.difficultySelectable.explain,unused:unset, onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"difficulties")},
+                {id:"abilityAttributes",icooon:"star",title:context.List.abilityAttributes.title,description:context.List.abilityAttributes.explain,unused:unset, onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"abilityAttributes")},
+                {id:"appliedRules",icooon:"contract",title:context.List.appliedRule.title,description:context.List.appliedRule.explain,unused:unset, onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"appliedRules")}
             ])
         const lang = this.app.state.language;
         const editorHeader:HTMLElement = appendElement(this.articleDOM,"div");
         const editorSegment:HTMLElement = appendElement(this.articleDOM,"div");
         const inputForms:InputFormObject<HandledType>= {
             ...generateBaseEditors(editorSegment,lang,context),
-            
+            ...generateDescriptionEditors(editorSegment,lang,context),
             scoreType:          new EditorScoreTypePart({
                 container:createEditorSegmentBaseElement(editorSegment),
                                             language:lang,
@@ -162,7 +184,6 @@ export class S_SettingRegulationState_GameModeDocViewer
                                             icooon:"person"
                                         }),
 
-            ...generateDescriptionEditors(editorSegment,lang,context)
         };
         const gameSystemID = this.requiredObj.collection.parent?.id
         if (gameSystemID === undefined) throw new Error("対応するゲームシステムIDが存在しません。")
@@ -180,7 +201,7 @@ export class S_SettingRegulationState_GameModeDocViewer
             },{
                 ErrorCatcher:(error) => this.app.errorCatcher(error),
                 whenAppendNewItem: (id,data) => {
-                    for (const id of ["abilities","targets","difficulties"]) headerMaker.get(id).classList.remove("u-unused")
+                    for (const id of ["abilities","targets","difficulties","abilityAttributes","appliedRules"]) headerMaker.get(id).classList.remove("u-unused")
                     headerMaker.changeTitle({mainTitle:context.title,subTitle:context.titleDescription})
                     this.requiredObj.id = id;
                     

@@ -30,6 +30,13 @@ import { S_TermOfUse } from "../termOfUse";
 import { S_introduction } from "../introduction";
 import { S_SetLanguage } from "../setLanguage";
 import { S_GameModeRule } from "../gameModeRule";
+import { S_SettingRegulationState_AbilityAttributeDocViewer } from "../settingNewRegulationState/S_SettingRegulationState_AbilityAttributeDocViewer";
+import { S_SettingRegulationState_TagsDocViewer } from "../settingNewRegulationState/S_SettingRegulationState_TagsDocViewer";
+import { S_SettingRegulationState_GameRuleAttributeDocViewer } from "../settingNewRegulationState/S_SettingRegulationState_GameRuleAttributeDocViewer";
+import { S_SettingRegulationState_GameRuleClassDocViewer } from "../settingNewRegulationState/S_SettingRegulationState_GameRuleClassDocViewer";
+import { S_SettingRegulationState_AbilityAttributeFlagDocViewer } from "../settingNewRegulationState/S_SettingRegulationState_AbilityAttributeFlagDocViewer";
+import { S_SettingRegulationState_AppliedGameRuleDocViewer } from "../settingNewRegulationState/S_SettingRegulationState_AppliedGameRuleDocViewer";
+import { S_SettingRegulationState_Top } from "../settingNewRegulationState/S_SettingNewRegulationState_Top";
 
 export type RequiredObjectType<StateClass> = StateClass extends PageStateBaseClass<infer U,IAppUsedToRead>? U : never;
 export type UsedIAppLimited<IAppLimited> = IAppLimited extends PageStateBaseClass<any,infer U>? U:never;
@@ -55,7 +62,14 @@ export interface PageStatesWithRequiredObject{
     settingRegulation_TargetDocViewer:S_SettingRegulationState_TargetDocViewer,
     settingRegulation_DifficultyDocViewer:S_SettingRegulationState_DifficultyDocViewer,
     settingRegulation_CollectionAppender: S_SettingRegulationState_CollectionAppender,
-    
+    settingRegulation_AbilityAttributeDocViewer: S_SettingRegulationState_AbilityAttributeDocViewer,
+    settingRegulation_AbilityAttributeFlagDocViewer: S_SettingRegulationState_AbilityAttributeFlagDocViewer,
+    settingRegulation_TagsDocViewer: S_SettingRegulationState_TagsDocViewer,
+    settingRegulation_RulesDocViewer: S_SettingRegulationState_GameRuleAttributeDocViewer,
+    settingRegulation_RuleClassesDocViewer: S_SettingRegulationState_GameRuleClassDocViewer,
+    settingRegulation_AppliedRulesDocViewer: S_SettingRegulationState_AppliedGameRuleDocViewer,
+    settingRegulation_Top: S_SettingRegulationState_Top,
+
     unverifiedRecord:S_UnverifiedRecords,
     gameRuleView:S_GameModeRule
 }
@@ -99,6 +113,13 @@ export const pageStates:PageStatesConstructorObj= {
     settingRegulation_TargetDocViewer:S_SettingRegulationState_TargetDocViewer,
     settingRegulation_DifficultyDocViewer:S_SettingRegulationState_DifficultyDocViewer,
     settingRegulation_CollectionAppender: S_SettingRegulationState_CollectionAppender,
+    settingRegulation_AbilityAttributeDocViewer: S_SettingRegulationState_AbilityAttributeDocViewer,
+    settingRegulation_AbilityAttributeFlagDocViewer: S_SettingRegulationState_AbilityAttributeFlagDocViewer,
+    settingRegulation_TagsDocViewer: S_SettingRegulationState_TagsDocViewer,
+    settingRegulation_RulesDocViewer: S_SettingRegulationState_GameRuleAttributeDocViewer,
+    settingRegulation_RuleClassesDocViewer: S_SettingRegulationState_GameRuleClassDocViewer,
+    settingRegulation_AppliedRulesDocViewer: S_SettingRegulationState_AppliedGameRuleDocViewer,
+    settingRegulation_Top: S_SettingRegulationState_Top,
 
     modifyRecordForm:S_ModifyRecordForm,
     credits:S_Credits,

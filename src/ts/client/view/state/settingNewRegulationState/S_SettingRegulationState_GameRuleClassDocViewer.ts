@@ -1,13 +1,14 @@
 import { IAppUsedToChangeState } from "../../../interface/AppInterfaces";
 import { PageStateBaseClass } from "../Base/PageStateClass";
 import { EditorFormManagerWithAutoDetect, InputFormObject } from "../../parts/SetNewRegulation/EditorFormManagerWithAutoDetect";
-import { IGameSystemInfoWithoutCollections } from "../../../../type/list/IGameSystemInfo";
 import { appendElement } from "../../../utility/aboutElement";
-import { EditorDatePart } from "../../parts/SetNewRegulation/Editor/EditorDatePart";
 import { DocViewerRequired } from "./Types";
-import { createEditorSegmentBaseElement, generateBaseEditors, generateDescriptionEditors, goBackFromDocToCollection, goDeeperFromDocToCollection, titleContext } from "./utility";
+import { createEditorSegmentBaseElement, generateBaseEditors, generateDescriptionEditors, goBackFromDocToCollection, titleContext } from "./utility";
 import { SettingRegulationStateHeader } from "../../parts/SetNewRegulation/SettingRegulationStateHeader";
 import { choiceString } from "../../../../utility/aboutLang";
+import { IDefinedRuleClassItem } from "../../../../type/list/IDefinedRuleClassItem";
+import { EditorMultipleIconCSSPart } from "../../parts/SetNewRegulation/Editor/EditorMultipleIconCSSPart";
+import { EditorTextPart } from "../../parts/SetNewRegulation/Editor/EditorTextPart";
 const context = {
     ...titleContext,
     List:{
@@ -21,39 +22,27 @@ const context = {
                 //#CTODO 英訳
                 English:"Press this button to go back to shallower directory."
             },
-        },
-        modeSelectable:{
-            
-            title:{
-                Japanese:"ゲームモード",
-                English:"Game Mode"
-            },
-            explain:{
-                Japanese:"この作品に登場するゲームモードを羅列しているリストです。",
-                English:"The list including all of the gamemodes in this title."
-            }
-        },
-        hashtag:{
-            
-            title:{
-                Japanese:"ハッシュタグ",
-                English:"Hashtag"
-            },
-            explain:{
-                Japanese:"この作品で使用されている登録済みのハッシュタグのリストです",
-                English:"The list including all of the hashtags in this title."
-            }
         }
     },
     Input:{
+        typeName:{
+            title:{
+                Japanese:"識別名",
+                English:"Identification name"
+            },
+            description:[{
+                Japanese:"このアイテムの識別名を入力してください。",
+                English:"Enter this item's Identification name in Japanese."
+            }]
+        },
         Japanese:{
             title:{
                 Japanese:"日本語名",
                 English:"Japanese Name"
             },
             description:[{
-                Japanese:"この作品の日本語名を入力してください。",
-                English:"Enter this title's name in Japanese."
+                Japanese:"このアイテムの日本語名を入力してください。",
+                English:"Enter this item's name in Japanese."
             }]
         },
         English:{
@@ -62,8 +51,8 @@ const context = {
                 English:"English Name"
             },
             description:[{
-                Japanese:"この作品の英語名を入力して下さい。",
-                English:"Enter this title's name in English."
+                Japanese:"このアイテムの英語名を入力して下さい。",
+                English:"Enter this item's name in English."
             }]
         },
         JapaneseDescription:{
@@ -72,8 +61,8 @@ const context = {
                 English:"Japanese Description"
             },
             description:[{
-                Japanese:" この作品についての説明を日本語で入力してください。",
-                English:"Enter this title's short description in Japanese."
+                Japanese:" このアイテムについての説明を日本語で入力してください。",
+                English:"Enter this item's short description in Japanese."
             }]
         },
         EnglishDescription:{
@@ -82,25 +71,31 @@ const context = {
                 English:"English Description"
             },
             description:[{
-                Japanese:"この作品についての説明を英語で入力して下さい。",
-                English:"Enter this title's short description in English."
+                Japanese:"このアイテムについての説明を英語で入力して下さい。",
+                English:"Enter this item's short description in English."
             }]
-        }
-        ,
-        releasedData:{
+        },
+        iconCSS:{
             title:{
-                Japanese:"発売日",
-                English:"Released Date"
+                Japanese:"icon CSS",
+                English:"iconCSS"
             },
             description:[{
-                Japanese:"この作品のリリース日を入力してください。",
-                English:"Press the button below to set the released date of this title <strong>In Japan</strong>."
+                Japanese:"このルールを表すアイコンを入力してください。",
+                English:"Enter the icon expressing this rule."
+            },{
+                Japanese:"Font Awesome 5のうち、無料プランで使えるアイコンのCSSクラスをここに入力してください。",
+                English:"Enter the icon expressing this rule."
+            },{
+                Japanese:",で区切ると複数アイコンを入力することが出来ます。",
+                English:"You can enter multiple icons by separating \",\"."
             }]
         }
+  
     }
 }
-type HandledType = IGameSystemInfoWithoutCollections;
-export class S_SettingRegulationState_GameSystemDocViewer
+type HandledType = IDefinedRuleClassItem
+export class S_SettingRegulationState_GameRuleClassDocViewer
     extends PageStateBaseClass<DocViewerRequired, IAppUsedToChangeState> {
     private editorForm:EditorFormManagerWithAutoDetect<HandledType>|null = null;
     init() {
@@ -113,45 +108,40 @@ export class S_SettingRegulationState_GameSystemDocViewer
             },[
             {
                 id:"back",icooon:"folder",title:context.List.backSelectable.title,description:context.List.backSelectable.explain,unused:false, onClickCallBack: () => goBackFromDocToCollection(this.app,this.requiredObj)
-            },
-            {
-                id:"modes",icooon:"ns",title:context.List.modeSelectable.title,description:context.List.modeSelectable.explain,unused, onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"modes")
-            },
-            {
-                id:"hashtags",icooon:"tag",title:context.List.hashtag.title,description:context.List.hashtag.explain,unused, onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"tags")
             }])
         const lang = this.app.state.language;
         const editorHeader:HTMLElement = appendElement(this.articleDOM,"div");
         const editorSegment:HTMLElement = appendElement(this.articleDOM,"div");
         const inputForms:InputFormObject<HandledType>= {
+            typeName:   new EditorTextPart({
+                container: createEditorSegmentBaseElement(appendElement(this.articleDOM,"div")),
+                language:lang,
+                ...context.Input.typeName,
+                icooon: "",
+                requiredField:true
 
+            }),
             ...generateBaseEditors(editorSegment,lang,context),
-                                        
-            releasedDate:       new EditorDatePart({
-                                            container:createEditorSegmentBaseElement(editorSegment),
-                                            language:lang,
-                                            title:context.Input.releasedData.title,
-                                            description:context.Input.releasedData.description,
-                                            icooon:"ns",
-                                            requiredField:true
-                                        }),
-                                        
-            ...generateDescriptionEditors(editorSegment,lang,context)
+            ...generateDescriptionEditors(editorSegment,lang,context),
+            iconCSS:   new EditorMultipleIconCSSPart({
+                container:createEditorSegmentBaseElement(appendElement(this.articleDOM,"div")),
+                language:lang,
+                ...context.Input.iconCSS,
+                icooon:"",
+                requiredField:true
+            })
         };
         this.editorForm = new EditorFormManagerWithAutoDetect(
             editorHeader,lang,this.requiredObj.collection,this.requiredObj.pathStack.join(" > "),inputForms,
             {
                 id:"",
+                typeName:"",
                 Japanese:"",English:"",
                 JDescription:"",EDescription:"",
-                recordsNumber:0,runnerIDList:[],
-                dateOfLatestPost:Date.now(),
-                releasedDate:Date.now(),
+                iconCSS:[""]
             },{
                 ErrorCatcher:(error) => this.app.errorCatcher(error),
                 whenAppendNewItem: (id,data) => {
-                    headerMaker.get("modes").classList.remove("u-unused")
-                    headerMaker.get("hashtags").classList.remove("u-unused")
                     headerMaker.changeTitle({mainTitle:context.title,subTitle:context.titleDescription})
                     this.requiredObj.id = id
                     

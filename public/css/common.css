@@ -671,16 +671,19 @@ article {
 @media screen and (max-width: 600px) {
   article {
     width: 90%;
+    font-size: small;
   }
 }
 @media screen and (min-width: 600px) and (max-width: 800px) {
   article {
     width: 80%;
+    font-size: smaller;
   }
 }
 @media screen and (min-width: 800px) and (max-width: 1000px) {
   article {
     width: 70%;
+    font-size: smaller;
   }
 }
 nav {
@@ -1283,29 +1286,79 @@ article h1:not(.u-noUnderline):after {
   justify-content: center;
   flex-direction: column;
 }
+.c-ruleDescription > * {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
 .c-ruleDescription > .__header {
   font-weight: bolder;
-  width: 90%;
+  width: 100%;
 }
 .c-ruleDescription > .__rule {
-  width: 80%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.c-ruleDescription > .__rule > * {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+.c-ruleDescription > .__note {
+  width: 100%;
+}
+
+.c-HeaderInRuleDescription {
+  display: flex;
+  flex-direction: row;
+}
+.c-HeaderInRuleDescription > .__icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: xx-large;
+}
+.c-HeaderInRuleDescription > .__ruleName {
   display: flex;
   flex-direction: column;
 }
-.c-ruleDescription > .__rule > .__item {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: nowrap;
-}
-.c-ruleDescription > .__rule > .__item > .__ruleScope {
+.c-HeaderInRuleDescription > .__ruleName > .__title {
+  font-size: larger;
   font-weight: bolder;
-  display: inline-block;
 }
-.c-ruleDescription > .__rule > .__item > .__ruleClass {
-  display: inline-block;
+.c-HeaderInRuleDescription > .__ruleName > .__typeName {
+  font-size: smaller;
 }
-.c-ruleDescription > .__note {
-  width: 80%;
+
+.c-ruleIndex > .__list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: larger;
+  margin: 0.2em;
+}
+.c-ruleIndex > .__list > .__item {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  width: 95%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+.c-ruleIndex > .__list > .__item.--top > * {
+  text-align: center;
+}
+.c-ruleIndex > .__list > .__item > *:first-child {
+  width: 60%;
+  font-size: smaller;
+  display: flex;
+  align-items: center;
+}
+.c-ruleIndex > .__list > .__item > .__classItems {
+  width: 40%;
+  font-size: smaller;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .p-titlePostHeader {

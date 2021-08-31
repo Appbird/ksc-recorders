@@ -3,7 +3,7 @@ import { WithoutID } from "./IFirestoreCollectionController";
 
 const base = {
     getRuleAttributeCollectionRef(){
-        return firebaseAdmin.firestore.collection("runners");
+        return firebaseAdmin.firestore.collection("rules");
     },
     getRunnerCollectionRef(){
         return firebaseAdmin.firestore.collection("runners");

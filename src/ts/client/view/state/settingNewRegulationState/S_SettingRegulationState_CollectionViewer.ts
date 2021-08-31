@@ -7,6 +7,7 @@ import { choiceString } from "../../../../utility/aboutLang";
 import { SettingRegulationStateHeader } from "../../parts/SetNewRegulation/SettingRegulationStateHeader";
 import { appendElement } from "../../../utility/aboutElement";
 import { ILabelledDocument } from "../../../../type/list/ILabelledDocument";
+import { AllCoveredCollectionName } from "./utility";
 
 const context = {
     title:{
@@ -66,15 +67,19 @@ export class S_SettingNewRegulationState_CollectionViewer
                 mainTitle: context.title,
                 subTitle:  context.titleDescription
             },[{
-                id:"modes",title:context.List.backSelectable.title,description:context.List.backSelectable.explain,unused:(this.requiredObj.pathStack.length === 1),icooon:"folder",
+                id:"back",title:context.List.backSelectable.title,description:context.List.backSelectable.explain,unused:(this.requiredObj.pathStack.length === 0),icooon:"folder",
                 onClickCallBack: () => {
                     if (this.requiredObj === null) throw new Error("オブジェクトが与えられていません。")
+                    if (this.requiredObj.pathStack.length === 1){
+                        this.app.transition("settingRegulation_Top",null)
+                        return;
+                    }
                     const id = this.requiredObj.collection.parent?.id;
                     const ref = this.requiredObj.collection.parent?.parent
                     if (id === undefined || ref === undefined) throw new Error("上の階層がありません");
                     this.requiredObj.pathStack.pop();
-                    
-                    this.transitionProperState(id,ref,this.requiredObj.pathStack,this.requiredObj.pathStack[this.requiredObj.pathStack.length-2]);
+                    if (this.requiredObj.pathStack.length !== 1) this.transitionProperState(id,ref,this.requiredObj.pathStack,this.requiredObj.pathStack[this.requiredObj.pathStack.length-2] as keyof AllCoveredCollectionName)
+                       
                 }
             },{
                 id:"insertNewDataByCSV",title:context.List.CSVSelectable.title,description:context.List.CSVSelectable.explain,unused:(ps[ps.length-1] !== "targets"&&ps[ps.length-1] !== "abilities"),icooon:"writing",
@@ -99,11 +104,11 @@ export class S_SettingNewRegulationState_CollectionViewer
             onClickEventListener: (id,item) => {
                 if (this.requiredObj === null) throw new Error()
                 this.requiredObj.pathStack.push(choiceString(item,this.app.state.language))
-                this.transitionProperState(id,this.requiredObj.collection,this.requiredObj.pathStack,this.requiredObj.pathStack[this.requiredObj.pathStack.length-2]);
+                this.transitionProperState(id,this.requiredObj.collection,this.requiredObj.pathStack,this.requiredObj.pathStack[this.requiredObj.pathStack.length-2] as keyof AllCoveredCollectionName);
             }
         })
     }
-    private transitionProperState(id:string,collection:firebase.firestore.CollectionReference,pathStack:string[],docWantToGo:string){
+    private transitionProperState(id:string,collection:firebase.firestore.CollectionReference,pathStack:string[],docWantToGo:keyof AllCoveredCollectionName){
         if (this.requiredObj === null) throw new Error()
         const moveTo = (() => {
             switch (docWantToGo){
@@ -112,7 +117,17 @@ export class S_SettingNewRegulationState_CollectionViewer
                 case "difficulties":    return "settingRegulation_DifficultyDocViewer";
                 case "modes":           return "settingRegulation_GameModeDocViewer";
                 case "titles":          return "settingRegulation_GameSystemDocViewer";
-                default:                return "settingRegulation_GameSystemDocViewer";
+                case "abilityAttributes": return "settingRegulation_AbilityAttributeDocViewer"
+                case "flags":           return "settingRegulation_AbilityAttributeFlagDocViewer"
+                case "tags":            return "settingRegulation_TagsDocViewer"
+                case "rules":           return "settingRegulation_RulesDocViewer"
+                case "ruleClasses":     return "settingRegulation_RuleClassesDocViewer"
+                case "appliedRules":    return "settingRegulation_AppliedRulesDocViewer"
+
+                default: 
+                    const error = new Error(`docWantToGo = ${String(docWantToGo)}となっており、ページの遷移先が定められていないものが与えられました。`)
+                    this.app.errorCatcher(error)
+                    throw error;
             }
         })()
         this.app.transition(moveTo,{

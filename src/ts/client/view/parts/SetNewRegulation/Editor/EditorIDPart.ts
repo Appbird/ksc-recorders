@@ -43,9 +43,7 @@ export class EditorIDPart implements EditorPart<string> {
         this.ulist = new UListCupsuled(appendElement(this.container,"ul"),language,description)
     }
     addChangeEventListener(callback: (changed: string|undefined) => void) {
-        this.selectInput.addEventListener("change", () => {
-            callback(this.value)
-        });
+        this.selectInput.addEventListener("change", () => callback(this.value));
     }
     get value(): string|undefined {
         return this.selectInput.getValueAsValue();

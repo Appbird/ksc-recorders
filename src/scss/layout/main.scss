@@ -17,13 +17,13 @@ article{
     padding-bottom: 4em;
 }
 @media screen and (max-width:600px) {
-    article {width:90%;}
+    article {width:90%; font-size: small;}
 }
 @media screen and (min-width:600px) and (max-width:800px) {
-    article {width:80%;}
+    article {width:80%; font-size: smaller;}
 }
 @media screen and (min-width:800px) and (max-width:1000px) {
-    article {width:70%;}
+    article {width:70%; font-size: smaller;}
 }
 nav{
     min-width:200px;

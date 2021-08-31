@@ -18,17 +18,20 @@ export class RuleResolver {
         if (rule === undefined) return undefined
         const ruleClassC = new DefinedRuleClassCollectionController(rule.id,this.transaction)
         return {
-                rule:           {
+                rule: {
                     ...chooseMultiLanguageString(await this.ruleAttributeC.getInfo(rule.id),language),
                     note: choiceString(rule.note,language)
                 },
                 appliedClass:   await Promise.all(
                     rule.appliedClassID.map(
-                        async appliedClassInfo => { return {
-                                ...chooseMultiLanguageString(await ruleClassC.getInfo(appliedClassInfo.id),language),
+                        async appliedClassInfo => {
+                            const data = await ruleClassC.getInfo(appliedClassInfo.id)    
+                            return {
+                                ...chooseMultiLanguageString(data,language),
                                 note: choiceString(appliedClassInfo.note,language),
-                                scope: choiceString(appliedClassInfo.note,language)
-                        }}
+                                scope: choiceString(appliedClassInfo.scope,language)
+                            }
+                        }
                     )
                 )
         }

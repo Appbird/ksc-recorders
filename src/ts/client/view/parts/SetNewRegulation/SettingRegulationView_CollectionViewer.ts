@@ -1,8 +1,8 @@
 import { appendElement, generateIcooonHTML } from "../../../utility/aboutElement";
-import { HTMLConverter } from "../../../../utility/ViewUtility";
 import { IView } from "../../IView";
 import { LanguageInApplication } from "../../../../type/LanguageInApplication";
-import firebase from "firebase";
+import firebase from "firebase/app";
+import "firebase/firestore";
 import { choiceString, selectAppropriateDescription } from "../../../../utility/aboutLang";
 import { ILabelledDocument, ILabelledDocumentLackingOfID } from "../../../../type/list/ILabelledDocument";
 import { icooonResolvable } from "../../../../type/foundation/icooonResolvable";

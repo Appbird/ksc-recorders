@@ -1,5 +1,4 @@
 import { icooonResolvable } from "../foundation/icooonResolvable";
-import { MultiLanguageString } from "../foundation/MultiLanguageString";
 import { IRecord } from "../record/IRecord";
 import { IAbilityItem } from "./IAbilityItem";
 import { IGameDifficultyItem } from "./IGameDifficultyItem";

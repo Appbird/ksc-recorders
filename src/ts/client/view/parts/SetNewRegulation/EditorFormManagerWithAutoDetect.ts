@@ -1,6 +1,5 @@
 import { LanguageInApplication } from "../../../../type/LanguageInApplication";
 import { EditorPart } from "./Editor/EditorPart";
-import { checkType } from "../../../../utility/InputCheckerUtility";
 import { TitleCupsuled } from "../TitleCupsuled";
 import { IView } from "../../IView";
 import { choiceString } from "../../../../utility/aboutLang";
@@ -10,10 +9,11 @@ import firebase from "firebase/app";
 /**
  * このクラスにエディタパーツ(EditorPart)を依存注入しておくと、値の同期を自動でやっておいてくれる。
  */
-type Callbacks = {
+type Callbacks<T> = {
     ErrorCatcher:(error:any)=>void,
     whenReset:()=>void,
     whenAppendNewItem:(id:string,data:{[key:string]:any})=>void,
+    onReady?:(obj:T)=>Promise<void>
 }
 const undefinedIDDisplayer = {
     Japanese:"新規",
@@ -28,12 +28,12 @@ export class EditorFormManagerWithAutoDetect<TypeOfObserved extends object> impl
     private unsubscribe:(()=>void)|null = null;
     private container:HTMLElement;
     private pathInString:string;
-
+    private isAlreadyInitalized:boolean = false;
     private title:TitleCupsuled;
     private language:LanguageInApplication;
     private readonly inputForm:InputFormObject<TypeOfObserved> 
     private data:{[key:string]:any};
-    private callbacks:Callbacks
+    private callbacks:Callbacks<TypeOfObserved>
     private defaultObject:TypeOfObserved;
 
     constructor(
@@ -44,8 +44,8 @@ export class EditorFormManagerWithAutoDetect<TypeOfObserved extends object> impl
         inputForms:InputFormObject<TypeOfObserved>,
         defaultObject:TypeOfObserved,
         {
-            ErrorCatcher,whenAppendNewItem,whenReset,id
-        }:Callbacks&{
+            ErrorCatcher,whenAppendNewItem,whenReset,onReady: initalizeWhenItemAreSet,id
+        }:Callbacks<TypeOfObserved>&{
             id?:string,
         }
     ){
@@ -61,14 +61,15 @@ export class EditorFormManagerWithAutoDetect<TypeOfObserved extends object> impl
         this.inputForm = inputForms;
         this.data = {};
         this.callbacks = {
-            ErrorCatcher:ErrorCatcher,
-            whenAppendNewItem:whenAppendNewItem,
-            whenReset:whenReset
+            ErrorCatcher,
+            whenAppendNewItem,
+            whenReset,
+            onReady: initalizeWhenItemAreSet
         }
         if (this.id === undefined){
             this.startToCreateNewData();
         }else {
-            this.fetchData().then(() => this.subscribe());
+            this.subscribe();
         }
         this.addChangeEventListener();
         this.refreshTitle()
@@ -80,17 +81,12 @@ export class EditorFormManagerWithAutoDetect<TypeOfObserved extends object> impl
         this.data = Object.assign(this.defaultObject);
         this.reflectView(this.data)
         this.refreshTitle();
-        
+        if (this.callbacks.onReady !== undefined && !this.isAlreadyInitalized) this.onReady()
     }
     private refreshTitle(){
         this.title.refresh(`Editing : ${this.pathInString}`,(this.id === undefined) ? choiceString(undefinedIDDisplayer,this.language):this.id,{
             chara:"u-smallerChara",hr:"u-bold"
         })
-    }
-    private async fetchData(){
-        const data = await (await (this.pathOfDocObserved.doc(this.id).get())).data()
-        if (data === undefined) return this.startToCreateNewData();
-        this.reflectView(data);
     }
     private subscribe(){
         this.unsubscribe = this.pathOfDocObserved.doc(this.id).onSnapshot(querySnapshot => {
@@ -98,7 +94,11 @@ export class EditorFormManagerWithAutoDetect<TypeOfObserved extends object> impl
             const data = querySnapshot.data();
             if (data === undefined) return;
             this.reflectView(data);
+            if (this.callbacks.onReady !== undefined && !this.isAlreadyInitalized) this.onReady()
         });
+    }
+    addChangeEventListenerToAllParts(callback:(changed:TypeOfObserved) => void){
+        for (const tuple of this.inputFormsTuples) tuple[1]?.addChangeEventListener(() => callback(this.data as TypeOfObserved))
     }
     private addChangeEventListener(){
         for (const [key,editor] of this.inputFormsTuples){
@@ -107,11 +107,10 @@ export class EditorFormManagerWithAutoDetect<TypeOfObserved extends object> impl
                 const beforeChange = this.data[key]
                 
                 console.info(`[KSSRs-InfoEditor] change on the client detected : Property ${key} >>> from ${beforeChange} to ${changed}`)
-                    
+                
                 this.data[key] = changed;
                 if (this.id !== undefined) {
-                    this.writeData();
-                    console.info(`[KSSRs-InfoEditor] reflected : Property ${key} >>> from ${beforeChange} to ${changed}`)
+                    this.writeData().then(() => console.info(`[KSSRs-InfoEditor] change reflected.`))
                     return;
                 }
                 if (this.isFilled()){
@@ -131,13 +130,11 @@ export class EditorFormManagerWithAutoDetect<TypeOfObserved extends object> impl
      * @param item ここに入れた値は画面表示更新前にListItemInputForm#dataプロパティに代入される。
      */
     private reflectView(item?:{[key:string]:any}){
-        
         if (item !== undefined) this.data = item;
         for (const [key,editor] of this.inputFormsTuples){
             if (editor === undefined) continue;
-            if (editor.requiredTypeInString === undefined) throw new Error("[EditorFormManagerWithAutoDetect:reflectView] editor.requiredTypeInString === undefined")
-            if (this.data.hasOwnProperty(key) && checkType(this.data[key],editor.requiredTypeInString)) editor.refresh(this.data[key])
-            //#NOTE 型システム的には保証されていないが一応チェックも通してるので正当な型が入る…ハズ。
+            if (this.data.hasOwnProperty(key)) editor.refresh(this.data[key])
+            //#NOTE 型システム的には保証されていない。
         }
     }
     /**
@@ -154,13 +151,12 @@ export class EditorFormManagerWithAutoDetect<TypeOfObserved extends object> impl
      * 現在のListItemInputForm#dataプロパティをもとにデータベースに新しいデータとして書き込む。
      * なお、idプロパティに何かを代入している場合、それがfirestoreでのidに置き換えられる点に注意。
      * @param item ここに入れた値は画面表示更新前にListItemInputForm#dataプロパティに代入される。
-     * @throws データがすでに登録済みであった(ListItemInputForm#dataがundefinedでない)場合、例外を投げます。
      * @returns データが充てられたIDを返します。
      */
     async addData(item?:{[key:string]:any}):Promise<string>{
         if (item !== undefined) this.data = item;
-        if (this.id !== undefined) throw new Error("このデータは既に登録済みです。")
-        const ref = await this.pathOfDocObserved.add(this.data);
+        if (this.data.id !== undefined) this.id = this.data.id
+        const ref = (this.id === undefined) ? this.pathOfDocObserved.doc(this.id) : this.pathOfDocObserved.doc()
         this.data.id = ref.id
         this.pathOfDocObserved.doc(ref.id).set(this.data)
         this.callbacks.whenAppendNewItem(ref.id,this.data);
@@ -183,6 +179,11 @@ export class EditorFormManagerWithAutoDetect<TypeOfObserved extends object> impl
     }
     get inputFormsTuples():[string,EditorPart<any>|undefined][]{
         return Object.entries(this.inputForm);
+    }
+    private onReady(){
+        if (this.callbacks.onReady === undefined) return;
+        this.callbacks.onReady(this.data as TypeOfObserved)
+        this.isAlreadyInitalized = true;
     }
 }
 

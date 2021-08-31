@@ -1,4 +1,4 @@
-import { IDefinedRuleAttributeWithoutCollection } from "../../../../src/ts/type/list/IRuleAttributeItem";
+import { IDefinedRuleAttributeWithoutCollection } from "../../../../src/ts/type/list/IDefinedRuleAttributeItem";
 import { PartialValueWithFieldValue, Transaction } from "../function/firebaseAdmin";
 import { firestoreCollectionUtility } from "./base/FirestoreCollectionUtility";
 import { IFirestoreCollectionController, WithoutID } from "./base/IFirestoreCollectionController";

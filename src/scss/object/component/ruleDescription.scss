@@ -2,28 +2,81 @@
     display: flex;
     justify-content: center;
     flex-direction: column;
+    &>*{
+        margin-top: 1em;
+        margin-bottom: 1em;
+    }
     &>.__header{
         font-weight: bolder;
-        width:90%;
+        width:100%;
     }
     &>.__rule{
-        width:80%;
-        display: flex;
+        display:flex;
         flex-direction: column;
-        &>.__item{
-            display: flex;
-            justify-content:space-between;
-            flex-wrap: nowrap;
-            &>.__ruleScope{
-                font-weight: bolder;
-                display:inline-block;
-            }
-            &>.__ruleClass{
-                display:inline-block;
-            }
+        justify-content: center;
+        &>*{
+            margin-top: 0.5em;
+            margin-bottom: 0.5em;
         }
     }
     &>.__note{
-        width:80%;
+        width:100%;
+    }
+}
+.c-HeaderInRuleDescription{
+    display: flex;
+    flex-direction: row;
+        
+        &>.__icon{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: xx-large;
+        }
+        &>.__ruleName{
+            display:flex;
+            flex-direction: column;
+            &>.__title{
+                font-size: larger;
+                font-weight: bolder;
+            }
+            &>.__typeName{
+                font-size:smaller;
+            }
+        }
+}
+.c-ruleIndex{
+    &>.__list{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-size: larger;
+        margin:0.2em;
+        &>.__item{
+            padding-top:0.5em;
+            padding-bottom: 0.5em;
+            width: 95%;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-around;
+            &.--top>*{
+                text-align: center;
+            }
+            &>*:first-child{
+                width:60%;
+                font-size:smaller;
+                display: flex;
+                align-items: center;
+            }
+            &>.__classItems{
+                width:40%;
+                
+                font-size:smaller;
+                display:flex;
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        
     }
 }

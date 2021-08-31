@@ -1,4 +1,4 @@
-import { IDefinedRuleClassItem } from "../../../../src/ts/type/list/IRuleClassItem";
+import { IDefinedRuleClassItem } from "../../../../src/ts/type/list/IDefinedRuleClassItem";
 import { PartialValueWithFieldValue, Transaction } from "../function/firebaseAdmin";
 import { firestoreCollectionUtility } from "./base/FirestoreCollectionUtility";
 import { IFirestoreCollectionController, WithoutID } from "./base/IFirestoreCollectionController";
@@ -11,7 +11,7 @@ export class DefinedRuleClassCollectionController implements IFirestoreCollectio
         id:string,
         private transaction?:Transaction    
     ) {
-        this.ref = firestoreCollectionUtility.getRuleAttributeCollectionRef().doc(id).collection("classes")
+        this.ref = firestoreCollectionUtility.getRuleAttributeCollectionRef().doc(id).collection("ruleClasses")
     }
     getCollection(): Promise<HandledType[]> {
         return firestoreCollectionUtility.getCollection<HandledType>(this.ref,this.transaction);

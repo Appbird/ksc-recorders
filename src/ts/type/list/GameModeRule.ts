@@ -1,9 +1,12 @@
 import { MultiLanguageString } from "../foundation/MultiLanguageString";
+import { ILabelledDocument } from "./ILabelledDocument";
 
-export interface IAppliedGameModeRule{
+export interface IAppliedGameModeRule extends ILabelledDocument{
 	id:string;
+	Japanese:string;
+	English:string;
 	appliedClassID:IAppliedClassInfo[]
-	note:string;
+	note:MultiLanguageString
 }
 export interface IAppliedClassInfo{
 	id:string;

@@ -7,16 +7,18 @@ import { context_required, EditorPart } from "./EditorPart";
 import SimpleMDE from "simplemde";
 import { choiceString } from "../../../../../utility/aboutLang";
 
-export class EditorSimpleMDEPart implements EditorPart<string> {
+export class EditorMultiLanguageSimpleMDEPart implements EditorPart<MultiLanguageString> {
     private container: HTMLElement;
-    private textInput: SimpleMDE;
+    private JtextInput: SimpleMDE;
     private htmlCon: HTMLConverter;
     private _requiredField:boolean;
     private ulist:UListCupsuled
-    private textarea:HTMLTextAreaElement
-    private static readonly _requiredTypeInString = "string";
+    private static readonly _requiredTypeInString = undefined;
+    private EtextInput: SimpleMDE;
+    private Jtextarea: HTMLTextAreaElement;
+    private Etextarea: HTMLTextAreaElement;
     get requiredTypeInString(){
-        return EditorSimpleMDEPart._requiredTypeInString;
+        return EditorMultiLanguageSimpleMDEPart._requiredTypeInString;
     }
     constructor(
         {container,language,title,requiredField,description,icooon}:{
@@ -33,43 +35,56 @@ export class EditorSimpleMDEPart implements EditorPart<string> {
         this.htmlCon = new HTMLConverter(language);
         this._requiredField = requiredField;
         if (title !== undefined) this.container.appendChild(this.htmlCon.elementWithoutEscaping `<h1 class="u-noUnderline">${generateIcooonHTML({icooonName:(icooon)})}${title}</h1>`);
-        this.textarea = appendElement(this.container,"textarea")
+        
         this.ulist = new UListCupsuled(appendElement(this.container,"ul"),language,description)
-        this.textInput = new SimpleMDE({
-            element:    this.textarea,
+        this.Jtextarea = appendElement(this.container,"textarea")
+        this.Etextarea = appendElement(this.container,"textarea")
+        this.JtextInput = new SimpleMDE({
+            element:    this.Jtextarea,
             autosave:{
-                enabled:true,
+                enabled:false,
                 uniqueId:`EditorSimpleMDEPart__${choiceString(title,language)}`
             },
             spellChecker:false,
+            placeholder:"Japanese"
+        });
+        this.EtextInput = new SimpleMDE({
+            element:    this.Etextarea,
+            autosave:{
+                enabled:false,
+                uniqueId:`EditorSimpleMDEPart__${choiceString(title,language)}`
+            },
+            spellChecker:false,
+            placeholder:`English`
         });
         
     }
-    addChangeEventListener(callback: (changed: string) => void) {
-        this.textarea.addEventListener("change", () => callback(this.value))
+    addChangeEventListener(callback: (changed: MultiLanguageString) => void) {
+        this.Jtextarea.addEventListener("change", () => callback(this.value))
+        this.Etextarea.addEventListener("change", () => callback(this.value))
     }
-    get value(): string {
-        return this.textInput.value();
+    get value():  MultiLanguageString {
+        return {
+            Japanese:this.JtextInput.value(),
+            English:this.EtextInput.value()
+        }
     }
-    refresh(value: string) {
-        this.textInput.value(value);
+    refresh(value: MultiLanguageString) {
+        this.JtextInput.value(value.Japanese ? value.Japanese : "");
+        this.EtextInput.value(value.English ? value.English : "");
     }
     disabled(state:boolean){
         (state) ? this.container.classList.add("u-unused") : this.container.classList.remove("u-unused")
     }
     isFill(): boolean {
-        return this.value.length !== 0
+        return this.JtextInput.value().length * this.EtextInput.value().length !== 0
     }
     get requiredField():boolean{
         return this._requiredField
     }
-    clearAutoSavedText(){
-        this.textInput.value("")
-        this.textInput.clearAutosavedValue()
-    }
     destroy(){
-        this.container.innerHTML = "";
         this.ulist.destroy();
+        this.container.innerHTML = "";
     }
 }
 

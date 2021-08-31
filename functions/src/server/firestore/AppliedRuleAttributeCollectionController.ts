@@ -11,7 +11,7 @@ export class AppliedRuleAttributeCollectionController implements IFirestoreColle
         gameSystemID:string,gameModeID:string,
         private transaction?:Transaction    
     ) {
-        this.ref = firestoreCollectionUtility.getGameModeItemRef(gameSystemID,gameModeID).collection("appliedRuleAttributes")
+        this.ref = firestoreCollectionUtility.getGameModeItemRef(gameSystemID,gameModeID).collection("appliedRules")
     }
     getCollection(): Promise<HandledType[]> {
         return firestoreCollectionUtility.getCollection<HandledType>(this.ref,this.transaction);

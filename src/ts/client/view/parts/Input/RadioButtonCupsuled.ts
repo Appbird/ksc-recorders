@@ -38,14 +38,13 @@ export class RadioButtonCupsuled<T> implements IView {
     }
     private select(index:number){
         if (this.disabledState) return;
-
         this.elements[this.selectedIndex].input.classList.remove("--checked");
         this.elements[index].input.classList.add("--checked");
 
         this.selected = this.elements[index].value;
+        if (this.selectedIndex !== index) for (const callback of this.callbacks) callback(this.elements[index].value)
         this.selectedIndex = index;
-        
-        for (const callback of this.callbacks) callback(this.elements[index].value)
+       
     }
     get value(): T {
         return this.selected;

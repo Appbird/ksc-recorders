@@ -3,14 +3,14 @@ import { PageStateBaseClass } from "../Base/PageStateClass";
 import { EditorFormManagerWithAutoDetect, InputFormObject } from "../../parts/SetNewRegulation/EditorFormManagerWithAutoDetect";
 import { appendElement } from "../../../utility/aboutElement";
 import { DocViewerRequired } from "./Types";
-import { createEditorSegmentBaseElement, generateBaseEditors, generateDescriptionEditors, goBackFromDocToCollection, titleContext } from "./utility";
+import { createEditorSegmentBaseElement, generateBaseEditors, generateDescriptionEditors, goBackFromDocToCollection, goDeeperFromDocToCollection, titleContext } from "./utility";
 import { SettingRegulationStateHeader } from "../../parts/SetNewRegulation/SettingRegulationStateHeader";
-import { IAbilityItem } from "../../../../type/list/IAbilityItem";
 import { choiceString } from "../../../../utility/aboutLang";
 import { IAbilityAttributeItemWithoutCollections } from "../../../../type/list/IAbilityAttributeItemWithoutCollections";
-import { StateAdministrator } from "../../../Administrator/StateAdminister";
 import { EditorBooleanPart } from "../../parts/SetNewRegulation/Editor/EditorTogglePart";
 import { EditorPositiveIntegerPart } from "../../parts/SetNewRegulation/Editor/EditorNumberTypePart";
+import { EditorMultipleTogglePart } from "../../parts/SetNewRegulation/Editor/EditorMultipleTogglePart";
+import { IGameModeItemWithoutCollections } from "../../../../type/list/IGameModeItem";
 
 const context = {
     ...titleContext,
@@ -23,6 +23,16 @@ const context = {
             explain:{
                 Japanese:"上の階層に戻ります。",
                 English:"return to shallower directory."
+            },
+        },
+        Flag:{
+            title:{
+                Japanese:"属性値",
+                English:"Attribute Values"
+            },
+            explain:{
+                Japanese:"この能力属性に対して対して定義される属性値のリストです。",
+                English:"The list of attribute values defined for this ability attribute."
             },
         }
     },
@@ -69,64 +79,85 @@ const context = {
         },
         multipleItems:{
             title:{
-                Japanese:   "",
-                English:    ""
+                Japanese:   "複数フラグを許可するか",
+                English:    "If allow multiple flags"
             },
             description:[{
-                Japanese:   "",
-                English:    ""
+                Japanese:   "この能力属性は、複数のフラグを取ることが出来るかを選びます。",
+                English:    "Select if this ability attribute can take multiple flags."
+            },{
+                Japanese: "「フラグ」とは、能力属性値の取った値のことを指します。",
+                English: "\"flag\" means a value that one ability attributes takes."
             }]
         },
         duplicatedItems:{
             title:{
-                Japanese:   "",
-                English:    ""
+                Japanese:   "重複フラグを許可するか",
+                English:    "If allow duplicated flags"
             },
             description:[{
-                Japanese:   "",
-                English:    ""
+                Japanese:   "一度に同じフラグを複数取ることが出来るかを選択します。",
+                English:    "Select if this ability attribute can take reduplication flags at once."
             }]
         },
         requiredItemCount:{
             title:{
-                Japanese:   "",
-                English:    ""
+                Japanese:   "必要とするフラグの数",
+                English:    "The number of required flags"
             },
             description:[{
-                Japanese:   "",
-                English:    ""
+                Japanese:   "この能力属性値が必要とするフラグの数を入力してください。",
+                English:    "Enter the number of flags this ability attribute rquires."
             }]
         },
         maxItemCount:{
             title:{
-                Japanese:   "",
-                English:    ""
+                Japanese:   "最大のフラグの数",
+                English:    "The max number of flags."
             },
             description:[{
-                Japanese:   "",
-                English:    ""
+                Japanese:   "この能力属性値が持てる最大のフラグ数を入力してください。",
+                English:    "Enter the mex number of flags this ability attribute can take."
+            }]
+        },
+        targetPlayerFlag:{
+            title:{
+                Japanese:   "どのプレイヤーにこの能力属性を付与するか",
+                English:    "Which players the ability attribute is given to."
+            },
+            description:[{
+                Japanese:   "プレイヤーに対応するスイッチを偽にすると、そのプレイヤーに対してこの属性が問われなくなります。",
+                English:    "If you switch the boolean value of a player to false, this ability attribute will be not given to the player."
+            },{
+                Japanese:   "上から、1P, 2P ,3P ,...の順で並んでいます。",
+                English:    "From the top, they are arranged in the order of 1P, 2P, 3P, ... ."
             }]
         }
         
     }
 }
+
 type HandledType = IAbilityAttributeItemWithoutCollections
 export class S_SettingRegulationState_AbilityAttributeDocViewer
     extends PageStateBaseClass<DocViewerRequired, IAppUsedToChangeState> {
     private editorForm:EditorFormManagerWithAutoDetect<HandledType>|null = null;
     async init() {
+        
+        const unset = (this.requiredObj.id===undefined)
          const headerMaker = new SettingRegulationStateHeader(
             appendElement(this.articleDOM,"div"),this.app.state.language,
             {
                 mainTitle: (this.requiredObj.id !== undefined) ? context.title:context.titleWithoutID,
                 subTitle:  (this.requiredObj.id !== undefined) ? context.titleDescription:context.titleWithoutIDDescription
-            },[{
-                id:"back",icooon:"folder",title:context.List.backSelectable.title,description:context.List.backSelectable.explain,unused:false, onClickCallBack: () => goBackFromDocToCollection(this.app,this.requiredObj)
-            }])
+            },[
+                {id:"back",icooon:"folder",title:context.List.backSelectable.title,description:context.List.backSelectable.explain,unused:false, onClickCallBack: () => goBackFromDocToCollection(this.app,this.requiredObj)},
+                {id:"flag",icooon:"flag",title:context.List.Flag.title,description:context.List.Flag.explain,unused:unset, onClickCallBack: () =>  goDeeperFromDocToCollection(this.app,this.requiredObj,"flags")}
+            ])
         const lang = this.app.state.language;
         const editorHeader:HTMLElement = appendElement(this.articleDOM,"div");
         const editorSegment:HTMLElement = appendElement(this.articleDOM,"div");
-
+        const gameMode = (await this.requiredObj.collection.parent?.get())?.data() as IGameModeItemWithoutCollections|undefined
+        if (gameMode === undefined) throw new Error("gameMode === undefined")
         const inputForms:InputFormObject<HandledType>= {
 
             ...generateBaseEditors(editorSegment,lang,context),
@@ -136,8 +167,8 @@ export class S_SettingRegulationState_AbilityAttributeDocViewer
                     language:lang,
                     title:context.Input.multipleItems.title,
                     description:context.Input.multipleItems.description,
-                    icooon:"feather",
-                    requiredField:false,
+                    icooon:"flag",
+                    requiredField:true,
                     indentifiedName:"multipleItems"
 
             }),
@@ -146,8 +177,8 @@ export class S_SettingRegulationState_AbilityAttributeDocViewer
                 language:lang,
                 title:context.Input.duplicatedItems.title,
                 description:context.Input.duplicatedItems.description,
-                icooon:"feather",
-                requiredField:false,
+                icooon:"flag",
+                requiredField:true,
                 indentifiedName:"duplicatedItems"
 
             }),
@@ -156,8 +187,8 @@ export class S_SettingRegulationState_AbilityAttributeDocViewer
                 language:lang,
                 title:context.Input.requiredItemCount.title,
                 description:context.Input.requiredItemCount.description,
-                icooon:"feather",
-                requiredField:false
+                icooon:"flag",
+                requiredField:true
             })
             ,
             maxItemCount:          new EditorPositiveIntegerPart({
@@ -165,14 +196,23 @@ export class S_SettingRegulationState_AbilityAttributeDocViewer
                 language:lang,
                 title:context.Input.maxItemCount.title,
                 description:context.Input.maxItemCount.description,
-                icooon:"feather",
-                requiredField:false
+                icooon:"flag",
+                requiredField:true
+            }),
+            targetPlayerFlag:       new EditorMultipleTogglePart({
+                container:createEditorSegmentBaseElement(appendElement(this.articleDOM,"div")),
+                language:lang,
+                title:context.Input.targetPlayerFlag.title,
+                description:context.Input.targetPlayerFlag.description,
+                icooon:"flag",
+                requiredField:true,
+                indentifiedName:"targetPlayerFlag",
+                toggleNumber: gameMode?.maxNumberOfPlayer
             })
         };
-        const firstStateOfTargetPlayerFlag = (() => {
+        const firstStateOfTargetPlayerFlag = await (async () => {
             const result:boolean[] = []
-            if (!StateAdministrator.checkGameSystemEnvIsSet(this.app.state.gameSystemEnvDisplayed)) throw new Error()
-            for (let i = 0; i < this.app.state.gameSystemEnvDisplayed.gameMode.maxNumberOfPlayer; i++) result.push(true)
+            for (let i = 0; i < gameMode.maxNumberOfPlayer; i++) result.push(true)
             return result
         })()
         this.editorForm = new EditorFormManagerWithAutoDetect(
@@ -186,6 +226,7 @@ export class S_SettingRegulationState_AbilityAttributeDocViewer
             },{
                 ErrorCatcher:(error) => this.app.errorCatcher(error),
                 whenAppendNewItem: (id,data) => {
+                    for (const id of ["flags"]) headerMaker.get(id).classList.remove("u-unused")
                     headerMaker.changeTitle({mainTitle:context.title,subTitle:context.titleDescription})
                     this.requiredObj.id = id;
                     

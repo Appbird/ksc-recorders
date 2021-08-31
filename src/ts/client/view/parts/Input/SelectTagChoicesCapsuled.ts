@@ -39,9 +39,8 @@ export class SelectTagChoicesCapsuled implements IView {
         this._data = data;
 
             //#CTODO サジェストに近い候補のものを入力すると、それ本体ではなく似たものがタグとして入力される問題を解決する。
-            //*> Tagifyを利用してここを書き換える。  
-            //#TODO ゲームモードごとのルールを書く
-            //#TODO 属性編集画面と、ゲームモードルール編集画面を作る
+            //*> Tagifyを利用してここを書き換える。
+            //#CTODO 属性編集画面と、ゲームモードルール編集画面を作る
 
     }
     addEventListener(eventType: "addItem" | "click" | "hideDropdown" | "change" | "choice", callback: (event: any) => void) {

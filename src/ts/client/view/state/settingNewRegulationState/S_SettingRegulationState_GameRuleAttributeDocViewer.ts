@@ -1,13 +1,14 @@
 import { IAppUsedToChangeState } from "../../../interface/AppInterfaces";
 import { PageStateBaseClass } from "../Base/PageStateClass";
 import { EditorFormManagerWithAutoDetect, InputFormObject } from "../../parts/SetNewRegulation/EditorFormManagerWithAutoDetect";
-import { IGameSystemInfoWithoutCollections } from "../../../../type/list/IGameSystemInfo";
 import { appendElement } from "../../../utility/aboutElement";
-import { EditorDatePart } from "../../parts/SetNewRegulation/Editor/EditorDatePart";
 import { DocViewerRequired } from "./Types";
 import { createEditorSegmentBaseElement, generateBaseEditors, generateDescriptionEditors, goBackFromDocToCollection, goDeeperFromDocToCollection, titleContext } from "./utility";
 import { SettingRegulationStateHeader } from "../../parts/SetNewRegulation/SettingRegulationStateHeader";
 import { choiceString } from "../../../../utility/aboutLang";
+import { IDefinedRuleAttributeWithoutCollection } from "../../../../type/list/IDefinedRuleAttributeItem";
+import { EditorTextPart } from "../../parts/SetNewRegulation/Editor/EditorTextPart";
+import { EditorIconCSSPart } from "../../parts/SetNewRegulation/Editor/EditorIconCSSPart";
 const context = {
     ...titleContext,
     List:{
@@ -22,28 +23,17 @@ const context = {
                 English:"Press this button to go back to shallower directory."
             },
         },
-        modeSelectable:{
+        ruleClasses:{
             
             title:{
-                Japanese:"ゲームモード",
-                English:"Game Mode"
+                Japanese:"ルールクラス",
+                English:"Rule Class"
             },
             explain:{
-                Japanese:"この作品に登場するゲームモードを羅列しているリストです。",
-                English:"The list including all of the gamemodes in this title."
+                Japanese:"このルール属性に属するルールクラスのリストです。",
+                English:"The list including all of rule classes associated with this rule attribute with  in this title."
             }
         },
-        hashtag:{
-            
-            title:{
-                Japanese:"ハッシュタグ",
-                English:"Hashtag"
-            },
-            explain:{
-                Japanese:"この作品で使用されている登録済みのハッシュタグのリストです",
-                English:"The list including all of the hashtags in this title."
-            }
-        }
     },
     Input:{
         Japanese:{
@@ -85,22 +75,35 @@ const context = {
                 Japanese:"この作品についての説明を英語で入力して下さい。",
                 English:"Enter this title's short description in English."
             }]
-        }
-        ,
-        releasedData:{
+        },
+        ruleName:{
             title:{
-                Japanese:"発売日",
-                English:"Released Date"
+                Japanese:"ルール名",
+                English:"Rule Name"
             },
             description:[{
-                Japanese:"この作品のリリース日を入力してください。",
-                English:"Press the button below to set the released date of this title <strong>In Japan</strong>."
+                Japanese:"ルールの識別名を入力してください。",
+                English:"Enter the unique name of this rule."
+            }]
+        },
+        iconCSS:{
+            title:{
+                Japanese:"icon CSS",
+                English:"iconCSS"
+            },
+            description:[{
+                Japanese:"このルールを表すアイコンを入力してください。",
+                English:"Enter the icon expressing this rule."
+            },{
+                Japanese:"Font Awesome 5のうち、無料プランで使えるアイコンのCSSクラスをここに入力してください。",
+                English:"Enter the icon expressing this rule."
             }]
         }
+  
     }
 }
-type HandledType = IGameSystemInfoWithoutCollections;
-export class S_SettingRegulationState_GameSystemDocViewer
+type HandledType = IDefinedRuleAttributeWithoutCollection;
+export class S_SettingRegulationState_GameRuleAttributeDocViewer
     extends PageStateBaseClass<DocViewerRequired, IAppUsedToChangeState> {
     private editorForm:EditorFormManagerWithAutoDetect<HandledType>|null = null;
     init() {
@@ -115,10 +118,7 @@ export class S_SettingRegulationState_GameSystemDocViewer
                 id:"back",icooon:"folder",title:context.List.backSelectable.title,description:context.List.backSelectable.explain,unused:false, onClickCallBack: () => goBackFromDocToCollection(this.app,this.requiredObj)
             },
             {
-                id:"modes",icooon:"ns",title:context.List.modeSelectable.title,description:context.List.modeSelectable.explain,unused, onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"modes")
-            },
-            {
-                id:"hashtags",icooon:"tag",title:context.List.hashtag.title,description:context.List.hashtag.explain,unused, onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"tags")
+                id:"ruleclass",icooon:"ns",title:context.List.ruleClasses.title,description:context.List.ruleClasses.explain,unused, onClickCallBack: () => goDeeperFromDocToCollection(this.app,this.requiredObj,"ruleClasses")
             }])
         const lang = this.app.state.language;
         const editorHeader:HTMLElement = appendElement(this.articleDOM,"div");
@@ -126,17 +126,23 @@ export class S_SettingRegulationState_GameSystemDocViewer
         const inputForms:InputFormObject<HandledType>= {
 
             ...generateBaseEditors(editorSegment,lang,context),
-                                        
-            releasedDate:       new EditorDatePart({
-                                            container:createEditorSegmentBaseElement(editorSegment),
-                                            language:lang,
-                                            title:context.Input.releasedData.title,
-                                            description:context.Input.releasedData.description,
-                                            icooon:"ns",
-                                            requiredField:true
-                                        }),
-                                        
-            ...generateDescriptionEditors(editorSegment,lang,context)
+            ...generateDescriptionEditors(editorSegment,lang,context),
+            ruleName:   new EditorTextPart({
+                container:createEditorSegmentBaseElement(appendElement(this.articleDOM,"div")),
+                language:lang,
+                title:context.Input.ruleName.title,
+                description:context.Input.ruleName.description,
+                icooon:"",
+                requiredField:true
+            }),
+            iconCSS:   new EditorIconCSSPart({
+                container:createEditorSegmentBaseElement(appendElement(this.articleDOM,"div")),
+                language:lang,
+                title:context.Input.iconCSS.title,
+                description:context.Input.iconCSS.description,
+                icooon:"",
+                requiredField:true
+            })
         };
         this.editorForm = new EditorFormManagerWithAutoDetect(
             editorHeader,lang,this.requiredObj.collection,this.requiredObj.pathStack.join(" > "),inputForms,
@@ -144,14 +150,11 @@ export class S_SettingRegulationState_GameSystemDocViewer
                 id:"",
                 Japanese:"",English:"",
                 JDescription:"",EDescription:"",
-                recordsNumber:0,runnerIDList:[],
-                dateOfLatestPost:Date.now(),
-                releasedDate:Date.now(),
+                ruleName:"",iconCSS:"",hasMultipleRuleClassItem:true
             },{
                 ErrorCatcher:(error) => this.app.errorCatcher(error),
                 whenAppendNewItem: (id,data) => {
-                    headerMaker.get("modes").classList.remove("u-unused")
-                    headerMaker.get("hashtags").classList.remove("u-unused")
+                    headerMaker.get("ruleclass").classList.remove("u-unused")
                     headerMaker.changeTitle({mainTitle:context.title,subTitle:context.titleDescription})
                     this.requiredObj.id = id
                     

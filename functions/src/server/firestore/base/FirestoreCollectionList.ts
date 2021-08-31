@@ -9,7 +9,7 @@
     //#NOTE Aの型は(...:string[]) => IFirestoreCollectionControllerの部分型である。それぞれで分岐してやれば、あとは、結果で統一してその返り値のgetメソッドやらを呼べばいい。
 
 
-//#TODO デバッグ
+//#CTODO デバッグ
     //*> record/write,delete,modify,verifyがきちんと働くかチェック。
 
 import { AbilityAttributeCollectionController } from "../AbilityAttributeCollectionController";

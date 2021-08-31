@@ -6,8 +6,8 @@ import { appendElement } from "../../../utility/aboutElement";
 import { EditorTextPart } from "../../parts/SetNewRegulation/Editor/EditorTextPart";
 import { DocViewerRequired } from "./Types";
 
-type CollectionName = "modes"|"abilities"|"targets"|"difficulties"
-export function goDeeperFromDocToCollection(app:IAppUsedToReadAndChangeOnlyPageState,requiredObj:DocViewerRequired,destination:CollectionName){
+export type AllCoveredCollectionName = "titles"|"modes"|"abilities"|"targets"|"difficulties"|"abilityAttributes"|"flags"|"tags"|"rules"|"ruleClasses"|"appliedRules"
+export function goDeeperFromDocToCollection(app:IAppUsedToReadAndChangeOnlyPageState,requiredObj:DocViewerRequired,destination:AllCoveredCollectionName){
     if (requiredObj.id === undefined) return;
     
     console.log(`[KSSRs] go to ${requiredObj.collection.path}/${(requiredObj.id) ? requiredObj.id : "(new)"}/${destination} ...`)

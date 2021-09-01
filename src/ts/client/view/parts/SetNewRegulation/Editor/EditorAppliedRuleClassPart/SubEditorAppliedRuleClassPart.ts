@@ -83,7 +83,7 @@ export class SubeditorAppliedRuleClassesPart implements EditorPart<IAppliedClass
         (state) ? this.container.classList.add("u-unused") : this.container.classList.remove("u-unused")
     }
     isFill(): boolean {
-        return this.classSelector.getValueAsArray()[0] !== undefined && this.scopeEditor.isFill()
+        return this.classSelector.getValueAsArray()[0] !== undefined
     }
     get requiredField():boolean{
         return this._requiredField

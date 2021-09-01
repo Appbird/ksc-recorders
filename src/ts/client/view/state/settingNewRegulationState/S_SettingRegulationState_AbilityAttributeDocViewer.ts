@@ -207,7 +207,7 @@ export class S_SettingRegulationState_AbilityAttributeDocViewer
                 icooon:"flag",
                 requiredField:true,
                 indentifiedName:"targetPlayerFlag",
-                toggleNumber: gameMode?.maxNumberOfPlayer
+                toggleNumber: gameMode.maxNumberOfPlayer
             })
         };
         const firstStateOfTargetPlayerFlag = await (async () => {
@@ -220,13 +220,13 @@ export class S_SettingRegulationState_AbilityAttributeDocViewer
             {
                 id:"",
                 Japanese:"",English:"",
-                JDescription:"",EDescription:"",
+                JDescription:"",EDescription:"",icooonName:"tag",
                 multipleItems:true,requiredItemCount:1,maxItemCount:1,
                 duplicatedItems:false,targetPlayerFlag:firstStateOfTargetPlayerFlag
             },{
                 ErrorCatcher:(error) => this.app.errorCatcher(error),
                 whenAppendNewItem: (id,data) => {
-                    for (const id of ["flags"]) headerMaker.get(id).classList.remove("u-unused")
+                    headerMaker.get("flag").classList.remove("u-unused")
                     headerMaker.changeTitle({mainTitle:context.title,subTitle:context.titleDescription})
                     this.requiredObj.id = id;
                     

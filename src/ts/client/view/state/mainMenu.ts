@@ -308,7 +308,6 @@ export class S_MainMenu
                 },
                 isDisabled:!isSetTargetGameMode,
                 biggerTitle:false,
-                //#TODO なんか404になる
                 to:() => {this.app.transition("gameRuleView",{gameSystemID:this.app.state.gameSystemIDDisplayed,gameModeID:this.app.state.gameModeIDDisplayed})}
             }];
         }

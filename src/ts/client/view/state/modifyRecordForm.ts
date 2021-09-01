@@ -71,13 +71,33 @@ export class S_ModifyRecordForm
                         difficultyItems,abilityItems,tagItems,runnerID,abilityAttributeItems,gameSystemID,gameModeID,language:this.app.state.language,
                         tagLanguage:record.languageOfTagName,defaultRecord:record,
                         maxPlayerNumber:this.app.state.gameSystemEnvDisplayed.gameMode.maxNumberOfPlayer,
-                        onDecideEventListener:async (input) => this.sendInputInfo(gameSystemID,gameModeID,record.id,input),
+                        onDecideEventListener:(input) => this.onDecideEventEvoker(input,gameSystemID,gameModeID,record.id),
                         fetchTargetItems:async (input) => (await this.app.accessToAPI("list_targets",{gameSystemEnv:{gameSystemID,gameModeID},id:input})).result
                     }
             )
             this.deleteLoadingSpinner();
         }
-        private async sendInputInfo(gameSystemID:string,gameModeID:string,recordID:string,recordModified:ISentRecordOffer){
+        private onDecideEventEvoker(input:ISentRecordOffer,gameSystemID:string,gameModeID:string,recordID:string):Promise<void>{
+            return new Promise((resolve) => this.app.notie.reasonInputerAleart({
+                    text:{
+                        Japanese:"修正を適用しますか？",
+                        English:"Are you sure you want to apply this modification to the record?",
+                    }, 
+                    okCallback:(reason:string)=>{
+                        this.generateLoadingSpinner()
+                        this.sendInputInfo(gameSystemID,gameModeID,recordID,input,reason)
+                        
+                        resolve()
+                    },
+                    placeholder:{
+                        Japanese: "ここに編集した理由を簡単に記入して下さい。",
+                        English: "Enter the reason why you modify this record in short."
+                    }
+                }
+                )
+            )
+        }
+        private async sendInputInfo(gameSystemID:string,gameModeID:string,recordID:string,recordModified:ISentRecordOffer,reason:string){
             try{
                 this.app.goToTop()
                 this.generateLoadingSpinner("cloud")
@@ -89,6 +109,7 @@ export class S_ModifyRecordForm
                     },
                     recordID, recordModified,
                     language:language,
+                    reason:reason,
                     IDToken:await this.app.loginAdministratorReadOnly.getIDToken()
                 })
                 this.app.notie.successAlert({

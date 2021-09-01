@@ -1,6 +1,6 @@
 import { OnePlayerOfAbilityAttribute, OnePlayerOfAbilityAttributeResolved } from "../../../../src/ts/type/foundation/IRegulation";
 import { LanguageInApplication } from "../../../../src/ts/type/LanguageInApplication";
-import { IAbilityAttributeItemWithoutCollections, IAbilityAttributeFlagItem } from "../../../../src/ts/type/list/IAbilityAttributeItemWithoutCollections";
+import { IAbilityAttributeItemWithoutCollections } from "../../../../src/ts/type/list/IAbilityAttributeItemWithoutCollections";
 import { IAbilityItem } from "../../../../src/ts/type/list/IAbilityItem";
 import { IGameDifficultyItem } from "../../../../src/ts/type/list/IGameDifficultyItem";
 import { IGameModeItemWithoutCollections } from "../../../../src/ts/type/list/IGameModeItem";
@@ -29,21 +29,19 @@ export class RecordResolver{
     private gameModeID:IDResolver<IGameModeItemWithoutCollections>
     private runnerID: IDResolver<IRunner>;
     private abilityAttributeID: IDResolver<IAbilityAttributeItemWithoutCollections>;
-    private attributeFlagID: IDResolver<IAbilityAttributeFlagItem>;
-    private attributeFlagC: AbilityAttributeFlagsCollectiCollectionController;
     private hashTagID: IDResolver<IHashTagItem>;
-    constructor(gameSystemID:string,gameModeID:string,
+    constructor(
+        private gameSystemIDText:string,
+        private gameModeIDText:string,
         transaction?:Transaction){
-        this.attributeFlagC     = new AbilityAttributeFlagsCollectiCollectionController(gameSystemID,gameModeID,"undefined")
         this.runnerID           = new IDResolver(new RunnerCollectionController(transaction))
         this.gameSystemID       = new IDResolver(new GameSystemItemController(transaction))
-        this.gameModeID         = new IDResolver(new GameModeItemController(gameSystemID,transaction))
-        this.difficultyID       = new IDResolver(new DifficultyCollectionController(gameSystemID,gameModeID,transaction))
-        this.targetID           = new IDResolver(new TargetCollectionController(gameSystemID,gameModeID,transaction))
-        this.abilityID          = new IDResolver(new AbilityCollectionController(gameSystemID,gameModeID,transaction))
-        this.abilityAttributeID = new IDResolver(new AbilityAttributeCollectionController(gameSystemID,gameModeID,transaction))
-        this.attributeFlagID    = new IDResolver(this.attributeFlagC)
-        this.hashTagID          = new IDResolver(new HashTagCollectionController(gameSystemID))
+        this.gameModeID         = new IDResolver(new GameModeItemController(gameSystemIDText,transaction))
+        this.difficultyID       = new IDResolver(new DifficultyCollectionController(gameSystemIDText,gameModeIDText,transaction))
+        this.targetID           = new IDResolver(new TargetCollectionController(gameSystemIDText,gameModeIDText,transaction))
+        this.abilityID          = new IDResolver(new AbilityCollectionController(gameSystemIDText,gameModeIDText,transaction))
+        this.abilityAttributeID = new IDResolver(new AbilityAttributeCollectionController(gameSystemIDText,gameModeIDText,transaction))
+        this.hashTagID          = new IDResolver(new HashTagCollectionController(gameSystemIDText))
     }
     async convertRecordsIntoRecordGroupResolved(records: IRecord[],
         info: { groupName: string; numberOfRecords: number; numberOfRunners: number; lang: LanguageInApplication; }): Promise<IRecordGroupResolved> {
@@ -114,10 +112,10 @@ export class RecordResolver{
     private resolveAbilityAttributeIDForEachPlayer(playerOfAbilityAttributes: OnePlayerOfAbilityAttribute, lang: LanguageInApplication): Promise<OnePlayerOfAbilityAttributeResolved> {
         return Promise.all(
             playerOfAbilityAttributes.map(async unit => {
-                this.attributeFlagC.changeRef(unit.attributeID)
+                const attributeFlagID = new IDResolver(new AbilityAttributeFlagsCollectiCollectionController(this.gameSystemIDText,this.gameModeIDText,unit.attributeID))
                 return {
                     attributeName: await this.abilityAttributeID.resolveForTitle(unit.attributeID, lang),
-                    onFlagNames: await Promise.all(unit.onFlagIDs.map(onFlagID => this.attributeFlagID.resolveForTitle(onFlagID, lang)))
+                    onFlagNames: await Promise.all(unit.onFlagIDs.map(onFlagID => attributeFlagID.resolveForTitle(onFlagID, lang)))
                 }
             })
         )

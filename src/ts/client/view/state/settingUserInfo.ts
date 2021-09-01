@@ -1,5 +1,4 @@
-import { IRunner, IRunnerEditable } from "../../../type/record/IRunner";
-import { StateAdministrator } from "../../Administrator/StateAdminister";
+import { IRunnerEditable } from "../../../type/record/IRunner";
 import { IAppUsedToChangeState } from "../../interface/AppInterfaces";
 import { appendElement } from "../../utility/aboutElement";
 import { EditorTextPart } from "../parts/SetNewRegulation/Editor/EditorTextPart";

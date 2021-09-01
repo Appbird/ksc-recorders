@@ -57,7 +57,6 @@ export class EditorIDPart implements EditorPart<string> {
         this.selectInput.setSelected(value);
     }
     refreshOption(options:ILabelledDocument[]){
-        this.selectInput.clearStore();
         this.selectInput.setChoices(options);
     }
     isFill(): boolean {

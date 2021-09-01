@@ -5,10 +5,9 @@ import { IView } from "../../IView";
 
 export class RadioButtonCupsuled<T> implements IView {
     private container: HTMLElement;
-    private selected: T;
-    private selectedIndex:number = 0;
     private elements: { input: HTMLElement; value: T; }[];
     private disabledState: boolean = false;
+    private selectedIndex:number = 0;
     private callbacks:((selected: T) => void)[] = [];
     constructor(
         container: HTMLElement,
@@ -19,7 +18,6 @@ export class RadioButtonCupsuled<T> implements IView {
         this.container = container;
         const htmlConverter = new HTMLConverter(language);
         this.container.classList.add("c-radioSelectors");
-        this.selected = options[0].value;
         this.elements = options.map(({ optionLabel, value }, index) => {
             const ele = this.container.appendChild(htmlConverter.elementWithoutEscaping`
                 <div class="__item ${(index === 0) ? "--checked" : ""}" name="${name}" ><p>${optionLabel}</p></div>
@@ -29,7 +27,7 @@ export class RadioButtonCupsuled<T> implements IView {
         });
     }
     onChangeEventListener(callback: (selected: T) => void): void {
-        this.callbacks.push(callback)
+        this.callbacks.push((changed:T) => callback(changed))
     }
     disabled(state:boolean){
         this.disabledState = state;
@@ -37,23 +35,23 @@ export class RadioButtonCupsuled<T> implements IView {
         else this.container.classList.remove("--disabled")
     }
     private select(index:number){
-        if (this.disabledState) return;
+        if (this.disabledState || this.selectedIndex === index) return;
         this.elements[this.selectedIndex].input.classList.remove("--checked");
         this.elements[index].input.classList.add("--checked");
-
-        this.selected = this.elements[index].value;
-        if (this.selectedIndex !== index) for (const callback of this.callbacks) callback(this.elements[index].value)
         this.selectedIndex = index;
-       
+        for (const callback of this.callbacks) callback(this.elements[index].value)
     }
     get value(): T {
-        return this.selected;
+        return this.elements[this.selectedIndex].value
     }
     set value(value: T) {
-        this.selected = value;
-        const inputIndex = this.elements.findIndex((ele) => ele.value === value);
-        if (inputIndex === -1) throw new Error(`[RadioButtonCupsuled] 不正な値が入力されました。value: ${value}`)
-        this.select(inputIndex);
+        const index = this.elements.findIndex((element) => element.value === value )
+        if (index === -1) throw new Error("index === -1 :" + value)
+        if (this.selectedIndex === index) return;
+        
+        this.elements[this.selectedIndex].input.classList.remove("--checked");
+        this.elements[index].input.classList.add("--checked");
+        this.selectedIndex = index;
     }
     destroy() {
         this.container.innerHTML = "";

@@ -126,6 +126,7 @@ export class EditorPlayersWithAttributesPart implements EditorPart<HandledType[]
         this.addNewItemButton.toggle(this.maxPlayerNumber > this.playersWithAttributesChoices.length)
     }
     get value():HandledType[]|undefined {
+        if (this.playersWithAttributesChoices.length === 0) return []
         if (this.requiredField && this.playersWithAttributesChoices.some( (choice,index) => (choice.value.abilityID === undefined) && index !== this.playersWithAttributesChoices.length - 1)) return undefined
         const array =  this.playersWithAttributesChoices.map(
             choice => {

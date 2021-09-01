@@ -38,6 +38,7 @@ export class OfferFormView implements IView {
     private editors:InputFormObjectWithAllProperties<RecordInputData>;
     private editorFormManager:EditorFormManager<RecordInputData>
     private fetchTargetItems:(difficultyIDs:string[])=>Promise<ITargetItem[]>|ITargetItem[]
+    private errorCatcher?:(err:any) => void
     private targetIDPart:EditorIDPart;
     private runnerID:string;
     private gameSystemID:string;
@@ -49,7 +50,7 @@ export class OfferFormView implements IView {
     }
     //#CTODO エラー3 INVALID_ARGUMENT: Cannot convert an array value in an array value.を解決する。
     //#CTODO  appへの依存を解消する。具体的にappを利用する処理を全てPage側で定義させ、それをコールバックでこちらに渡す。
-    constructor(container:HTMLElement,{tagLanguage,language,onDecideEventListener,maxPlayerNumber,fetchTargetItems,defaultRecord,gameSystemID,gameModeID,difficultyItems,abilityItems,abilityAttributeItems,tagItems,runnerID }:{
+    constructor(container:HTMLElement,{tagLanguage,language,onDecideEventListener,maxPlayerNumber,fetchTargetItems,defaultRecord,gameSystemID,gameModeID,difficultyItems,abilityItems,abilityAttributeItems,tagItems,runnerID,errorCatcher }:{
        difficultyItems:IGameDifficultyItem[],
        abilityItems:IAbilityItem[],
        abilityAttributeItems?:SetOfFlagsOfAbilityAttributeItem[],
@@ -59,11 +60,13 @@ export class OfferFormView implements IView {
        gameModeID:string,maxPlayerNumber:number,
        language:LanguageInApplication,
        tagLanguage:LanguageInApplication,
-        onDecideEventListener:(input:ISentRecordOffer)=>void,
-        fetchTargetItems:(targetIDs:string[])=>Promise<ITargetItem[]>|ITargetItem[]
+        onDecideEventListener:(input:ISentRecordOffer)=>void|Promise<void>,
+        fetchTargetItems:(targetIDs:string[])=>Promise<ITargetItem[]>|ITargetItem[],
+        errorCatcher?:(err:any) => void,
         defaultRecord?:IRecordWithoutID
     }) {
         this.gameSystemID = gameSystemID
+        this.errorCatcher = errorCatcher
         this.gameModeID = gameModeID
         this.tagLanguage = tagLanguage
         this.container = container;
@@ -163,26 +166,34 @@ export class OfferFormView implements IView {
         const errorViewer =  this.container.appendChild(htmlCon.elementWithoutEscaping`<div class="u-width90per u-margin2em u-redChara u-bolderChara"></div>`)
         const decideButton = new DecideButtonPart(this.container.appendChild(htmlCon.elementWithoutEscaping`<div class="u-width50per u-margin2em"></div>`) as HTMLElement,{
             text:{Japanese:"決定",English:"Submit"},language: language,
-            onClick:() => {
+            onClick:async () => {
                 if (!this.editorFormManager.isFill()){
                     errorViewer.innerHTML = choiceString({Japanese:"入力が不十分です。",English:"The input of the form is not enough."},tagLanguage)
                     return;
                 }
-                onDecideEventListener(this.convertRecordInputDataToISentRecordOffer(this.editorFormManager.value))
-                decideButton.disabled()
+                try{
+                    await onDecideEventListener(this.convertRecordInputDataToISentRecordOffer(this.editorFormManager.value))
+                    decideButton.disabled()
+                } catch(err){
+                    console.error(err)
+                }
             }
         })
         
-        this.editors.difficultyID.addChangeEventListener( (change) => (change === undefined) ?  undefined: this.setTargetOptions(this.getTargetsListFromDifficultyID(change)))
-        if (this.editors.difficultyID.value !== undefined) this.setTargetOptions(this.getTargetsListFromDifficultyID(this.editors.difficultyID.value))
-        if (defaultRecord) {
-            const difficultyID = defaultRecord.regulation.gameSystemEnvironment.gameDifficultyID;
-            this.setTargetOptions(this.getTargetsListFromDifficultyID(difficultyID)).then(() => {
-                this.editorFormManager.refresh(this.convertIRecordToRecordData(defaultRecord))
-            })
+        if (defaultRecord !== undefined) this.initalizeEditors(defaultRecord).catch(err => this.errorCatcher ? this.errorCatcher(err) : undefined)
+        else {
+            if (this.editors.difficultyID.value !== undefined) this.setTargetOptions(this.getTargetsListFromDifficultyID(this.editors.difficultyID.value))
+            this.editors.difficultyID.addChangeEventListener( (change) => (change === undefined) ?  undefined: this.setTargetOptions(this.getTargetsListFromDifficultyID(change)))
         }
+
     }
 
+    private async initalizeEditors(defaultRecord:IRecordWithoutID){
+        const difficultyID = defaultRecord.regulation.gameSystemEnvironment.gameDifficultyID;
+        await this.setTargetOptions(this.getTargetsListFromDifficultyID(difficultyID))
+        this.editorFormManager.refresh(this.convertIRecordToRecordData(defaultRecord))
+    
+    }
     private convertRecordInputDataToISentRecordOffer(value:RecordInputData):ISentRecordOffer{
         //#CTODO ここの実装
         let abilityInfo:{abilityIDs:string[],abilitiesAttributeIDs?:OnePlayerOfAbilityAttribute[]};

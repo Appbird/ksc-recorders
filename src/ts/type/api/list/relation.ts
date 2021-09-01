@@ -18,6 +18,7 @@ import { IAbilityAttributeFlagItem, IAbilityAttributeItemWithoutCollections } fr
 import { IReceivedDataAtServer_pickUp_UseSIdMIdAIdId } from "./atServer_pickup/IReceivedDataAtServer_pickUp_UseSIdMIdAIdId";
 import { IReceivedDataAtServer_gameRule_get } from "../gameRule/IReceivedDataAtServer_gameRule_get";
 import { IReceivedDataAtClient_gameRule_get } from "../gameRule/IReceivedDataAtClient_gameRule_get";
+import { IRecord } from "../../record/IRecord";
 
 export interface IReceivedData_listGameSystems extends IReceivedData{
     atServer:IReceivedDataAtServer_getlist_UseId
@@ -46,6 +47,10 @@ export interface IReceivedData_listAbilities extends IReceivedData{
 export interface IReceivedData_listDifficulties extends IReceivedData{
     atServer:IReceivedDataAtServer_getlist_UseSIdMIdId
     atClient:IReceivedDataAtClient_getlist<IGameDifficultyItem>
+}
+export interface IReceivedData_listRecords extends IReceivedData{
+    atServer:IReceivedDataAtServer_getlist_UseSIdMIdId
+    atClient:IReceivedDataAtClient_getlist<IRecord>
 }
 export interface IReceivedData_listAbilityAttributes extends IReceivedData{
     atServer:IReceivedDataAtServer_getlist_UseSIdMIdId
@@ -83,6 +88,10 @@ export interface IReceivedData_listAbility extends IReceivedData{
 export interface IReceivedData_listDifficulty extends IReceivedData{
     atServer:IReceivedDataAtServer_pickUp_UseSIdMIdId
     atClient:IReceivedDataAtClient_pickUp<IGameDifficultyItem>
+}
+export interface IReceivedData_listRecord extends IReceivedData{
+    atServer:IReceivedDataAtServer_pickUp_UseSIdMIdId
+    atClient:IReceivedDataAtClient_pickUp<IRecord>
 }
 export interface IReceivedData_listAbilityAttribute extends IReceivedData{
     atServer:IReceivedDataAtServer_pickUp_UseSIdMIdId

@@ -21,6 +21,9 @@ export class DecideButtonPart implements IView{
     disabled():void{
         this.container.classList.add("u-unused")
     }
+    enabled():void{
+        this.container.classList.remove("u-unused")
+    }
     destroy(): void {
         this.container.innerHTML = ""
     }

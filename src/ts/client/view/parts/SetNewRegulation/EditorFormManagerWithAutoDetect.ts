@@ -4,6 +4,7 @@ import { TitleCupsuled } from "../TitleCupsuled";
 import { IView } from "../../IView";
 import { choiceString } from "../../../../utility/aboutLang";
 import firebase from "firebase/app";
+import "firebase/firestore"
 //#CTODO アイテムごとの設定項目を表すクラスの実装
 
 /**
@@ -35,7 +36,6 @@ export class EditorFormManagerWithAutoDetect<TypeOfObserved extends object> impl
     private data:{[key:string]:any};
     private callbacks:Callbacks<TypeOfObserved>
     private defaultObject:TypeOfObserved;
-
     constructor(
         container:HTMLElement,
         language:LanguageInApplication,
@@ -90,7 +90,6 @@ export class EditorFormManagerWithAutoDetect<TypeOfObserved extends object> impl
     }
     private subscribe(){
         this.unsubscribe = this.pathOfDocObserved.doc(this.id).onSnapshot(querySnapshot => {
-            console.info(`[KSSRs-InfoEditor] change from the server detected.`)
             const data = querySnapshot.data();
             if (data === undefined) return;
             this.reflectView(data);
@@ -106,7 +105,7 @@ export class EditorFormManagerWithAutoDetect<TypeOfObserved extends object> impl
             editor.addChangeEventListener((changed) => {
                 const beforeChange = this.data[key]
                 
-                console.info(`[KSSRs-InfoEditor] change on the client detected : Property ${key} >>> from ${beforeChange} to ${changed}`)
+                console.info(`[KSSRs-InfoEditor] Change on this client detected : [Property ${key}] from ${beforeChange} to ${changed}`)
                 
                 this.data[key] = changed;
                 if (this.id !== undefined) {
@@ -156,7 +155,7 @@ export class EditorFormManagerWithAutoDetect<TypeOfObserved extends object> impl
     async addData(item?:{[key:string]:any}):Promise<string>{
         if (item !== undefined) this.data = item;
         if (this.data.id !== undefined) this.id = this.data.id
-        const ref = (this.id === undefined) ? this.pathOfDocObserved.doc(this.id) : this.pathOfDocObserved.doc()
+        const ref = (this.id !== undefined) ? this.pathOfDocObserved.doc(this.id) : this.pathOfDocObserved.doc()
         this.data.id = ref.id
         this.pathOfDocObserved.doc(ref.id).set(this.data)
         this.callbacks.whenAppendNewItem(ref.id,this.data);

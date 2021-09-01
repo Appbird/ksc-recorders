@@ -117,7 +117,7 @@ export class S_SettingRegulationState_GameRuleClassDocViewer
                 container: createEditorSegmentBaseElement(appendElement(this.articleDOM,"div")),
                 language:lang,
                 ...context.Input.typeName,
-                icooon: "",
+                icooon: "tag",
                 requiredField:true
 
             }),
@@ -127,7 +127,7 @@ export class S_SettingRegulationState_GameRuleClassDocViewer
                 container:createEditorSegmentBaseElement(appendElement(this.articleDOM,"div")),
                 language:lang,
                 ...context.Input.iconCSS,
-                icooon:"",
+                icooon:"tag",
                 requiredField:true
             })
         };

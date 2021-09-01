@@ -54,6 +54,9 @@ const context = {
                 Japanese:"適用するルールクラスを選択します。",
                 English: "Select rule class you want to apply."
             },{
+                Japanese:"適用範囲の欄に何も書かない場合、全セグメントにこのルールクラスが適用されることになります",
+                English: "If you write no comments in this \"scope\" section, the rule class will be applied to all segments."
+            },{
                 Japanese:"必要であれば、適用範囲や注を書くことが出来ます。",
                 English: "If you need, you can write the scope of the rule class or note about this application."
             }]
@@ -120,7 +123,7 @@ export class S_SettingRegulationState_AppliedGameRuleDocViewer
             }),
         };
         //#CTODO Japanese,Englishが更新されない理由が何故かを探る
-        //#TODO ゲームルールを表示させるページを用意して表示してみる。
+        //#CTODO ゲームルールを表示させるページを用意して表示してみる。
         idEditor.refreshOption((await firebase.firestore().collection("rules").get()).docs.map(doc => doc.data() as IDefinedRuleClassItem))
 
         this.editorForm = new EditorFormManagerWithAutoDetect<IAppliedGameModeRule>(

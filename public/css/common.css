@@ -855,12 +855,9 @@ article.is-seqEnd:before {
   border-right: none;
 }
 
-.c-radioSelectors > .__item:first-child {
+.c-radioSelectors > .__item {
   border-top-left-radius: 3px;
   border-bottom-left-radius: 3px;
-}
-
-.c-radioSelectors > .__item:last-child {
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
   border-right: solid #666 thin;
@@ -1342,23 +1339,22 @@ article h1:not(.u-noUnderline):after {
   width: 95%;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
 }
 .c-ruleIndex > .__list > .__item.--top > * {
-  text-align: center;
+  text-align: left;
 }
 .c-ruleIndex > .__list > .__item > *:first-child {
-  width: 60%;
+  width: 50%;
   font-size: smaller;
   display: flex;
   align-items: center;
 }
 .c-ruleIndex > .__list > .__item > .__classItems {
-  width: 40%;
+  width: 50%;
   font-size: smaller;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .p-titlePostHeader {

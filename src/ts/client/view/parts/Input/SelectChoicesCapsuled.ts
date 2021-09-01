@@ -84,6 +84,7 @@ export class SelectChoicesCapsuled<T extends ILabelledDocument> implements IView
             return { value: ele.id, label: choiceString(ele, this._language) };
         }));
         this._data = item;
+        if (value !== undefined) this.setSelected(value)
         if (item.length === 1 && (!this.container.multiple || this._choices.config.maxItemCount === 1)) this.setSelected(item[0].id)
     }
     clearChoices() {

@@ -82,13 +82,13 @@ export class S_SettingNewRegulationState_CollectionViewer
                        
                 }
             },{
-                id:"insertNewDataByCSV",title:context.List.CSVSelectable.title,description:context.List.CSVSelectable.explain,unused:(ps[ps.length-1] !== "targets"&&ps[ps.length-1] !== "abilities"),icooon:"writing",
+                id:"insertNewDataByCSV",title:context.List.CSVSelectable.title,description:context.List.CSVSelectable.explain,unused:!(["targets","abilities"].includes(ps[ps.length-1])),icooon:"writing",
                 onClickCallBack: async () => {
                     if (this.requiredObj === null) throw new Error("ターゲットが設定されていません。")
                     this.app.transition("settingRegulation_CollectionAppender",this.requiredObj,{ifAppendHistory:false})
                 }
             },{
-                id:"copyData",title:context.List.copySelectable.title,description:context.List.copySelectable.explain,unused:(ps[ps.length-1] !== "targets"&&ps[ps.length-1] !== "abilities"),icooon:"duplicated",
+                id:"copyData",title:context.List.copySelectable.title,description:context.List.copySelectable.explain,unused:!(["targets","abilities"].includes(ps[ps.length-1])),icooon:"duplicated",
                 onClickCallBack: async () => {
                     if (this.requiredObj === null) throw new Error("ターゲットが設定されていません。")
                     navigator.clipboard.writeText(await convertToCSV(this.requiredObj?.collection))

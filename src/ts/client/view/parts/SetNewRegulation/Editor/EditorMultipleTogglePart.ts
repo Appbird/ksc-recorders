@@ -44,9 +44,9 @@ export class EditorMultipleTogglePart implements EditorPart<boolean[]>{
         this.input = []
         for (let i = 0; i < toggleNumber; i++){
             this.input.push(
-                new RadioButtonCupsuled<boolean>(appendElement(this.container,"div"), indentifiedName,language,
+                new RadioButtonCupsuled<boolean>(appendElement(this.container,"div"), `${indentifiedName}_${i}`,language,
                 [
-                    { optionLabel:context.option_False,value:false  },
+                    { optionLabel:context.option_False,value:false},
                     { optionLabel:context.option_True,value:true }
                 ])
             )
@@ -54,20 +54,20 @@ export class EditorMultipleTogglePart implements EditorPart<boolean[]>{
         this.ulist = new UListCupsuled(appendElement(this.container,"ul"),language,description)
     }
     addChangeEventListener(callback: (changed: boolean[]) => void): void {
-        for (const editor of this.input) editor.onChangeEventListener(() => callback(this.value))
+        for (const editor of this.input)  editor.onChangeEventListener(() => callback(this.value))
     }
     refresh(value: boolean[]): void {
         if (this.input.length !== value.length) throw new Error("this.input.length !== value.length")
-        this.input.forEach((editor,index) => editor.value = value[index])
+        this.input.forEach((editor,index) =>  editor.value = value[index])
     }
     isFill(): boolean {
         return true;
     }
     disabled(state: boolean): void {
-        for (const editor of this.input)editor.disabled(state)
+        for (const editor of this.input) editor.disabled(state)
     }
     destroy(): void {
-        for (const editor of this.input)editor.destroy();
+        for (const editor of this.input) editor.destroy();
         this.ulist.destroy();
     }
     get requiredTypeInString():string{

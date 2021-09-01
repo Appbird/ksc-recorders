@@ -1,34 +1,37 @@
-<div class="c-title">
-  <div class="c-title__main">記録の基本情報</div>
-</div>
-<hr noshade class="u-bold" />
-<div class="u-width95per">
-  <div class="c-evidenceMovie">
-    <div class="c-evidenceMovie__placeholder"></div>
-  </div>
-  <div class="c-title">
-    <div class="c-title__sub u-underline">
-      <i class="fas fa-link"></i> <a>${recordDetail.link[0]}</a>
-    </div>
-  </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/dark.css">
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/notie/dist/notie.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+    <link rel="stylesheet"  href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"/>
+    <link rel="stylesheet"  href="./css/common.css">
+    <script src="https://kit.fontawesome.com/13cb75e069.js" crossorigin="anonymous"></script>
+    <link rel="shortcut icon" href="favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <title>Kirby-Speed/Score-Recorders</title>
+</head>
+<body>
+    <header id="header">
+        <div id="headerDisplay" class="p-titlePostHeader">
+            <div class = "p-titlePostHeader__main">Kirby-Speed/Score-Recorders</div>
+            <div class = "p-titlePostHeader__sub">KSSRs</div>
+        </div>
+        <div id="userIcon" class="u-left-aligined-forFlex">
+            <p class="u-left-align"></p>
+            <img id="userIcon" class="c-userIcon u-background--person u-margin05em"></img>
+        </div>
+    </header>
+    <div class="compensateionForHeader"></div>
+    <main rel="main">
+        <article id="article">
+            <div id="cover"></div>
+        </article>
+    </main>
 
-  <div class="c-title">
-    <div class="c-title__main u-biggerChara">
-      ${converseMiliSecondsIntoTime(recordDetail.score)}
-    </div>
-    <div class="c-title__sub u-biggerChara onClickFirer_RunnerName">
-      <i class="fas fa-user"></i>${recordDetail.runnerName}
-    </div>
-  </div>
-  <hr noshade class="u-thin" />
-  <div class="tagsDetail"></div>
-</div>
-<div class="u-space3em"></div>
-<div class="c-title">
-  <div class="c-title__main">走者ノート</div>
-</div>
-<hr noshade class="u-bold" />
-<div class="u-width95per">
-  <div class="c-runnerNote">${marked(recordDetail.note)}</div>
-  <div class="u-space3em"></div>
-</div>
+</body>
+<script src="js/main.js" type="module"></script>
+
+</html>

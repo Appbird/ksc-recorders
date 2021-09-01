@@ -17,12 +17,9 @@
     border-right: none;
 }
 
-.c-radioSelectors>.__item:first-child{
+.c-radioSelectors>.__item{
     border-top-left-radius: 3px;
     border-bottom-left-radius: 3px;
-}
-.c-radioSelectors>.__item:last-child{
-
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
     border-right: solid #666 thin;

@@ -17,6 +17,7 @@ export class EditorMultipleIDPart implements EditorPart<string[]> {
     private static _requiredTypeInString = "string[]";
     private _requiredField:boolean;
     private ulist:UListCupsuled;
+    private maxItemCount:number;
     private unsubscribe:(()=>void)|null = null;
     get requiredTypeInString(){
         return EditorMultipleIDPart._requiredTypeInString
@@ -42,6 +43,7 @@ export class EditorMultipleIDPart implements EditorPart<string[]> {
         description = [...description];
         if(requiredField && description.length !== 0) description.unshift(context_required)
         this.container = container;
+        this.maxItemCount = maxItemCount
         this.htmlCon = new HTMLConverter(language);
         this._requiredField = requiredField;
         this.container.appendChild(this.htmlCon.elementWithoutEscaping`
@@ -76,7 +78,8 @@ export class EditorMultipleIDPart implements EditorPart<string[]> {
         this.selectInput.setChoices(options);
     }
     isFill(): boolean {
-        return this.selectInput.getValueAsArray().length === 0;
+        const x = this.selectInput.getValueAsArray().length
+        return 1 <= x && x <= this.maxItemCount;
     }
     get requiredField(){
         return this._requiredField;

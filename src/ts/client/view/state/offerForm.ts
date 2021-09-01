@@ -4,6 +4,7 @@ import { choiceString } from "../../../utility/aboutLang";
 import { TargetGameMode } from "../../Administrator/StateAdminister";
 import { IAppUsedToChangeState } from "../../interface/AppInterfaces";
 import { appendElement } from "../../utility/aboutElement";
+import { MenuView } from "../parts/MenuView";
 import { OfferFormView } from "../parts/OfferFormView/OfferFormView";
 import { PageTitleView } from "../parts/PageTitleView";
 import { PageStateBaseClass } from "./Base/PageStateClass";
@@ -29,7 +30,9 @@ export class S_OfferForm
             if ( this.app.state.gameSystemEnvDisplayed.gameSystem === null || this.app.state.gameSystemEnvDisplayed.gameMode === null) throw new Error("ターゲットゲームモードが定められていません。")
             if (this.requiredObj === null) this.requiredObj = {
                     targetGameMode:this.app.state.gameSystemEnvDisplayed
-                }
+            }
+            
+            this.generateRuleIntroduction()
 
             if (this.requiredObj.targetGameMode !== undefined) this.app.changeTargetGameMode(this.requiredObj.targetGameMode)
             const gameSystemID = this.app.state.gameSystemIDDisplayed
@@ -90,6 +93,25 @@ export class S_OfferForm
             } catch(error){
                 this.app.errorCatcher(error,"記録の登録に失敗しました。")
             }
+        }
+        private generateRuleIntroduction(){
+            const mainMenu = new MenuView(appendElement(this.articleDOM,"div","u-width90per u-marginUpDown2em"),this.app.state.language,null)
+        
+                mainMenu.generateMenuItem({
+                    title:{
+                        Japanese:"ルール",
+                        English:"Rules",
+                        icon:"contract"
+                    },
+                    description:{
+                        Japanese:"<p>このゲームモードにおけるルールを確認することが出来ます。<strong>記録を投稿する前に読んでください。</strong></p>",
+                        English:"<p>Rules in this game mode is written in this page. <strong>Please read this rules before you submit a record.</strong></p>"
+                    },
+                    isDisabled:false,
+                    biggerTitle:false,
+                    to:() => {this.app.transition("gameRuleView",{gameSystemID:this.app.state.gameSystemIDDisplayed,gameModeID:this.app.state.gameModeIDDisplayed})}
+                })
+            appendElement(this.articleDOM,"hr","u-thin")
         }
 }
 

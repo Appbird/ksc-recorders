@@ -58,23 +58,22 @@
             width: 95%;
             display: flex;
             flex-direction: row;
-            justify-content: space-around;
             &.--top>*{
-                text-align: center;
+                text-align: left;
             }
             &>*:first-child{
-                width:60%;
+                width:50%;
                 font-size:smaller;
                 display: flex;
                 align-items: center;
             }
             &>.__classItems{
-                width:40%;
+                width:50%;
                 
                 font-size:smaller;
                 display:flex;
                 flex-direction: column;
-                align-items: center;
+                align-items: flex-start;
             }
         }
         

@@ -117,7 +117,9 @@ export class EditorPlayerWithAttributesPart implements EditorPart<HandledType> {
         return this._requiredField;
     }
     isFillAllAbility(){
-        return this.selectInput.getValueAsArray()[0] !== undefined
+        const abilityFill = this.selectInput.getValueAsArray()[0] !== undefined 
+        const attributeEmpty = this.selectInput.getValueAsArray().length === 0
+        return (abilityFill && attributeEmpty) || !attributeEmpty
     }
     destroy(){
         if (this.unsubscribe !== null)this.unsubscribe();

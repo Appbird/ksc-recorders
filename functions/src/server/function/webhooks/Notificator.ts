@@ -27,10 +27,10 @@ export class Notifier{
             colorcode:number,reason?:string
         }){
             
-            if (gameMode.DiscordRoleID !== undefined) attached = `<@&${gameMode.DiscordRoleID}>\n${attached}`
-            attached = attached.replace(/"/g,`'`);
+            if (gameMode.DiscordRoleID !== undefined) attached = `<@&${gameMode.DiscordRoleID}> \n ${attached}`
+            attached = attached.replace(/\"/g,`'`);
             const body = `{
-                "content": ${(attached.length === 0) ? null : `"${attached}"`},
+                "content": ${(attached.length === 0) ? "null" : `"${attached}"`},
                 "embeds": [
                   {
                     "title": "${msgIcon} Record is **${Verb_ed}.**",
@@ -54,7 +54,7 @@ export class Notifier{
                       },
                       {
                         "name": "**__[ Ability ]__**",
-                        "value": "${record.regulation.abilityNames.map((ele,index) => writeAbilityNameWithAttribute(record.regulation,ele,index)).join("\n")}",
+                        "value": "${record.regulation.abilityNames.map((ele,index) => writeAbilityNameWithAttribute(record.regulation,ele,index)).join(", ")}",
                         "inline": true
                       },
                       {

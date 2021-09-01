@@ -36,6 +36,7 @@ export async function search(input:IReceivedData_recordSearch["atServer"]):Promi
                         const result = record.regulation.abilitiesAttributeIDs?.every((playerAttributes,playerindex) => {
                             if (input.abilityAttributeIDs === undefined) throw new Error("[search] input.abilityAttributeIDs === undefined")
                             const conditionAbilityAttribute = input.abilityAttributeIDs[playerindex]
+                            if (conditionAbilityAttribute === undefined) return true;
                             return isOnePlayerOfAbilityAttributesSatisfiedTheCondition(playerAttributes,conditionAbilityAttribute)
                             
                         })

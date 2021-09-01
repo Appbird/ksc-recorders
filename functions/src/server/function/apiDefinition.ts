@@ -71,6 +71,7 @@ apiList.set<APIFunctions["list_hashTags_onlyApproved"]>("/list/hashTags/onlyAppr
 apiList.set<APIFunctions["list_difficulties"]>  ("/list/difficulties", isIReceivedDataAtServer_getlist_UseSIdMIdId, getList("difficulty"))
 apiList.set<APIFunctions["list_abilities"]>     ("/list/abilities", isIReceivedDataAtServer_getlist_UseSIdMIdId, getList("ability"))
 apiList.set<APIFunctions["list_targets"]>       ("/list/targets", isIReceivedDataAtServer_getlist_UseSIdMIdId, getList("target"))
+apiList.set<APIFunctions["list_records"]>        ("/list/records", isIReceivedDataAtServer_getlist_UseSIdMIdId, getList("record"))
 apiList.set<APIFunctions["list_abilityAttributes"]>         ("/list/abilityAttributes", isIReceivedDataAtServer_getlist_UseSIdMIdId, getList("abilityAttribute"))
 apiList.set<APIFunctions["list_abilityAttributeFlags"]>     ("/list/abilityAttributeFlags", isIReceivedDataAtServer_getList_UseSIdMIdAIdId, getList("abilityAttributeFlag"))
 
@@ -81,6 +82,7 @@ apiList.set<APIFunctions["list_hashTag"]>       ("/list/hashTag",isIReceivedData
 apiList.set<APIFunctions["list_difficulty"]>    ("/list/difficulty", isIReceivedDataAtServer_pickUp_UseSIdMIdId, pickUp("difficulty"))
 apiList.set<APIFunctions["list_ability"]>       ("/list/ability", isIReceivedDataAtServer_pickUp_UseSIdMIdId, pickUp("ability"))
 apiList.set<APIFunctions["list_target"]>        ("/list/target", isIReceivedDataAtServer_pickUp_UseSIdMIdId, pickUp("target"))
+apiList.set<APIFunctions["list_record"]>        ("/list/record", isIReceivedDataAtServer_pickUp_UseSIdMIdId, pickUp("record"))
 apiList.set<APIFunctions["list_abilityAttribute"]>      ("/list/abilityAttribute", isIReceivedDataAtServer_pickUp_UseSIdMIdId, pickUp("abilityAttribute"))
 apiList.set<APIFunctions["list_abilityAttributeFlag"]>  ("/list/abilityAttributeFlag", isIReceivedDataAtServer_pickUp_UseSIdMIdAIdId, pickUp("abilityAttributeFlag"))
 apiList.set<APIFunctions["list_abilityAttribute"]>      ("/list/abilityAttribute", isIReceivedDataAtServer_pickUp_UseSIdMIdId, pickUp("abilityAttribute"))

@@ -124,23 +124,22 @@ export class S_SettingRegulationState_GameRuleAttributeDocViewer
         const editorHeader:HTMLElement = appendElement(this.articleDOM,"div");
         const editorSegment:HTMLElement = appendElement(this.articleDOM,"div");
         const inputForms:InputFormObject<HandledType>= {
-
-            ...generateBaseEditors(editorSegment,lang,context),
-            ...generateDescriptionEditors(editorSegment,lang,context),
             ruleName:   new EditorTextPart({
                 container:createEditorSegmentBaseElement(appendElement(this.articleDOM,"div")),
                 language:lang,
                 title:context.Input.ruleName.title,
                 description:context.Input.ruleName.description,
-                icooon:"",
+                icooon:"tag",
                 requiredField:true
             }),
+            ...generateBaseEditors(editorSegment,lang,context),
+            ...generateDescriptionEditors(editorSegment,lang,context),
             iconCSS:   new EditorIconCSSPart({
                 container:createEditorSegmentBaseElement(appendElement(this.articleDOM,"div")),
                 language:lang,
                 title:context.Input.iconCSS.title,
                 description:context.Input.iconCSS.description,
-                icooon:"",
+                icooon:"tag",
                 requiredField:true
             })
         };

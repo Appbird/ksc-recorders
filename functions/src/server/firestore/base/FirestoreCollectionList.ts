@@ -53,6 +53,7 @@ const CollectionListConstructors = new Map<keyof CollectionList, new (...data: a
     ["abilityAttribute",AbilityAttributeCollectionController],
     ["abilityAttributeFlag",AbilityAttributeFlagsCollectiCollectionController],
     ["runner",RunnerCollectionController],
+    ["record",RecordCollectionController],
     ["hashTag",HashTagCollectionController],
     ["hashTagOnlyApproved",HashTagOnlyApprovedCollectionController],
     ["ruleAttribute",DefinedRuleAttributeCollectionController],
@@ -84,6 +85,7 @@ export function generateCollectionController<T extends keyof CollectionList>(col
         case "difficulty":
         case "ability":
         case "target":
+        case "record":
         case "ruleClass":
         case "abilityAttribute":
             if (!gameSystemEnv || !gameSystemEnv.gameSystemID || !gameSystemEnv.gameModeID) throw new Error("[generateCollectionController] Either gameSystemEnv.gameSystemID or .gameModeID is not defined.")

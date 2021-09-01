@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@types/marked": "^2.0.5",
+    "@types/node-fetch": "^2.5.12",
     "@types/simplemde": "^1.11.8",
     "@types/yaireo__tagify": "^4.7.0",
     "@yaireo/tagify": "^4.7.2",

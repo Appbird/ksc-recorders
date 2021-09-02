@@ -59,7 +59,8 @@ export class RuleIndexPart {
     }
     private generateRuleIndexHTML(ruleObj: RuleAttributeAndAppliedClassInfo, language: LanguageInApplication) {
         return `<div class="__item">
-                    <div><i class="${ruleObj.rule.iconCSS}"></i> ${ruleObj.rule.title}${(ruleObj.rule.note || 0) !== 0 ? ` <i class="u-redChara u-bolderChara">${choiceString(contents.annotated, language)}</i>` : ""}</div> <div class="__classItems">${this.generateClassDescriptionInRuleIndex(ruleObj.appliedClass, language)}</div>
+                    <div><a class="u-bolderChara u-underline" href="#${ruleObj.rule.ruleName.replace(/\s/g,"_")}"><i class="${ruleObj.rule.iconCSS}"></i> ${ruleObj.rule.title}</a>
+                    ${(ruleObj.rule.note || 0) !== 0 ? ` <i class="u-redChara u-bolderChara">${choiceString(contents.annotated, language)}</i>` : ""}</div> <div class="__classItems">${this.generateClassDescriptionInRuleIndex(ruleObj.appliedClass, language)}</div>
                 </div>`;
     }
     private generateClassDescriptionInRuleIndex(appliedClass: AppliedRuleClassResolved[], language: LanguageInApplication) {

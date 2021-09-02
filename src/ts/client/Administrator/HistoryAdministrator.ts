@@ -10,13 +10,12 @@ export class HistoryAdministrator{
     constructor(app:IAppUsedToReadAndChangePage){
         this.app = app;
         this.urlAd = new URLAdministrator(app)
-        window.addEventListener('popstate', (event) => {
-            
+        window.addEventListener('popstate', ({state}) => {
+            this.app.transition(state.pageState,state.requiredObject,{ifAppendHistory:false})
         });
     }
     clearIntroduction(){
         localStorage.setItem("KSSRs::HistoryAdministrator::clearIntroduction_v1","true")
-
     }
     checkIfIntroductionIsOver(){
         return localStorage.getItem("KSSRs::HistoryAdministrator::clearIntroduction_v1") === "true"

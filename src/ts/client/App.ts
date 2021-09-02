@@ -12,7 +12,6 @@ import { LoginAdministrator, LoginAdministratorReadOnly } from "./Administrator/
 import { IAppUsedToChangeState } from "./interface/AppInterfaces";
 import firebase from "firebase/app";
 import {PageNotificationAdministrator} from "./Administrator/PageNotificationAdministrator"
-import {version} from "../AppInfo.json"
 export default class App implements IAppUsedToChangeState{
     private _state:StateAdministrator;
     private loginAd:LoginAdministrator | null = null;
@@ -21,8 +20,6 @@ export default class App implements IAppUsedToChangeState{
     private header:HeaderController = new HeaderController();
     private apiCaller:APIAdministrator = new APIAdministrator();
     private _notie:PageNotificationAdministrator;
-
-    public readonly version:string = version
     constructor(articleDOM:HTMLElement,language:LanguageInApplication){
         this._state = new StateAdministrator(language);
         this._notie = new PageNotificationAdministrator(this);
@@ -32,6 +29,12 @@ export default class App implements IAppUsedToChangeState{
         document.getElementById("header")?.addEventListener("click",() => {
             this.transition("mainMenu",null)
         })
+    }
+    get version():Promise<string>{
+        return fetch("https://api.github.com/repos/appbird/kss-recorders/releases/latest")
+            .then(result => result.json())
+            .then(result => result.tag_name)
+            .catch((err) => this.errorCatcher(err));
     }
     async init(){
         try{

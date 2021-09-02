@@ -46,7 +46,7 @@ export class RuleIndexPart {
         container.appendChild(elementWithoutEscaping`
             <div class="c-ruleIndex u-width90per">
                 <div class="__indexTitle">${choiceString(contents.indexTitle,language).replace(/\$\{number\}/g,rules.length.toString())}</div>
-                <div class="__indexTitle">${choiceString(contents.specify_priority_in_ruleClasses,language)}</div>
+                <div class="__indexTitle u-bolderChara">${choiceString(contents.specify_priority_in_ruleClasses,language)}</div>
                 <div class="__list">
                     <div class="__item --top u-smallerChara">
                         <p class=""><i class=""></i> ${choiceString(contents.ruleName,language)}</p> <p class="">${choiceString(contents.ruleClass,language)}</p>

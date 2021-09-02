@@ -26,6 +26,10 @@ const contents={
     noScope:{
         Japanese: "全セグメント",
         English: "All Segments"
+    },
+    specify_priority_in_ruleClasses:{
+        Japanese:   "もっとも上にあるアイテムが基本的にルールとして優先されます。",
+        English:    "If the scope of rule classes is duplicated and contradicts each other, the item at the top has priority."
     }
 }
 
@@ -42,6 +46,7 @@ export class RuleIndexPart {
         container.appendChild(elementWithoutEscaping`
             <div class="c-ruleIndex u-width90per">
                 <div class="__indexTitle">${choiceString(contents.indexTitle,language).replace(/\$\{number\}/g,rules.length.toString())}</div>
+                <div class="__indexTitle u-bolderChara">${choiceString(contents.specify_priority_in_ruleClasses,language)}</div>
                 <div class="__list">
                     <div class="__item --top u-smallerChara">
                         <p class=""><i class=""></i> ${choiceString(contents.ruleName,language)}</p> <p class="">${choiceString(contents.ruleClass,language)}</p>

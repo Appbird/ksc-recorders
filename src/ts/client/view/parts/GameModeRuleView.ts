@@ -38,7 +38,7 @@ export class GameModeRuleView {
     setHeader({ title, description,ruleName, iconCSS }: { title: string; ruleName:string; description?: string; iconCSS: string; }) {
         this.headerSegment.innerHTML = "";
         const header = new TitleCupsuled(appendElement(this.headerSegment, "div"));
-        header.refresh(title, ruleName, { iconCSS,chara:"u-smallerChara",id:ruleName });
+        header.refresh(title, ruleName, { iconCSS,chara:"u-smallerChara",id:ruleName.replace(/\s/g,"_") });
         appendElement(this.headerSegment, "p", "u-smallerChara u-width90per").innerHTML = description || ""
     }
     setRule({ appliedClass }: { appliedClass: AppliedRuleClassResolved[]; }) {

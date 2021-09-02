@@ -7,20 +7,11 @@ import { LanguageInApplication } from "../../type/LanguageInApplication";
 export class HistoryAdministrator{
     private app:IAppUsedToReadAndChangePage;
     private urlAd:URLAdministrator
-    private transitionPile:TransitionItem<keyof PageStates>[] = [];
     constructor(app:IAppUsedToReadAndChangePage){
         this.app = app;
         this.urlAd = new URLAdministrator(app)
         window.addEventListener('popstate', (e) => {
-            this.back();
         });
-    }
-    async appendHistory(){
-        this.transitionPile.push({
-            pageState:this.app.state.state,
-            requiredObject:this.app.state.requiredObj
-        })
-        
     }
     clearIntroduction(){
         localStorage.setItem("KSSRs::HistoryAdministrator::clearIntroduction_v1","true")
@@ -64,11 +55,6 @@ export class HistoryAdministrator{
         console.info(`[KSSRs::HistoryAdministrator::TargetMode] register current target gamemode: ${this.app.state.gameSystemEnvDisplayed.gameSystem?.English} / ${this.app.state.gameSystemEnvDisplayed.gameMode?.Japanese}`)
     }
 
-    back(){
-        const past = this.transitionPile.pop();
-        if (past === undefined) return;
-        this.app.transition(past.pageState,past.requiredObject,{ifAppendHistory:false})
-    }
     getPreviousPageData():TransitionItem<keyof PageStates>|"redirect"|null{
         const str = localStorage.getItem("KSSRs::HistoryAdministrator::PreviousPage")
         if (str === null) return null;

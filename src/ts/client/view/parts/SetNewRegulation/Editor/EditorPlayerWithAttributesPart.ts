@@ -118,8 +118,8 @@ export class EditorPlayerWithAttributesPart implements EditorPart<HandledType> {
     }
     isFillAllAbility(){
         const abilityFill = this.selectInput.getValueAsArray()[0] !== undefined 
-        const attributeEmpty = this.selectInput.getValueAsArray().length === 0
-        return (abilityFill && attributeEmpty) || !attributeEmpty
+        const attributeConditionExist = this.attributeChoices.some(attributeChoice => attributeChoice.editor.value.length !== 0)
+        return abilityFill || !attributeConditionExist
     }
     destroy(){
         if (this.unsubscribe !== null)this.unsubscribe();

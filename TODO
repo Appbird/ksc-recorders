@@ -1,0 +1,5 @@
+issues:
+  https://github.com/Appbird/kss-recorders/issues/1 :
+    ✔ src\ts\client\view\parts\SetNewRegulation\EditorFormManagerWithAutoDetect.ts @done(21-09-02 14:37)
+      ✔ メソッドaddDataにおいて、idの生成条件を修正する。 @done(21-09-02 14:35)
+      ✔ 動作確認を行う @done(21-09-02 14:37)

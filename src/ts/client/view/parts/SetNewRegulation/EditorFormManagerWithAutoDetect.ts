@@ -155,7 +155,7 @@ export class EditorFormManagerWithAutoDetect<TypeOfObserved extends object> impl
     async addData(item?:{[key:string]:any}):Promise<string>{
         if (item !== undefined) this.data = item;
         if (this.data.id !== undefined) this.id = this.data.id
-        const ref = (this.id !== undefined) ? this.pathOfDocObserved.doc(this.id) : this.pathOfDocObserved.doc()
+        const ref = (this.id !== undefined && this.id.length !== 0) ? this.pathOfDocObserved.doc(this.id) : this.pathOfDocObserved.doc()
         this.data.id = ref.id
         this.pathOfDocObserved.doc(ref.id).set(this.data)
         this.callbacks.whenAppendNewItem(ref.id,this.data);

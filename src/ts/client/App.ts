@@ -109,8 +109,6 @@ export default class App implements IAppUsedToChangeState{
     }
     async transition<T extends keyof PageStates>(nextState:T, requestObject:RequiredObjectType<PageStates[T]>,{ifAppendHistory=true,title=""}:{ifAppendHistory?:boolean,title?:string} = {}){
         this.goToTop();
-        if (ifAppendHistory) this.historyAd.appendHistory()
-        
         try { 
             await this.transitionAd.transition(nextState,requestObject,{title:title})
             if (ifAppendHistory) this.historyAd.registerCurrentPage();

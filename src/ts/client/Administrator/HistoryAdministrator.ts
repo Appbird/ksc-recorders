@@ -10,7 +10,8 @@ export class HistoryAdministrator{
     constructor(app:IAppUsedToReadAndChangePage){
         this.app = app;
         this.urlAd = new URLAdministrator(app)
-        window.addEventListener('popstate', (e) => {
+        window.addEventListener('popstate', (event) => {
+            
         });
     }
     clearIntroduction(){
@@ -21,11 +22,11 @@ export class HistoryAdministrator{
         return localStorage.getItem("KSSRs::HistoryAdministrator::clearIntroduction_v1") === "true"
     }
     registerCurrentPage(){
-        const data = JSON.stringify({
+        const data = {
             pageState:this.app.state.state,
             requiredObject:this.app.state.requiredObj
-        })
-        localStorage.setItem("KSSRs::HistoryAdministrator::PreviousPage",data)
+        }
+        localStorage.setItem("KSSRs::HistoryAdministrator::PreviousPage",JSON.stringify(data))
         switch(this.app.state.state){
             case "detailView":{
                 const obj = this.app.state.requiredObj as APIFunctions["record_detail"]["atServer"]

@@ -26,6 +26,10 @@ const contents={
     noScope:{
         Japanese: "全セグメント",
         English: "All Segments"
+    },
+    specify_priority_in_ruleClasses:{
+        Japanese:   "同じ適用範囲において複数のクラスが適用され、たがいに矛盾している場合、もっとも上にあるアイテムが優先されます。",
+        English:    "If the scope of rule classes is duplicated and contradicts each other, the item at the top has priority."
     }
 }
 

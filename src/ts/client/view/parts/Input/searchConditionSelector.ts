@@ -187,7 +187,7 @@ export class SearchConditionSelectorView implements IView{
         new DecideButtonPart(this.container.appendChild(elementWithoutEscaping`<div class="u-width50per u-margin2em"></div>`) as HTMLElement,{
             text:{Japanese:"決定",English:"Submit"},language,
             onClick:() => {
-                if (abilitySelectEditor.kind === "PlayersWithAttributesPart" && !abilitySelectEditor.isFillAllAbility()){
+                if (abilitySelectEditor.kind === "PlayersWithAttributesPart" && !abilitySelectEditor.isAttributeConditionWithAbilityCondition()){
                     errorViewer.innerHTML = choiceString({Japanese:"能力欄の入力が不十分です。(能力属性のみを指定した検索は現在できません。)",English:"The input of Ability isn't enough. (For now, searching with only specifying attributes of ability is not implemented.)"},language)
                     return;
                 }

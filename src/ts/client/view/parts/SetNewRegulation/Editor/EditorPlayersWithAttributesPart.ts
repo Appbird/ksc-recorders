@@ -143,8 +143,8 @@ export class EditorPlayersWithAttributesPart implements EditorPart<HandledType[]
     disabled(state:boolean){
         for (const editor of this.playersWithAttributesChoices) editor.disabled(state)
     }
-    isFillAllAbility(){
-        return this.playersWithAttributesChoices.every((editor) => editor.isFillAllAbility())
+    isAttributeConditionWithAbilityCondition(){
+        return this.playersWithAttributesChoices.every((editor) => editor.isAttributeConditionWithAbilityCondition())
     }
     refresh(values:{abilityID:string,attribute:OnePlayerOfAbilityAttribute}[]) {
         while (true){

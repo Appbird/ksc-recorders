@@ -116,7 +116,7 @@ export class EditorPlayerWithAttributesPart implements EditorPart<HandledType> {
     get requiredField(){
         return this._requiredField;
     }
-    isFillAllAbility(){
+    isAttributeConditionWithAbilityCondition(){
         const abilityFill = this.selectInput.getValueAsArray()[0] !== undefined 
         const attributeConditionExist = this.attributeChoices.some(attributeChoice => attributeChoice.editor.value.length !== 0)
         return abilityFill || !attributeConditionExist

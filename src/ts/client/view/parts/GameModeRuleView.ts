@@ -44,7 +44,7 @@ export class GameModeRuleView {
     setRule({ appliedClass }: { appliedClass: AppliedRuleClassResolved[]; }) {
         this.ruleSegment.innerHTML = "";
         for (const cl of appliedClass) {
-            const iconHTML = cl.iconCSS.map(cssClass => `<i class="${cssClass}"></i>`).join();
+            const iconHTML = cl.iconCSS.map(cssClass => `<i class="${cssClass}"></i>`).join("");
             this.ruleSegment.appendChild(elementWithoutEscaping`
                 <div class="c-HeaderInRuleDescription u-marginLeftRight05emToChildren">
                     <div class="__icon">${iconHTML}</div>

@@ -47,7 +47,7 @@ export class S_MainMenu
                 },this.generateDetailMenuInfo()]
             ]
             const notice = new NoticeView(appendElement(this.articleDOM,"div"),"mainMenu","headerDescription",context.mainManu,this.app.state.language)
-            const main = (gsed.gameSystem !== null && gsed.gameMode !== null) ? this.generateMainMenuDescriptionWithTargetMode():this.generateMainMenuDescription()
+            const main = await ((gsed.gameSystem !== null && gsed.gameMode !== null) ? this.generateMainMenuDescriptionWithTargetMode():this.generateMainMenuDescription())
             
             
             for (const generator of menuGenerators){
@@ -61,7 +61,7 @@ export class S_MainMenu
             
             this.deleteLoadingSpinner();
         }
-        generateMainMenuDescription(){
+        async generateMainMenuDescription(){
             return this.articleDOM.appendChild(this.htmlConverter.elementWithoutEscaping`
             <div>
                 
@@ -70,7 +70,7 @@ export class S_MainMenu
                     <div class="__title">Welcome to <br>Kirby-Speed/Score-Recorders!</div>
                 </div>
                 <hr noshade class="u-bold">
-                <div class="u-width90per u-bolderChara">ver ${this.app.version}</div>
+                <div class="u-width90per u-bolderChara">${await this.app.version}</div>
                 <br>
                 <div class="u-width90per">
                 ${context.description[0]}
@@ -84,7 +84,7 @@ export class S_MainMenu
             `) as HTMLElement;
             
         }
-        generateMainMenuDescriptionWithTargetMode(){
+        async generateMainMenuDescriptionWithTargetMode(){
             const gsed = this.app.state.gameSystemEnvDisplayed
             const gameModeDescription = choiceDescription(gsed.gameMode,this.app.state.language)
             if (gsed.gameSystem === null || gsed.gameMode === null) throw new Error(`ゲームモードが設定されていません。`)
@@ -95,7 +95,7 @@ export class S_MainMenu
                     <div class="__title">${ `${gsed.gameSystem.English}/${gsed.gameMode.English}<br>Top Menu`}</div>
                 </div>
                 <hr noshade class="u-bold">
-                <div class="u-width90per u-bolderChara">ver ${this.app.version}</div>
+                <div class="u-width90per u-bolderChara">${await this.app.version}</div>
                 <br>
                 <div class="u-background--gray"> 
                     <br>

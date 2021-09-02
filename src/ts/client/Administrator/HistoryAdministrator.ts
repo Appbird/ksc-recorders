@@ -30,28 +30,29 @@ export class HistoryAdministrator{
         return localStorage.getItem("KSSRs::HistoryAdministrator::clearIntroduction_v1") === "true"
     }
     registerCurrentPage(){
-        localStorage.setItem("KSSRs::HistoryAdministrator::PreviousPage",JSON.stringify({
+        const data = JSON.stringify({
             pageState:this.app.state.state,
             requiredObject:this.app.state.requiredObj
-        }))
+        })
+        localStorage.setItem("KSSRs::HistoryAdministrator::PreviousPage",data)
         switch(this.app.state.state){
             case "detailView":{
                 const obj = this.app.state.requiredObj as APIFunctions["record_detail"]["atServer"]
-                history.pushState(null,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/ogpDetailView/?state=detailView&gs=${obj.gameSystemEnv.gameSystemID}&gm=${obj.gameSystemEnv.gameModeID}&id=${obj.id}`)
+                history.pushState(data,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/ogpDetailView/?state=detailView&gs=${obj.gameSystemEnv.gameSystemID}&gm=${obj.gameSystemEnv.gameModeID}&id=${obj.id}`)
                 break;
             }
             case "userPageInWhole":{
                 const obj = this.app.state.requiredObj as {runnerID:string}
-                history.pushState(null,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/?state=userPageInWhole&id=${obj.runnerID}`)
+                history.pushState(data,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/?state=userPageInWhole&id=${obj.runnerID}`)
                 break;
             }
             case "userPageInSpecific":{
                 const obj = this.app.state.requiredObj as TargetGameMode&{runnerID:string}
-                history.pushState(null,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/?state=userPageInWhole&id=${obj.runnerID}`)
+                history.pushState(data,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/?state=userPageInWhole&id=${obj.runnerID}`)
                 break;
             }
             default:
-                history.pushState(null,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/`)
+                history.pushState(data,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/`)
                 break;
 
         } 

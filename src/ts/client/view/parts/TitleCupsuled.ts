@@ -11,18 +11,20 @@ export class TitleCupsuled implements IView{
         chara = "",
         subChara = "",
         hr = "u-thin",
-        iconCSS
+        iconCSS,
+        id = ""
     }:{
         chara?:"u-biggerChara"|"u-smallerChara"|"",
         subChara?:"u-biggerChara"|"u-smallerChara"|"",
         hr?:"u-thin"|"u-bold"
         underline?:boolean,
-        iconCSS?:string
+        iconCSS?:string,
+        id?:string
     } = {}){
         this.container.innerHTML = "";
         const title = this.container.appendChild(elementWithoutEscaping`
         <div class="c-title u-margin05em">
-            <div class="c-title__main ${chara}">${(iconCSS) ? `<i class="${iconCSS}"></i> ` : "" }${main}</div>
+            <div class="c-title__main ${chara}" id="${id}">${(iconCSS) ? `<i class="${iconCSS}"></i> ` : "" }${main}</div>
         </div>
         `);
         if (sub !== undefined) title.appendChild(elementWithoutEscaping`<div class="c-title__sub ${subChara}">${sub}</div>`)

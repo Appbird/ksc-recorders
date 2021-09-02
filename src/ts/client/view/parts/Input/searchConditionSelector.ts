@@ -187,7 +187,7 @@ export class SearchConditionSelectorView implements IView{
         new DecideButtonPart(this.container.appendChild(elementWithoutEscaping`<div class="u-width50per u-margin2em"></div>`) as HTMLElement,{
             text:{Japanese:"決定",English:"Submit"},language,
             onClick:() => {
-                if (!(!this.isAbilitySelectEditor(abilitySelectEditor) && abilitySelectEditor.isFillAllAbility())){
+                if (abilitySelectEditor.kind === "PlayersWithAttributesPart" && !abilitySelectEditor.isFillAllAbility()){
                     errorViewer.innerHTML = choiceString({Japanese:"能力欄の入力が不十分です。(能力属性のみを指定した検索は現在できません。)",English:"The input of Ability isn't enough. (For now, searching with only specifying attributes of ability is not implemented.)"},language)
                     return;
                 }
@@ -198,11 +198,6 @@ export class SearchConditionSelectorView implements IView{
         const difficultyID = this.editors.difficultySelected.value
         if (difficultyID !== undefined) this.getTargetItems(difficultyID).then(targetItems => targetSelectEditor.refreshOption(targetItems))
     
-    }
-    isAbilitySelectEditor(editor:EditorPlayersWithAttributesPart|EditorMultipleIDPart):editor is EditorMultipleIDPart{
-        const value = editor.value
-        if (value === undefined) return false
-        return typeof value[0] === "string"
     }
     destroy(){
         this.editorManager.destroy()

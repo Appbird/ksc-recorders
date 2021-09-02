@@ -12,6 +12,7 @@ import { SmallButtonPart } from "../../MultiButtonPart";
 
 type HandledType ={abilityID:string,attribute:OnePlayerOfAbilityAttribute}
 export class EditorPlayersWithAttributesPart implements EditorPart<HandledType[]> {
+    public readonly kind = "PlayersWithAttributesPart"
     private container: HTMLElement;
     private playersWithAttributesChoices:EditorPlayerWithAttributesPart[] = [];
     private htmlCon: HTMLConverter;

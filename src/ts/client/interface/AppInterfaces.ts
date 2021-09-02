@@ -9,7 +9,7 @@ import { PageStates, RequiredObjectType } from "../view/state/Base/PageStates";
 
 
 export interface IAppUsedToRead{
-    readonly version:string;
+    readonly version:Promise<string>;
     state:StateAdministerReadOnly;
     loginAdministratorReadOnly:LoginAdministratorReadOnly;
     checkIfIntroductionIsOver:()=>boolean;

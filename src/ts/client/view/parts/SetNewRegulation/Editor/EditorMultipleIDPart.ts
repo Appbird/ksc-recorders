@@ -11,6 +11,7 @@ import { MultiLanguageDescription } from "../../../../../utility/aboutLang";
 import { ILabelledDocument } from "../../../../../type/list/ILabelledDocument";
 
 export class EditorMultipleIDPart implements EditorPart<string[]> {
+    public readonly kind = "MultipleIDPart"
     private container: HTMLElement;
     private selectInput: SelectChoicesCapsuled<ITargetItem>;
     private htmlCon: HTMLConverter;

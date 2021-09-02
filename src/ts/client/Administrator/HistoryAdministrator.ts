@@ -7,51 +7,43 @@ import { LanguageInApplication } from "../../type/LanguageInApplication";
 export class HistoryAdministrator{
     private app:IAppUsedToReadAndChangePage;
     private urlAd:URLAdministrator
-    private transitionPile:TransitionItem<keyof PageStates>[] = [];
     constructor(app:IAppUsedToReadAndChangePage){
         this.app = app;
         this.urlAd = new URLAdministrator(app)
-        window.addEventListener('popstate', (e) => {
-            this.back();
+        window.addEventListener('popstate', ({state}) => {
+            this.app.transition(state.pageState,state.requiredObject,{ifAppendHistory:false})
         });
-    }
-    async appendHistory(){
-        this.transitionPile.push({
-            pageState:this.app.state.state,
-            requiredObject:this.app.state.requiredObj
-        })
-        
     }
     clearIntroduction(){
         localStorage.setItem("KSSRs::HistoryAdministrator::clearIntroduction_v1","true")
-
     }
     checkIfIntroductionIsOver(){
         return localStorage.getItem("KSSRs::HistoryAdministrator::clearIntroduction_v1") === "true"
     }
     registerCurrentPage(){
-        localStorage.setItem("KSSRs::HistoryAdministrator::PreviousPage",JSON.stringify({
+        const data = {
             pageState:this.app.state.state,
             requiredObject:this.app.state.requiredObj
-        }))
+        }
+        localStorage.setItem("KSSRs::HistoryAdministrator::PreviousPage",JSON.stringify(data))
         switch(this.app.state.state){
             case "detailView":{
                 const obj = this.app.state.requiredObj as APIFunctions["record_detail"]["atServer"]
-                history.pushState(null,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/ogpDetailView/?state=detailView&gs=${obj.gameSystemEnv.gameSystemID}&gm=${obj.gameSystemEnv.gameModeID}&id=${obj.id}`)
+                history.pushState(data,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/ogpDetailView/?state=detailView&gs=${obj.gameSystemEnv.gameSystemID}&gm=${obj.gameSystemEnv.gameModeID}&id=${obj.id}`)
                 break;
             }
             case "userPageInWhole":{
                 const obj = this.app.state.requiredObj as {runnerID:string}
-                history.pushState(null,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/?state=userPageInWhole&id=${obj.runnerID}`)
+                history.pushState(data,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/?state=userPageInWhole&id=${obj.runnerID}`)
                 break;
             }
             case "userPageInSpecific":{
                 const obj = this.app.state.requiredObj as TargetGameMode&{runnerID:string}
-                history.pushState(null,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/?state=userPageInWhole&id=${obj.runnerID}`)
+                history.pushState(data,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/?state=userPageInWhole&id=${obj.runnerID}`)
                 break;
             }
             default:
-                history.pushState(null,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/`)
+                history.pushState(data,`Kirby-Speed/ScoreRecorders:${this.app.state.state}`,`/`)
                 break;
 
         } 
@@ -63,11 +55,6 @@ export class HistoryAdministrator{
         console.info(`[KSSRs::HistoryAdministrator::TargetMode] register current target gamemode: ${this.app.state.gameSystemEnvDisplayed.gameSystem?.English} / ${this.app.state.gameSystemEnvDisplayed.gameMode?.Japanese}`)
     }
 
-    back(){
-        const past = this.transitionPile.pop();
-        if (past === undefined) return;
-        this.app.transition(past.pageState,past.requiredObject,{ifAppendHistory:false})
-    }
     getPreviousPageData():TransitionItem<keyof PageStates>|"redirect"|null{
         const str = localStorage.getItem("KSSRs::HistoryAdministrator::PreviousPage")
         if (str === null) return null;

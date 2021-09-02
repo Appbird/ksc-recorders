@@ -38,7 +38,7 @@ export class GameModeRuleView {
     setHeader({ title, description,ruleName, iconCSS }: { title: string; ruleName:string; description?: string; iconCSS: string; }) {
         this.headerSegment.innerHTML = "";
         const header = new TitleCupsuled(appendElement(this.headerSegment, "div"));
-        header.refresh(title, ruleName, { iconCSS,chara:"u-smallerChara" });
+        header.refresh(title, ruleName, { iconCSS,chara:"u-smallerChara",id:ruleName });
         appendElement(this.headerSegment, "p", "u-smallerChara u-width90per").innerHTML = description || ""
     }
     setRule({ appliedClass }: { appliedClass: AppliedRuleClassResolved[]; }) {
@@ -46,7 +46,7 @@ export class GameModeRuleView {
         for (const cl of appliedClass) {
             const iconHTML = cl.iconCSS.map(cssClass => `<i class="${cssClass}"></i>`).join("");
             this.ruleSegment.appendChild(elementWithoutEscaping`
-                <div id="${cl.typeName}" class="c-HeaderInRuleDescription u-marginLeftRight05emToChildren">
+                <div class="c-HeaderInRuleDescription u-marginLeftRight05emToChildren">
                     <div class="__icon">${iconHTML}</div>
                     <div class="__ruleName">
                         <div class="__title">${cl.title}</div>

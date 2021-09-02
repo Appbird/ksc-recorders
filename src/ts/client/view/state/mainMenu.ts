@@ -70,7 +70,7 @@ export class S_MainMenu
                     <div class="__title">Welcome to <br>Kirby-Speed/Score-Recorders!</div>
                 </div>
                 <hr noshade class="u-bold">
-                <div class="u-width90per u-bolderChara">ver ${await this.app.version}</div>
+                <div class="u-width90per u-bolderChara">${await this.app.version}</div>
                 <br>
                 <div class="u-width90per">
                 ${context.description[0]}
@@ -95,7 +95,7 @@ export class S_MainMenu
                     <div class="__title">${ `${gsed.gameSystem.English}/${gsed.gameMode.English}<br>Top Menu`}</div>
                 </div>
                 <hr noshade class="u-bold">
-                <div class="u-width90per u-bolderChara">ver ${await this.app.version}</div>
+                <div class="u-width90per u-bolderChara">${await this.app.version}</div>
                 <br>
                 <div class="u-background--gray"> 
                     <br>

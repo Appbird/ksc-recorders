@@ -5,7 +5,7 @@ import { appendElement, generateIcooonHTML } from "../../../../utility/aboutElem
 import { TextInputCapsuled } from "../../TextInputCapsuled";
 import { UListCupsuled } from "../../Input/UListCupsuled";
 import { context_required, EditorPart } from "./EditorPart";
-import { convertScoreIntoNumber } from "../../../../../utility/timeUtility";
+import { convertScoreIntoNumber } from "../../../../../utility/timeExpressionUtility";
 import { choiceString } from "../../../../../utility/aboutLang";
 
 export class EditorScorePart implements EditorPart<number> {

@@ -5,7 +5,7 @@ import { IView } from "../IView";
 import { LanguageInApplication } from "../../../type/LanguageInApplication";
 import { HTMLConverter } from "../../../utility/ViewUtility";
 import marked from "marked";
-import { formatDate } from "../../../utility/timeUtility";
+import { formatDate } from "../../../utility/timeExpressionUtility";
 
 export class NotificationList implements IView {
     private container: Element;

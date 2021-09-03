@@ -1,6 +1,6 @@
 import { ScoreType } from "../../../type/list/IGameModeItem";
 import { IRecordInShortResolved } from "../../../type/record/IRecord";
-import { converseMiliSecondsIntoTime } from "../../../utility/timeUtility";
+import { converseMiliSecondsIntoTime } from "../../../utility/timeExpressionUtility";
 import { element, HTMLConverter, writeAbilityNameWithAttribute } from "../../../utility/ViewUtility";
 import { IView } from "../IView";
 import { TagsView } from "./TagsView";

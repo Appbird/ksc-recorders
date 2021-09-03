@@ -1,5 +1,5 @@
 import { IRecordResolved } from "../../../../type/record/IRecord";
-import { converseMiliSecondsIntoTime, formatDate } from "../../../../utility/timeUtility";
+import { converseMiliSecondsIntoTime, formatDate } from "../../../../utility/timeExpressionUtility";
 import {  HTMLConverter, writeAbilityNameWithAttribute } from "../../../../utility/ViewUtility";
 import { IView } from "../../IView";
 import { TagsView } from "../TagsView";

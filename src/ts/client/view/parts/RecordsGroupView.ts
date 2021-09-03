@@ -1,5 +1,5 @@
 import { element, elementWithoutEscaping } from "../../../utility/ViewUtility";
-import { convertNumberIntoDateString } from "../../../utility/timeUtility";
+import { convertNumberIntoDateString } from "../../../utility/timeExpressionUtility";
 import { IRecordGroupResolved } from "../../../type/record/IRecordGroupResolved";
 import { IRecordInShortResolved } from "../../../type/record/IRecord";
 import { createElementWithIdAndClass, findElementByClassNameWithErrorPossibility } from "../../utility/aboutElement";

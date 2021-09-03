@@ -32,9 +32,9 @@ const contents={
         English:    "If the scope of rule classes is duplicated and contradicts each other, the item at the top has priority."
     }
 }
-
+type HandledType = {ruleInfo:RuleAttributeAndAppliedClassInfo, onClick:()=>void}
 export class RuleIndexPart {
-    private rules: {ruleInfo:RuleAttributeAndAppliedClassInfo, onClick:()=>void}[] = []
+    private rules:HandledType[] = []
     constructor(
         private container: HTMLElement,
         private language: LanguageInApplication

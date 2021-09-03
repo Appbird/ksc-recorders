@@ -2,6 +2,7 @@ import { choiceString } from "../../../utility/aboutLang";
 import { elementWithoutEscaping } from "../../../utility/ViewUtility";
 import { AppliedRuleClassResolved, RuleAttributeAndAppliedClassInfo } from "../../../type/api/gameRule/RuleAttributeAndAppliedClassInfo";
 import { LanguageInApplication } from "../../../type/LanguageInApplication";
+import { findElementByClassNameWithErrorPossibility } from "../../utility/aboutElement";
 const contents={
     ruleName:{
         Japanese: "ルールの属性",
@@ -40,7 +41,11 @@ export class RuleIndexPart {
         private language: LanguageInApplication
     ){
     }
-    private appendNewRule(ruleInfo:RuleAttributeAndAppliedClassInfo, onClick:()=>void){
+    /**
+     * ルールの目次のアイテムを追加します
+     * これで追加し終えた後に、refrectViewメソッドを実行する必要があります。
+     */
+    appendNewRule(ruleInfo:RuleAttributeAndAppliedClassInfo, onClick:()=>void){
         this.rules.push({ruleInfo,onClick})
     }
     refrectView(){
@@ -52,7 +57,7 @@ export class RuleIndexPart {
             `);
             return
         }
-        this.container.appendChild(elementWithoutEscaping`
+        const ruleIndexSegment = this.container.appendChild(elementWithoutEscaping`
             <div class="c-ruleIndex u-width90per">
                 <div class="__indexTitle">${choiceString(contents.indexTitle,this.language).replace(/\$\{number\}/g,this.rules.length.toString())}</div>
                 <div class="__indexTitle u-bolderChara">${choiceString(contents.specify_priority_in_ruleClasses,this.language)}</div>
@@ -61,16 +66,18 @@ export class RuleIndexPart {
                         <p class=""><i class=""></i> ${choiceString(contents.ruleName,this.language)}</p> <p class="">${choiceString(contents.ruleClass,this.language)}</p>
                     </div>
                     <hr noshade class="u-thin">
-                    ${this.rules.map((ruleObj) => this.generateRuleIndexHTML(ruleObj, this.language)).join("")}
                 </div>
             <div>
         `);
-    }
-    private generateRuleIndexHTML(ruleObj: RuleAttributeAndAppliedClassInfo, language: LanguageInApplication) {
-        return `<div class="__item">
-                    <div><a class="u-bolderChara u-underline" href="#${ruleObj.rule.ruleName.replace(/\s/g,"_")}"><i class="${ruleObj.rule.iconCSS}"></i> ${ruleObj.rule.title}</a>
-                    ${(ruleObj.rule.note || 0) !== 0 ? ` <i class="u-redChara u-bolderChara">${choiceString(contents.annotated, language)}</i>` : ""}</div> <div class="__classItems">${this.generateClassDescriptionInRuleIndex(ruleObj.appliedClass, language)}</div>
-                </div>`;
+        const ruleIndexItemsSegment = findElementByClassNameWithErrorPossibility(ruleIndexSegment,"__list")
+        for (const {ruleInfo,onClick} of this.rules){
+            ruleIndexItemsSegment.appendChild(elementWithoutEscaping`
+                <div class="__item">
+                    <div><a class="u-bolderChara u-underline" href="#${ruleInfo.rule.ruleName.replace(/\s/g,"_")}"><i class="${ruleInfo.rule.iconCSS}"></i> ${ruleInfo.rule.title}</a>
+                    ${(ruleInfo.rule.note || 0) !== 0 ? ` <i class="u-redChara u-bolderChara">${choiceString(contents.annotated, this.language)}</i>` : ""}</div> <div class="__classItems">${this.generateClassDescriptionInRuleIndex(ruleInfo.appliedClass, this.language)}</div>
+                </div>
+            `).addEventListener(`click`, () => onClick())
+        }
     }
     private generateClassDescriptionInRuleIndex(appliedClass: AppliedRuleClassResolved[], language: LanguageInApplication) {
         return appliedClass.map(ruleClass => `

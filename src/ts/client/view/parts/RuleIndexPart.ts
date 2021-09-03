@@ -34,25 +34,34 @@ const contents={
 }
 
 export class RuleIndexPart {
-    constructor(container: HTMLElement, { rules, language }: { rules: RuleAttributeAndAppliedClassInfo[]; language: LanguageInApplication; }) {
-        if (rules.length === 0) {
-            container.appendChild(elementWithoutEscaping`
+    private rules: {ruleInfo:RuleAttributeAndAppliedClassInfo, onClick:()=>void}[] = []
+    constructor(
+        private container: HTMLElement,
+        private language: LanguageInApplication
+    ){
+    }
+    private appendNewRule(ruleInfo:RuleAttributeAndAppliedClassInfo, onClick:()=>void){
+        this.rules.push({ruleInfo,onClick})
+    }
+    refrectView(){
+        if (this.rules.length === 0) {
+            this.container.appendChild(elementWithoutEscaping`
                 <div class="c-ruleIndex u-width90per">
-                    <div class="__indexTitle">${choiceString(contents.indexTitleWithoutRules,language)}</div>
+                    <div class="__indexTitle">${choiceString(contents.indexTitleWithoutRules,this.language)}</div>
                 <div>
             `);
             return
         }
-        container.appendChild(elementWithoutEscaping`
+        this.container.appendChild(elementWithoutEscaping`
             <div class="c-ruleIndex u-width90per">
-                <div class="__indexTitle">${choiceString(contents.indexTitle,language).replace(/\$\{number\}/g,rules.length.toString())}</div>
-                <div class="__indexTitle u-bolderChara">${choiceString(contents.specify_priority_in_ruleClasses,language)}</div>
+                <div class="__indexTitle">${choiceString(contents.indexTitle,this.language).replace(/\$\{number\}/g,this.rules.length.toString())}</div>
+                <div class="__indexTitle u-bolderChara">${choiceString(contents.specify_priority_in_ruleClasses,this.language)}</div>
                 <div class="__list">
                     <div class="__item --top u-smallerChara">
-                        <p class=""><i class=""></i> ${choiceString(contents.ruleName,language)}</p> <p class="">${choiceString(contents.ruleClass,language)}</p>
+                        <p class=""><i class=""></i> ${choiceString(contents.ruleName,this.language)}</p> <p class="">${choiceString(contents.ruleClass,this.language)}</p>
                     </div>
                     <hr noshade class="u-thin">
-                    ${rules.map((ruleObj) => this.generateRuleIndexHTML(ruleObj, language)).join("")}
+                    ${this.rules.map((ruleObj) => this.generateRuleIndexHTML(ruleObj, this.language)).join("")}
                 </div>
             <div>
         `);
@@ -65,10 +74,10 @@ export class RuleIndexPart {
     }
     private generateClassDescriptionInRuleIndex(appliedClass: AppliedRuleClassResolved[], language: LanguageInApplication) {
         return appliedClass.map(ruleClass => `
-        <div>
-            ${this.generateCSSIcons(ruleClass)} [${ruleClass.scope || choiceString(contents.noScope,language)}]`
-                + `${(ruleClass.note?.length || 0) !== 0 ? ` <i class="u-redChara u-bolderChara">${choiceString(contents.annotated, language)}</i>` : ""}
-        </div>`
+            <div>
+                ${this.generateCSSIcons(ruleClass)} [${ruleClass.scope || choiceString(contents.noScope,language)}]`
+                    + `${(ruleClass.note?.length || 0) !== 0 ? ` <i class="u-redChara u-bolderChara">${choiceString(contents.annotated, language)}</i>` : ""}
+            </div>`
         ).join("");
     }
     private generateCSSIcons({ iconCSS }: { iconCSS: string[]; }) {

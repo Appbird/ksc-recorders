@@ -162,12 +162,12 @@ export default class App implements IAppUsedToChangeState{
     acceptTheTerms(){
         this.historyAd.clearIntroduction()
     }
-    async scrollToThePagePosition(){
+    async scrollToThePagePosition(YPosition:number = 0){
         while (true){
-            const scrolled = 
-                (( window.pageYOffset !== undefined ) ? window.pageYOffset: document.documentElement.scrollTop);
+            const scrolled = window.pageYOffset - YPosition;
             window.scrollTo( 0, Math.floor( scrolled / 1.5 ) );
-            await new Promise<void>((resolve) =>  {window.setTimeout(() => resolve(), 30 )})
+            await miliseconds(30)
+
         }
     }
     

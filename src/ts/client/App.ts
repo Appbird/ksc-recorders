@@ -174,7 +174,7 @@ export default class App implements IAppUsedToChangeState{
         while (true) {
             currentDistance = currentDistance * commonRatio
             window.scrollTo( 0, currentDistance + YPosition );
-            if (currentDistance < 2) break;
+            if (Math.abs(currentDistance) < 2) break;
             await miliseconds(30)
         }
     }

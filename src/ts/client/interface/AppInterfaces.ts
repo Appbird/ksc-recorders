@@ -16,7 +16,7 @@ export interface IAppUsedToRead{
     accessToAPI:<T extends keyof APIFunctions_noChanging>(functionName: T, requiredObj: APIFunctions[T]["atServer"]) => Promise<APIFunctions[T]["atClient"]>
 }
 export interface IAppUsedToReadAndChangeOnlyPageState/*IAppUsedToReadAndChangeOnlyPageState*/ extends IAppUsedToRead{
-    scrollToThePagePosition:(yposition?:number)=>void;
+    scrollToThePagePosition:(yposition?:number)=>Promise<void>;
     notie:PageNotificationAdministrator;
     accessToAPI:<T extends keyof APIFunctions_noChanging>(functionName: T, requiredObj: APIFunctions[T]["atServer"]) => Promise<APIFunctions[T]["atClient"]>
     transition<T extends keyof PageStates>(nextState:T, requestObject:RequiredObjectType<PageStates[T]>):void

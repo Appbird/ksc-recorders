@@ -76,7 +76,7 @@ export class RuleIndexPart {
                     <div><i class="${ruleInfo.rule.iconCSS}"></i> ${ruleInfo.rule.title}
                     ${(ruleInfo.rule.note || 0) !== 0 ? ` <i class="u-redChara u-bolderChara">${choiceString(contents.annotated, this.language)}</i>` : ""}</div> <div class="__classItems">${this.generateClassDescriptionInRuleIndex(ruleInfo.appliedClass, this.language)}</div>
                 </div>
-            `).addEventListener(`click`, () => onClick())
+            `).addEventListener(`click`, onClick)
         }
     }
     private generateClassDescriptionInRuleIndex(appliedClass: AppliedRuleClassResolved[], language: LanguageInApplication) {

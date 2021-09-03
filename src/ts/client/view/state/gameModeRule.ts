@@ -37,7 +37,7 @@ export class S_GameModeRule extends PageStateBaseClass<{gameSystemID:string,game
             view.setHeader(ruleObj.rule)
             view.setRule(ruleObj)
             view.setNote(ruleObj.rule)
-            ruleIndexPart.appendNewRule(ruleObj,() => this.app.goToTop())
+            ruleIndexPart.appendNewRule(ruleObj,() => this.app.scrollToThePagePosition())
         }
         ruleIndexPart.refrectView()
         this.deleteLoadingSpinner()

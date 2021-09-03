@@ -99,7 +99,7 @@ export class S_ModifyRecordForm
         }
         private async sendInputInfo(gameSystemID:string,gameModeID:string,recordID:string,recordModified:ISentRecordOffer,reason:string){
             try{
-                this.app.goToTop()
+                this.app.scrollToThePagePosition()
                 this.generateLoadingSpinner("cloud")
 
                 const language = this.app.state.language;

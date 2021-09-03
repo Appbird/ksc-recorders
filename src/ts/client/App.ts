@@ -108,7 +108,7 @@ export default class App implements IAppUsedToChangeState{
         return this.loginAd;
     }
     async transition<T extends keyof PageStates>(nextState:T, requestObject:RequiredObjectType<PageStates[T]>,{ifAppendHistory=true,title=""}:{ifAppendHistory?:boolean,title?:string} = {}){
-        this.goToTop();
+        this.scrollToThePagePosition();
         try { 
             await this.transitionAd.transition(nextState,requestObject,{title:title})
             if (ifAppendHistory) this.historyAd.registerCurrentPage();
@@ -162,10 +162,13 @@ export default class App implements IAppUsedToChangeState{
     acceptTheTerms(){
         this.historyAd.clearIntroduction()
     }
-    goToTop(){
-        var scrolled = ( window.pageYOffset !== undefined ) ? window.pageYOffset: document.documentElement.scrollTop;
-        window.scrollTo( 0, Math.floor( scrolled / 1.5 ) );
-        if ( scrolled > 2 ) { window.setTimeout( ()=>this.goToTop(), 30 );}
+    async scrollToThePagePosition(){
+        while (true){
+            const scrolled = 
+                (( window.pageYOffset !== undefined ) ? window.pageYOffset: document.documentElement.scrollTop);
+            window.scrollTo( 0, Math.floor( scrolled / 1.5 ) );
+            await new Promise<void>((resolve) =>  {window.setTimeout(() => resolve(), 30 )})
+        }
     }
     
 }

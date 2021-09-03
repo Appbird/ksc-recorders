@@ -13,6 +13,7 @@ import { IAppUsedToChangeState } from "./interface/AppInterfaces";
 import firebase from "firebase/app";
 import {PageNotificationAdministrator} from "./Administrator/PageNotificationAdministrator"
 import { miliseconds } from "../utility/timeAsyncUtility";
+import { fitInRange } from "../utility/numericUtility";
 export default class App implements IAppUsedToChangeState{
     private _state:StateAdministrator;
     private loginAd:LoginAdministrator | null = null;
@@ -169,9 +170,9 @@ export default class App implements IAppUsedToChangeState{
      */
     async scrollToThePagePosition(YPosition:number = 0){
         YPosition = fitInRange(
-                                    0,
-                                    YPosition,
-                                    document.documentElement.scrollHeight - window.innerHeight
+                            0,
+                            YPosition,
+                            document.documentElement.scrollHeight - window.innerHeight
                     )
         const distanceAtFirst = window.pageYOffset - YPosition;
         let currentDistance = distanceAtFirst

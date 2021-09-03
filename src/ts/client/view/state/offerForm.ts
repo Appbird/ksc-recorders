@@ -76,7 +76,7 @@ export class S_OfferForm
 
         private async decide(input:ISentRecordOffer){
             try {
-                this.app.goToTop();
+                this.app.scrollToThePagePosition();
                 this.generateLoadingSpinner("cloud");
                 const detailRecord = (await this.app.accessToAPI("record_write",{
                     record:input,

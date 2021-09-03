@@ -26,18 +26,22 @@ export class S_GameModeRule extends PageStateBaseClass<{gameSystemID:string,game
         if (this.requiredObj.gameSystemID  === undefined) throw new Error("this.requiredObj.gameMode.rules === undefined")
         const rules = (await this.app.accessToAPI("gameRule_get", { 
             gameSystemEnv:this.requiredObj,
-            language: this.app.state.language 
+            language: this.app.state.language
         })).result
         if (rules === undefined) throw new Error("rules === undefined")
-        new RuleIndexPart(appendElement(this.articleDOM,"div","u-marginUpDown2em"),{rules,language:this.app.state.language})
+        const ruleIndexPart = new RuleIndexPart(appendElement(this.articleDOM,"div","u-marginUpDown2em"),this.app.state.language)
 
         const ruleSegment = appendElement(this.articleDOM,"div","u-width90per")
         for (const ruleObj of rules) {
-            const view = new GameModeRuleView(appendElement(ruleSegment,"div"),this.app.state.language)
+            const ruleDetailedSegment = appendElement(ruleSegment,"div")
+            const view = new GameModeRuleView(ruleDetailedSegment,this.app.state.language)
             view.setHeader(ruleObj.rule)
             view.setRule(ruleObj)
             view.setNote(ruleObj.rule)
+            const destinationYPosition = ruleDetailedSegment.getBoundingClientRect().y + window.scrollY
+            ruleIndexPart.appendNewRule(ruleObj,() => this.app.scrollToThePagePosition(destinationYPosition))
         }
+        ruleIndexPart.refrectView()
         this.deleteLoadingSpinner()
     }
     private generateRuleIntroduction(){

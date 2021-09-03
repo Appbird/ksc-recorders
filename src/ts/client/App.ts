@@ -12,6 +12,8 @@ import { LoginAdministrator, LoginAdministratorReadOnly } from "./Administrator/
 import { IAppUsedToChangeState } from "./interface/AppInterfaces";
 import firebase from "firebase/app";
 import {PageNotificationAdministrator} from "./Administrator/PageNotificationAdministrator"
+import { miliseconds } from "../utility/timeAsyncUtility";
+import { fitInRange } from "../utility/numericUtility";
 export default class App implements IAppUsedToChangeState{
     private _state:StateAdministrator;
     private loginAd:LoginAdministrator | null = null;
@@ -108,7 +110,7 @@ export default class App implements IAppUsedToChangeState{
         return this.loginAd;
     }
     async transition<T extends keyof PageStates>(nextState:T, requestObject:RequiredObjectType<PageStates[T]>,{ifAppendHistory=true,title=""}:{ifAppendHistory?:boolean,title?:string} = {}){
-        this.goToTop();
+        this.scrollToThePagePosition();
         try { 
             await this.transitionAd.transition(nextState,requestObject,{title:title})
             if (ifAppendHistory) this.historyAd.registerCurrentPage();
@@ -162,10 +164,25 @@ export default class App implements IAppUsedToChangeState{
     acceptTheTerms(){
         this.historyAd.clearIntroduction()
     }
-    goToTop(){
-        var scrolled = ( window.pageYOffset !== undefined ) ? window.pageYOffset: document.documentElement.scrollTop;
-        window.scrollTo( 0, Math.floor( scrolled / 1.5 ) );
-        if ( scrolled > 2 ) { window.setTimeout( ()=>this.goToTop(), 30 );}
+    /**
+     * ページをスムーズにスクロールします。
+     * @param YPosition 飛ばすページのY座標の位置。与えられたY座標が上になるまで
+     */
+    async scrollToThePagePosition(YPosition:number = 0){
+        YPosition = fitInRange(
+                            0,
+                            YPosition,
+                            document.documentElement.scrollHeight - window.innerHeight
+                    )
+        const distanceAtFirst = window.pageYOffset - YPosition;
+        let currentDistance = distanceAtFirst
+        const commonRatio = 2/3
+        while (true) {
+            currentDistance = currentDistance * commonRatio
+            window.scrollTo( 0, currentDistance + YPosition );
+            if (Math.abs(currentDistance) < 2) break;
+            await miliseconds(30)
+        }
     }
     
 }

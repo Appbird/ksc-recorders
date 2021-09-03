@@ -2,7 +2,7 @@ import { element, elementWithoutEscaping } from "../../../utility/ViewUtility";
 import { generateIcooonHTML, writeElement } from "../../utility/aboutElement";
 import { IView } from "../IView";
 import {IGameSystemInfoWithoutCollections} from "../../../type/list/IGameSystemInfo"
-import {convertNumberIntoDateString}from "../../../utility/timeUtility"
+import {convertNumberIntoDateString}from "../../../utility/timeExpressionUtility"
 import { selectAppropriateDescription, choiceString } from "../../../utility/aboutLang"
 import { LanguageInApplication } from "../../../type/LanguageInApplication";
 export class GameSystemCardGroup implements IView{

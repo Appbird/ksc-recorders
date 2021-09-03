@@ -5,7 +5,7 @@ import { appendElement, generateIcooonHTML } from "../../../../utility/aboutElem
 import { TextInputCapsuled } from "../../TextInputCapsuled";
 import { UListCupsuled } from "../../Input/UListCupsuled";
 import { context_required, EditorPart } from "./EditorPart";
-import { converseMiliSecondsIntoTime, convertTimeIntoNumber } from "../../../../../utility/timeUtility";
+import { converseMiliSecondsIntoTime, convertTimeIntoNumber } from "../../../../../utility/timeExpressionUtility";
 import { choiceString } from "../../../../../utility/aboutLang";
 
 export class EditorRecordTimePart implements EditorPart<number> {

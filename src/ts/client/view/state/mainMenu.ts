@@ -10,7 +10,7 @@ import { MultiLanguageString } from "../../../type/foundation/MultiLanguageStrin
 import context from "./mainMenu.json"
 import { NoticeView } from "../parts/notice";
 import { choiceDescription } from "../../../utility/aboutLang";
-import { formatDate } from "../../../utility/timeUtility";
+import { formatDate } from "../../../utility/timeExpressionUtility";
 
 export class S_MainMenu
     extends PageStateBaseClass<null|{gameSystem:IGameSystemInfoWithoutCollections, gameMode:IGameModeItemWithoutCollections},IAppUsedToReadAndChangePage>{

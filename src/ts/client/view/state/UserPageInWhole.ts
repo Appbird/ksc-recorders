@@ -5,7 +5,7 @@ import { UserInformationBoard } from "../parts/UserInformationBoard";
 import { IGameModeItemWithoutCollections } from "../../../type/list/IGameModeItem";
 import { IGameSystemInfoWithoutCollections } from "../../../type/list/IGameSystemInfo";
 import { choiceString, selectAppropriateDescription } from "../../../utility/aboutLang";
-import { convertNumberIntoDateString } from "../../../utility/timeUtility";
+import { convertNumberIntoDateString } from "../../../utility/timeExpressionUtility";
 import { elementWithoutEscaping } from "../../../utility/ViewUtility";
 
 

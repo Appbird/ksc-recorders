@@ -38,7 +38,7 @@ export class S_GameModeRule extends PageStateBaseClass<{gameSystemID:string,game
             view.setHeader(ruleObj.rule)
             view.setRule(ruleObj)
             view.setNote(ruleObj.rule)
-            const destinationYPosition = ruleDetailedSegment.getBoundingClientRect().y + window.scrollY + window.innerHeight/3
+            const destinationYPosition = ruleDetailedSegment.getBoundingClientRect().y + window.scrollY - (window.innerHeight/10)
             ruleIndexPart.appendNewRule(ruleObj,() => this.app.scrollToThePagePosition(destinationYPosition))
         }
         ruleIndexPart.refrectView()

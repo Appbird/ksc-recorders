@@ -47,13 +47,13 @@ export class S_SettingRegulationState_Top
                 onClickCallBack: () => this.app.transition("settingNewRegulation_CollectionViewer",{
                     collection: firebase.firestore().collection("titles"),
                     pathStack:["titles"]
-                })
+                },{ifAppendHistory:false})
             },{
                 id:"ruleAttributes",icooon:"folder",title:context.List.rules.title,description:context.List.rules.explain,unused:false,
                 onClickCallBack: () => this.app.transition("settingNewRegulation_CollectionViewer",{
                     collection: firebase.firestore().collection("rules"),
                     pathStack:["rules"]
-                })
+                },{ifAppendHistory:false})
             }
             ]
         )

@@ -33,11 +33,12 @@ export class S_GameModeRule extends PageStateBaseClass<{gameSystemID:string,game
 
         const ruleSegment = appendElement(this.articleDOM,"div","u-width90per")
         for (const ruleObj of rules) {
-            const view = new GameModeRuleView(appendElement(ruleSegment,"div"),this.app.state.language)
+            const ruleDetailedSegment = appendElement(ruleSegment,"div")
+            const view = new GameModeRuleView(ruleDetailedSegment,this.app.state.language)
             view.setHeader(ruleObj.rule)
             view.setRule(ruleObj)
             view.setNote(ruleObj.rule)
-            ruleIndexPart.appendNewRule(ruleObj,() => this.app.scrollToThePagePosition())
+            ruleIndexPart.appendNewRule(ruleObj,() => this.app.scrollToThePagePosition(ruleDetailedSegment.getBoundingClientRect().y + window.scrollY))
         }
         ruleIndexPart.refrectView()
         this.deleteLoadingSpinner()

@@ -12,6 +12,7 @@ import { LoginAdministrator, LoginAdministratorReadOnly } from "./Administrator/
 import { IAppUsedToChangeState } from "./interface/AppInterfaces";
 import firebase from "firebase/app";
 import {PageNotificationAdministrator} from "./Administrator/PageNotificationAdministrator"
+import { miliseconds } from "../utility/timeAsyncUtility";
 export default class App implements IAppUsedToChangeState{
     private _state:StateAdministrator;
     private loginAd:LoginAdministrator | null = null;

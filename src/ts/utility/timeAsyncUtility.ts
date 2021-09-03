@@ -4,10 +4,10 @@
  * @returns Promise<void>
  * @example
  * ```typescript
- * // 30ミリ秒待機します。
+ * // 30ミリ秒待機します。 
  *  await miliseconds(30)
  * ```
  */
-async function miliseconds(miliSec:number){
+export async function miliseconds(miliSec:number){
     return new Promise<void>((resolve) =>  {window.setTimeout(() => resolve(), miliSec )})
 }

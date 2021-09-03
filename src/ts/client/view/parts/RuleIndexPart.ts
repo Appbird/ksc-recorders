@@ -28,6 +28,10 @@ const contents={
         Japanese: "全セグメント",
         English: "All Segments"
     },
+    ruleIndexClickable:{
+        Japanese:   "下の目次をクリックすると、そのルールの詳細へ飛ぶことが出来ます。",
+        English:    "If you click on the index below, you will jump to the detailed description of the rule."
+    },
     specify_priority_in_ruleClasses:{
         Japanese:   "もっとも上にあるアイテムが基本的にルールとして優先されます。",
         English:    "If the scope of rule classes is duplicated and contradicts each other, the item at the top has priority."
@@ -58,8 +62,9 @@ export class RuleIndexPart {
             return
         }
         const ruleIndexSegment = this.container.appendChild(elementWithoutEscaping`
-            <div class="c-ruleIndex u-width90per">
+            <div class="c-ruleIndex u-width90per u-clickable">
                 <div class="__indexTitle">${choiceString(contents.indexTitle,this.language).replace(/\$\{number\}/g,this.rules.length.toString())}</div>
+                <div class="__indexTitle">${choiceString(contents.ruleIndexClickable,this.language)}</div>
                 <div class="__indexTitle u-bolderChara">${choiceString(contents.specify_priority_in_ruleClasses,this.language)}</div>
                 <div class="__list">
                     <div class="__item --top u-smallerChara">

@@ -168,6 +168,7 @@ export default class App implements IAppUsedToChangeState{
      * @param YPosition 飛ばすページのY座標の位置。与えられたY座標が上になるまで
      */
     async scrollToThePagePosition(YPosition:number = 0){
+        YPosition = Math.min(document.documentElement.scrollHeight - window.innerHeight,YPosition)
         const distanceAtFirst = window.pageYOffset - YPosition;
         let currentDistance = distanceAtFirst
         const commonRatio = 2/3

@@ -168,10 +168,11 @@ export default class App implements IAppUsedToChangeState{
      */
     async scrollToThePagePosition(YPosition:number = 0){
         while (true){
-            const scrolled = window.pageYOffset - YPosition;
-            window.scrollTo( 0, Math.floor( scrolled / 1.5 ) + YPosition );
+            const distance = window.pageYOffset - YPosition;
+            window.scrollTo( 0, Math.floor( distance / 1.5 ) + YPosition );
             await miliseconds(30)
-            if (scrolled < 2) break;
+            if (distance < 2) break;
+
         }
     }
     

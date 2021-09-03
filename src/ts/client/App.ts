@@ -162,12 +162,16 @@ export default class App implements IAppUsedToChangeState{
     acceptTheTerms(){
         this.historyAd.clearIntroduction()
     }
+    /**
+     * ページをスムーズにスクロールします。
+     * @param YPosition 飛ばすページのY座標の位置。与えられたY座標が上になるまで
+     */
     async scrollToThePagePosition(YPosition:number = 0){
         while (true){
             const scrolled = window.pageYOffset - YPosition;
-            window.scrollTo( 0, Math.floor( scrolled / 1.5 ) );
+            window.scrollTo( 0, Math.floor( scrolled / 1.5 ) + YPosition );
             await miliseconds(30)
-
+            if (scrolled < 2) break;
         }
     }
     

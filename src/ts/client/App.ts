@@ -167,12 +167,14 @@ export default class App implements IAppUsedToChangeState{
      * @param YPosition 飛ばすページのY座標の位置。与えられたY座標が上になるまで
      */
     async scrollToThePagePosition(YPosition:number = 0){
-        while (true){
-            const distance = window.pageYOffset - YPosition;
-            window.scrollTo( 0, Math.floor( distance / 1.5 ) + YPosition );
+        const distanceAtFirst = window.pageYOffset - YPosition;
+        let currentDistance = distanceAtFirst
+        const commonRatio = 2/3
+        while (true) {
+            currentDistance = currentDistance * commonRatio
+            window.scrollTo( 0, currentDistance + YPosition );
+            if (currentDistance < 2) break;
             await miliseconds(30)
-            if (distance < 2) break;
-
         }
     }
     

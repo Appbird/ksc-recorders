@@ -568,7 +568,7 @@ hr {
 }
 
 hr.u-bold {
-  height: 5px;
+  height: 3px;
 }
 
 hr.u-thin {
@@ -1685,6 +1685,11 @@ article h1:not(.u-noUnderline):after {
   justify-content: center;
 }
 
+.u-flex-nowrap {
+  display: flex;
+  flex-wrap: nowrap;
+}
+
 .u-font--ForNumber {
   font-family: "Montserrat", sans-serif;
 }
@@ -1758,6 +1763,10 @@ article h1:not(.u-noUnderline):after {
 
 .u-underline {
   border-bottom: 2px solid #131313;
+}
+
+.u-underline_text {
+  text-decoration: underline;
 }
 
 .u-inline {

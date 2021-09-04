@@ -2,7 +2,7 @@ import { choiceString } from "../../../utility/aboutLang";
 import { elementWithoutEscaping } from "../../../utility/ViewUtility";
 import { AppliedRuleClassResolved, RuleAttributeAndAppliedClassInfo } from "../../../type/api/gameRule/RuleAttributeAndAppliedClassInfo";
 import { LanguageInApplication } from "../../../type/LanguageInApplication";
-import { findElementByClassNameWithErrorPossibility } from "../../utility/aboutElement";
+import { appendElement, findElementByClassNameWithErrorPossibility } from "../../utility/aboutElement";
 const contents={
     ruleName:{
         Japanese: "ルールの属性",
@@ -75,21 +75,23 @@ export class RuleIndexPart {
             <div>
         `);
         const ruleIndexItemsSegment = findElementByClassNameWithErrorPossibility(ruleIndexSegment,"__list")
-        for (const {ruleInfo,onClick} of this.rules){
-            ruleIndexItemsSegment.appendChild(elementWithoutEscaping`
-                <div class="__item">
-                    <div>
-                    <i class="${ruleInfo.rule.iconCSS}"></i> ${ruleInfo.rule.title}
-                    ${(ruleInfo.rule.note || 0) !== 0 ? ` <i class="u-redChara u-bolderChara">${choiceString(contents.annotated, this.language)}</i>` : ""}</div> <div class="__classItems">${this.generateClassDescriptionInRuleIndex(ruleInfo.appliedClass, this.language)}</div>
-                </div>
-            `).addEventListener(`click`, onClick)
-        }
+        this.rules.forEach(({ruleInfo,onClick},index) => {
+                ruleIndexItemsSegment.appendChild(elementWithoutEscaping`
+                    <div class="__item">
+                        <div>
+                        <i class="${ruleInfo.rule.iconCSS}"></i> ${ruleInfo.rule.title}
+                        ${(ruleInfo.rule.note || 0) !== 0 ? ` <i class="u-redChara u-bolderChara">${choiceString(contents.annotated, this.language)}</i>` : ""}</div> <div class="__classItems">${this.generateClassDescriptionInRuleIndex(ruleInfo.appliedClass, this.language)}</div>
+                    </div>
+                `).addEventListener(`click`, onClick)
+                if (index !== this.rules.length - 1)appendElement(ruleIndexItemsSegment,"hr","u-thin")
+            }
+        )
     }
     private generateClassDescriptionInRuleIndex(appliedClass: AppliedRuleClassResolved[], language: LanguageInApplication) {
         return appliedClass.map(ruleClass => `
             <div>
                 ${this.generateCSSIcons(ruleClass)}
-                <div class="u-bolderChara u-inline u-underline">${ruleClass.title}</div>
+                <div class="u-bolderChara u-inline">${ruleClass.title}</div>
                 <br>
                 <div class="u-charaSpace_1em"></div>[${ruleClass.scope || choiceString(contents.noScope,language)}]`
                     + `${(ruleClass.note?.length || 0) !== 0 ? ` <i class="u-redChara u-bolderChara">${choiceString(contents.annotated, language)}</i>` : ""}

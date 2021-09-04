@@ -1,5 +1,5 @@
 import { IRecord, IRecordResolved } from "../../../../../src/ts/type/record/IRecord";
-import { converseMiliSecondsIntoTime } from "../../../../../src/ts/utility/timeUtility";
+import { converseMiliSecondsIntoTime } from "../../../../../src/ts/utility/timeExpressionUtility";
 import {webhookURL} from "../../secret.json"
 import fetch from "node-fetch";
 import { IGameModeItemWithoutCollections, ScoreType } from "../../../../../src/ts/type/list/IGameModeItem";

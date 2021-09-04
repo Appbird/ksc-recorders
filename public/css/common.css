@@ -1811,6 +1811,12 @@ article h1:not(.u-noUnderline):after {
   min-width: 2.6em;
 }
 
+.u-charaSpace_1em {
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+}
+
 .u-width90per {
   width: 90%;
   margin-left: 5%;

@@ -91,7 +91,7 @@ export class RuleIndexPart {
                 ${this.generateCSSIcons(ruleClass)}
                 <div class="u-bolderChara u-inline u-underline">${ruleClass.title}</div>
                 <br>
-                [${ruleClass.scope || choiceString(contents.noScope,language)}]`
+                <div class="u-charaSpace_1em"></div>[${ruleClass.scope || choiceString(contents.noScope,language)}]`
                     + `${(ruleClass.note?.length || 0) !== 0 ? ` <i class="u-redChara u-bolderChara">${choiceString(contents.annotated, language)}</i>` : ""}
             </div>`
         ).join("");

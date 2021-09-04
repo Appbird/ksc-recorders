@@ -6,6 +6,7 @@ import { GameModeRuleView } from "../parts/GameModeRuleView";
 import {PageStateBaseClass} from "./Base/PageStateClass"
 import { RuleIndexPart } from "../parts/RuleIndexPart";
 import { MenuView } from "../parts/MenuView";
+import { RuleAttributeAndAppliedClassInfo } from "../../../type/api/gameRule/RuleAttributeAndAppliedClassInfo";
 export const contents = {
     title:{
         Japanese:   "ルール",
@@ -30,7 +31,7 @@ export class S_GameModeRule extends PageStateBaseClass<{gameSystemID:string,game
         })).result
         if (rules === undefined) throw new Error("rules === undefined")
         const ruleIndexPart = new RuleIndexPart(appendElement(this.articleDOM,"div","u-marginUpDown2em"),this.app.state.language)
-
+        rules.sort(sort)
         const ruleSegment = appendElement(this.articleDOM,"div","u-width90per")
         for (const ruleObj of rules) {
             const ruleDetailedSegment = appendElement(ruleSegment,"div")
@@ -75,3 +76,8 @@ export class S_GameModeRule extends PageStateBaseClass<{gameSystemID:string,game
 
 
 
+function sort(a:RuleAttributeAndAppliedClassInfo,b:RuleAttributeAndAppliedClassInfo){
+    if (a.rule.title > b.rule.title) return 1
+    if (a.rule.title < b.rule.title) return -1
+    return 1
+}

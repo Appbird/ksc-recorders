@@ -7,10 +7,19 @@ import {PageStateBaseClass} from "./Base/PageStateClass"
 import { RuleIndexPart } from "../parts/RuleIndexPart";
 import { MenuView } from "../parts/MenuView";
 import { RuleAttributeAndAppliedClassInfo } from "../../../type/api/gameRule/RuleAttributeAndAppliedClassInfo";
+import { TitleCupsuled } from "../parts/TitleCupsuled";
 export const contents = {
     title:{
         Japanese:   "ルール",
         English:    "Rule"
+    },
+    ruleIndex:{
+        Japanese:   "目次",
+        English:    "Index"
+    },
+    detail:{
+        Japanese:   "詳細",
+        English:    "Detail"
     }
 }
 export class S_GameModeRule extends PageStateBaseClass<{gameSystemID:string,gameModeID:string},IAppUsedToReadAndChangeOnlyPageState>{
@@ -29,8 +38,15 @@ export class S_GameModeRule extends PageStateBaseClass<{gameSystemID:string,game
             gameSystemEnv:this.requiredObj,
             language: this.app.state.language
         })).result
+
+        const ruleIndexTitlePart = new TitleCupsuled(appendElement(this.articleDOM,"div","u-marginUpDown2em"))
+        ruleIndexTitlePart.refresh(choiceString(contents.ruleIndex,this.app.state.language),undefined,{underline:true})
+        
         if (rules === undefined) throw new Error("rules === undefined")
         const ruleIndexPart = new RuleIndexPart(appendElement(this.articleDOM,"div","u-marginUpDown2em"),this.app.state.language)
+
+        const ruleDetailTitlePart = new TitleCupsuled(appendElement(this.articleDOM,"div","u-marginUpDown2em"))
+        ruleDetailTitlePart.refresh(choiceString(contents.detail,this.app.state.language),undefined,{underline:true})
         rules.sort(sort)
         const ruleSegment = appendElement(this.articleDOM,"div","u-width90per")
         for (const ruleObj of rules) {

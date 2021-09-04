@@ -37,7 +37,7 @@ const contents={
         English:    "If the scope of rule classes is duplicated and contradicts each other, the item at the top has priority."
     }
 }
-type HandledType = {ruleInfo:RuleAttributeAndAppliedClassInfo, onClick:()=>void}
+type HandledType = {ruleInfo:RuleAttributeAndAppliedClassInfo, onClick?:()=>void}
 export class RuleIndexPart {
     private rules:HandledType[] = []
     constructor(
@@ -49,7 +49,7 @@ export class RuleIndexPart {
      * ルールの目次のアイテムを追加します
      * これで追加し終えた後に、refrectViewメソッドを実行する必要があります。
      */
-    appendNewRule(ruleInfo:RuleAttributeAndAppliedClassInfo, onClick:()=>void){
+    appendNewRule(ruleInfo:RuleAttributeAndAppliedClassInfo, onClick?:()=>void){
         this.rules.push({ruleInfo,onClick})
     }
     refrectView(){
@@ -70,29 +70,33 @@ export class RuleIndexPart {
                     <div class="__item --top u-smallerChara">
                         <p class=""><i class=""></i> ${choiceString(contents.ruleName,this.language)}</p> <p class="">${choiceString(contents.ruleClass,this.language)}</p>
                     </div>
-                    <hr noshade class="u-thin">
+                    <hr noshade class="u-bold">
                 </div>
             <div>
         `);
         const ruleIndexItemsSegment = findElementByClassNameWithErrorPossibility(ruleIndexSegment,"__list")
-        this.rules.forEach(({ruleInfo,onClick},index) => {
-                ruleIndexItemsSegment.appendChild(elementWithoutEscaping`
+        this.rules.forEach(({ruleInfo,onClick}) => {
+                const segment = ruleIndexItemsSegment.appendChild(elementWithoutEscaping`
                     <div class="__item">
                         <div>
-                        <i class="${ruleInfo.rule.iconCSS}"></i> ${ruleInfo.rule.title}
-                        ${(ruleInfo.rule.note || 0) !== 0 ? ` <i class="u-redChara u-bolderChara">${choiceString(contents.annotated, this.language)}</i>` : ""}</div> <div class="__classItems">${this.generateClassDescriptionInRuleIndex(ruleInfo.appliedClass, this.language)}</div>
+                            <i class="${ruleInfo.rule.iconCSS}"></i> ${ruleInfo.rule.title}
+                            ${(ruleInfo.rule.note || 0) !== 0 ? `<i class="u-redChara u-bolderChara">${choiceString(contents.annotated, this.language)}</i>` : ""}
+                        </div>
+                        <div class="__classItems">${this.generateClassDescriptionInRuleIndex(ruleInfo.appliedClass, this.language)}</div>
                     </div>
-                `).addEventListener(`click`, onClick)
-                if (index !== this.rules.length - 1)appendElement(ruleIndexItemsSegment,"hr","u-thin")
+                `)
+                if (onClick !== undefined) segment.addEventListener("click",onClick)
+                appendElement(ruleIndexItemsSegment,"hr","u-thin")
             }
         )
     }
     private generateClassDescriptionInRuleIndex(appliedClass: AppliedRuleClassResolved[], language: LanguageInApplication) {
         return appliedClass.map(ruleClass => `
             <div>
-                ${this.generateCSSIcons(ruleClass)}
-                <div class="u-bolderChara u-inline">${ruleClass.title}</div>
-                <br>
+                <div class="u-bolderChara u-underline_text">
+                    ${this.generateCSSIcons(ruleClass)}
+                    ${ruleClass.title}
+                </div>
                 <div class="u-charaSpace_1em"></div>[${ruleClass.scope || choiceString(contents.noScope,language)}]`
                     + `${(ruleClass.note?.length || 0) !== 0 ? ` <i class="u-redChara u-bolderChara">${choiceString(contents.annotated, language)}</i>` : ""}
             </div>`

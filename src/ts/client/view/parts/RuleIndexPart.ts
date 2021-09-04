@@ -78,7 +78,8 @@ export class RuleIndexPart {
         for (const {ruleInfo,onClick} of this.rules){
             ruleIndexItemsSegment.appendChild(elementWithoutEscaping`
                 <div class="__item">
-                    <div><i class="${ruleInfo.rule.iconCSS}"></i> ${ruleInfo.rule.title}
+                    <div>
+                    <i class="${ruleInfo.rule.iconCSS}"></i> ${ruleInfo.rule.title}
                     ${(ruleInfo.rule.note || 0) !== 0 ? ` <i class="u-redChara u-bolderChara">${choiceString(contents.annotated, this.language)}</i>` : ""}</div> <div class="__classItems">${this.generateClassDescriptionInRuleIndex(ruleInfo.appliedClass, this.language)}</div>
                 </div>
             `).addEventListener(`click`, onClick)
@@ -87,7 +88,10 @@ export class RuleIndexPart {
     private generateClassDescriptionInRuleIndex(appliedClass: AppliedRuleClassResolved[], language: LanguageInApplication) {
         return appliedClass.map(ruleClass => `
             <div>
-                ${this.generateCSSIcons(ruleClass)} [${ruleClass.scope || choiceString(contents.noScope,language)}]`
+                ${this.generateCSSIcons(ruleClass)}
+                <div class="u-bolderChara u-inline u-underline">${ruleClass.title}</div>
+                <br>
+                [${ruleClass.scope || choiceString(contents.noScope,language)}]`
                     + `${(ruleClass.note?.length || 0) !== 0 ? ` <i class="u-redChara u-bolderChara">${choiceString(contents.annotated, language)}</i>` : ""}
             </div>`
         ).join("");

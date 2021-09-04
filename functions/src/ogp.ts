@@ -1,4 +1,4 @@
-import { converseMiliSecondsIntoTime } from "../../src/ts/utility/timeUtility";
+import { converseMiliSecondsIntoTime } from "../../src/ts/utility/timeExpressionUtility";
 import { GameModeItemController } from "./server/firestore/GameModeItemController";
 import { GameSystemItemController } from "./server/firestore/GameSystemController";
 import { RecordCollectionController } from "./server/firestore/RecordCollectionController";

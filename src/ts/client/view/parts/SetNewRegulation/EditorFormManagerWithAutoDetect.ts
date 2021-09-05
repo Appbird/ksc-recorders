@@ -22,7 +22,7 @@ const undefinedIDDisplayer = {
 }
 export type InputFormObject<T> = {[P in keyof T]?:EditorPart<T[P]>} 
 export type InputFormObjectWithAllProperties<T> = {[P in keyof T]:EditorPart<T[P]>} 
-type HandledTypeWithServerStamp<T> = {[P in keyof T]: T[P] extends firebase.firestore.Timestamp ? firebase.firestore.FieldValue : T[P]}
+type HandledTypeWithServerStamp<T> = {[P in keyof T]: T[P] extends firebase.firestore.Timestamp | undefined ? firebase.firestore.FieldValue : T[P]}
 
 export class EditorFormManagerWithAutoDetect<TypeOfObserved extends object> implements IView {
     private pathOfDocObserved:firebase.firestore.CollectionReference

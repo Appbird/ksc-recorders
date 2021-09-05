@@ -13,6 +13,10 @@ export const contents = {
         Japanese:   "ルール",
         English:    "Rule"
     },
+    latestModifiedDate:{
+        Japanese:   "このルールは2021年9月4日に制定されたものです。この日時より以前に承認された記録はこのルールに沿わない可能性があります、ご了承ください。",
+        English:    "These rules is enacted at 2021-09-04. Please note that records verified before this time may not follow these rules."
+    },
     ruleIndex:{
         Japanese:   "目次",
         English:    "Index"
@@ -38,6 +42,9 @@ export class S_GameModeRule extends PageStateBaseClass<{gameSystemID:string,game
             gameSystemEnv:this.requiredObj,
             language: this.app.state.language
         })).result
+
+        const attention = appendElement(this.articleDOM,"p","u-boldChara")
+        attention.textContent = choiceString(contents.ruleIndex,this.app.state.language)
 
         const ruleIndexTitlePart = new TitleCupsuled(appendElement(this.articleDOM,"div","u-marginUpDown2em"))
         ruleIndexTitlePart.refresh(choiceString(contents.ruleIndex,this.app.state.language),undefined,{underline:true})

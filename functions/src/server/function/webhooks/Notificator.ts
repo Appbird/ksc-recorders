@@ -27,7 +27,7 @@ export class Notifier{
             colorcode:number,reason?:string
         }){
             
-            if (gameMode.DiscordRoleID !== undefined) attached = `<@&${gameMode.DiscordRoleID}> \n ${attached}`
+            if (gameMode.DiscordRoleID !== undefined) attached = `<@&${gameMode.DiscordRoleID}> ${attached}`
             attached = attached.replace(/\"/g,`'`);
             const body = `{
                 "content": ${(attached.length === 0) ? "null" : `"${attached}"`},

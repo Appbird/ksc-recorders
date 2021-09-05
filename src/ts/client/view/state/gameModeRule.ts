@@ -15,7 +15,7 @@ export const contents = {
         English:    "Rule"
     },
     latestModifiedDate:{
-        Japanese:   "このルールは<strong>${data}</strong>に制定されたものです。<br>この日時より以前に承認された記録はこのルールに沿わない可能性があります、ご了承ください。",
+        Japanese:   "このページのルールは<strong>${data}</strong>に制定されたものです。<br>この日時より以前に承認された記録はこのルールに沿わない可能性があります、ご了承ください。",
         English:    "These rules is enacted at <strong>${data}</strong>. <br>Please note that records verified before this time may not follow these rules."
     },
     ruleIndex:{
@@ -36,7 +36,6 @@ export class S_GameModeRule extends PageStateBaseClass<{gameSystemID:string,game
         )
         this.generateLoadingSpinner()
         
-        this.generateRuleIntroduction()
 
         if (this.requiredObj.gameSystemID  === undefined) throw new Error("this.requiredObj.gameMode.rules === undefined")
         const response = (await this.app.accessToAPI("gameRule_get", { 
@@ -47,6 +46,8 @@ export class S_GameModeRule extends PageStateBaseClass<{gameSystemID:string,game
 
         const attention = appendElement(this.articleDOM,"p","u-boldChara u-width90per u-smallerChara")
         attention.innerHTML = choiceString(contents.latestModifiedDate,this.app.state.language).replace(/\$\{data\}/g,formatDate(response.modifiedAt,"time",false))
+
+        this.generateRuleIntroduction()
 
         const ruleIndexTitlePart = new TitleCupsuled(appendElement(this.articleDOM,"div","u-marginUpDown2em"))
         ruleIndexTitlePart.refresh(choiceString(contents.ruleIndex,this.app.state.language),undefined,{underline:true})

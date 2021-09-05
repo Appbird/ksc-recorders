@@ -4,4 +4,5 @@ import { RuleAttributeAndAppliedClassInfo } from "./RuleAttributeAndAppliedClass
 export interface IReceivedDataAtClient_gameRule_get extends IReceivedDataAtClient {
     result: RuleAttributeAndAppliedClassInfo[]|undefined;
     isSucceeded: boolean;
+    modifiedAt:number
 }

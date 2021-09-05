@@ -17,10 +17,12 @@ export class RuleResolver {
     async getRuleAttributeInfo(rule:IAppliedGameModeRule,language:LanguageInApplication):Promise<RuleAttributeAndAppliedClassInfo|undefined>{
         if (rule === undefined) return undefined
         const ruleClassC = new DefinedRuleClassCollectionController(rule.id,this.transaction)
+        const data = await this.ruleAttributeC.getInfo(rule.id)
         return {
                 rule: {
-                    ...chooseMultiLanguageString(await this.ruleAttributeC.getInfo(rule.id),language),
-                    note: choiceString(rule.note,language)
+                    ...chooseMultiLanguageString(data,language),
+                    note: choiceString(rule.note,language),
+                    latestModifiedAt: rule.modifiedAt?.toMillis()
                 },
                 appliedClass:   await Promise.all(
                     rule.appliedClassID.map(
@@ -29,7 +31,8 @@ export class RuleResolver {
                             return {
                                 ...chooseMultiLanguageString(data,language),
                                 note: choiceString(appliedClassInfo.note,language),
-                                scope: choiceString(appliedClassInfo.scope,language)
+                                scope: choiceString(appliedClassInfo.scope,language),
+                                
                             }
                         }
                     )

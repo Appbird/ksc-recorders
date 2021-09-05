@@ -22,6 +22,7 @@ const undefinedIDDisplayer = {
 }
 export type InputFormObject<T> = {[P in keyof T]?:EditorPart<T[P]>} 
 export type InputFormObjectWithAllProperties<T> = {[P in keyof T]:EditorPart<T[P]>} 
+type HandledTypeWithServerStamp<T> = {[P in keyof T]: T[P] extends firebase.firestore.Timestamp | undefined ? firebase.firestore.FieldValue : T[P]}
 
 export class EditorFormManagerWithAutoDetect<TypeOfObserved extends object> implements IView {
     private pathOfDocObserved:firebase.firestore.CollectionReference
@@ -35,22 +36,25 @@ export class EditorFormManagerWithAutoDetect<TypeOfObserved extends object> impl
     private readonly inputForm:InputFormObject<TypeOfObserved> 
     private data:{[key:string]:any};
     private callbacks:Callbacks<TypeOfObserved>
-    private defaultObject:TypeOfObserved;
+    private defaultObject:HandledTypeWithServerStamp<TypeOfObserved>;
+    private needModifiedAt: boolean;
     constructor(
         container:HTMLElement,
         language:LanguageInApplication,
         pathOfDocObserved:firebase.firestore.CollectionReference,
         pathInString:string,
         inputForms:InputFormObject<TypeOfObserved>,
-        defaultObject:TypeOfObserved,
+        defaultObject:HandledTypeWithServerStamp<TypeOfObserved>,
         {
-            ErrorCatcher,whenAppendNewItem,whenReset,onReady: initalizeWhenItemAreSet,id
+            ErrorCatcher,whenAppendNewItem,whenReset,onReady: initalizeWhenItemAreSet,id,needModifiedAt = false
         }:Callbacks<TypeOfObserved>&{
             id?:string,
+            needModifiedAt?:boolean
         }
     ){
         container.innerHTML = ""
         this.container = container;
+        this.needModifiedAt = needModifiedAt;
         this.title = new TitleCupsuled(this.container)
         this.pathInString = pathInString;
         this.defaultObject = defaultObject;
@@ -77,16 +81,19 @@ export class EditorFormManagerWithAutoDetect<TypeOfObserved extends object> impl
     private startToCreateNewData(){
         if (this.unsubscribe !== null) this.unsubscribe();
         this.id = undefined;
-        const defaultObj:{[key:string]:any} = {};
         this.data = Object.assign(this.defaultObject);
         this.reflectView(this.data)
         this.refreshTitle();
         if (this.callbacks.onReady !== undefined && !this.isAlreadyInitalized) this.onReady()
     }
     private refreshTitle(){
-        this.title.refresh(`Editing : ${this.pathInString}`,(this.id === undefined) ? choiceString(undefinedIDDisplayer,this.language):this.id,{
-            chara:"u-smallerChara",hr:"u-bold"
-        })
+        this.title.refresh(
+            `Editing : ${this.pathInString}`,
+            (this.id === undefined) ? choiceString(undefinedIDDisplayer,this.language):this.id,
+            {
+                chara:"u-smallerChara",hr:"u-bold"
+            }
+        )
     }
     private subscribe(){
         this.unsubscribe = this.pathOfDocObserved.doc(this.id).onSnapshot(querySnapshot => {
@@ -144,6 +151,7 @@ export class EditorFormManagerWithAutoDetect<TypeOfObserved extends object> impl
     async writeData(item?:{[key:string]:any}){
         if (item !== undefined) this.data = item;
         this.data["id"] = this.id;
+        if (this.needModifiedAt) this.data["modifiedAt"] = firebase.firestore.FieldValue.serverTimestamp()
         await this.pathOfDocObserved.doc(this.id).set(this.data)
     }
     /**

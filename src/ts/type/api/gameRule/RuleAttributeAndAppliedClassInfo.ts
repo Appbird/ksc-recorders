@@ -8,5 +8,5 @@ export type RuleAttributeAndAppliedClassInfo = {
     appliedClass: AppliedRuleClassResolved[];
 };
 
-export type AppliedRuleAttributeResolved    = ResolvedID<IDefinedRuleAttributeWithoutCollection>&{note?:string}
+export type AppliedRuleAttributeResolved    = ResolvedID<IDefinedRuleAttributeWithoutCollection>&{note?:string, latestModifiedAt?:number}
 export type AppliedRuleClassResolved        = ResolvedID<IDefinedRuleClassItem>&{note?:string,scope?:string}

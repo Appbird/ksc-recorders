@@ -132,7 +132,8 @@ export class S_SettingRegulationState_AppliedGameRuleDocViewer
                 id:"",
                 appliedClassID:[],
                 Japanese:"",English:"",
-                note:{ Japanese:"",English:"" }
+                note:{ Japanese:"",English:"" },
+                modifiedAt: firebase.firestore.FieldValue.serverTimestamp()
             },{
                 ErrorCatcher:(error) => this.app.errorCatcher(error),
                 whenAppendNewItem: (id,data) => {
@@ -152,7 +153,8 @@ export class S_SettingRegulationState_AppliedGameRuleDocViewer
                     });
                 },
                 onReady: (data) => this.initalizeEditors(data,idEditor,appliedClassIDEditor,inputForms),
-                id:this.requiredObj.id   
+                id:this.requiredObj.id,
+                needModifiedAt:true
             })
         
     }

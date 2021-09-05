@@ -4,7 +4,6 @@ import { choiceString } from "../../../../utility/aboutLang";
 import { HTMLConverter } from "../../../../utility/ViewUtility";
 import { appendElement, createElementWithIdAndClass, generateIcooonHTML } from "../../../utility/aboutElement";
 import { IView } from "../../IView";
-import { PageTitleView } from "../PageTitleView";
 import { TitleCupsuled } from "../TitleCupsuled";
 
 export class SettingRegulationStateHeader implements IView {

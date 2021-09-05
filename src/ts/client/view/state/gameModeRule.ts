@@ -8,14 +8,15 @@ import { RuleIndexPart } from "../parts/RuleIndexPart";
 import { MenuView } from "../parts/MenuView";
 import { RuleAttributeAndAppliedClassInfo } from "../../../type/api/gameRule/RuleAttributeAndAppliedClassInfo";
 import { TitleCupsuled } from "../parts/TitleCupsuled";
+import { formatDate } from "../../../utility/timeExpressionUtility";
 export const contents = {
     title:{
         Japanese:   "ルール",
         English:    "Rule"
     },
     latestModifiedDate:{
-        Japanese:   "このルールは2021年9月4日に制定されたものです。この日時より以前に承認された記録はこのルールに沿わない可能性があります、ご了承ください。",
-        English:    "These rules is enacted at 2021-09-04. Please note that records verified before this time may not follow these rules."
+        Japanese:   "このルールは<strong>${data}</strong>に制定されたものです。<br>この日時より以前に承認された記録はこのルールに沿わない可能性があります、ご了承ください。",
+        English:    "These rules is enacted at <strong>${data}</strong>. <br>Please note that records verified before this time may not follow these rules."
     },
     ruleIndex:{
         Japanese:   "目次",
@@ -38,13 +39,14 @@ export class S_GameModeRule extends PageStateBaseClass<{gameSystemID:string,game
         this.generateRuleIntroduction()
 
         if (this.requiredObj.gameSystemID  === undefined) throw new Error("this.requiredObj.gameMode.rules === undefined")
-        const rules = (await this.app.accessToAPI("gameRule_get", { 
+        const response = (await this.app.accessToAPI("gameRule_get", { 
             gameSystemEnv:this.requiredObj,
             language: this.app.state.language
-        })).result
+        }))
+        const rules = response.result
 
-        const attention = appendElement(this.articleDOM,"p","u-boldChara")
-        attention.textContent = choiceString(contents.ruleIndex,this.app.state.language)
+        const attention = appendElement(this.articleDOM,"p","u-boldChara u-width90per u-smallerChara")
+        attention.innerHTML = choiceString(contents.latestModifiedDate,this.app.state.language).replace(/\$\{data\}/g,formatDate(response.modifiedAt,"time",false))
 
         const ruleIndexTitlePart = new TitleCupsuled(appendElement(this.articleDOM,"div","u-marginUpDown2em"))
         ruleIndexTitlePart.refresh(choiceString(contents.ruleIndex,this.app.state.language),undefined,{underline:true})

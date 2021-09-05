@@ -61,6 +61,7 @@ export class S_OfferForm
                         })).result
                     } } )
                 )
+            
             abilityAttributeItems = (abilityAttributeItems.length === 0) ? undefined : abilityAttributeItems
             const view = new OfferFormView(
                 this.articleDOM.appendChild(document.createElement("div")),

@@ -23,6 +23,7 @@ import { HTMLConverter } from "../../../../utility/ViewUtility";
 import { EditorPlayersWithAttributesPart } from "../SetNewRegulation/Editor/EditorPlayersWithAttributesPart";
 import { choiceString } from "../../../../utility/aboutLang";
 import { DecideButtonPart } from "../DecideButtonPart";
+import { ILabelledDocument } from "../../../../type/list/ILabelledDocument";
 type RecordInputData = {
     link:string;
     score:number;
@@ -76,6 +77,8 @@ export class OfferFormView implements IView {
         this.runnerID = runnerID
         this.isAbilityIDsWithAttributes = abilityAttributeItems !== undefined && abilityAttributeItems.length !== 0
         this.difficultyItems = difficultyItems
+        if (abilityAttributeItems) for (const unit of abilityAttributeItems) unit.flagsInAttribute.sort(sort(language))
+
         const htmlCon = new HTMLConverter(language)
         const link = new EditorRecordLinkPart({
             container:      appendNewEditorElement(this.container),
@@ -266,3 +269,14 @@ export class OfferFormView implements IView {
 
 }
 
+
+function sort(language:LanguageInApplication){
+    return (a:ILabelledDocument,b:ILabelledDocument) => {
+        const A = choiceString(a,language)
+        const B = choiceString(b,language)
+        if (A > B) return 1
+        if (A < B) return -1
+        return 0
+     }
+
+}

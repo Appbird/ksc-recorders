@@ -1,5 +1,7 @@
+import { LanguageInApplication } from "../../../type/LanguageInApplication";
 import { IGameModeItemWithoutCollections } from "../../../type/list/IGameModeItem";
 import { IGameSystemInfoWithoutCollections } from "../../../type/list/IGameSystemInfo";
+import { ILabelledDocument } from "../../../type/list/ILabelledDocument";
 import { choiceString } from "../../../utility/aboutLang";
 import { IAppUsedToReadAndChangePage } from "../../interface/AppInterfaces";
 import { appendElement } from "../../utility/aboutElement";
@@ -28,6 +30,7 @@ export class S_SearchConditionSelector
             "",
             "c-icooon u-background--menu"
         );
+        const language = this.app.state.language
         const gameSystemID = this.app.state.gameSystemIDDisplayed
         const gameModeID = this.app.state.gameModeIDDisplayed
         const gameModeInfo = this.app.state.gameSystemEnvDisplayed.gameMode
@@ -54,6 +57,7 @@ export class S_SearchConditionSelector
                 })).result
             } } )
         )
+        for (const unit of setsOfFlagsOfAbilityAttributeItem) unit.flagsInAttribute.sort(sort(this.app.state.language))
         new SearchConditionSelectorView(this.articleDOM.appendChild(document.createElement("div")),{
             difficulties,abilities,hashTags,gameSystemID,gameModeID,setsOfFlagsOfAbilityAttributeItem,
             superiorScore:(gameModeInfo.scoreType === "time") ? "LowerFirst":"HigherFirst",language:this.app.state.language,maxPlayerNumber:gameModeInfo.maxNumberOfPlayer,
@@ -69,5 +73,14 @@ export class S_SearchConditionSelector
     }
 }
 
+function sort(language:LanguageInApplication){
+    return (a:ILabelledDocument,b:ILabelledDocument) => {
+        const A = choiceString(a,language)
+        const B = choiceString(b,language)
+        if (A > B) return 1
+        if (A < B) return -1
+        return 0
+     }
 
+}
     

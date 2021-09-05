@@ -11,10 +11,10 @@ export async function gameMode_get(input:APIFunctions["gameRule_get"]["atServer"
 
     const ruleInfo    = await Promise.all(gameRuleAttributeWillBeResolved.map(ruleAttr => gameRuleC.getRuleAttributeInfo(ruleAttr,input.language)))
     if (ruleInfo.some(ruleAttr => ruleAttr === undefined)) throw new Error("getRuleAttributeInfo found rule attribute ID which does not be assigned.")
-    
+    const modifiedAt = ruleInfo.map(unit => unit?.rule.latestModifiedAt ? unit?.rule.latestModifiedAt : 1630756800 ).sort((a,b) => b-a)[0]
     return {
         isSucceeded:    true,
         result:         Object.assign(ruleInfo as RuleAttributeAndAppliedClassInfo[]),
-        modifiedAt:     ruleInfo.map(unit => unit?.rule.latestModifiedAt ? unit?.rule.latestModifiedAt : 0 ).sort((a,b) => b-a)[0]   
+        modifiedAt:     modifiedAt
     }
 }

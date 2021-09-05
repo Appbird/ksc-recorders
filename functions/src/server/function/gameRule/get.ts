@@ -15,6 +15,6 @@ export async function gameMode_get(input:APIFunctions["gameRule_get"]["atServer"
     return {
         isSucceeded:    true,
         result:         Object.assign(ruleInfo as RuleAttributeAndAppliedClassInfo[]),
-        modifiedAt:     modifiedAt
+        modifiedAt
     }
 }

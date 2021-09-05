@@ -1,5 +1,7 @@
 import { MultiLanguageString } from "../foundation/MultiLanguageString";
 import { ILabelledDocument } from "./ILabelledDocument";
+import firebase from "firebase/app"
+import "firebase/firestore"
 
 export interface IAppliedGameModeRule extends ILabelledDocument{
 	id:string;
@@ -7,6 +9,7 @@ export interface IAppliedGameModeRule extends ILabelledDocument{
 	English:string;
 	appliedClassID:IAppliedClassInfo[]
 	note:MultiLanguageString
+	modifiedAt?:firebase.firestore.Timestamp
 }
 export interface IAppliedClassInfo{
 	id:string;

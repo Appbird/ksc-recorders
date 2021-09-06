@@ -69,12 +69,12 @@ const context = {
         ,
         TargetIDs:{
             title:{
-                Japanese:"この難易度に含まれるセグメント (登場する敵など)",
-                English:"The Segments (such as boss or stages) this difficulty includes"
+                Japanese:"このカテゴリに含まれるセグメント (登場する敵など)",
+                English:"The Segments (such as boss or stages) this category includes"
             },
             description:[{
-                Japanese:"この難易度で登場する敵やステージを登録して下さい。",
-                English:"Enter stages or enemys in this difficulty."
+                Japanese:"このカテゴリで登場する敵やステージを登録して下さい。",
+                English:"Enter stages or enemys in this category."
             },
             {
                 Japanese:"順番に注意して下さい。",

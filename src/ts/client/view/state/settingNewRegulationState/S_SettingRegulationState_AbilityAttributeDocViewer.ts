@@ -43,8 +43,8 @@ const context = {
                 English:"Japanese Name"
             },
             description:[{
-                Japanese:"この難易度の日本語名を入力してください。",
-                English:"Enter this target's name in Japanese."
+                Japanese:"この能力属性の日本語名を入力してください。",
+                English:"Enter this ability attribute's name in Japanese."
             }]
         },
         English:{
@@ -53,7 +53,7 @@ const context = {
                 English:"English Name"
             },
             description:[{
-                Japanese:"この難易度の英語名を入力して下さい。",
+                Japanese:"このアイテムの英語名を入力して下さい。",
                 English:"Enter this target's name in English."
             }]
         },
@@ -63,8 +63,8 @@ const context = {
                 English:"Japanese Description"
             },
             description:[{
-                Japanese:" この難易度についての説明を日本語で入力してください。",
-                English:"Enter this target's short description in Japanese."
+                Japanese:" この能力属性についての説明を日本語で入力してください。",
+                English:"Enter this ability attribute's short description in Japanese."
             }]
         },
         EnglishDescription:{
@@ -73,8 +73,8 @@ const context = {
                 English:"English Description"
             },
             description:[{
-                Japanese:"この難易度についての説明を英語で入力して下さい。",
-                English:"Enter this target's short description in English."
+                Japanese:"この能力属性についての説明を英語で入力して下さい。",
+                English:"Enter this ability attribute's short description in English."
             }]
         },
         multipleItems:{

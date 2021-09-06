@@ -38,12 +38,15 @@
     },
     "DifficultyChoices":{
         "Header":{
-            "Japanese":"難易度",
-            "English":"Difficulty"
+            "Japanese":"カテゴリ",
+            "English":"Category"
         },
         "Notice":[{
-            "Japanese": " 取得した記録がどの難易度で取られたかを入力します。",
-            "English": " Enter difficulty of the gamemode you run in the record." 
+            "Japanese":"カテゴリを選択して下さい。",
+            "English":"Set the Category."
+        },{
+            "Japanese":"カテゴリとは、セグメントの分類のことを表します。",
+            "English":"\"Category\" means the classification of segments."
         }]
     },
     "TargetChoices":{

@@ -1,4 +1,7 @@
 # Kirby-Speed/Score-Recorders
+[ URL ] https://kss-recorders.web.app/
+
+<img src="https://i.gyazo.com/9c4611fbfa39cb36a4bfd4ba1dac9eeb.png" width="300em">
 
 Kirby-Speed/Score-Recorders(KSSRs)はカービィシリーズのゲームのタイム/スコアを集積するTA/RTAプラットフォームです。ボスやステージごとの記録集積に特化しています。
 

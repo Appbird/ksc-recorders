@@ -45,12 +45,12 @@ const context = {
         },
         difficultySelectable:{
             title:{
-                Japanese:"難易度",
-                English:"Difficulties"
+                Japanese:"カテゴリ",
+                English:"Categories"
             },
             explain:{
-                Japanese:"このゲームモードに登場する難易度を羅列しているリストです。",
-                English:"The list included all of difficulties in this gamemode"
+                Japanese:"このゲームモードに登録されているカテゴリを羅列しているリストです。",
+                English:"The list included all of categories in this gamemode"
             },
         },
         abilityAttributes:{

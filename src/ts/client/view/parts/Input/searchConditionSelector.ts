@@ -20,12 +20,15 @@ import { DecideButtonPart } from "../DecideButtonPart";
 const contents = {
     Difficulty : {
         title:{
-            Japanese:"難易度(セグメントパック)",
-            English:"Difficulty(Segment Pack)"
+            Japanese:"カテゴリ",
+            English:"Category"
         },
         description:[{
-            Japanese:"検索したい難易度を指定してください。",
-            English:"Set the difficulty."
+            Japanese:"カテゴリを選択して下さい。",
+            English:"Set the Category."
+        },{
+            Japanese:"カテゴリとは、セグメントの分類のことを表します。",
+            English:"\"Category\" means the classification of segments."
         }],
         icooon:"difficulty"
     },
@@ -39,8 +42,8 @@ const contents = {
             English:"Set the segment(s). Records will be picked up for each segment."
         },
         {
-            Japanese:"何も指定しなかった場合、上で指定した難易度に含まれるセグメントを全て列挙して検索します。", 
-            English: "If you don't set any segment here, records will be picked up for every each segment that the difficulty above includes."
+            Japanese:"何も指定しなかった場合、上で指定したカテゴリに含まれるセグメントを全て列挙して検索します。", 
+            English: "If you don't set any segment here, records will be picked up for every each segment that the selected category includes."
         }],
         icooon: "flag"
     },
